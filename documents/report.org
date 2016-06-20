@@ -90,7 +90,7 @@
 *** Consumption
 
 #+name: consumption_analysis
-#+begin_src python :noweb no-export :dir ../analysis :results silent :tangle report.py
+#+begin_src python :noweb no-export :dir ../analysis :results silent :tangle ../analysis/consumption_analysis.py
 <<Imports>>
 <<TUP Utilities>>
 
