@@ -283,26 +283,27 @@ items in the survey.
 
 *** Total Asset Holdings
 
-Perhaps interestingly, the cash group does not appear to have seen an increase in the value
-of assets measured at all, with small and imprecise point estimates.
-The most important result is that the TUP group has significantly more asset wealth than
-the cash or control groups two years after receipt of transfers. The
-TUP group has a sizeable change of 662 SSP on average (53% increase over controls,
-p<.01). Total measured asset holdings in the TUP group have fallen 60 SSP on average, but 127
-SSP in the control group. 40% of TUP households report higher asset wealth than in
-the midline survey, 12 percentage points higher than among control HH's (p<.01).
-This actually represents a larger gain than seen in 2014, where the TUP program
-resulted in a 38% increase in total asset holdings. 
+Perhaps interestingly, the cash group does not appear to have seen an increase in the
+value of assets measured at all, with small and imprecise point estimates. The most
+important result is that the TUP group has significantly more asset wealth than the
+cash or control groups two years after receipt of transfers. The TUP group has a
+sizeable change of 662 SSP on average (53% increase over controls, p<.01). Total
+measured asset holdings in the TUP group have fallen 60 SSP on average, but 127 SSP
+in the control group. 40% of TUP households report higher asset wealth than in the
+midline survey, 12 percentage points higher than among control HH's (p<.01). This
+actually represents a larger gain than seen in 2014, where the TUP program resulted
+in a 38% increase in total asset holdings.
 
 So-called "Productive" assets include anything that could plausibly be used in
-productive activity. [fn:: For now, we include in this list: cows,
-goats and small animals, chickens, ducks, ploughs, sheds, shop premises, pangas, axes, mobiles, carts,
-and sewing equipment.] Here we see the TUP group has 336 SSP more in this area
-over the control group, or twice as much. The total value of the
-treatment effect was roughly the same at midline, while the percentage change over baseline was
-smaller at 74%. Note also that the effect on total value is higher than the effect
-on productive asset value, suggesting that the increased wealth cannot be explained
-purely by households holding onto asset transfers for the length of the program's monitoring phase.
+productive activity. [fn:: For now, we include in this list: cows, goats and small
+animals, chickens, ducks, ploughs, sheds, shop premises, pangas, axes, mobiles,
+carts, and sewing equipment.] Here we see the TUP group has 336 SSP more in this area
+over the control group, or twice as much. The total value of the treatment effect was
+roughly the same at midline, while the percentage change over baseline was smaller at
+74%. Note also that the effect on total value is higher than the effect on productive
+asset value, suggesting that the increased wealth cannot be explained purely by
+households holding onto asset transfers for the length of the program's monitoring
+phase.
 
 More interesting tests remain. [fn:: TODO: Separate effects by sub-groups (asset types & high/low asset levels)] [fn:: TODO: Add food and cash savings to the asset tables?]
 
@@ -938,6 +939,7 @@ return AllTables
 #+end_src
 
 ** Savings
+
 #+name: savings_analysis
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
 import numpy as np

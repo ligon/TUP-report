@@ -26,59 +26,255 @@
 ** Assignment within Asset Treatment Branch
 * Results                                                           :elliott:
   
-   By and large, don't yet have results on Asset+ and Cash+
-   
+Don't yet have results on Asset+ and Cash+
 
-** Attrition
+** Attrition & Baseline balance
 ** Assets
-*** TODO Get ves neediness panel se code
-** Consumption Expenditures & Welfare
- #+name: consumption_results
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
- <<consumption_analysis>>
- return tab
- #+end_src
+   
+#+name: asset_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<asset_analysis>>
+return tab
+#+end_src
 
- #+RESULTS: consumption_results
- |----------------------------------+---------------+---------------+---------------+---------------|
- |                                  | Tot           | Food          | FoodShr       | logTot        |
- |----------------------------------+---------------+---------------+---------------+---------------|
- | CTL mean                         | $39.80^{*}$   | $27.46^{*}$   | $ 0.70^{***}$ | $ 3.52^{***}$ |
- |                                  | $(22.18)$     | $(15.54)$     | $( 0.18)$     | $( 0.61)$     |
- |----------------------------------+---------------+---------------+---------------+---------------|
- | TUP*2014                         | $ 9.34^{***}$ | $ 6.12^{***}$ | $-0.01$       | $ 0.23^{***}$ |
- |                                  | $( 2.26)$     | $( 1.57)$     | $( 0.02)$     | $( 0.06)$     |
- | TUP*2015                         | $ 1.69$       | $ 0.72$       | $-0.01$       | $ 0.04$       |
- |                                  | $( 2.15)$     | $( 1.50)$     | $( 0.01)$     | $( 0.05)$     |
- | CSH*2014                         | $-1.03$       | $-0.97$       | $ 0.01$       | $-0.02$       |
- |                                  | $( 2.80)$     | $( 1.95)$     | $( 0.02)$     | $( 0.07)$     |
- | CSH*2015                         | $ 5.66^{**}$  | $ 3.50^{*}$   | $-0.01$       | $ 0.14^{**}$  |
- |                                  | $( 2.75)$     | $( 1.91)$     | $( 0.02)$     | $( 0.07)$     |
- | Bsln2013                         | $ 0.10^{***}$ | $ 0.07^{**}$  | $ 0.07^{**}$  | $ 0.06^{***}$ |
- |                                  | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     | $( 0.02)$     |
- | 2014                             | $35.09^{***}$ | $26.03^{***}$ | $ 0.69^{***}$ | $ 3.25^{***}$ |
- |                                  | $( 1.89)$     | $( 1.30)$     | $( 0.03)$     | $( 0.08)$     |
- | 2015                             | $35.93^{***}$ | $24.62^{***}$ | $ 0.64^{***}$ | $ 3.29^{***}$ |
- |                                  | $( 1.77)$     | $( 1.22)$     | $( 0.03)$     | $( 0.08)$     |
- | Bsln_NAN                         | $ 6.83^{***}$ | $ 6.13^{***}$ | $ 0.09^{***}$ | $ 0.31^{***}$ |
- |                                  | $( 2.47)$     | $( 1.68)$     | $( 0.03)$     | $( 0.09)$     |
- |----------------------------------+---------------+---------------+---------------+---------------|
- | F-stat                           | $ 4.83$       | $ 5.79$       | $ 6.30$       | $ 4.77$       |
- | N                                | $1305.00$     | $1295.00$     | $1295.00$     | $1305.00$     |
- |----------------------------------+---------------+---------------+---------------+---------------|
- | $\beta^{TUP}_{2014}-\beta^{CSH}$ | $ 3.68$       | $ 2.61$       | $-0.01$       | $ 0.09$       |
- |                                  | $( 3.51)$     | $( 2.44)$     | $( 0.02)$     | $( 0.09)$     |
- | $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-3.97$       | $-2.78$       | $-0.00$       | $-0.10$       |
- |                                  | $( 2.85)$     | $( 1.98)$     | $( 0.02)$     | $( 0.07)$     |
- |----------------------------------+---------------+---------------+---------------+---------------|
+#+RESULTS: asset_results
+|                                  | Productive     | Total           |
+|----------------------------------+----------------+-----------------|
+| Bsln2013                         | $ 0.00$        | $ 0.08^{***}$   |
+|                                  | $( 0.01)$      | $( 0.02)$       |
+| 2014                             | $465.53^{***}$ | $1259.75^{***}$ |
+|                                  | $(55.96)$      | $(112.68)$      |
+| 2015                             | $392.97^{***}$ | $1124.61^{***}$ |
+|                                  | $(50.21)$      | $(103.46)$      |
+| TUP*2014                         | $361.80^{***}$ | $535.79^{***}$  |
+|                                  | $(74.19)$      | $(154.02)$      |
+| TUP*2015                         | $320.74^{***}$ | $624.79^{***}$  |
+|                                  | $(68.68)$      | $(146.01)$      |
+| CSH*2014                         | $18.50$        | $-125.86$       |
+|                                  | $(95.80)$      | $(191.31)$      |
+| CSH*2015                         | $-5.00$        | $-49.99$        |
+|                                  | $(88.40)$      | $(187.32)$      |
+| Bsln_NAN                         | $-131.14^{**}$ | $21.30$         |
+|                                  | $(51.35)$      | $(146.51)$      |
+| F-stat                           | $10.19$        | $ 8.53$         |
+|                                  |                |                 |
+| N                                | $1247.00$      | $1305.00$       |
+|                                  |                |                 |
+| CTL mean                         | $337.60$       | $1225.61$       |
+|                                  | $(605.57)$     | $(1502.46)$     |
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $366.79^{***}$ | $585.78^{**}$   |
+|                                  | $(114.58)$     | $(239.76)$      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $325.74^{***}$ | $674.78^{***}$  |
+|                                  | $(92.26)$      | $(194.72)$      |
 #+end_example
 
-  
-   - Open question about including \log\lambda, but probably not
+
+** Consumption Expenditures & Welfare
+
+#+name: consumption_aggregate_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<consumption_analysis>>
+return tab
+#+end_src
+
+
+#+RESULTS: consumption_results
+|----------------------------------+---------------+---------------+---------------+---------------|
+|                                  | Tot           | Food          | FoodShr       | logTot        |
+|----------------------------------+---------------+---------------+---------------+---------------|
+| CTL mean                         | $39.80^{*}$   | $27.46^{*}$   | $ 0.70^{***}$ | $ 3.52^{***}$ |
+|                                  | $(22.18)$     | $(15.54)$     | $( 0.18)$     | $( 0.61)$     |
+|----------------------------------+---------------+---------------+---------------+---------------|
+| TUP*2014                         | $ 9.34^{***}$ | $ 6.12^{***}$ | $-0.01$       | $ 0.23^{***}$ |
+|                                  | $( 2.26)$     | $( 1.57)$     | $( 0.02)$     | $( 0.06)$     |
+| TUP*2015                         | $ 1.69$       | $ 0.72$       | $-0.01$       | $ 0.04$       |
+|                                  | $( 2.15)$     | $( 1.50)$     | $( 0.01)$     | $( 0.05)$     |
+| CSH*2014                         | $-1.03$       | $-0.97$       | $ 0.01$       | $-0.02$       |
+|                                  | $( 2.80)$     | $( 1.95)$     | $( 0.02)$     | $( 0.07)$     |
+| CSH*2015                         | $ 5.66^{**}$  | $ 3.50^{*}$   | $-0.01$       | $ 0.14^{**}$  |
+|                                  | $( 2.75)$     | $( 1.91)$     | $( 0.02)$     | $( 0.07)$     |
+| Bsln2013                         | $ 0.10^{***}$ | $ 0.07^{**}$  | $ 0.07^{**}$  | $ 0.06^{***}$ |
+|                                  | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     | $( 0.02)$     |
+| 2014                             | $35.09^{***}$ | $26.03^{***}$ | $ 0.69^{***}$ | $ 3.25^{***}$ |
+|                                  | $( 1.89)$     | $( 1.30)$     | $( 0.03)$     | $( 0.08)$     |
+| 2015                             | $35.93^{***}$ | $24.62^{***}$ | $ 0.64^{***}$ | $ 3.29^{***}$ |
+|                                  | $( 1.77)$     | $( 1.22)$     | $( 0.03)$     | $( 0.08)$     |
+| Bsln_NAN                         | $ 6.83^{***}$ | $ 6.13^{***}$ | $ 0.09^{***}$ | $ 0.31^{***}$ |
+|                                  | $( 2.47)$     | $( 1.68)$     | $( 0.03)$     | $( 0.09)$     |
+|----------------------------------+---------------+---------------+---------------+---------------|
+| F-stat                           | $ 4.83$       | $ 5.79$       | $ 6.30$       | $ 4.77$       |
+| N                                | $1305.00$     | $1295.00$     | $1295.00$     | $1305.00$     |
+|----------------------------------+---------------+---------------+---------------+---------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $ 3.68$       | $ 2.61$       | $-0.01$       | $ 0.09$       |
+|                                  | $( 3.51)$     | $( 2.44)$     | $( 0.02)$     | $( 0.09)$     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-3.97$       | $-2.78$       | $-0.00$       | $-0.10$       |
+|                                  | $( 2.85)$     | $( 1.98)$     | $( 0.02)$     | $( 0.07)$     |
+|----------------------------------+---------------+---------------+---------------+---------------|
+#+end_example
 
 ** Occupation & Employment 
 ** Income
+   
+These income results are not yet fully reliable. Income was determined as the product
+of price and quantity measures, and where not given, we used the median stated prices
+for a given unit of a given good. This procedure is likely error prone and warrants
+further quality checks.
+
+Note that topcoding has a large effect on the distribution here. The control group in
+2015 has a measured income of roughly 4325 SSP per year, or roughly $540 US (assuming
+an exchange rate of around 8). The TUP group sees a 327 SSP ($41 US) increase in
+annual average income, but with a fairly skewed distribution and high standard
+errors). The related figure shows that total income is not particularly different
+among groups. Perhaps the main lesson is that the TUP group has measurably more
+reported livestock-related income, and less farm income, indicating a shift away from
+farming. The cash group may exhibit some substitution away from farm and livestock,
+but sees no notable change in income overall. 
+
+#+name: income_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<income_analysis>>
+return tab
+#+end_src
+
+#+Caption: Distribution of total observed income by group
+#+NAME: fig:IncomeDistribution
+[[../figures/IncomeDistribution.png]] 
+
+#+RESULTS: income_results
+|---------------------------+----------------+----------------+-----------------+-----------------|
+|                           | Farm           | Livestock      | Non-Farm        | Total           |
+|---------------------------+----------------+----------------+-----------------+-----------------|
+| cons                      | $773.05^{***}$ | $640.33^{***}$ | $3774.49^{***}$ | $4325.54^{***}$ |
+|                           | $(49.67)$      | $(91.75)$      | $(301.09)$      | $(292.91)$      |
+| TUP                       | $-142.20^{*}$  | $281.12^{**}$  | $86.24$         | $327.83$        |
+|                           | $(77.21)$      | $(126.30)$     | $(469.48)$      | $(455.95)$      |
+| CSH                       | $-26.15$       | $-83.81$       | $61.80$         | $ 7.92$         |
+|                           | $(100.82)$     | $(177.25)$     | $(620.53)$      | $(600.43)$      |
+| F-stat                    | $ 1.75$        | $ 3.48$        | $ 0.02$         | $ 0.28$         |
+|                           |                |                |                 |                 |
+| N                         | $531.00$       | $380.00$       | $606.00$        | $671.00$        |
+|                           |                |                |                 |                 |
+| CTL mean                  | $773.05$       | $640.33$       | $3774.49$       | $4325.54$       |
+|                           | $(848.21)$     | $(1131.01)$    | $(4671.65)$     | $(4789.58)$     |
+| $\beta^{TUP}-\beta^{CSH}$ | $-116.05$      | $364.94^{**}$  | $24.44$         | $319.91$        |
+|                           | $(105.79)$     | $(174.74)$     | $(651.27)$      | $(629.93)$      |
+|---------------------------+----------------+----------------+-----------------+-----------------|
+#+end_example
+
+
+** Food Security
+
+#+name: foodsecure_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<foodsecure_analysis>>
+return tab
+#+end_src
+
+#+RESULTS: foodsecure_results
+|                                  | fewmeals    | hungry      | nofood      | portions    | wholeday  | worried   | z-score      |
+|----------------------------------+-------------+-------------+-------------+-------------+-----------+-----------+--------------|
+| Bsln2013                         | $ 0.05^{*}$ | $ 0.05^{*}$ | $ 0.02$     | $-0.00$     | $ 0.03$   | $ 0.03$   | $ 0.07^{**}$ |
+|                                  | $( 0.03)$   | $( 0.03)$   | $( 0.03)$   | $( 0.03)$   | $( 0.03)$ | $( 0.03)$ | $( 0.03)$    |
+| 2014                             | $-0.02$     | $-0.08$     | $-0.06$     | $ 0.02$     | $-0.06$   | $-0.04$   | $-0.06$      |
+|                                  | $( 0.06)$   | $( 0.06)$   | $( 0.06)$   | $( 0.06)$   | $( 0.06)$ | $( 0.06)$ | $( 0.06)$    |
+| 2015                             | $ 0.02$     | $ 0.03$     | $-0.02$     | $-0.06$     | $-0.00$   | $-0.06$   | $-0.03$      |
+|                                  | $( 0.06)$   | $( 0.06)$   | $( 0.06)$   | $( 0.06)$   | $( 0.06)$ | $( 0.06)$ | $( 0.06)$    |
+| TUP*2014                         | $ 0.00$     | $ 0.15$     | $ 0.15^{*}$ | $-0.08$     | $ 0.09$   | $ 0.11$   | $ 0.11$      |
+|                                  | $( 0.09)$   | $( 0.09)$   | $( 0.09)$   | $( 0.09)$   | $( 0.09)$ | $( 0.09)$ | $( 0.09)$    |
+| TUP*2015                         | $-0.13$     | $-0.08$     | $ 0.07$     | $ 0.07$     | $-0.01$   | $ 0.12$   | $ 0.01$      |
+|                                  | $( 0.09)$   | $( 0.09)$   | $( 0.09)$   | $( 0.09)$   | $( 0.09)$ | $( 0.09)$ | $( 0.09)$    |
+| CSH*2014                         | $ 0.01$     | $ 0.07$     | $ 0.04$     | $-0.02$     | $ 0.05$   | $-0.06$   | $ 0.02$      |
+|                                  | $( 0.11)$   | $( 0.11)$   | $( 0.11)$   | $( 0.11)$   | $( 0.11)$ | $( 0.11)$ | $( 0.11)$    |
+| CSH*2015                         | $ 0.01$     | $-0.11$     | $-0.01$     | $ 0.07$     | $-0.05$   | $ 0.02$   | $-0.01$      |
+|                                  | $( 0.11)$   | $( 0.11)$   | $( 0.11)$   | $( 0.11)$   | $( 0.11)$ | $( 0.11)$ | $( 0.11)$    |
+| Bsln_NAN                         | $ 0.15^{*}$ | $ 0.09$     | $-0.01$     | $ 0.16^{*}$ | $ 0.09$   | $ 0.12$   | $ 0.16^{*}$  |
+|                                  | $( 0.09)$   | $( 0.09)$   | $( 0.09)$   | $( 0.09)$   | $( 0.08)$ | $( 0.09)$ | $( 0.09)$    |
+| F-stat                           | $ 1.31$     | $ 1.28$     | $ 0.69$     | $ 0.69$     | $ 0.43$   | $ 0.98$   | $ 1.37$      |
+|                                  |             |             |             |             |           |           |              |
+| N                                | $1297.00$   | $1297.00$   | $1293.00$   | $1292.00$   | $1282.00$ | $1291.00$ | $1299.00$    |
+|                                  |             |             |             |             |           |           |              |
+| CTL mean                         | $ 0.05$     | $ 0.05$     | $-0.02$     | $-0.02$     | $ 0.02$   | $-0.03$   | $ 0.01$      |
+|                                  | $( 0.99)$   | $( 1.01)$   | $( 0.98)$   | $( 0.96)$   | $( 0.97)$ | $( 0.96)$ | $( 0.98)$    |
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-0.00$     | $ 0.26^{*}$ | $ 0.17$     | $-0.15$     | $ 0.14$   | $ 0.09$   | $ 0.12$      |
+|                                  | $( 0.14)$   | $( 0.14)$   | $( 0.14)$   | $( 0.14)$   | $( 0.14)$ | $( 0.14)$ | $( 0.14)$    |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-0.13$     | $ 0.03$     | $ 0.09$     | $ 0.00$     | $ 0.04$   | $ 0.11$   | $ 0.02$      |
+|                                  | $( 0.12)$   | $( 0.12)$   | $( 0.12)$   | $( 0.12)$   | $( 0.12)$ | $( 0.12)$ | $( 0.12)$    |
+#+end_example
+
 ** Savings, Transfers & Credit
+   
+#+name: savings_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<savings_analysis>>
+return Table
+#+end_src
+
+Of particular note, the Non-zeros for Give Trans and Get Trans are implausible
+(right?). This also omits loans, for the moment, which are obviously important.
+
+#+RESULTS: savings_results
+|                                  | Food Sav      | Get Trans     | Give Trans    | LandCult      | LandOwn       | Savings       |
+|----------------------------------+---------------+---------------+---------------+---------------+---------------+---------------|
+| 2014                             | $ 1.00^{***}$ | $ 0.50^{***}$ | $ 0.50^{***}$ | $ 0.83^{***}$ | $ 0.82^{***}$ | $ 0.43^{***}$ |
+|                                  | $( 0.02)$     | $( 0.00)$     | $( 0.02)$     | $( 0.06)$     | $( 0.05)$     | $( 0.04)$     |
+| 2015                             | $ 0.82^{***}$ | $ 0.50^{***}$ | $ 0.50^{***}$ | $ 0.77^{***}$ | $ 0.84^{***}$ | $ 0.39^{***}$ |
+|                                  | $( 0.02)$     | $( 0.00)$     | $( 0.02)$     | $( 0.05)$     | $( 0.05)$     | $( 0.04)$     |
+| Bsln2013                         | $ $           | $ 0.50^{***}$ | $ 0.51^{***}$ | $ 0.05$       | $ 0.07$       | $ 0.05$       |
+|                                  |               | $( 0.00)$     | $( 0.02)$     | $( 0.05)$     | $( 0.04)$     | $( 0.04)$     |
+| Bsln_NAN                         | $ $           | $ 0.50^{***}$ | $ 0.49^{***}$ | $ 0.05$       | $ 0.05$       | $ 0.08^{*}$   |
+|                                  |               | $( 0.00)$     | $( 0.01)$     | $( 0.06)$     | $( 0.05)$     | $( 0.04)$     |
+| CSH*2014                         | $ 0.00$       | $ 0.00$       | $-0.00$       | $-0.04$       | $-0.01$       | $-0.06$       |
+|                                  | $( 0.04)$     | $( 0.00)$     | $( 0.03)$     | $( 0.04)$     | $( 0.04)$     | $( 0.06)$     |
+| CSH*2015                         | $ 0.02$       | $-0.00$       | $-0.00$       | $ 0.05$       | $ 0.02$       | $ 0.03$       |
+|                                  | $( 0.04)$     | $( 0.00)$     | $( 0.04)$     | $( 0.04)$     | $( 0.04)$     | $( 0.05)$     |
+| TUP*2014                         | $-0.02$       | $-0.00$       | $-0.03$       | $-0.03$       | $-0.00$       | $ 0.22^{***}$ |
+|                                  | $( 0.03)$     | $( 0.00)$     | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     | $( 0.04)$     |
+| TUP*2015                         | $-0.03$       | $-0.00$       | $-0.04$       | $ 0.01$       | $-0.01$       | $ 0.21^{***}$ |
+|                                  | $( 0.03)$     | $( 0.00)$     | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     | $( 0.04)$     |
+| F-stat                           | $15.60$       | $-41.33$      | $ 0.60$       | $ 0.79$       | $ 0.76$       | $ 8.83$       |
+|                                  |               |               |               |               |               |               |
+| N                                | $870.00$      | $255.00$      | $161.00$      | $1231.00$     | $1251.00$     | $1259.00$     |
+|                                  |               |               |               |               |               |               |
+| CTL mean                         | $ 0.82$       | $ 1.00$       | $ 1.00$       | $ 0.82$       | $ 0.90$       | $ 0.45$       |
+|                                  |               |               |               |               |               |               |
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-0.04$       | $-0.00$       | $-0.02$       | $-0.07$       | $-0.02$       | $ 0.19$       |
+|                                  |               |               |               |               |               |               |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-0.05$       | $-0.00$       | $-0.03$       | $-0.03$       | $-0.03$       | $ 0.18$       |
+|                                  |               |               |               |               |               |               |
+
+| |Food Sav|  Get Trans|  Give Trans|  LandCult|  LandOwn|  Savings |
+|-
+| 2014 | $62.03^{***}$ | $158.29^{***}$ | $86.25^{*}$ | $11.37$ | $17.31^{**}$ | $106.72^{***}$ |
+| | $( 8.36)$  | $(60.54)$  | $(49.01)$  | $( 9.94)$  | $( 8.56)$  | $(24.85)$ |
+| 2015 | $114.78^{***}$ | $230.20^{***}$ | $128.32^{***}$ | $61.52^{***}$ | $51.89^{***}$ | $163.04^{***}$ |
+| | $( 7.60)$  | $(57.64)$  | $(48.03)$  | $( 9.54)$  | $( 7.88)$  | $(24.13)$ |
+| Bsln2013 | $ $ | $ 0.12$ | $ 0.02$ | $ 0.94$ | $-2.43$ | $ 0.05^{**}$ |
+| |  | $( 0.11)$  | $( 0.09)$  | $( 3.07)$  | $( 1.95)$  | $( 0.02)$ |
+| Bsln_NAN | $ $ | $ 9.52$ | $12.38$ | $-1.60$ | $-6.02$ | $40.07^{*}$ |
+| |  | $(54.22)$  | $(41.51)$  | $( 9.92)$  | $( 8.29)$  | $(21.24)$ |
+| CSH*2014 | $ 0.22$ | $17.28$ | $-61.19$ | $10.18$ | $10.50$ | $28.74$ |
+| | $(15.38)$  | $(69.66)$  | $(57.24)$  | $(15.07)$  | $(12.57)$  | $(42.93)$ |
+| CSH*2015 | $-14.34$ | $127.75$ | $17.37$ | $-39.18^{***}$ | $-32.37^{***}$ | $91.40^{**}$ |
+| | $(14.98)$  | $(78.29)$  | $(72.41)$  | $(14.90)$  | $(11.95)$  | $(40.89)$ |
+| TUP*2014 | $17.16$ | $10.09$ | $32.65$ | $-4.76$ | $-3.02$ | $-27.09$ |
+| | $(12.33)$  | $(57.23)$  | $(43.79)$  | $(11.94)$  | $(10.04)$  | $(29.76)$ |
+| TUP*2015 | $ 1.13$ | $23.23$ | $-41.12$ | $-17.38$ | $-12.56$ | $81.33^{***}$ |
+| | $(12.26)$  | $(58.46)$  | $(50.57)$  | $(11.65)$  | $( 9.41)$  | $(29.32)$ |
+| F-stat | $ 7.14$ | $ 1.53$ | $ 0.63$ | $ 4.91$ | $ 3.72$ | $ 7.41$ |
+| |  |  |  |  |  | |
+| N | $777.00$ | $255.00$ | $159.00$ | $1042.00$ | $1114.00$ | $671.00$ |
+| |  |  |  |  |  | |
+| CTL mean | $114.78$ | $245.08$ | $138.40$ | $61.88$ | $46.00$ | $191.19$ |
+| |  |  |  |  |  | |
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $31.50$ | $-117.66$ | $15.28$ | $34.42$ | $29.35$ | $-118.49$ |
+| |  |  |  |  |  | |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $15.47$ | $-104.51$ | $-58.49$ | $21.79$ | $19.80$ | $-10.07$ |
+| |  |  |  |  |  | |
+#+end_example
+
+
+
+
 * Discussion                                                            :ethan:
 ** Differences across treatments
 ** 
@@ -87,6 +283,7 @@
 * COMMENT Code Appendix
 
 ** Analysis
+   
 *** Consumption
 
 #+name: consumption_analysis
@@ -105,7 +302,7 @@ year = ['c_clothesfootwear', 'c_womensclothes', 'c_childrensclothes', 'c_shoes',
 
 normalize = {3:food, 30:month, 360:year}
 
-D = full_data(normalize=normalize)
+D = full_data(File=File, normalize=normalize)
 
 C, HH, T = consumption_data(D, how="long")
 C = C.join(T, how="left")
@@ -164,6 +361,375 @@ SE = SE.append(diff_se)
 tab = df_to_orgtbl(results, sedf=SE)
 #+END_SRC
 
+*** Assets
+    
+#+name: asset_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle Endline_analysis.py
+<<Imports>>
+<<TUP Utilities>>
+D = full_data(File=File, balance=[])
+
+Outcomes = ["Total", "Productive"]
+Aval2013 = asset_vars(D,year=2013)[0][Outcomes]
+Aval2014 = asset_vars(D,year=2014)[0][Outcomes]
+Aval2015 = asset_vars(D,year=2015)[0][Outcomes]
+
+#$\approx$ Creates Year dummies and baseline values as `var'2013
+for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+    Aval["Year"]=Year
+    for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+Vals = Vals.join(D[["TUP","CSH"]])
+Vals["CTL"] = (Vals["TUP"]+Vals["CSH"] ==0).apply(int)
+
+for group in ("TUP", "CSH"):
+    for year in ("2013", "2014", "2015"):
+        Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+#~ Make graph of distribution
+stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
+Vals["Group"] = stringify("TUP")+stringify("CSH")+stringify("CTL")
+for var in ("Total","Productive"):
+   fig,ax = plt.subplots(1,2)
+   for i,yr in enumerate((2014,2015)):
+       Vals.ix[yr].dropna(subset=[[var,"TUP","CSH","CTL"]]).groupby("Group")[var].plot(kind="kde",ax=ax[i])
+       ax[i].set_title("{} Asset Value in {}".format(var,yr))
+       ax[i].legend()
+       #~ ax[i].set_aspect(1)
+       ax[i].set_xlim(left=0)
+   plt.savefig("../figures/Asset{}_kde.png".format(var))
+   plt.clf()
+
+Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+
+#$\approx$ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+Vals=Vals.loc[2014:2015]
+regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+CTL = Vals["TUP"]+Vals["CSH"] ==0
+CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+for var in Outcomes:
+    ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+    diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+results = results.append(diff)
+SE = SE.append(diff_se)
+
+tab = df_to_orgtbl(results, sedf=SE)
+#+end_src
+
+*** Income
+
+Note that topcoding has a large effect on the distribution here, and we see only a small (presumably non-random) portion of actual income for each household.
+
+#+name: income_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+<<Imports>>
+<<TUP Utilities>>
+
+# Top-Code or censor outliers?
+def topcode(var, Nstd=3, drop=False):
+    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
+    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
+    return var
+
+D = full_data(balance=[])
+keep = D.index
+
+I_file = '../../data/Endline/sections_8_17.dta'
+I = stata.read_stata(I_file).rename(columns={"id":"HH"}).set_index("HH", drop=True).ix[keep]
+
+#~Getting non-agriculture income data is easy
+I = I.filter(regex="^s16")
+Imonths    = I.filter(regex="s16_\dc").rename(columns=lambda x: x[:-1])
+Ipermonth  = I.filter(regex="s16_\dd").rename(columns=lambda x: x[:-1])
+Income_12m = Imonths.mul(Ipermonth).sum(axis=1)
+Iyear      = I.filter(regex="s16_\de").rename(columns=lambda x: x[:-1]).sum(axis=1)
+
+A_file = "../../data/Endline/Agriculture_cleaned.dta"
+A = stata.read_stata(A_file).rename(columns={"id":"HH"}).set_index("HH",drop=False).ix[keep]
+unit_prices = A.groupby(["harvest_type", "harvest_price_unit"])["harvest_price"].median()
+prices = unit_prices.loc[zip(A["harvest_type"],A["harvest_price_unit"])]
+A["price"]=list(prices)
+
+A["harvest_unit_match"] = A["harvest_price_unit"] == A["harvest_unit"]
+A["price"] = A["harvest_unit_match"]*A["harvest_price"] + (1-A["harvest_unit_match"])*A["price"]
+
+A["income_farm_year"] = A["harvest_size"]*A["price"]
+Ayear = A.groupby("HH")["income_farm_year"].sum()
+
+unit_prices = A.groupby(["livestock_type", "livestock_price_unit"])["livestock_price"].median()
+prices = unit_prices.loc[zip(A["livestock_type"],A["livestock_price_unit"])]
+A["price"]=list(prices)
+A["livestock_unit_match"] = A["livestock_price_unit"] == A["livestock_unit"]
+A["price"] = A["livestock_unit_match"]*A["livestock_price"] + (1-A["livestock_unit_match"])*A["price"]
+
+A["income_livestock_year"] = A["livestock_size"]*A["price"]
+Lyear = A.groupby("HH")["income_livestock_year"].sum()
+
+Outcomes = ["Total", "Non-Farm", "Farm",  "Livestock"]
+Controls = ["cons", "TUP","CSH"]
+Vals = pd.DataFrame({"Non-Farm": Income_12m, "Farm":Ayear, "Livestock":Lyear})
+Vals = Vals.apply(topcode)
+
+Vals["Total"] = Vals.sum(axis=1)
+Vals["cons"] = 1.
+
+Vals = Vals.join(D[["TUP","CSH"]])
+Vals["CTL"] = (Vals["TUP"]+Vals["CSH"] ==0).apply(int)
+
+#~ Make graph of distribution
+stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
+Vals["Group"] = stringify("TUP")+stringify("CSH")+stringify("CTL")
+Vals.dropna(subset=[["Total","TUP","CSH","CTL"]]).groupby("Group")["Total"].plot(kind="kde")
+plt.title("Total Income Distribution by Group")
+plt.savefig("../figures/IncomeDistribution.png")
+
+regs = {var: sm.OLS(Vals[var], Vals[Controls], missing="drop").fit() for var in Outcomes}
+results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+CTL = Vals["CTL"] 
+CTLmean = Vals.query("Group=='CTL'").mean().ix[Outcomes]
+CTLsd = Vals.query("Group=='CTL'").std().ix[Outcomes]
+diff, diff_se = pd.DataFrame(CTLmean,columns=["CTL mean"]).T, pd.DataFrame(CTLsd,columns=["CTL mean"]).T
+
+for var in Outcomes:
+    ttest1= regs[var].t_test("TUP - CSH = 0").summary_frame()
+
+    diff.loc[   r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    diff_se.loc[r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+results = results.append(diff)
+SE = SE.append(diff_se)
+
+tab = df_to_orgtbl(results, sedf=SE)
+
+#+end_src
+
+*** Food Security
+
+ #+name: foodsecure_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ <<Imports>>
+ <<TUP Utilities>>
+
+ D = full_data(balance=[])
+
+ codes = {"1-2 times a week": 3,
+         "3-6 times a week": 2,
+         "Everyday": 1,
+         "everyday": 1,
+         "Less than once a week": 4,
+         "less than once a week": 4,
+         "Never": 5,
+         "never": 5}
+
+ recode = lambda x: codes.setdefault(x,x)
+
+ Aval2013 = D.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Aval2014 = D.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Aval2015 = D.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
+
+ index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
+ Outcomes = index_vars+["z-score"]
+ #~ Creates Year dummies, z-scores and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     for var in index_vars:
+        Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
+     FS_sum = Aval[index_vars].sum(axis=1)
+     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+   
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["TUP","CSH"]])
+
+ for group in ("TUP", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+ Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
+
+*** Savings
+    
+#+name: savings_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+<<Imports>>
+<<TUP Utilities>>
+
+# Top-Code or censor outliers?
+def topcode(var, Nstd=3, drop=False):
+    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
+    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
+    return var
+
+D = full_data(balance=[])
+
+Sav = pd.DataFrame(index=D.index) #~ Set up empty DataFrame to fill
+
+years = [("_b",2013), ("_m",2014), ("_e", 2015)]
+for suff,year in years: #~ Make Aggregate savings and land holding variables
+    Sav["Savings{}".format(year)]  = D.filter(regex="^savings_(home|bank|BRAC|NGOs|other){}".format(suff)).sum(1)
+    Sav["Food Sav{}".format(year)] = D.filter(regex="^savings_(maize|sorghum|otherfood)_val{}".format(suff)).sum(1)
+
+    Sav["LandCult{}".format(year)] = D.filter(regex="^land_(owncult|rentcult|communitycult){}".format(suff)).sum(1)
+    Sav["LandOwn{}".format(year)]  = D.filter(regex="^land_own.*{}".format(suff)).sum(1)
+
+    Sav["Get Trans{}".format(year)]  = D.filter(regex="^transfers_get.*{}".format(suff)).sum(1)
+    Sav["Give Trans{}".format(year)] = D.filter(regex="^transfers_give.*{}".format(suff)).sum(1)
+
+Outcomes = ["Savings","Food Sav","LandCult","LandOwn", "Get Trans", "Give Trans"] #~ Loans give/received omitted
+
+by_year = []
+for yr in ("2013","2014","2015"): #~ Provide Baseline Values & put in long format
+    S_Year = Sav.filter(like=yr).rename(columns=lambda x:x[:-4])
+    for var in Outcomes: 
+        if var+"2013" in Sav: S_Year[var+"2013"] = Sav[var+"2013"]
+    #~ Note that adding "Year" has to come after topcode, which switches strings to Nan...
+    S_Year["Year"] = yr
+    by_year.append(S_Year)
+
+#~ In long format with Year,HH index
+Sav = pd.concat(by_year).reset_index().set_index(["Year", "HH"], drop=False)
+#~ Make Year Dummies for fixed effects
+
+
+Sav = Sav.join(pd.get_dummies(Sav["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+Sav = Sav.drop(["HH","Year"],1)
+Sav = Sav.join(D[["TUP","CSH"]])
+
+for group in ("TUP", "CSH"): #~ Make Treatment-by-year interactions
+    for year in ("2013", "2014", "2015"):
+        Sav["{}*{}".format(group,year)] = Sav[group]*Sav[year]
+
+def isPositive(i):
+    #~ Returns 1 if number is positive, 0 if number<=0, nan if already nan, and self if string.
+    #~ Note that it's safe to run dummy variables through.
+    try:
+        if np.isnan(i): return i
+        else: return float(i>0)
+    except TypeError: return i
+
+too_many_null = 30
+Nonzero = Sav.applymap(isPositive)
+
+#~ Naturally, only do this after Creating Nonzero dataframe.
+for var in Outcomes: #~ Set zeros to missing And topcode among non-zero values
+    for outcome in (var,var+"2013"):
+       if outcome in Sav:
+           Sav[outcome] = Sav[outcome].replace(0,np.nan)
+           Sav[outcome] = Sav.groupby(level="Year")[outcome].apply(topcode) #~ (Untested)
+
+many_null = [item for item in Sav if Sav[item].notnull().sum()<too_many_null]
+Sav = Sav.drop(many_null,1).copy()
+
+Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+
+Sav = Sav.loc["2014":"2015"]
+Nonzero = Nonzero.loc["2014":"2015"]
+Sav_regs = regressions(Sav,     outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+Zer_regs = regressions(Nonzero, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+Sav_results, Sav_SE  = reg_table(Sav_regs,  resultdf=True,table_info=["N","F-stat"])
+Zer_results, Zer_SE  = reg_table(Zer_regs,  resultdf=True,table_info=["N","F-stat"])
+
+CTL = Sav["TUP"]+Sav["CSH"] ==0
+#~ Get control group means and standard deviations
+Sav_CTLmean = {var: Sav[CTL].loc["2015",var].mean() for var in Outcomes}
+Zer_CTLmean = {var: Nonzero[CTL].loc["2015",var].mean() for var in Outcomes}
+Sav_CTLsd = {var: Sav[CTL].loc["2015",var].std() for var in Outcomes}
+Zer_CTLsd = {var: Nonzero[CTL].loc["2015",var].std() for var in Outcomes}
+Sav_diff, Sav_diff_se = pd.DataFrame(Sav_CTLmean,index=["CTL mean"]), pd.DataFrame(Sav_CTLsd,index=["CTL mean"])
+Zer_diff, Zer_diff_se = pd.DataFrame(Zer_CTLmean,index=["CTL mean"]), pd.DataFrame(Zer_CTLsd,index=["CTL mean"])
+
+for var in Outcomes:
+    #~ Savings regressions first
+    ttest1= Sav_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Sav_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+    Sav_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Sav_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    Sav_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Sav_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+    #~ Nonzero regressions second
+    ttest1= Zer_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Zer_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+    Zer_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Zer_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    Zer_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Zer_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+Land = ["LandCult","LandOwn"] 
+Savings = ["Savings","Food Sav", "Get Trans", "Give Trans"] 
+
+Save_results = Sav_results.append(Sav_diff)
+Zero_results = Zer_results.append(Zer_diff)
+Save_SE = Sav_SE.append(Sav_diff_se)
+Zero_SE = Zer_SE.append(Zer_diff_se)
+
+#~ Land_results = Sav_results[Land]
+#~ zLan_results = Zer_results[Land]
+#~ Land_SE = Sav_SE[Land]
+#~ zLan_SE = Zer_SE[Land]
+#~ 
+#~ Sav_results = Sav_results[Savings]
+#~ Zer_results = Zer_results[Savings]
+#~ Sav_SE =           Sav_SE[Savings]
+#~ Zer_SE =           Zer_SE[Savings]
+
+Save_tab = df_to_orgtbl(Save_results, sedf=Sav_SE)
+Zero_tab = df_to_orgtbl(Zero_results, sedf=Zer_SE)
+
+Table = Zero_tab +"\n"+ Save_tab
+#+end_src
+
 ** Reading and Cleaning
    
 #+name: Imports
@@ -175,10 +741,21 @@ import statsmodels.api as sm
 from matplotlib import pyplot as plt
 #+end_src
 
+*TUP Utilities* contains: 
+
+- full_data(), a function to read in the data and move it to long format
+- consumption_data(), which takes df=full_data() and returns consumption data in long
+  format and cleaned (normalized, topcoded, etc.)
+- regressions(), which takes a list of outcomes, a list of controls, and if
+  specified, lagged values of each outcome and returns an {"outcome":sm.OLS} dictionary
+- reg_table() takes regressions() and returns a statsmodels or org table of results.
+- asset_vars(), which takes full_data() and returns aggregated asset holding
+  variables from a given year
+
 #+name: TUP Utilities
 #+begin_src python :dir ../analysis :noweb no-export :results silent 
-
-def full_data(File="../data/TUP_full.dta", balance = [],normalize=True):
+File = "../../data/TUP_full.dta"
+def full_data(File="../../data/TUP_full.dta", balance = [],normalize=True):
     """
     Reads in TUP_full.dta, the full dataset after the cleaning in stata (which is where most of the variable selection happen
     If you need a variable not in TUP_full, include it in the keep command in `year'_cleanup.do and re-run TUP_merge.do)
@@ -467,6 +1044,54 @@ def df_to_orgtbl(df,tdf=None,sedf=None,float_fmt='%5.2f'):
                 s+=entry 
             s+='|\n'
         return s
+
+def asset_vars(D, year=2014, append=False,logs = False, topcode_prices=3, output=False):
+    """
+    Construct asset variables for year:
+        Total asset value
+        Total productive asset value
+    Note: value colums have format asset_val_{good}, quantity colums have format asset_n_{good}
+    topcode_prices --> If inferred price (val/n) is >mean+3sigma, set to mean+3sigma
+    TODO: Rename all columns to be the same in An, Aval, price
+    """
+    A = D.filter(regex="^asset_")
+    #~ Some assets to ignore, either because numbers turned out to be more or less meaningless, or because they overlap (e.g. nets & ITN nets)
+    A.drop([col for col in A.columns if any([good in col for good in ('house','homeste','ITN')])], axis=1,inplace=True)
+    if year==2014:   A=A.filter(regex="_m$").rename(columns=lambda col: col[:-2])
+    elif year==2013: A=A.filter(regex="_b$").rename(columns=lambda col: col[:-2])
+    elif year==2015: A=A.filter(regex="_e$").rename(columns=lambda col: col[:-2])
+    An = A.filter(like='_n_').rename(columns=lambda col: col[8:])
+    Aval = A.filter(like='_val_').rename(columns=lambda col: col[10:]) 
+    price = Aval.divide(An)
+    if topcode_prices: #~ Made necessary by a very long right tail.
+        for good in price.columns:
+            x = price[good]
+            top = x.mean()+topcode_prices*x.std()
+            x[x>top]=top
+            price[good]=x
+            Aval[good]=(x*An[good])
+    #~ Make aggregate Assets & Productive Assets
+
+    if year>2013:
+        Aval['poultry']=Aval[['chickens','ducks']].sum(axis=1)
+        An['poultry']=An[['chickens','ducks']].sum(axis=1)
+                
+    if output:
+        Aval.to_pickle('/tmp/asset_values_%s.df' % year)    
+        An.to_pickle('/tmp/asset_count_%s.df' % year)    
+    Aval['Total'.format(year)] = Aval.sum(axis=1)
+    if year>2013:
+        productive=['cows', 'smallanimals', 'chickens', 'ducks', 'plough', 'shed', 'shop', 'pangas', 'axes', 'mobile', 'carts', 'sewing']
+        Aval['Productive'.format(year)] = Aval[productive].sum(axis=1)
+    elif year==2013:
+        productive=['cows', 'smallanimals', 'poultry', 'plough', 'shed', 'shop', 'mobile', 'carts', 'sewing']
+        Aval['Productive'.format(year)] = Aval[productive].sum(axis=1)
+
+    if logs: Aval,An,price = map(lambda x: np.log(x.replace(0,np.e)), (Aval,An,price) )
+
+    if append: D = D.merge(price, right_index=True, left_index=True)
+
+    return Aval,An,price
 
 
 #+end_src
