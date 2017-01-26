@@ -1,0 +1,12 @@
+*.pyc
+*#
+*.log
+*/auto/*.el
+*.aux
+*.log
+*.blg
+*.bst
+*.dvi
+*.out
+*.pyg
+auto/

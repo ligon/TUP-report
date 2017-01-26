@@ -1,0 +1,34 @@
+:SETUP:
+#+LATEX_HEADER_EXTRA: \usepackage{stringstrings}\renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
+:END:
+#+TITLE: Key Findings of BRAC-SS TUP RCT
+#+AUTHOR: Reajul Chowdhury and Elliott Collins and Ethan Ligon and Kaivan Munshi
+
+** Introduction
+
+** Interventions
+
+** Evaluation Design
+
+** Key Findings
+
+*** Asset Holdings
+
+*Main Result*
+    
+*** Income
+
+*Main Result*
+
+*** Consumption
+
+*Main Result*
+
+*** Food Security
+
+*Main Result*
+
+
+** Policy Implications
+
+** Conclusion
