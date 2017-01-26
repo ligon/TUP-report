@@ -115,8 +115,7 @@ return tab
    
 These income results are not yet fully reliable. Income was determined as the product
 of price and quantity measures, and where not given, we used the median stated prices
-for a given unit of a given good. This procedure is likely error prone and warrants
-further quality checks.
+for a given unit of a given good. 
 
 Note that topcoding has a large effect on the distribution here. The control group in
 2015 has a measured income of roughly 4325 SSP per year, or roughly $540 US (assuming
