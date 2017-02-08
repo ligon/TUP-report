@@ -9,4 +9,5 @@
 *.dvi
 *.out
 *.pyg
+.DS*
 auto/

@@ -249,7 +249,7 @@ def process_data(*args, **kwargs):
         C, HH, T = consumption_data(D, how="wide")
 
     #~ Get location variables for each (Just neighborhood dummies)
-    L = pd.read_csv('../data/csv/checklist_withLocations20150605.csv')
+    L = pd.read_csv('../../data/csv/Locations.csv')
     L = L.rename(columns={'RespID':'HH'}).set_index('HH')['Location'].apply(lambda x: x.lower())
 
     #~ Delete items with too many zeros
