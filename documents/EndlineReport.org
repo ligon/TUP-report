@@ -500,7 +500,6 @@ transfers respectively, with no difference in group means.
 return Table
 #+end_src
 
-
 #+name: tab:Nonzero
 #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access 
 #+attr_latex: :environment longtable :align lrrrrrrr
@@ -537,11 +536,11 @@ return Table
 #+name: tab:Savings
 #+caption: Average treatment effects by group-year on total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
 #+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+----------------|----------------+----------------+----------------|
+|----------------------------------+----------------+----------------+----------------+----------------|
 | Amt.                             | Savings        | Food Sav       | LandCult       | LandOwn        |
-|----------------------------------+----------------|----------------+----------------+----------------|
+|----------------------------------+----------------+----------------+----------------+----------------|
 | CTL mean                         | $191.19$       | $114.78$       | $61.88$        | $46.00$        |
-|----------------------------------+----------------|----------------+----------------+----------------|
+|----------------------------------+----------------+----------------+----------------+----------------|
 | CSH*2014                         | $28.74$        | $ 0.22$        | $10.18$        | $10.50$        |
 |                                  | $(42.93)$      | $(15.38)$      | $(15.07)$      | $(12.57)$      |
 | CSH*2015                         | $91.40^{**}$   | $-14.34$       | $-39.18^{***}$ | $-32.37^{***}$ |
@@ -558,13 +557,13 @@ return Table
 |                                  | $( 0.02)$      |                | $( 3.07)$      | $( 1.95)$      |
 | Bsln_NAN                         | $40.07^{*}$    |                | $-1.60$        | $-6.02$        |
 |                                  | $(21.24)$      |                | $( 9.92)$      | $( 8.29)$      |
-|----------------------------------+----------------|----------------+----------------+----------------|
+|----------------------------------+----------------+----------------+----------------+----------------|
 | $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-118.49$      | $31.50$        | $34.42$        | $29.35$        |
 | $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-10.07$       | $15.47$        | $21.79$        | $19.80$        |
-|----------------------------------+----------------|----------------+----------------+----------------|
+|----------------------------------+----------------+----------------+----------------+----------------|
 | F-stat                           | $ 7.41$        | $ 7.14$        | $ 4.91$        | $ 3.72$        |
 | N                                | $671.00$       | $777.00$       | $1042.00$      | $1114.00$      |
-|----------------------------------+----------------|----------------+----------------+----------------|
+|----------------------------------+----------------+----------------+----------------+----------------|
 
 
 *** Land Holdings
@@ -1203,14 +1202,15 @@ for var in Outcomes: #~ Set zeros to missing And topcode among non-zero values
            Sav[outcome] = Sav[outcome].replace(0,np.nan)
            Sav[outcome] = Sav.groupby(level="Year")[outcome].apply(topcode) #~ (Untested)
 
-many_null = [item for item in Sav if Sav[item].notnull().sum()<too_many_null]
-many_null2 =[item for item in Savings if Savings[item].notnull().sum()<too_many_null]
+many_null = [item for item in Sav if Sav[item].count()<too_many_null]
+many_null2 =[item for item in Savings if Savings[item].count()<too_many_null]
 Sav = Sav.drop(many_null,1).copy()
 Savings = Savings.drop(many_null,1).copy()
 
 Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
 
 Sav = Sav.loc["2014":"2015"]
+Savings = Savings.loc["2014":"2015"]
 Nonzero = Nonzero.loc["2014":"2015"]
 Sav_regs = regressions(Sav,     outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
 Zer_regs = regressions(Nonzero, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
@@ -1714,7 +1714,6 @@ This code does not yet work in this file. Come back to it...
   # Normalize log lambdas
   l=myl/myl.std()
 #+END_SRC
-
 
 #+name: residuals_by_group
 #+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
