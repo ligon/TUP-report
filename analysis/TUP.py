@@ -18,12 +18,12 @@ def Range(*args):
     try: return(xrange(*args))
     except NameError: return(range(*args))    
 
-def items(dct):
+def Items(dct):
     """ Silly Python3 compatability stuff"""
     try: return(dct.iteritems())
     except AttributeError: return(dct.items())    
-    
-def full_data(File="../../data/TUP_full.dta", balance = [],normalize=True):
+   
+def full_data(File="TUP_full.dta",DIR="../../data/", balance = [],normalize=True, locations=True):
     """
     Reads in TUP_full.dta, the full dataset after the cleaning in stata (which is where most of the variable selection happen
     If you need a variable not in TUP_full, include it in the keep command in `year'_cleanup.do and re-run TUP_merge.do)
@@ -35,13 +35,23 @@ def full_data(File="../../data/TUP_full.dta", balance = [],normalize=True):
     balance: 
         Enforces balance of households across the panel consisting of the years speficied in `balance'
         (any of ['Base','Mid','End'])
+    NEW: Pulls in and includes location variables (but does not set them as an index)
 
     Returns D
     """
-    Df = stata.read_stata(File)
+    File = DIR+File
+    if "csv" in File:   Df = pd.read_csv(File)
+    elif "dta" in File: Df = stata.read_stata(File)
+    else:               Df = pd.read_pickle(File)
     Df.rename(columns={'idno':'HH', "Control":"CTL", "Cash":"CSH"},inplace=True)
     Df.set_index("HH",inplace=True,drop=False)
     for t in ['CTL','CSH','TUP']: Df[t].fillna(0,inplace=True)
+    #~ 114 households are not listed as being in any group...
+    #~ Several of these are also in the baseline survey, so would have been in the randomization file...
+    #~ Those *not* in the baseline are potentially a non-random sample, what with differential attrition.
+    #~ CTL2 includes all non-treatment households as controls. Importantly, so does any regression including a constant instead of a saturated model approach
+    Df["CTL2"] = 1-Df[["TUP","CSH"]].sum(1)
+
     #~ Organize merge and attrition variables
     mergedict = {'master only (1)':  1, 'using only (2)':  2, 'matched (3)':  3}
     for col in Df.filter(like='merge_').columns:
@@ -51,26 +61,29 @@ def full_data(File="../../data/TUP_full.dta", balance = [],normalize=True):
     Df['Mid']  =  Df['merge_midline']>1
     Df['End']  =  Df['merge_endline']>1
 
-    if normalize:
-        try: len(normalize)
-        except TypeError:
+    if normalize:           #~ Set consumption variables to their daily values
+        try: len(normalize) #~ Check if a dictionary was passed
+        except TypeError:   #~ Otherwise make the obvious one
             food = ['c_cereals', 'c_maize', 'c_sorghum', 'c_millet', 'c_potato', 'c_sweetpotato', 'c_rice', 'c_bread', 'c_beans', 'c_oil', 'c_salt', 'c_sugar', 'c_meat', 'c_livestock', 'c_poultry', 'c_fish', 'c_egg', 'c_nuts', 'c_milk', 'c_vegetables', 'c_fruit', 'c_tea', 'c_spices', 'c_alcohol', 'c_otherfood']
             month = ['c_fuel', 'c_medicine', 'c_airtime', 'c_cosmetics', 'c_soap', 'c_transport', 'c_entertainment', 'c_childcare', 'c_tobacco', 'c_batteries', 'c_church', 'c_othermonth']    
             year = ['c_clothesfootwear', 'c_womensclothes', 'c_childrensclothes', 'c_shoes', 'c_homeimprovement', 'c_utensils', 'c_furniture', 'c_textiles', 'c_ceremonies', 'c_funerals', 'c_charities', 'c_dowry', 'c_other']    
             normalize = {3:food, 30:month, 360:year}
-    for col in Df.columns:
-        for window, category in items(normalize):
-            try:
-                if col[:-2] in category:   Df[col] /= window
-            except KeyError: print("{} not in Df".format(col)    )
+        for col in Df.columns: #~ And actually normalize consumption variables to daily values
+            for window, category in Items(normalize):
+                try:
+                    if col[:-2] in category:   Df[col] /= window
+                except KeyError: print("{} not in Df".format(col))
     
-    #~ Remove these for Endline!!! You have disaggregate versions of these for the mid-to-end comparison
-    Df.drop(["c_cereals_e","c_meat_e"],axis=1, inplace=True) #~ , "c_cereals_m","c_meat_m"
+    #~ Df.drop(["c_cereals_e","c_meat_e"],axis=1, inplace=True) #~ , "c_cereals_m","c_meat_m"
     D  = Df[Df[balance].all(axis=1)] 
+    if locations:
+        L = pd.read_csv(DIR+"Locations.csv").rename(columns={"RespID":"HH"}).set_index("HH")["Location"]
+        D = D.drop("location_b",1).join(L,how="left")
+    else: D["Location"]=1.
     del Df
     return D
 
-def consumption_data(D, how="long", hh_vars=["hh_size","child_total"], goods_from_years=[]):
+def consumption_data(D, include2016=False, how="long", hh_vars=["hh_size","child_total"], goods_from_years=[],WRITE=False,use_dates=False):
     """
         Takes the DataFrame D from full_data()
 
@@ -89,14 +102,23 @@ def consumption_data(D, how="long", hh_vars=["hh_size","child_total"], goods_fro
         balance: Base, Mid, and End-- Drops to balance on all years in list.
             If estimation is restricted to 1 or 2 years, don't drop those just missing in unused years.
         goods_from_years: Any year in ["Base", "Mid", "End"]; returns C with the intersection of consumption categories from all years in list.
-    """
+        include2016: calls mobile_data() and concatenates that information into C and HH
+            IF include2016, then use_dates decides if each wave is indexed separately or if they're duplicately indexed as "2016"
+
+   """
     #~ Read in and clean up full data
 
-    C  = D.filter(regex='^c_')
-    HH = D.filter([i for i in D.columns if any(j in i for j in hh_vars)]) #~ Convoluted, but includes all specified hh_vars w/ any suffix
+    def newdf(vars,D,index=["HH","Location"]):
+        X=D.drop(D.index.names,1).reset_index().copy()
+        if type(vars)==str: df=X.filter(regex=vars).join(X[index]).set_index(index)
+        else:               df=X[vars+index].set_index(index)
+        return df
+    
+    C  = newdf("^c_",D)
+    HH = newdf([i for i in D.columns if any(i.startswith(j) for j in hh_vars)],D) #~ Includes all specified hh_vars w/ any suffix
 
     #~ Balance expenditure categories across years in "goods_from_years" (Options)
-    suffix = {'Base':'_b','Mid':'_m','End':'_e'}
+    suffix = {"Base":'_b',"Mid":'_m',"End":'_e'}
     
     if goods_from_years: #~ Chosen to balance included expenditure categories across years
         #~ If specified "Base" or "End" switch to suffixes
@@ -110,35 +132,97 @@ def consumption_data(D, how="long", hh_vars=["hh_size","child_total"], goods_fro
         #~ Dealing with this hideous subscript notation that I'll try to phase out at some point.
         C = C.filter(regex="|".join(keep_goods))
 
-    C.to_pickle('/tmp/ss-consumption.df')
-
     if how=="long":
     ####~ Reshape Consumption Data ~####
-        #~ Cs breaks C down by year (by checking suffixes via regex), removes the suffix
-        Cs = [C.filter(regex='_{}$'.format(year)).rename(columns=lambda i: i[:-2]) for year in list('bme')]
-        for i in Range(len(Cs)):
-            #~ Then specify year
-            Cs[i]['Year']=2013+i
-            #~ Re-insert HH id
-            Cs[i]['HH']=D['HH']
-        #~ And concat into long form
-        C = pd.concat(Cs)
-
-        #~ Reshape Household Data (Same dance as above)
+        #~ Cs breaks C down by year (by checking suffixes via regex), removes the suffix *AND* prefix
+        Cs = [C.filter(regex='_{}$'.format(year)).rename(columns=lambda i: i[2:-2]) for year in list('bme')]
         HHs = [HH.filter(regex='_{}$'.format(year)).rename(columns=lambda i: i[:-2]) for year in list('bme')]
-        for year in Range(len(HHs)):
+        for i in Range(len(Cs)):
+            Cs[i]['Year']=2013+i
             HHs[i]['Year']=2013+i
-            HHs[i]['HH']=D['HH']
-        HH = pd.concat(HHs)
+        C = pd.concat(Cs).set_index("Year", append=True).reorder_levels([0,2,1])
+        HH = pd.concat(HHs).set_index("Year", append=True).reorder_levels([0,2,1])
         del Cs
         del HHs
-
-        C.set_index(["Year","HH"],  inplace=True, drop=True)
-        HH.set_index(["Year","HH"], inplace=True, drop=True)
+        if include2016:
+            M,Mc,Mhh = mobile_data(use_dates=use_dates)
+            Mc = Mc.groupby(level=['HH'])
+            HH=pd.concat([HH, Mhh])
+            C=pd.concat([C, Mc])
 
     T = D[['HH','CTL','CSH','TUP']].set_index("HH", drop=True)
     
+    if WRITE=="csv":
+        C.to_csv('/tmp/ss-consumption{}.csv'.format(str("_wide"*bool(how!="long"))))
+        HH.to_csv('/tmp/ss-hh{}.csv'.format(str("_wide"*bool(how!="long"))))
+        T.to_csv('/tmp/ss-treatment{}.csv'.format(str("_wide"*bool(how!="long"))))
+   elif WRITE:
+        C.to_pickle('/tmp/ss-consumption{}.df'.format(str("_wide"*bool(how!="long"))))
+        HH.to_pickle('/tmp/ss-hh{}.df'.format(str("_wide"*bool(how!="long"))))
+        T.to_pickle('/tmp/ss-treatment{}.df'.format(str("_wide"*bool(how!="long"))))
+
     return C, HH, T
+
+def mobile_data(File="remote_survey_Nov2015_April2016.dta", use_dates=True, DIR="../../data/Mobile/", set_thresholds = False):
+
+    File = DIR+File
+    LocationsFile = DIR+"Locations.csv"
+    use_bsln =  "b" #~ "m" "e"
+    M = stata.read_stata(File)
+    M["Sell"]  = M.filter(regex="^S6_[abcd]_2").sum(1)
+    M["Buy"]   = M.filter(regex="^S7S7_[abcd]_2").sum(1)
+    M["iSell"] = (M["Sell"]>0).apply(int)
+    M["iBuy"]  = (M["Buy"]>0).apply(int)
+    VARNAMES = {"Sell":"Sell","Buy":"Buy","iSell":"iSell","iBuy":"iBuy","introDate_Int":"date", "introId_Number":"HH", "introRes_name":"Name", "introEnu_name":"Enumerator",
+            "S3S3_a":"hh_size", "S3S3_b":"child_total", "S3S3_c":"num_meals", "S4S4_a":"vegetables",
+            "S4S4_b":"sugar", "S4S4_c":"fish", "S4S4_d":"nuts", "S4S4_e":"beans",
+            "S5S5_a":"fuel", "S5S5_b":"medicine", "S5S5_c":"airtime", "S5S5_d":"cosmetics",
+            "S5S5_e":"soap", "SubmissionDate_year":"year", "SubmissionDate_month":"month", "SubmissionDate_day":"day",
+            "SubmissionDate_hour":"hour", "SubmissionDate_minute":"minute", "SubmissionDate_second":"second", "month":"monthname"}
+
+    Datename = {"November 2015":"1November", "December 2015":"2December",
+    "January 2016":"3January", "February 2016":"4February", "March 2016":"5March", "April 2016":"6April"}
+    HH_vars = ["hh_size", "child_total"]
+    ITEMS = ["vegetables", "sugar", "fish", "nuts", "beans", "fuel", "medicine", "airtime", "cosmetics", "soap"]
+    Food, Durables = ITEMS[:5], ITEMS[5:]
+
+    M = M.rename(columns=VARNAMES)[list(VARNAMES.values())]
+    M['t'] = M['monthname'].replace(Datename)
+    M = M.set_index(["t","HH"],drop=False)
+    #~ Eliminate duplicates
+    M = M.groupby(level=["t","HH"]).last()
+
+    if not set_thresholds: #~ thresholds set manually by looking for outliers graphically.
+        thresholds={'soap': 750, 'airtime': 600,
+                    'fuel': 510, 'fish': 150,
+                    'nuts': 150, 'medicine': 5000,
+                    'sugar': 500, 'cosmetics': 1100,
+                    'beans': 200, 'vegetables': 400,
+                    'hh_size': 25, 'child_total': 17}
+    else: #~ Make graphs and set thresholds manually
+        M["Total"] = M[ITEMS].sum(1)
+        thresholds={}
+        for item in ITEMS:
+            find_outliers(item,M,"Total")
+            plt.show()
+            thresholds[item]=int(Input(item+": "))
+        for item in HH_vars:
+            find_outliers(item,M)
+            plt.show()
+            thresholds[item]=int(Input(item+": "))
+    for item,thresh in Items(thresholds): #~ Topcode
+        M.loc[M[item]>thresh,item]=thresh
+    
+    L = pd.read_csv("../../data/Locations.csv").rename(columns={"RespID":"HH"}).set_index("HH")["Location"]
+    M = M.join(L,how="left")
+    if use_dates: M = M.rename(columns={"t":"Year"}) #~ ["Year"]=2016
+    else:         M["Year"]=2016
+    M = M.set_index(['HH', 'Year', 'Location'])
+    M[Food] /= 3.
+    M[Durables] /= 30.
+    Mc, Mhh = M[ITEMS], M[HH_vars]
+    return M, Mc, Mhh 
+
 
 def read_data(File="../../data/csv/TUP_full.csv",hh_vars=["hh_size","child_total"], normalize=True, balance = [], goods_from_years=[]):
     """
@@ -389,10 +473,10 @@ def reg_table(models,**kwargs):
     else:
         # Extras = lambda model: pd.Series({"N":model.nobs})
         # results = pd.DataFrame({Var:model.params.append(Extras(model)) for Var,model in items(models)})
-        results = pd.DataFrame({Var:model.params for Var,model in items(models)})
-        SEs     = pd.DataFrame({Var:model.bse    for Var,model in items(models)})
+        results = pd.DataFrame({Var:model.params for Var,model in Items(models)})
+        SEs     = pd.DataFrame({Var:model.bse    for Var,model in Items(models)})
         if table_info:
-            extras = pd.DataFrame({Var: pd.Series({name:stat(model) for name,stat in items(info_dict)}) for Var,model in items(models)})
+            extras = pd.DataFrame({Var: pd.Series({name:stat(model) for name,stat in Items(info_dict)}) for Var,model in Items(models)})
             results = results.append(extras)
         if Transpose: results, SEs = results.T, SEs.T
 
@@ -440,10 +524,15 @@ def asset_vars(D, year=2014, append=False,logs = False, topcode_prices=3, output
     Aval['Total'.format(year)] = Aval.sum(axis=1)
     if year>2013:
         productive=['cows', 'smallanimals', 'chickens', 'ducks', 'plough', 'shed', 'shop', 'pangas', 'axes', 'mobile', 'carts', 'sewing']
+        livestock=['cows', 'smallanimals', 'chickens', 'ducks']
         Aval['Productive'.format(year)] = Aval[productive].sum(axis=1)
+        Aval['Livestock'.format(year)] = Aval[livestock].sum(axis=1)
     elif year==2013:
         productive=['cows', 'smallanimals', 'poultry', 'plough', 'shed', 'shop', 'mobile', 'carts', 'sewing']
+        livestock=['cows', 'smallanimals', 'poultry']
         Aval['Productive'.format(year)] = Aval[productive].sum(axis=1)
+        Aval['Livestock'.format(year)] = Aval[livestock].sum(axis=1)
+
 
     if logs: Aval,An,price = map(lambda x: np.log(x.replace(0,np.e)), (Aval,An,price) )
 
