@@ -1009,7 +1009,9 @@ return tab
  mobile=True
 
  D = full_data()
- C, HH, T = consumption_data(D,WRITE=True,include2016=False)
+ C, HH, T = consumption_data(D,WRITE=False,include2016=False)
+ HH['log HHSIZE'] = HH["hh_size"].apply(np.log)
+ HH = HH.drop("hh_size",1)
  y,z = C.replace(0,np.nan).apply(np.log).sort_index(level=[0,1,2])[ConsumptionItems].copy(),HH.sort_index(level=[0,1,2]).copy()
  y.index.names, z.index.names = ['j','t','mkt'], ['j','t','mkt']
  keep = pd.notnull(y.index.get_level_values("mkt"))
