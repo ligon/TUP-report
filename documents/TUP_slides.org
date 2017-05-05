@@ -1,0 +1,835 @@
+:SETUP:    
+#+TITLE: Two Capital Transfers in South Sudan (2013-2015)
+#+DATE: \today
+#+AUTHOR: Elliott Collins & Ethan Ligon
+#+EMAIL: elliottmcollins@berkeley.edu
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: c:nil creator:comment d:(not LOGBOOK) date:t e:t email:nil
+#+OPTIONS: f:t inline:t num:nil p:nil pri:nil stat:t tags:t tasks:t
+#+OPTIONS: tex:t timestamp:t author:nil toc:t todo:t |:t
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+BIBLIOGRAPHY: main chicago
+#+OPTIONS: H:2 texht:t toc:nil
+#+BEAMER_COLOR_THEME:
+#+BEAMER_FONT_THEME:
+#+BEAMER_HEADER:
+#+BEAMER_INNER_THEME:
+#+BEAMER_OUTER_THEME:
+#+BEAMER_THEME: Madrid
+#+LaTeX_CLASS_OPTIONS: [t,presentation]
+#+LATEX_HEADER: \newcommand{\T}{\top}
+#+LATEX_HEADER: \newcommand{\E}{\ensuremath{\mbox{E}}}
+#+LATEX_HEADER: \renewcommand{\vec}[1]{\mathbf{#1}}
+#+LATEX_HEADER: \newcommand{\R}{\ensuremath{\mathbb{R}}}
+#+LATEX_HEADER: \newcommand{\Eq}[1]{(\ref{eq:#1})}
+#+LATEX_HEADER_EXTRA: \newtheorem{proposition}{Proposition} \newcommand{\Prop}[1]{Proposition \ref{prop:#1}}
+#+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
+:END:
+
+* A Multifaceted Asset Transfer Program
+
+** Targetting the Ultra-Poor (TUP)
+
+- "Very poor" households face physical and human capital constraints
+- BRAC started a program to address both:
+
+  - Microenterprise training ($\approx$ 1 week)
+  - *Capital transfers* (Relatively large, enterprise-specific)
+  - Monitoring & support
+  - Savings Encouragement
+
+- Goal is to provide a new, sustained source of income
+
+** Evidence: 
+
+- *Bandiera et al.* Evaluates original TUP program in Bangladesh
+  + Increase in self-employment 15pp 
+  + 7% increase in expenditure
+  + Increased productive asset holdings
+- *Banerjee et al.* evaluate 6 more experiments[fn:: Ethiopia, Ghana, Peru, Honduras, India, Pakistan]
+  + Similar in magnitude to Bandiera et al.
+  + .122 sd increase in consumption, .25 sd increase in asset holdings
+
+* Cash Transfers
+** Evidence: 
+   
+Lots of experiments on cash transfers
+
+- *Haushofer & Shapiro (2013):* UCT's in Kenya
+  + 20% increase in food consumption, 58% increase in assets
+- *Blattman /et al./ (2015)* give $150 USD with "support groups"
+  + 15% \uparrow in consumption; \approx 40% \uparrow in productive assets held
+
+** An alternative to TUP-type programs
+
+Relative to Cash Transfers:
+
+- TUP programs have high fixed *and* marginal costs
+- /And/ constrain investment of new capital to a given activity
+- Offers several additional forms of support
+- *Different welfare implications?*
+
+We compare cash and TUP programs in southern South Sudan (Yei county).
+
+- High poverty rate, inflation, and political uncertainty
+   
+* BRAC's Experiment in South Sudan 
+
+** Few direct comparisons have been tried
+
+"/Because it is cheaper and easier to just deliver cash rather than physical assets and training, ... it would be useful to have a direct comparison of the effects of these programs./" -Banerjee et al.
+
+- We randomly assign 250 individuals to the TUP program
+- Selected another 125 to receive unconditional cash transfers
+
+** The TUP Program
+
+- Two short trainings (\approx 5 days)
+    
+  - General business skills (numeracy, bookkeeping)
+  - Enterprise-specific skills
+    
+- Assets: Farming, ducks, goats, or small trade
+
+  - Total market value $350 or $410
+  - Accounts for 80-90% of average mariginal cost of enrollment
+    
+- Weekly group meetings (modeled on MFIs) for 12 months
+
+** Cash Transfers
+
+- Market value of TUP transfers measured at $350-410
+
+- 125 eligible HH's received the same amount in cash
+
+- Gives the TUP framework an economically interesting, policy-relevant counterfactual
+
+- Not announced to HH's until week before (no ex-ante change in expectations)
+
+* Complications
+
+** Timing of Transfers
+
+- Asset transfers in December 2013 and March 2014
+
+  - Interrupted by conflict
+  - Had not yet seriously spread to Yei
+  - (No record of transfer dates)
+
+- Cash transfers completed June-July 2014
+
+** Adjusting for Timing
+
+- Endline was conducted
+
+  - 12-13 months after UCT's
+  - 14 or 18 months after asset transfers
+  - An eventful 6 months...
+
+- Two Concerns:
+  
+  - Trajectory of treatment effects may yield different estimates under null hypothesis.
+
+  - Economic environment may have changed since first $\frac{1}{2}$ of transfers
+
+- Midline survey in 2014, immediately before cash transfers. 
+
+** Empirical Specification
+\begin{equation*}
+Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{Cash}I_{t}*Cash_{it}+\beta_{t}^{TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}+\epsilon_{i}
+\end{equation*}
+ 
+- $\delta_{t}$: Time FE's,  $I_{2014}= 1 if t==2014$
+- Estimate four treatment effects, $(2014,2015)\times(TUP,Cash)$
+- $\beta^{CSH}_{2014}$ is a placebo test.
+- Test $\beta^{CSH}_{2015} = \beta^{TUP}_{2014}$ and $\beta^{CSH}_{2015} = \beta^{TUP}_{2015}$
+  
+* Results
+
+** Asset Holdings
+ #+name: asset_results
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+ <<asset_analysis>>
+ return tab
+ #+end_src
+
+ - Large effects on asset stock
+ - No evidence for cash transfers
+   - Contrasts with other cash transfer programs
+
+ |----------------------------------+----------------+----------------|
+ |                                  | Productive     | Total          |
+ |----------------------------------+----------------+----------------|
+ | CTL mean                         | $337.60$       | $1225.61$      |
+ |                                  | $(605.57)$     | $(1502.46)$    |
+ |----------------------------------+----------------+----------------|
+ | TUP*2014                         | $361.80^{***}$ | $535.79^{***}$ |
+ | TUP*2015                         | $320.74^{***}$ | $624.79^{***}$ |
+ | CSH*2014                         | $18.50$        | $-125.86$      |
+ | CSH*2015                         | $-5.00$        | $-49.99$       |
+ | N                                | $1247.00$      | $1305.00$      |
+ |----------------------------------+----------------+----------------|
+ | $\beta^{TUP}_{2014}-\beta^{CSH}$ | $366.79^{***}$ | $585.78^{**}$  |
+ | $\beta^{TUP}_{2015}-\beta^{CSH}$ | $325.74^{***}$ | $674.78^{***}$ |
+ |----------------------------------+----------------+----------------|
+
+** Consumption
+
+ #+name: consumption_results
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+ <<consumption_analysis>>
+ return tab
+ #+end_src
+
+ |----------------------------------+---------------+---------------+---------------+---------------|
+ |                                  | Tot           | Food          | FoodShr       | logTot        |
+ |----------------------------------+---------------+---------------+---------------+---------------|
+ | CTL mean                         | $39.80^{*}$   | $27.46^{*}$   | $ 0.70^{***}$ | $ 3.52^{***}$ |
+ |----------------------------------+---------------+---------------+---------------+---------------|
+ | TUP*2014                         | $ 6.64^{***}$ | $ 3.88^{***}$ | $-0.02$       | $ 0.21^{***}$ |
+ | TUP*2015                         | $ 1.50$       | $ 0.47$       | $-0.01$       | $ 0.04$       |
+ | CSH*2014                         | $-0.04$       | $-0.08$       | $ 0.01$       | $-0.03$       |
+ | CSH*2015                         | $ 5.48^{**}$  | $ 3.27^{**}$  | $-0.01$       | $ 0.14^{**}$  |
+ | Bsln2013                         | $ 0.07^{**}$  | $ 0.05^{**}$  | $ 0.08^{**}$  | $ 0.06^{***}$ |
+ | 2014                             | $26.17^{***}$ | $17.01^{***}$ | $ 0.62^{***}$ | $ 2.97^{***}$ |
+ | 2015                             | $36.81^{***}$ | $25.33^{***}$ | $ 0.63^{***}$ | $ 3.29^{***}$ |
+ |----------------------------------+---------------+---------------+---------------+---------------|
+ | N                                | $1305.00$     | $1286.00$     | $1286.00$     | $1305.00$     |
+ | $\beta^{TUP}_{2014}-\beta^{CSH}$ | $ 1.16$       | $ 0.61$       | $-0.01$       | $ 0.07$       |
+ | $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-3.98$       | $-2.80^{*}$   | $-0.00$       | $-0.10$       |
+ |----------------------------------+---------------+---------------+---------------+---------------|
+
+ - TUP group saw short-run effect on total consumption
+   - Not long after direct food support finished
+   - Disappears in 2015
+ - Cash transfer group sees similar effect at 1 year
+ - Both largely concentrated in food expenditures
+
+** Food Security
+
+ #+name: foodsecure_results
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+ <<foodsecure_analysis>>
+ return tab
+ #+end_src
+
+ |----------------------------------+--------------+-------------+-------------+-------------+-----------+
+ |                                  | z-score      | fewmeals    | hungry      | nofood      | wholeday  |
+ |----------------------------------+--------------+-------------+-------------+-------------+-----------+
+ | CTL mean                         | $ 0.01$      | $ 0.05$     | $ 0.05$     | $-0.02$     | $ 0.02$   |
+ |----------------------------------+--------------+-------------+-------------+-------------+-----------+
+ | TUP*2014                         | $ 0.11$      | $ 0.00$     | $ 0.15$     | $ 0.15^{*}$ | $ 0.09$   |
+ | TUP*2015                         | $ 0.01$      | $-0.13$     | $-0.08$     | $ 0.07$     | $-0.01$   |
+ | CSH*2014                         | $ 0.02$      | $ 0.01$     | $ 0.07$     | $ 0.04$     | $ 0.05$   |
+ | CSH*2015                         | $-0.01$      | $ 0.01$     | $-0.11$     | $-0.01$     | $-0.05$   |
+ | Bsln2013                         | $ 0.07^{**}$ | $ 0.05^{*}$ | $ 0.05^{*}$ | $ 0.02$     | $ 0.03$   |
+ |----------------------------------+--------------+-------------+-------------+-------------+-----------+
+ | $\beta^{TUP}_{2014}-\beta^{CSH}$ | $ 0.12$      | $-0.00$     | $ 0.26^{*}$ | $ 0.17$     | $ 0.14$   |
+ | $\beta^{TUP}_{2015}-\beta^{CSH}$ | $ 0.02$      | $-0.13$     | $ 0.03$     | $ 0.09$     | $ 0.04$   |
+ | N                                | $1299.00$    | $1297.00$   | $1297.00$   | $1293.00$   | $1282.00$ |
+ |----------------------------------+--------------+-------------+-------------+-------------+-----------+
+
+ - Observed changes in total consumption don't translate into improved food security
+
+** Savings (Total)
+
+- TUP group has more food saved, then more cash.
+- Useful to look at extensive margin...
+   
+|----------------------------------+----------------+---------------+-------------+------------|
+|                                  | Savings        | Food Sav      | Get Trans   | Give Trans |
+|----------------------------------+----------------+---------------+-------------+------------|
+| CTL mean                         | $78.70$        | $65.85$       | $45.84$     | $11.82$    |
+|----------------------------------+----------------+---------------+-------------+------------|
+| CSH*2014                         | $32.37$        | $ 5.00$       | $19.09$     | $-14.07$   |
+|                                  | $(45.88)$      | $(10.38)$     | $(28.53)$   | $(15.29)$  |
+| CSH*2015                         | $32.22$        | $-9.60$       | $ 8.12$     | $ 3.33$    |
+|                                  | $(45.88)$      | $(10.38)$     | $(28.53)$   | $(15.29)$  |
+| TUP*2014                         | $18.53$        | $26.08^{***}$ | $42.41^{*}$ | $ 2.69$    |
+|                                  | $(36.31)$      | $( 8.22)$     | $(22.58)$   | $(12.10)$  |
+| TUP*2015                         | $101.17^{***}$ | $-5.03$       | $ 1.24$     | $-1.24$    |
+|                                  | $(36.31)$      | $( 8.22)$     | $(22.58)$   | $(12.10)$  |
+|----------------------------------+----------------+---------------+-------------+------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-13.68$       | $35.68$       | $34.29$     | $-0.64$    |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $68.96$        | $ 4.57$       | $-6.88$     | $-4.57$    |
+| N                                | $2250.00$      | $2250.00$     | $2250.00$   | $2250.00$  |
+|----------------------------------+----------------+---------------+-------------+------------|
+
+** Savings (Extensive)
+#+name: savings_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<savings_analysis>>
+Tables = Sav_tab+"\n"+Zer_tab
+return Tables
+#+end_src
+  
+- Many respondents report zero savings
+- TUP households are  \approx 18% - 30% more likely to report having some cash savings
+  + Positive effects from savings encouragement? Or reporting effects?
+
+|----------------------------------+---------------+---------------+---------------+---------------|
+|                                  | Savings       | Food Sav      | Get Trans     | Give Trans    |
+|----------------------------------+---------------+---------------+---------------+---------------|
+| CTL mean                         | $ 0.39$       | $ 0.54$       | $ 0.17$       | $ 0.08$       |
+|----------------------------------+---------------+---------------+---------------+---------------|
+| CSH*2014                         | $ 0.03$       | $ 0.12^{**}$  | $ 0.08^{**}$  | $ 0.03$       |
+|                                  | $( 0.05)$     | $( 0.05)$     | $( 0.04)$     | $( 0.03)$     |
+| CSH*2015                         | $ 0.01$       | $ 0.02$       | $-0.03$       | $-0.01$       |
+|                                  | $( 0.05)$     | $( 0.05)$     | $( 0.04)$     | $( 0.03)$     |
+| TUP*2014                         | $ 0.29^{***}$ | $ 0.13^{***}$ | $ 0.08^{***}$ | $ 0.07^{***}$ |
+|                                  | $( 0.04)$     | $( 0.04)$     | $( 0.03)$     | $( 0.03)$     |
+| TUP*2015                         | $ 0.18^{***}$ | $-0.03$       | $-0.01$       | $ 0.03$       |
+|                                  | $( 0.04)$     | $( 0.04)$     | $( 0.03)$     | $( 0.03)$     |
+|----------------------------------+---------------+---------------+---------------+---------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $ 0.28^{***}$ | $ 0.10$       | $ 0.11^{**}$  | $ 0.08^{*}$   |
+|                                  | $( 0.06)$     | $( 0.07)$     | $( 0.05)$     | $( 0.04)$     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $ 0.18^{***}$ | $-0.05$       | $ 0.02$       | $ 0.04$       |
+|                                  | $( 0.05)$     | $( 0.05)$     | $( 0.04)$     | $( 0.03)$     |
+| N                                | $1500.00$     | $1500.00$     | $1500.00$     | $1500.00$     |
+|----------------------------------+---------------+---------------+---------------+---------------|
+
+** Savings (Intensive)
+
+- Among households /with/ positive savings:
+  - TUP households hold 90 SSP (\approx 47%) more
+  - UCT households hold 81 SSP (\approx 42%) more
+|----------------------------------+----------------+------------+------------+------------|
+|                                  | Savings        | Food Sav   | Get Trans  | Give Trans |
+|----------------------------------+----------------+------------+------------+------------|
+| CTL mean                         | $191.19$       | $114.78$   | $245.08$   | $138.40$   |
+|                                  | $(252.74)$     | $(135.12)$ | $(278.14)$ | $(134.51)$ |
+|----------------------------------+----------------+------------+------------+------------|
+| CSH*2014                         | $28.74$        | $ 0.22$    | $17.28$    | $-61.19$   |
+|                                  | $(42.93)$      | $(15.38)$  | $(69.66)$  | $(57.24)$  |
+| CSH*2015                         | $91.40^{**}$   | $-14.34$   | $127.75$   | $17.37$    |
+|                                  | $(40.89)$      | $(14.98)$  | $(78.29)$  | $(72.41)$  |
+| TUP*2014                         | $-27.09$       | $17.16$    | $10.09$    | $32.65$    |
+|                                  | $(29.76)$      | $(12.33)$  | $(57.23)$  | $(43.79)$  |
+| TUP*2015                         | $81.33^{***}$  | $ 1.13$    | $23.23$    | $-41.12$   |
+|                                  | $(29.32)$      | $(12.26)$  | $(58.46)$  | $(50.57)$  |
+|----------------------------------+----------------+------------+------------+------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-118.49^{**}$ | $31.50$    | $-117.66$  | $15.28$    |
+|                                  | $(50.48)$      | $(19.40)$  | $(96.61)$  | $(84.55)$  |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-10.07$       | $15.47$    | $-104.51$  | $-58.49$   |
+|                                  | $(40.86)$      | $(16.10)$  | $(83.12)$  | $(73.46)$  |
+| N                                | $671.00$       | $777.00$   | $255.00$   | $159.00$   |
+|----------------------------------+----------------+------------+------------+------------|
+
+** Land Use (Total)
+
+|----------------------------------+---------------+----------------|
+| Area (Fedan)                     | Cult Land     | Own Land       |
+|----------------------------------+---------------+----------------|
+| CTL mean                         | $59.90$       | $53.51$        |
+|----------------------------------+---------------+----------------|
+| CSH*2014                         | $15.83$       | $16.75$        |
+|                                  | $(19.90)$     | $(16.07)$      |
+| CSH*2015                         | $-45.09^{**}$ | $-43.52^{***}$ |
+|                                  | $(17.86)$     | $(16.07)$      |
+| TUP*2014                         | $-7.08$       | $ 1.13$        |
+|                                  | $(15.90)$     | $(12.83)$      |
+| TUP*2015                         | $-15.55$      | $-17.66$       |
+|                                  | $(14.28)$     | $(12.83)$      |
+|----------------------------------+---------------+----------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $38.01$       | $44.65$        |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $29.54$       | $25.86$        |
+| N                                | $1893.00$     | $2063.00$      |
+|----------------------------------+---------------+----------------|
+
+** Income
+#+name: income_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<income_analysis>>
+return tab
+#+end_src
+
+- TUP group substituted away from farmwork to livestock
+- Both have /less/ income from farming and agricultural wage labor
+
+#+name: tab:Income
+#+caption: Average treatment effects by group-year on total value (in SSP) of income reported in 2015 by sector.
+#+attr_latex: :environment longtable :align lrrrrrrr
+|---------------------------+------------+---------------+---------------+------------|
+|                           | Total      | Farm          | Livestock     | Non-Farm   |
+|---------------------------+------------+---------------+---------------+------------|
+| CTL mean                  | $4325.54$  | $773.05$      | $640.33$      | $3774.49$  |
+|---------------------------+------------+---------------+---------------+------------|
+| TUP                       | $327.83$   | $-142.20^{*}$ | $281.12^{**}$ | $86.24$    |
+|                           | $(455.95)$ | $(77.21)$     | $(126.30)$    | $(469.48)$ |
+| CSH                       | $ 7.92$    | $-26.15$      | $-83.81$      | $61.80$    |
+|                           | $(600.43)$ | $(100.82)$    | $(177.25)$    | $(620.53)$ |
+|---------------------------+------------+---------------+---------------+------------|
+| $\beta^{TUP}-\beta^{CSH}$ | $319.91$   | $-116.05$     | $364.94^{**}$ | $24.44$    |
+|                           | $(629.93)$ | $(105.79)$    | $(174.74)$    | $(651.27)$ |
+|---------------------------+------------+---------------+---------------+------------|
+| N                         | $671.00$   | $531.00$      | $380.00$      | $606.00$   |
+|---------------------------+------------+---------------+---------------+------------|
+
+** Conflict
+   
+TUP group less likely to report being affected or having forgone investment by conflict.
+
+(The violence was mostly distant at the time.)
+
+|----------+---------------+---------------+---------------+---------------+---------------|
+|          | Affected      | Not Invest    | Migrated      | No Means      | ProtectLives  |
+|----------+---------------+---------------+---------------+---------------+---------------|
+| CTL mean | $ 0.53^{***}$ | $ 0.16^{***}$ | $ 0.33^{***}$ | $ 0.33^{***}$ | $ 0.38^{***}$ |
+|----------+---------------+---------------+---------------+---------------+---------------|
+| TUP      | $-0.13^{***}$ | $-0.06^{**}$  | $ 0.04$       | $-0.06$       | $ 0.02$       |
+|          | $( 0.04)$     | $( 0.03)$     | $( 0.04)$     | $( 0.04)$     | $( 0.05)$     |
+|----------+---------------+---------------+---------------+---------------+---------------|
+| N        | $601.00$      | $655.00$      | $655.00$      | $655.00$      | $585.00$      |
+| F-stat   | $ 9.20$       | $ 3.95$       | $ 0.96$       | $ 2.55$       | $ 0.19$       |
+|----------+---------------+---------------+---------------+---------------+---------------|
+
+* Interpretation and Speculation 
+  
+** Summary
+
+- TUP group reports significantly higher assets stock and savings in 2015.
+- Cash group reports higher savings (intensive) and consumption in 2015.
+  + No asset effects, in contrast with previous experiments
+- Cash group moved away from farming. TUP group moved specifically towards livestock.
+- TUP group less likely to report being affected by the conflict (in 2015.)
+
+- $\beta^{TUP}_{2015}=\beta^{Cash}_{2015}$ rejected for asset wealth and Pr(savings>0).
+
+** Interpretation
+
+Possible interpretations:
+
+- Cash results consistent with climate of uncertainty and high inflation.
+  + Little investment or illiquid savings. Less land ownership.
+- TUP framework has some success at increasing wealth & financial security in a
+  context where cash transfers may have atypically few long-term effects.
+
+* COMMENT Code Appendix
+
+** Consumption
+
+ #+name: consumption_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl
+
+ food = ['c_cereals', 'c_maize', 'c_sorghum', 'c_millet', 'c_potato', 'c_sweetpotato', 'c_rice', 'c_bread', 'c_beans', 'c_oil', 'c_salt', 'c_sugar', 'c_meat', 'c_livestock', 'c_poultry', 'c_fish', 'c_egg', 'c_nuts', 'c_milk', 'c_vegetables', 'c_fruit', 'c_tea', 'c_spices', 'c_alcohol', 'c_otherfood']
+ month = ['c_fuel', 'c_medicine', 'c_airtime', 'c_cosmetics', 'c_soap', 'c_transport', 'c_entertainment', 'c_childcare', 'c_tobacco', 'c_batteries', 'c_church', 'c_othermonth']    
+ year = ['c_clothesfootwear', 'c_womensclothes', 'c_childrensclothes', 'c_shoes', 'c_homeimprovement', 'c_utensils', 'c_furniture', 'c_textiles', 'c_ceremonies', 'c_funerals', 'c_charities', 'c_dowry', 'c_other']    
+ normalize = {3:food, 30:month, 360:year}
+
+ D = full_data(normalize=normalize,balance=[])
+
+ C, HH, T = consumption_data(D, how="long")
+ C = C.join(T, how="left")
+ Outcomes = ["Tot", "FoodShr", "Food",  "logTot"]
+
+ #~ Make aggregate variables
+ for Year,suffix in ( ("2013","_b"), ("2014","_m"), ("2015","_e") ):
+     C["Food"]   = C[[item for item in food  if item in C]].sum(axis=1).replace(0,np.nan)
+     C["Month"]  = C[[item for item in month if item in C]].sum(axis=1).replace(0,np.nan)
+     C["Year"]   = C[[item for item in year  if item in C]].sum(axis=1).replace(0,np.nan)
+     C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
+     C["FoodShr"]= C["Food"]/C["Tot"] #~ FoodShare variable
+     C["logTot"] = C["Tot"].apply(np.log)
+
+ #~ Make Baseline variable
+ for var in Outcomes: 
+     Bl = C.loc[2013,var]
+     C = C.join(Bl,rsuffix="2013", how="left")
+
+
+ C["Y"]=np.nan
+ for yr in (2013, 2014, 2015): C.loc[yr,"Y"]=str(int(yr))
+
+ C = C.join(pd.get_dummies(C["Y"]), how="left")
+ for group in ("TUP", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         interaction = C[group]*C[year]
+         if interaction.sum()>0: C["{}*{}".format(group,year)] = interaction
+
+ Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+ C = C.loc[2014:2015]
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ regs = regressions(C, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+ #~ regs = {var: sm.OLS(C[var], C[Controls], missing='drop').fit() for var in Outcomes}
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = C["TUP"]+C["CSH"] ==0
+ CTLmean = {var: C[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: C[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+END_SRC
+
+** Assets
+
+ #+name: asset_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ D = full_data(balance=[])
+
+ Outcomes = ["Total", "Productive"]
+ Aval2013 = asset_vars(D,year=2013)[0][Outcomes]
+ Aval2014 = asset_vars(D,year=2014)[0][Outcomes]
+ Aval2015 = asset_vars(D,year=2015)[0][Outcomes]
+
+ #~ Creates Year dummies and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["TUP","CSH"]])
+
+ for group in ("TUP", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+ Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
+
+** Savings
+
+ #+name: savings_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+
+ # Top-Code or censor outliers?
+ def topcode(var, Nstd=3, drop=False):
+     if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
+     else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
+     return var
+
+ D = full_data(balance=[]) #~ Read in data (drop an extraneous unmatched household)
+
+ Sav = pd.DataFrame(index=D.index) #~ Set up empty DataFrame to fill
+
+ years = [("_b",2013), ("_m",2014), ("_e", 2015)]
+ for suff,year in years: #~ Make Aggregate savings and land holding variables
+     Sav["Savings{}".format(year)]  = D.filter(regex="^savings_(home|bank|BRAC|NGOs|other){}".format(suff)).sum(1)
+     Sav["Food Sav{}".format(year)] = D.filter(regex="^savings_(maize|sorghum|otherfood)_val{}".format(suff)).sum(1)
+
+     Sav["LandCult{}".format(year)] = D.filter(regex="^land_(owncult|rentcult|communitycult){}".format(suff)).sum(1)
+     Sav["LandOwn{}".format(year)]  = D.filter(regex="^land_own.*{}".format(suff)).sum(1)
+
+     Sav["Get Trans{}".format(year)]  = D.filter(regex="^transfers_get.*{}".format(suff)).sum(1)
+     Sav["Give Trans{}".format(year)] = D.filter(regex="^transfers_give.*{}".format(suff)).sum(1)
+
+ Outcomes = ["Savings","Food Sav","LandCult","LandOwn", "Get Trans", "Give Trans"] #~ Loans give/received omitted
+
+ by_year = []
+ for yr in ("2013","2014","2015"): #~ Provide Baseline Values & put in long format
+     S_Year = Sav.filter(like=yr).rename(columns=lambda x:x[:-4])
+     for var in Outcomes: 
+         if var+"2013" in Sav: S_Year[var+"2013"] = Sav[var+"2013"]
+     #~ Note that adding "Year" has to come after topcode, which switches strings to Nan...
+     S_Year["Year"] = yr
+     by_year.append(S_Year)
+
+ #~ In long format with Year,HH index
+ Sav = pd.concat(by_year).reset_index().set_index(["Year", "HH"], drop=False)
+ #~ Make Year Dummies for fixed effects
+ Sav = Sav.join(pd.get_dummies(Sav["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Sav = Sav.drop(["HH","Year"],1)
+ Sav = Sav.join(D[["TUP","CSH"]])
+
+ for group in ("TUP", "CSH"): #~ Make Treatment-by-year interactions
+     for year in ("2013", "2014", "2015"):
+         Sav["{}*{}".format(group,year)] = Sav[group]*Sav[year]
+
+ def isPositive(i):
+     #~ Returns 1 if number is positive, 0 if number<=0, nan if already nan, and self if string.
+     #~ Note that it's safe to run dummy variables through.
+     try:
+         if np.isnan(i): return i
+         else: return float(i>0)
+     except TypeError: return i
+
+ too_many_null = 30
+ Nonzero = Sav.applymap(isPositive)
+
+ #~ Naturally, only do this after Creating Nonzero dataframe.
+ for var in Outcomes: #~ Set zeros to missing And topcode among non-zero values
+     for outcome in (var,var+"2013"):
+        if outcome in Sav:
+            Sav[outcome] = Sav[outcome].replace(0,np.nan)
+            Sav[outcome] = Sav.groupby(level="Year")[outcome].apply(topcode) #~ (Untested)
+
+ many_null = [item for item in Sav if Sav[item].notnull().sum()<too_many_null]
+ Sav = Sav.drop(many_null,1).copy()
+
+ Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+
+ Sav = Sav.loc["2014":"2015"]
+ Nonzero = Nonzero.loc["2014":"2015"]
+ Sav_regs = regressions(Sav,     outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+ Zer_regs = regressions(Nonzero, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ Sav_results, Sav_SE  = reg_table(Sav_regs,  resultdf=True,table_info=["N","F-stat"])
+ Zer_results, Zer_SE  = reg_table(Zer_regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Sav["TUP"]+Sav["CSH"] ==0
+ Sav_CTLmean = {var: Sav[CTL].loc["2015",var].mean() for var in Outcomes}
+ Zer_CTLmean = {var: Nonzero[CTL].loc["2015",var].mean() for var in Outcomes}
+ Sav_CTLsd = {var: Sav[CTL].loc["2015",var].std() for var in Outcomes}
+ Zer_CTLsd = {var: Nonzero[CTL].loc["2015",var].std() for var in Outcomes}
+ Sav_diff, Sav_diff_se = pd.DataFrame(Sav_CTLmean,index=["CTL mean"]), pd.DataFrame(Sav_CTLsd,index=["CTL mean"])
+ Zer_diff, Zer_diff_se = pd.DataFrame(Zer_CTLmean,index=["CTL mean"]), pd.DataFrame(Zer_CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     #~ Savings regressions first
+     ttest1= Sav_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= Sav_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+     Sav_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     Sav_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     Sav_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     Sav_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+     #~ Nonzero regressions second
+     ttest1= Zer_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= Zer_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+     Zer_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     Zer_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     Zer_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     Zer_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ Land = ["LandCult","LandOwn"] 
+ Savings = ["Savings","Food Sav", "Get Trans", "Give Trans"] 
+
+ Sav_results = Sav_results.append(Sav_diff)
+ Zer_results = Zer_results.append(Zer_diff)
+ Sav_SE = Sav_SE.append(Sav_diff_se)
+ Zer_SE = Zer_SE.append(Zer_diff_se)
+
+ Land_results = Sav_results[Land]
+ zLan_results = Zer_results[Land]
+ Land_SE = Sav_SE[Land]
+ zLan_SE = Zer_SE[Land]
+
+ Sav_results = Sav_results[Savings]
+ Zer_results = Zer_results[Savings]
+ Sav_SE =           Sav_SE[Savings]
+ Zer_SE =           Zer_SE[Savings]
+
+ Sav_tab = df_to_orgtbl(Sav_results, sedf=Sav_SE)
+ Zer_tab = df_to_orgtbl(Zer_results, sedf=Zer_SE)
+ Land_tab = df_to_orgtbl(Land_results, sedf=Land_SE)
+ zLan_tab = df_to_orgtbl(zLan_results, sedf=zLan_SE)
+
+ #+end_src
+
+** Food Security
+
+ #+name: foodsecure_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ D = full_data(balance=[])
+
+ codes = {"1-2 times a week": 3,
+         "3-6 times a week": 2,
+         "Everyday": 1,
+         "everyday": 1,
+         "Less than once a week": 4,
+         "less than once a week": 4,
+         "Never": 5,
+         "never": 5}
+
+ recode = lambda x: codes.setdefault(x,x)
+
+ Aval2013 = D.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Aval2014 = D.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Aval2015 = D.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
+
+ index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
+ Outcomes = index_vars+["z-score"]
+ #~ Creates Year dummies, z-scores and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     for var in index_vars:
+        Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
+     FS_sum = Aval[index_vars].sum(axis=1)
+     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+    
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["TUP","CSH"]])
+
+ for group in ("TUP", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+ Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
+
+** Income
+
+ #+name: income_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ from pandas.io import stata
+ import statsmodels.api as sm
+ from matplotlib import pyplot as plt
+ from TUP import full_data, regressions, reg_table, df_to_orgtbl
+ """Note that this is middle-of-the-night scratch and should in no way be used in the final analysis.
+ """
+ D = full_data(balance=[])
+ keep = D.index
+
+ I_file = '../data/Endline/sections_8_17.dta'
+ I = stata.read_stata(I_file).rename(columns={"id":"HH"}).set_index("HH", drop=True).ix[keep]
+
+ #~Getting non-agriculture income data is easy
+ I = I.filter(regex="^s16")
+ Imonths    = I.filter(regex="s16_\dc").rename(columns=lambda x: x[:-1])
+ Ipermonth  = I.filter(regex="s16_\dd").rename(columns=lambda x: x[:-1])
+ Income_12m = Imonths.mul(Ipermonth).sum(axis=1)
+ Iyear      = I.filter(regex="s16_\de").rename(columns=lambda x: x[:-1]).sum(axis=1)
+
+ A_file = "../data/Endline/Agriculture_cleaned.dta"
+ A = stata.read_stata(A_file).rename(columns={"id":"HH"}).set_index("HH",drop=False).ix[keep]
+ unit_prices = A.groupby(["harvest_type", "harvest_price_unit"])["harvest_price"].median()
+ prices = unit_prices.loc[zip(A["harvest_type"],A["harvest_price_unit"])]
+ A["price"]=list(prices)
+
+ A["harvest_unit_match"] = A["harvest_price_unit"] == A["harvest_unit"]
+ A["price"] = A["harvest_unit_match"]*A["harvest_price"] + (1-A["harvest_unit_match"])*A["price"]
+
+ A["income_farm_year"] = A["harvest_size"]*A["price"]
+ Ayear = A.groupby("HH")["income_farm_year"].sum()
+
+ unit_prices = A.groupby(["livestock_type", "livestock_price_unit"])["livestock_price"].median()
+ prices = unit_prices.loc[zip(A["livestock_type"],A["livestock_price_unit"])]
+ A["price"]=list(prices)
+ A["livestock_unit_match"] = A["livestock_price_unit"] == A["livestock_unit"]
+ A["price"] = A["livestock_unit_match"]*A["livestock_price"] + (1-A["livestock_unit_match"])*A["price"]
+
+ A["income_livestock_year"] = A["livestock_size"]*A["price"]
+ Lyear = A.groupby("HH")["income_livestock_year"].sum()
+
+ Outcomes = ["Total", "Non-Farm", "Farm",  "Livestock"]
+ Controls = ["cons", "TUP","CSH"]
+ Vals = pd.DataFrame({"Non-Farm": Income_12m, "Farm":Ayear, "Livestock":Lyear})
+ Vals["Total"] = Vals.sum(axis=1)
+ Vals["cons"] = 1.
+
+ Vals = Vals.join(D[["TUP","CSH"]])
+
+ regs = {var: sm.OLS(Vals[var], Vals[Controls], missing="drop").fit() for var in Outcomes}
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals.ix[CTL][var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("TUP - CSH = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+
+
+ #+end_src
+
+
+

@@ -1,0 +1,407 @@
+#+TITLE: Two Capital Transfers in South Sudan (2013-2015)
+#+DATE: March 11, 2017
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: c:nil creator:comment d:(not LOGBOOK) date:t e:t email:nil
+#+OPTIONS: f:t inline:t num:nil p:nil pri:nil stat:t tags:t tasks:t
+#+OPTIONS: tex:t timestamp:t author:nil toc:t todo:t |:t
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+BIBLIOGRAPHY: main chicago
+#+OPTIONS: H:2 texht:t toc:nil
+#+BEAMER_COLOR_THEME:
+#+BEAMER_FONT_THEME:
+#+BEAMER_HEADER:
+#+BEAMER_INNER_THEME:
+#+BEAMER_OUTER_THEME:
+#+BEAMER_THEME: Madrid
+#+LaTeX_CLASS_OPTIONS: [t,presentation]
+#+LATEX_HEADER: \newcommand{\T}{\top}
+#+LATEX_HEADER: \newcommand{\E}{\ensuremath{\mbox{E}}}
+#+LATEX_HEADER: \renewcommand{\vec}[1]{\mathbf{#1}}
+#+LATEX_HEADER: \newcommand{\R}{\ensuremath{\mathbb{R}}}
+#+LATEX_HEADER: \newcommand{\Eq}[1]{(\ref{eq:#1})}
+#+LATEX_HEADER_EXTRA: \newtheorem{proposition}{Proposition} \newcommand{\Prop}[1]{Proposition \ref{prop:#1}}
+#+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
+
+* A Multifaceted Asset Transfer Program
+
+** Targetting the Ultra-Poor (TUP)
+
+- "Very poor" households face physical and human capital constraints
+- BRAC started a program to address both:
+
+  - Microenterprise training ($\approx$ 1 week)
+  - *Capital transfers* (Relatively large, enterprise-specific)
+  - Monitoring & support
+  - Savings Encouragement
+
+- Goal is to provide a new, sustained source of income
+
+** Evidence: 
+
+- *Bandiera et al.* Evaluates original TUP program in Bangladesh
+  + Increase in self-employment 15pp 
+  + 7% increase in expenditure
+  + Increased productive asset holdings
+- *Banerjee et al.* evaluate 6 more experiments[fn:: Ethiopia, Ghana, Peru, Honduras, India, Pakistan]
+  + Similar in magnitude to Bandiera et al.
+  + .122 sd increase in consumption, .25 sd increase in asset holdings
+
+* Cash Transfers
+** Cash Transfers
+   
+Lots of experiments on cash transfers
+
+- *Haushofer & Shapiro (2013):* UCT's in Kenya
+
+  + 20% increase in food consumption
+  + 58% increase in assets
+- *Blattman /et al./ (2015)* give $150 USD to women in Uganda (and form "support groups")
+
+  + 15% \uparrow in consumption
+  + \approx 40% \uparrow in productive assets held
+
+** An alternative to TUP-type programs
+
+Relative to Cash Transfers:
+
+- TUP programs have high fixed *and* marginal costs
+- /And/ constrain investment of new capital to a given activity
+- Offers several additional forms of support
+- *Different welfare implications?*
+
+We compare cash and TUP programs in southern South Sudan (Yei county).
+
+- High poverty rate, inflation, and political uncertainty
+   
+* BRAC's Experiment in South Sudan 
+
+** The TUP Program
+
+- Two short trainings (\approx 5 days)
+    
+  - General business skills (numeracy, bookkeeping)
+  - Enterprise-specific skills
+    
+- Assets: Farming, ducks, goats, or small trade
+
+  - Total market value $350 or $410
+  - Accounts for 80-90% of average mariginal cost of enrollment
+    
+- Weekly group meetings (modeled on MFIs) for 12 months
+
+** Cash Transfers
+
+- Market value of TUP transfers measured at $350-410
+
+- 125 eligible HH's received the same amount in cash
+
+- Gives the TUP framework an economically interesting, policy-relevant counterfactual
+
+- Not announced to HH's until week before (no ex-ante change in expectations)
+
+* Complications
+
+** Timing of Transfers
+
+- Asset transfers in December 2013 and March 2014
+
+  - Interrupted by conflict
+  - Had not yet seriously spread to Yei
+  - (No record of transfer dates)
+
+- Cash transfers completed June-July 2014
+
+- Midline survey in 2014, immediately before cash transfers.
+
+- Endline in 2015
+
+  - 12-13 months after UCT's
+  - 14 or 18 months after asset transfers
+  - An eventful 6 months...
+
+- Monthly Mobile Survey in 2016
+
+  - Collected 6 consumption items for 6 months
+  - Yields longer-term consumption estimates
+    
+** Empirical Specification
+\begin{equation*}
+Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{Cash}I_{t}*Cash_{it}+\beta_{t}^{TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}+\epsilon_{i}
+\end{equation*}
+ 
+- $\delta_{t}$: Time FE's,  $I_{2014}= 1 if t==2014$
+- Estimate four treatment effects, $(2014,2015)\times(TUP,Cash)$
+- $\beta^{CSH}_{2014}$ is a placebo test.
+- Test $\beta^{CSH}_{2015} = \beta^{TUP}_{2014}$ and $\beta^{CSH}_{2015} = \beta^{TUP}_{2015}$
+  
+* Results
+
+** Results: Asset Holdings
+ #+name: asset_results
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+ <<asset_analysis>>
+ return tab
+ #+end_src
+
+ - Large effects on asset stock for TUP but not UCT's
+
+|----------------------------------+----------------+----------------|
+|                                  | Total          | Productive     |
+|----------------------------------+----------------+----------------|
+| CTL mean                         | $1225.61$      | $337.60$       |
+|----------------------------------+----------------+----------------|
+| TUP*2014                         | $535.79^{***}$ | $361.80^{***}$ |
+|                                  | $(154.02)$     | $(74.19)$      |
+| TUP*2015                         | $624.79^{***}$ | $320.74^{***}$ |
+|                                  | $(146.01)$     | $(68.68)$      |
+| CSH*2014                         | $-125.86$      | $18.50$        |
+|                                  | $(191.31)$     | $(95.80)$      |
+| CSH*2015                         | $-49.99$       | $5.00$         |
+|                                  | $(187.32)$     | $(88.40)$      |
+|----------------------------------+----------------+----------------|
+| N                                | $1305.00$      | $1247.00$      |
+|----------------------------------+----------------+----------------|
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $674.78^{***}$ | $325.74^{***}$ |
+|                                  | $(194.72)$     | $(92.26)$      |
+|----------------------------------+----------------+----------------|
+
+** Results: Consumption
+
+ #+name: consumption_results
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+ <<consumption_analysis>>
+ return tab
+ #+end_src
+
+|----------------------------------+--------------+--------------+-------------+-------------|
+|                                  | Tot          | Food         | Non-durable | Durable     |
+|----------------------------------+--------------+--------------+-------------+-------------|
+| CTL mean                         | $39.80^{*}$  | $27.46^{*}$  | $9.73$      | $3.07$      |
+|----------------------------------+--------------+--------------+-------------+-------------|
+| TUP*2014                         | $9.34^{***}$ | $6.12^{***}$ | $1.94^{*}$  | $1.28^{**}$ |
+|                                  | $( 2.26)$    | $( 1.57)$    | $( 1.02)$   | $( 0.50)$   |
+| TUP*2015                         | $1.69$       | $0.72$       | $1.13$      | $0.09$      |
+|                                  | $( 2.15)$    | $( 1.50)$    | $( 0.96)$   | $( 0.47)$   |
+| CSH*2014                         | $-1.03$      | $-0.97$      | $0.96$      | $-0.38$     |
+|                                  | $( 2.80)$    | $( 1.95)$    | $( 1.28)$   | $( 0.62)$   |
+| CSH*2015                         | $5.66^{**}$  | $3.50^{*}$   | $2.17^{*}$  | $0.06$      |
+|                                  | $( 2.75)$    | $( 1.91)$    | $( 1.24)$   | $( 0.61)$   |
+| TUP*2016                         | $-1.22^{*}$  | $-1.18^{**}$ |             |             |
+|                                  | $( 0.69)$    | $( 0.53)$    |             |             |
+| CSH*2016                         | $ 1.74^{**}$ | $ 0.74$      |             |             |
+|                                  | $( 0.86)$    | $( 0.66)$    |             |             |
+|----------------------------------+--------------+--------------+-------------+-------------|
+| N                                | $1305.00$    | $1295.00$    | $1296.00$   | $1260.00$   |
+|----------------------------------+--------------+--------------+-------------+-------------|
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-3.97$      | $-2.78$      | $-1.04$     | $0.03$      |
+|                                  | $( 2.85)$    | $( 1.98)$    | $( 1.30)$   | $( 0.64)$   |
+|----------------------------------+--------------+--------------+-------------+-------------|
+
+** Savings (Total)
+
+- TUP group has more food saved, then more cash.
+- Useful to look at extensive margin...
+   
+|----------------------------------+----------------+---------------|
+|                                  | Savings        | Food Sav      |
+|----------------------------------+----------------+---------------|
+| CTL mean                         | $78.70$        | $65.85$       |
+|----------------------------------+----------------+---------------|
+| CSH*2014                         | $32.37$        | $5.00$        |
+|                                  | $(45.88)$      | $(10.38)$     |
+| CSH*2015                         | $32.22$        | $-9.60$       |
+|                                  | $(45.88)$      | $(10.38)$     |
+| TUP*2014                         | $18.53$        | $26.08^{***}$ |
+|                                  | $(36.31)$      | $( 8.22)$     |
+| TUP*2015                         | $101.17^{***}$ | $-5.03$       |
+|                                  | $(36.31)$      | $( 8.22)$     |
+|----------------------------------+----------------+---------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-13.68$       | $35.68$       |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $68.96$        | $4.57$        |
+| N                                | $2250.00$      | $2250.00$     |
+|----------------------------------+----------------+---------------|
+
+** Savings (Extensive)
+#+name: savings_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<savings_analysis>>
+Tables = Sav_tab+"\n"+Zer_tab
+return Tables
+#+end_src
+  
+- \approx 18% - 30% of TUP households report having some cash savings
+
+|----------------------------------+--------------+--------------|
+|                                  | Savings > 0  | Food Sav > 0 |
+|----------------------------------+--------------+--------------|
+| CTL mean                         | $0.39$       | $0.54$       |
+|----------------------------------+--------------+--------------|
+| CSH*2014                         | $0.03$       | $0.08$       |
+|                                  | $( 0.05)$    | $( 0.06)$    |
+| CSH*2015                         | $0.01$       | $0.02$       |
+|                                  | $( 0.05)$    | $( 0.05)$    |
+| TUP*2014                         | $0.29^{***}$ | $0.13^{***}$ |
+|                                  | $( 0.04)$    | $( 0.04)$    |
+| TUP*2015                         | $0.18^{***}$ | $-0.03$      |
+|                                  | $( 0.04)$    | $( 0.04)$    |
+|----------------------------------+--------------+--------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.28^{***}$ | $0.10$       |
+|                                  | $( 0.06)$    | $( 0.07)$    |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $0.18^{***}$ | $-0.05$      |
+|                                  | $( 0.05)$    | $( 0.05)$    |
+| N                                | $1500.00$    | $1500.00$    |
+|----------------------------------+--------------+--------------|
+
+** Savings (Intensive)
+
+HH's with any savings: \beta_{UCT} \approx 90 SSP (47%), \beta_{TUP} \approx 81 (42%)
+|----------------------------------+----------------+------------|
+|                                  | Savings        | Food Sav   |
+|----------------------------------+----------------+------------|
+| CTL mean                         | $191.19$       | $114.78$   |
+|----------------------------------+----------------+------------|
+| CSH*2014                         | $28.74$        | $0.22$     |
+|                                  | $(42.93)$      | $(15.38)$  |
+| CSH*2015                         | $91.40^{**}$   | $-14.34$   |
+|                                  | $(40.89)$      | $(14.98)$  |
+| TUP*2014                         | $-27.09$       | $17.16$    |
+|                                  | $(29.76)$      | $(12.33)$  |
+| TUP*2015                         | $81.33^{***}$  | $1.13$     |
+|                                  | $(29.32)$      | $(12.26)$  |
+|----------------------------------+----------------+------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-118.49^{**}$ | $31.50$    |
+|                                  | $(50.48)$      | $(19.40)$  |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-10.07$       | $15.47$    |
+|                                  | $(40.86)$      | $(16.10)$  |
+| N                                | $671.00$       | $777.00$   |
+|----------------------------------+----------------+------------|
+
+** Land Use (Total)
+
+Cash Transfers result in significantly less agricultural land use
+
+|----------------------------------+---------------+----------------|
+| Area (Fedan)                     | Cult Land     | Own Land       |
+|----------------------------------+---------------+----------------|
+| CTL mean                         | $59.90$       | $53.51$        |
+|----------------------------------+---------------+----------------|
+| CSH*2014                         | $15.83$       | $16.75$        |
+|                                  | $(19.90)$     | $(16.07)$      |
+| CSH*2015                         | $-45.09^{**}$ | $-43.52^{***}$ |
+|                                  | $(17.86)$     | $(16.07)$      |
+| TUP*2014                         | $-7.08$       | $1.13$         |
+|                                  | $(15.90)$     | $(12.83)$      |
+| TUP*2015                         | $-15.55$      | $-17.66$       |
+|                                  | $(14.28)$     | $(12.83)$      |
+|----------------------------------+---------------+----------------|
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $29.54$       | $25.86$        |
+|----------------------------------+---------------+----------------|
+| N                                | $1893.00$     | $2063.00$      |
+|----------------------------------+---------------+----------------|
+
+** Income
+#+name: income_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<income_analysis>>
+return tab
+#+end_src
+
+- TUP group substituted away from farmwork to livestock
+- Both have /less/ income from farming and agricultural wage labor
+
+#+name: tab:Income
+#+attr_latex: :environment longtable :align lrrrrrrr
+|---------------------------+------------+---------------+---------------+------------|
+|                           | Total      | Farm          | Livestock     | Non-Farm   |
+|---------------------------+------------+---------------+---------------+------------|
+| CTL mean                  | $4325.54$  | $773.05$      | $640.33$      | $3774.49$  |
+|---------------------------+------------+---------------+---------------+------------|
+| TUP                       | $327.83$   | $-142.20^{*}$ | $281.12^{**}$ | $86.24$    |
+|                           | $(455.95)$ | $(77.21)$     | $(126.30)$    | $(469.48)$ |
+| CSH                       | $7.92$     | $-26.15$      | $-83.81$      | $61.80$    |
+|                           | $(600.43)$ | $(100.82)$    | $(177.25)$    | $(620.53)$ |
+|---------------------------+------------+---------------+---------------+------------|
+| $\beta^{TUP}-\beta^{CSH}$ | $319.91$   | $-116.05$     | $364.94^{**}$ | $24.44$    |
+|                           | $(629.93)$ | $(105.79)$    | $(174.74)$    | $(651.27)$ |
+|---------------------------+------------+---------------+---------------+------------|
+| N                         | $671.00$   | $531.00$      | $380.00$      | $606.00$   |
+|---------------------------+------------+---------------+---------------+------------|
+
+** What did the cash get used for?
+   
+Simply asking what cash transfer households bought:
+
+|-------------+-------+----------+-----|
+| Use         |  % >0 | Avg. Amt | Std |
+|-------------+-------+----------+-----|
+| School      |  0.52 |      266 | 214 |
+| Sick        | 0.472 |      234 | 203 |
+| Food        | 0.472 |      150 | 202 |
+| Inventory   | 0.464 |      390 | 716 |
+| Save        |  0.36 |      193 | 190 |
+| Livestock   | 0.344 |      249 | 186 |
+| clothes     |  0.32 |      136 | 160 |
+| Renovations | 0.264 |      110 | 123 |
+|-------------+-------+----------+-----|
+
+** Conflict
+   
+TUP group less likely to report being affected or having forgone investment by conflict.
+
+(The violence was mostly distant at the time.)
+
+|----------+---------------+--------------+--------------+--------------+--------------|
+|          | Affected      | Not Invest   | Migrated     | No Means     | ProtectLives |
+|----------+---------------+--------------+--------------+--------------+--------------|
+| CTL mean | $0.53^{***}$  | $0.16^{***}$ | $0.33^{***}$ | $0.33^{***}$ | $0.38^{***}$ |
+|----------+---------------+--------------+--------------+--------------+--------------|
+| TUP      | $-0.13^{***}$ | $-0.06^{**}$ | $0.04$       | $-0.06$      | $0.02$       |
+|          | $( 0.04)$     | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    |
+|----------+---------------+--------------+--------------+--------------+--------------|
+| N        | $601.00$      | $655.00$     | $655.00$     | $655.00$     | $585.00$     |
+| F-stat   | $9.20$        | $3.95$       | $0.96$       | $2.55$       | $0.19$       |
+|----------+---------------+--------------+--------------+--------------+--------------|
+
+* Interpretation and Speculation 
+  
+** Summary
+
+- TUP group reports significantly higher assets stock and savings in 2015.
+
+- Cash group reports higher savings (intensive) and consumption 
+  + No asset effects, in contrast with previous experiments
+
+- Cash group moved away from farming. TUP group moved specifically towards livestock.
+
+- TUP group less likely to report being affected by the conflict (in 2015.)
+
+- $\beta^{TUP}_{2015}=\beta^{Cash}_{2015}$ rejected for asset wealth and Pr(savings>0).
+
+** Interpretation
+
+Possible interpretations:
+
+- Cash results consistent with climate of uncertainty and high inflation.
+
+  + Little investment or illiquid savings. Less land ownership. Focus on /spending/ money.
+
+- Both treatments increased short-term consumption. Neither significantly increased total income.
+
+- TUP framework has some success at increasing wealth & security in a context where cash transfers may have atypically few long-term effects.
+
+** Thank you
+
+
+|------------|
+|            |
+|------------|
+|            |
+| Thank You! |
+|            |
+|------------|
+|            |
+|------------|
