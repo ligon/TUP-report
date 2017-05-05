@@ -915,6 +915,8 @@ return tab
  import numpy as np
  import pandas as pd
  import statsmodels.api as sm
+ import sys
+ sys.path.append("../../data")
  from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
  D = full_data(balance=[])
  WEEKLY = True
@@ -998,6 +1000,8 @@ return tab
  import pandas as pd
  import cfe.estimation as nd
  import statsmodels.api as sm
+ import sys
+ sys.path.append("../../data")
  from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
  food =  ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
  month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
@@ -1040,17 +1044,21 @@ return tab
 
  #+name: consumption_analysis
  #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import sys
+ sys.path.append("../../data")
  import numpy as np
  import pandas as pd
  import cfe.estimation as nd
  import statsmodels.api as sm
+ import sys
+ sys.path.append("../../data")
  from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
  food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
  month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
  year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
 
  D = full_data()
- C, HH, T = consumption_data(D,WRITE="csv")
+ C, HH, T = consumption_data(D,WRITE=True) #"csv")
  logL = pd.read_pickle("../../data/ss-lambdas.df")
  logL.index.names=["HH","Year","Location"]
  C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
@@ -1154,6 +1162,8 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 from matplotlib import pyplot as plt
+import sys
+sys.path.append("../../data")
 from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
 def topcode(var, Nstd=3, drop=False):
     if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
@@ -1244,6 +1254,8 @@ tab = df_to_orgtbl(results, sedf=SE)
 #+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
 import numpy as np
 import pandas as pd
+import sys
+sys.path.append("../../data")
 from TUP import full_data, regressions, asset_vars, reg_table, df_to_orgtbl
 
 D = full_data(balance=[])
@@ -1293,6 +1305,8 @@ return AllTables
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import sys
+sys.path.append("../../data")
 from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
 
 def topcode(var, Nstd=3, drop=False):
@@ -1459,6 +1473,8 @@ import pandas as pd
 from pandas.io import stata
 import statsmodels.api as sm
 from matplotlib import pyplot as plt
+import sys
+sys.path.append("../../data")
 from TUP import full_data, regressions, reg_table, df_to_orgtbl
 """
 Note that topcoding has a large effect on the distribution here, and we see only a small (presumably non-random) portion of actual income for each household.
@@ -1564,6 +1580,8 @@ tab = df_to_orgtbl(results, sedf=SE)
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import sys
+sys.path.append("../../data")
 from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
 
 # Top-Code or censor outliers?
@@ -1639,6 +1657,8 @@ return Table
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import sys
+sys.path.append("../../data")
 from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
 
 D = full_data(balance=[])
