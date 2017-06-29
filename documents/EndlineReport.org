@@ -263,159 +263,121 @@ was not too far from creating comparable groups.
 
 ** Consumption
 
-The first measure of welfare to consider is household consumption, defined as the market
-value of goods or services used by the household. A sizable basket of goods were
-included in the survey module. These are separated into three categories: Food items
-(with a 3-day recall window), non-durables (a 30-day recall window), and durables
-and large expenditures (a one-year recall window). Consumption, as both the total amount
-and the composition of household spending, is perhaps the most appropriate
-measure of the welfare or poverty of a household in our survey. 
+The first measure of welfare to consider is household consumption, defined as the
+market value of goods or services used by the household. A sizable basket of goods
+were included in the survey module. These are separated into three categories: Food
+items (with a 3-day recall window), non-durables (a 30-day recall window), and
+durables and large expenditures (a one-year recall window). This is perhaps the most
+appropriate measure of the welfare or poverty of a household in our survey. 
 
 The results for several important consumption measures are presented in Table
 \ref{tab:consumption}. Importantly, we do not know about prices for each good in this
 time, though we can say that inflation was as high as 100% between 2014 and 2015.
 Nonetheless, we take the sum of all consumption and expenditure questions together as
 a measure of welfare. [fn:: Details on this issue are discussed further in Beegle
-(2012).]
+(2012).] In light of the fact that we have data on an incomplete basket, we also
+follow Collins and Ligon (2015), which details a method for deriving treatment
+effects on a model-based estimate of households' marginal utility, which we include
+here as \log\lambda_{it}.
 
 The main result is that TUP participants had higher consumption consumption in 2014,
-a few months into the primary monitoring phase after the asset transfers. Similarly,
-the Cash group has higher consumption in 2015, measured just over a year after
-disbursal. Food transfers had ceased weeks before the 2014 survey was conducted, and
-the assets had been transferred 6-8 months prior. The TUP group sees no notable
-difference from control in that period. The short-term consumption effects of either
-program are economically significant, representing a 23% and 14% increase in average
-total consumption for TUP and Cash, respectively.
-
-These results are consistent with a story in which either sort of transfer has a
-short-term consumption effect. Importantly, we do not reject the null hypothesis that
-the two effects are equal to one another. In either group, the increase in total
-consumption appears to be driven mainly by increased food consumption, with smaller
-effects on non-food consumption goods and durables. As such, there is no evidence
-that the share of food consumed falls, as might be predicted by Engel's law.
+several months into the primary monitoring phase after the asset transfers.
+Similarly, the cash group has higher consumption in 2015, measured just over a year
+after disbursal. Food transfers had ceased weeks before the 2014 survey was
+conducted, and the assets had been transferred 6-8 months prior. The TUP group sees
+no notable effect in 2015. The short-term consumption effects of either program are
+economically significant, representing a roughly 15% increase in average total
+consumption for both TUP and Cash. These results are consistent with a story in which
+either sort of transfer has a short-term consumption effect. Importantly, we do not
+reject the null hypothesis that the two effects are equal to one another. In either
+group, the increase in total consumption appears to be driven mainly by increased
+food consumption, with smaller effects on non-food consumption goods and durables. As
+such, there is no evidence that the share of food consumed falls, as might be
+predicted by Engel's law.
 
 \newpage
 
-#+name: consumption_aggregate_results
+#+name: consumption_results
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
 <<consumption_analysis>>
 return tab
 #+end_src
 
-#+RESULTS: consumption_aggregate_results
-|                                  | $\log\lambda_{it}$ | Food          | FoodShr       | Month         | Tot            | Year          | logTot        |
-|----------------------------------+--------------------+---------------+---------------+---------------+----------------+---------------+---------------|
-| 2014                             | $ 0.20^{***}$      | $25.61^{***}$ | $ 0.28^{***}$ | $20.34^{***}$ | $76.83^{***}$  | $20.34^{***}$ | $ 3.93^{***}$ |
-|                                  | $( 0.06)$          | $( 1.77)$     | $( 0.00)$     | $( 1.27)$     | $( 5.32)$      | $( 1.27)$     | $( 0.11)$     |
-| 2015                             | $ 0.17^{***}$      | $35.23^{***}$ | $ 0.28^{***}$ | $35.76^{***}$ | $105.70^{***}$ | $35.76^{***}$ | $ 4.18^{***}$ |
-|                                  | $( 0.06)$          | $( 1.67)$     | $( 0.00)$     | $( 1.27)$     | $( 5.00)$      | $( 1.27)$     | $( 0.11)$     |
-| Bsln2013                         | $ 0.02$            | $ 0.08^{**}$  | $ 0.17^{***}$ | $ $           | $ 0.08^{**}$   | $ $           | $ 0.07^{***}$ |
-|                                  | $( 0.03)$          | $( 0.04)$     | $( 0.00)$     |               | $( 0.04)$      |               | $( 0.03)$     |
-| Bsln_NAN                         | $-0.09$            | $ 6.84^{***}$ | $ 0.06^{***}$ | $ $           | $20.52^{***}$  | $ $           | $ 0.45^{***}$ |
-|                                  | $( 0.09)$          | $( 2.32)$     | $( 0.00)$     |               | $( 6.96)$      |               | $( 0.12)$     |
-| CSH*2014                         | $ 0.15$            | $-0.92$       | $-0.00^{***}$ | $ 3.51$       | $-2.75$        | $ 3.51$       | $ 0.01$       |
-|                                  | $( 0.11)$          | $( 2.67)$     | $( 0.00)$     | $( 2.53)$     | $( 8.01)$      | $( 2.53)$     | $( 0.08)$     |
-| CSH*2015                         | $-0.13$            | $ 6.01^{**}$  | $-0.00^{***}$ | $ 2.36$       | $18.02^{**}$   | $ 2.36$       | $ 0.16^{**}$  |
-|                                  | $( 0.10)$          | $( 2.61)$     | $( 0.00)$     | $( 2.53)$     | $( 7.83)$      | $( 2.53)$     | $( 0.08)$     |
-| TUP*2014                         | $-0.34^{***}$      | $ 6.20^{***}$ | $ 0.00^{***}$ | $10.65^{***}$ | $18.59^{***}$  | $10.65^{***}$ | $ 0.21^{***}$ |
-|                                  | $( 0.09)$          | $( 2.14)$     | $( 0.00)$     | $( 2.00)$     | $( 6.43)$      | $( 2.00)$     | $( 0.06)$     |
-| TUP*2015                         | $-0.11$            | $ 1.39$       | $ 0.00^{*}$   | $ 0.55$       | $ 4.18$        | $ 0.55$       | $ 0.05$       |
-|                                  | $( 0.08)$          | $( 2.04)$     | $( 0.00)$     | $( 2.00)$     | $( 6.13)$      | $( 2.00)$     | $( 0.06)$     |
-| F-stat                           | $ 4.05$            | $10.14$       | $-210.27$     | $23.38$       | $10.14$        | $23.38$       | $ 8.13$       |
-|                                  |                    |               |               |               |                |               |               |
-| N                                | $1296.00$          | $1291.00$     | $1291.00$     | $1488.00$     | $1291.00$      | $1488.00$     | $1291.00$     |
-|                                  |                    |               |               |               |                |               |               |
-| CTL mean                         | $ 0.15$            | $38.47$       | $ 0.33^{***}$ | $35.76$       | $115.40$       | $35.76$       | $ 4.51^{***}$ |
-|                                  | $( 0.92)$          | $(26.25)$     | $( 0.00)$     | $(27.16)$     | $(78.75)$      | $(27.16)$     | $( 0.76)$     |
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-0.22$            | $ 0.19$       | $ 0.00^{***}$ | $ 8.30^{**}$  | $ 0.57$        | $ 8.30^{**}$  | $ 0.05$       |
-|                                  | $( 0.13)$          | $( 3.33)$     | $( 0.00)$     | $( 3.22)$     | $( 9.99)$      | $( 3.22)$     | $( 0.10)$     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $ 0.02$            | $-4.61^{*}$   | $ 0.00^{***}$ | $-1.81$       | $-13.84^{*}$   | $-1.81$       | $-0.11$       |
-|                                  | $( 0.11)$          | $( 2.71)$     | $( 0.00)$     | $( 2.68)$     | $( 8.12)$      | $( 2.68)$     | $( 0.08)$     |
-
-
-|                           | $\log\lambda_{it}$ | Food          | Tot           | logTot        |
-|---------------------------+--------------------+---------------+---------------+---------------|
-| Bsln2013                  | $-0.03$            | $-0.04$       | $-0.01$       | $-0.01$       |
-|                           | $( 0.02)$          | $( 0.03)$     | $( 0.01)$     | $( 0.02)$     |
-| const                     | $-0.00$            | $28.42^{***}$ | $43.46^{***}$ | $ 3.59^{***}$ |
-|                           | $( 0.03)$          | $( 1.09)$     | $( 1.41)$     | $( 0.07)$     |
-| TUP                       | $ 0.05$            | $-0.89$       | $-0.87$       | $-0.02$       |
-|                           | $( 0.04)$          | $( 1.16)$     | $( 1.49)$     | $( 0.03)$     |
-| CSH                       | $ 0.09$            | $ 0.59$       | $ 1.15$       | $ 0.02$       |
-|                           | $( 0.05)$          | $( 1.44)$     | $( 1.86)$     | $( 0.04)$     |
-| Bsln_NAN                  | $ 0.10^{*}$        | $-1.97$       | $-1.01$       | $-0.08$       |
-|                           | $( 0.06)$          | $( 1.77)$     | $( 2.28)$     | $( 0.08)$     |
-| F-stat                    | $ 1.74$            | $ 0.88$       | $ 0.43$       | $ 0.53$       |
-|                           |                    |               |               |               |
-| N                         | $2877.00$          | $2862.00$     | $2879.00$     | $2879.00$     |
-|                           |                    |               |               |               |
-| CTL mean                  | $ 0.02$            | $27.11$       | $42.65$       | $ 3.52^{***}$ |
-|                           | $( 1.02)$          | $(26.81)$     | $(34.96)$     | $( 0.66)$     |
-| $\beta^{TUP}-\beta^{CSH}$ | $-0.04$            | $-1.48$       | $-2.02$       | $-0.04$       |
-|                           | $( 0.06)$          | $( 1.47)$     | $( 1.90)$     | $( 0.04)$     |
-#+end_example
-
-#+name: tab:consumption
 #+caption: Average treatment effects by Group-Year, controlling for baseline levels.
 #+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+---------------+--------------------+---------------+---------------+---------------+---------------|
-|                                  | Tot           | $\log\lambda_{it}$ | Food          | Non-durable   | Durable       | logTot        |
-|----------------------------------+---------------+--------------------+---------------+---------------+---------------+---------------|
-| CTL mean                         | $81.68^{*}$   | $ 0.15$            | $27.23^{*}$   | $25.24$       | $25.24$       | $ 4.23^{***}$ |
-|                                  | $(46.24)$     | $( 0.92)$          | $(15.41)$     | $(16.45)$     | $(16.45)$     | $( 0.65)$     |
-|----------------------------------+---------------+--------------------+---------------+---------------+---------------+---------------|
-| CSH*2014                         | $-3.08$       | $ 0.15$            | $-1.03$       | $ 3.51^{*}$   | $ 3.51^{*}$   | $ 0.01$       |
-|                                  | $( 5.86)$     | $( 0.11)$          | $( 1.95)$     | $( 1.93)$     | $( 1.93)$     | $( 0.07)$     |
-| CSH*2015                         | $10.78^{*}$   | $-0.13$            | $ 3.59^{*}$   | $ 1.03$       | $ 1.03$       | $ 0.12$       |
-|                                  | $( 5.73)$     | $( 0.10)$          | $( 1.91)$     | $( 1.93)$     | $( 1.93)$     | $( 0.07)$     |
-| TUP*2014                         | $18.20^{***}$ | $-0.34^{***}$      | $ 6.07^{***}$ | $10.65^{***}$ | $10.65^{***}$ | $ 0.21^{***}$ |
-|                                  | $( 4.70)$     | $( 0.09)$          | $( 1.57)$     | $( 1.53)$     | $( 1.53)$     | $( 0.06)$     |
-| TUP*2015                         | $ 2.43$       | $-0.11$            | $ 0.81$       | $ 0.04$       | $ 0.04$       | $ 0.04$       |
-|                                  | $( 4.49)$     | $( 0.08)$          | $( 1.50)$     | $( 1.53)$     | $( 1.53)$     | $( 0.06)$     |
-| 2014                             | $78.29^{***}$ | $ 0.20^{***}$      | $26.10^{***}$ | $20.34^{***}$ | $20.34^{***}$ | $ 3.95^{***}$ |
-|                                  | $( 3.89)$     | $( 0.06)$          | $( 1.30)$     | $( 0.97)$     | $( 0.97)$     | $( 0.10)$     |
-| 2015                             | $73.61^{***}$ | $ 0.17^{***}$      | $24.54^{***}$ | $25.24^{***}$ | $25.24^{***}$ | $ 3.91^{***}$ |
-|                                  | $( 3.66)$     | $( 0.06)$          | $( 1.22)$     | $( 0.97)$     | $( 0.97)$     | $( 0.10)$     |
-| Bsln2013                         | $ 0.07^{**}$  | $ 0.02$            | $ 0.07^{**}$  | $ $           | $ $           | $ 0.07^{***}$ |
-|                                  | $( 0.03)$     | $( 0.03)$          | $( 0.03)$     |               |               | $( 0.02)$     |
-| Bsln_NAN                         | $17.30^{***}$ | $-0.09$            | $ 5.77^{***}$ | $ $           | $ $           | $ 0.42^{***}$ |
-|                                  | $( 5.11)$     | $( 0.09)$          | $( 1.70)$     |               |               | $( 0.11)$     |
-|----------------------------------+---------------+--------------------+---------------+---------------+---------------+---------------|
-| F-stat                           | $ 5.69$       | $ 4.05$            | $ 5.69$       | $10.03$       | $10.03$       | $ 4.82$       |
-| N                                | $1289.00$     | $1296.00$          | $1289.00$     | $1488.00$     | $1488.00$     | $1289.00$     |
-|----------------------------------+---------------+--------------------+---------------+---------------+---------------+---------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $ 7.41$       | $-0.22$            | $ 2.47$       | $ 9.63^{***}$ | $ 9.63^{***}$ | $ 0.09$       |
-|                                  | $( 7.31)$     | $( 0.13)$          | $( 2.44)$     | $( 2.46)$     | $( 2.46)$     | $( 0.09)$     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-8.35$       | $ 0.02$            | $-2.78$       | $-0.99$       | $-0.99$       | $-0.08$       |
-|                                  | $( 5.95)$     | $( 0.11)$          | $( 1.98)$     | $( 2.04)$     | $( 2.04)$     | $( 0.07)$     |
-|----------------------------------+---------------+--------------------+---------------+---------------+---------------+---------------|
+#+name: tab:consumption
+|----------------------------------+-----------------+--------------------+----------------+---------------|
+|                                  | Tot             | $\log\lambda_{it}$ | Food           | logTot        |
+|----------------------------------+-----------------+--------------------+----------------+---------------|
+| CTL mean                         | $115.404$       | $0.159$            | $38.468$       | $4.509^{***}$ |
+|                                  | $(78.750)$      | $(0.967)$          | $(26.250)$     | $(0.756)$     |
+|----------------------------------+-----------------+--------------------+----------------+---------------|
+| CSH*2014                         | $-2.745$        | $0.127$            | $-0.915$       | $0.007$       |
+|                                  | $(8.008)$       | $(0.110)$          | $(2.669)$      | $(0.079)$     |
+| CSH*2015                         | $18.023^{**}$   | $-0.145$           | $6.008^{**}$   | $0.160^{**}$  |
+|                                  | $(7.831)$       | $(0.108)$          | $(2.610)$      | $(0.077)$     |
+| TUP*2014                         | $18.590^{***}$  | $-0.365^{***}$     | $6.197^{***}$  | $0.212^{***}$ |
+|                                  | $(6.426)$       | $(0.089)$          | $(2.142)$      | $(0.063)$     |
+| TUP*2015                         | $4.179$         | $-0.055$           | $1.393$        | $0.045$       |
+|                                  | $(6.130)$       | $(0.084)$          | $(2.043)$      | $(0.060)$     |
+| 2014                             | $76.831^{***}$  | $0.214^{***}$      | $25.610^{***}$ | $3.931^{***}$ |
+|                                  | $(5.318)$       | $(0.062)$          | $(1.773)$      | $(0.113)$     |
+| 2015                             | $105.702^{***}$ | $0.188^{***}$      | $35.234^{***}$ | $4.175^{***}$ |
+|                                  | $(5.001)$       | $(0.057)$          | $(1.667)$      | $(0.111)$     |
+| Bsln2013                         | $0.081^{**}$    | $0.022$            | $0.081^{**}$   | $0.073^{***}$ |
+|                                  | $(0.038)$       | $(0.029)$          | $(0.038)$      | $(0.026)$     |
+| Bsln_NAN                         | $20.521^{***}$  | $-0.119$           | $6.840^{***}$  | $0.447^{***}$ |
+|                                  | $(6.964)$       | $(0.088)$          | $(2.321)$      | $(0.121)$     |
+|----------------------------------+-----------------+--------------------+----------------+---------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.566$         | $-0.220$           | $0.189$        | $0.052$       |
+|                                  | $(9.994)$       | $(0.137)$          | $(3.331)$      | $(0.098)$     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-13.844^{*}$   | $0.090$            | $-4.615^{*}$   | $-0.115$      |
+|                                  | $(8.125)$       | $(0.111)$          | $(2.708)$      | $(0.080)$     |
+|----------------------------------+-----------------+--------------------+----------------+---------------|
+| F-stat                           | $10.142$        | $4.169$            | $10.142$       | $8.131$       |
+| N                                | $1291.000$      | $1296.000$         | $1291.000$     | $1291.000$    |
+|----------------------------------+-----------------+--------------------+----------------+---------------|
 
-#+name: tab:mobile_consumption
-#+caption: Average treatment effects using mobile data collection, controlling for baseline levels.
+This result leaves open the question of whether the cash treatment had a persistent effect
+on consumption, or whether the short-term effect found in 2015 is similarly;;:w
+temporary. It was this question that motivated the collection of an additional five
+rounds of data collection over a 6-month period in late 2015 and early 2016, in which
+we asked about ten items, five food and five non-food. This survey forms the basis
+for further estimates of \log\lambda_{it}. We consider the average treatment effect
+on households sampled for these mobile interviews, both for \log\lambda_{it} and for
+"Total consumption", which in this case we take a simple sum over the goods
+discussed. We find that, consistent with the TUP program, all evidence of an effect
+seem to be washed out by these subsequent survey.  Since the structure of this data
+is so different, we conduct this analysis separately.
+
+#+name: mobile_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<mobile_analysis>>
+return mtab
+#+end_src
+
+#+caption: Average treatment effects using mobile data collection (results are robust to controlling for baseline levels)
 #+attr_latex: :environment longtable :align lrrrrr
-|---------------------------+---------------+--------------------+---------------+---------------|
-|                           | Tot           | $\log\lambda_{it}$ | Food          | logTot        |
-|---------------------------+---------------+--------------------+---------------+---------------|
-| CTL mean                  | $42.65$       | $ 0.02$            | $27.11$       | $ 3.52^{***}$ |
-|                           | $(34.96)$     | $( 1.02)$          | $(26.81)$     | $( 0.66)$     |
-|---------------------------+---------------+--------------------+---------------+---------------|
-| Bsln2013                  | $-0.01$       | $-0.03$            | $-0.04$       | $-0.01$       |
-|                           | $( 0.01)$     | $( 0.02)$          | $( 0.03)$     | $( 0.02)$     |
-| const                     | $43.46^{***}$ | $-0.00$            | $28.42^{***}$ | $ 3.59^{***}$ |
-|                           | $( 1.41)$     | $( 0.03)$          | $( 1.09)$     | $( 0.07)$     |
-| TUP                       | $-0.87$       | $ 0.05$            | $-0.89$       | $-0.02$       |
-|                           | $( 1.49)$     | $( 0.04)$          | $( 1.16)$     | $( 0.03)$     |
-| CSH                       | $ 1.15$       | $ 0.09$            | $ 0.59$       | $ 0.02$       |
-|                           | $( 1.86)$     | $( 0.05)$          | $( 1.44)$     | $( 0.04)$     |
-| Bsln_NAN                  | $-1.01$       | $ 0.10^{*}$        | $-1.97$       | $-0.08$       |
-|                           | $( 2.28)$     | $( 0.06)$          | $( 1.77)$     | $( 0.08)$     |
-|---------------------------+---------------+--------------------+---------------+---------------|
-| F-stat                    | $ 0.43$       | $ 1.74$            | $ 0.88$       | $ 0.53$       |
-| N                         | $2879.00$     | $2877.00$          | $2862.00$     | $2879.00$     |
-|---------------------------+---------------+--------------------+---------------+---------------|
-| $\beta^{TUP}-\beta^{CSH}$ | $-2.02$       | $-0.04$            | $-1.48$       | $-0.04$       |
-|                           | $( 1.90)$     | $( 0.06)$          | $( 1.47)$     | $( 0.04)$     |
-|---------------------------+---------------+--------------------+---------------+---------------|
+#+name: tab:mobile_consumption
+|---------------------------+--------------------+----------------+---------------|
+|                           | $\log\lambda_{it}$ | Tot            | logTot        |
+|---------------------------+--------------------+----------------+---------------|
+| CTL mean                  | $-0.018$           | $30.851$       | $3.158^{***}$ |
+|                           | $(1.001)$          | $(27.768)$     | $(0.734)$     |
+|---------------------------+--------------------+----------------+---------------|
+| TUP                       | $0.023$            | $-0.624$       | $-0.011$      |
+|                           | $(0.041)$          | $(1.152)$      | $(0.030)$     |
+| CSH                       | $0.056$            | $0.776$        | $0.028$       |
+|                           | $(0.052)$          | $(1.459)$      | $(0.038)$     |
+| const                     | $-0.018$           | $30.851^{***}$ | $3.158^{***}$ |
+|                           | $(0.027)$          | $(0.753)$      | $(0.020)$     |
+|---------------------------+--------------------+----------------+---------------|
+| $\beta^{TUP}-\beta^{CSH}$ | $-0.033$           | $-1.399$       | $-0.039$      |
+|                           | $(0.055)$          | $(1.524)$      | $(0.040)$     |
+|---------------------------+--------------------+----------------+---------------|
+| F-stat                    | $0.584$            | $0.434$        | $0.475$       |
+| N                         | $2877.000$         | $2878.000$     | $2878.000$    |
+|---------------------------+--------------------+----------------+---------------|
 
 
 ** Food Security
@@ -993,14 +955,16 @@ return tab
  #+end_src
 
 ** Consumption
+
  #+name: lambda_analysis
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-lambdas.py
 
  import numpy as np
  import pandas as pd
  import cfe.estimation as nd
  import statsmodels.api as sm
  import sys
+ DATADIR = "../../data/"
  sys.path.append("../../data")
  from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
  food =  ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
@@ -1008,7 +972,7 @@ return tab
  ConsumptionItems = food+['airtime','fuel']
  mobile=True
 
- D = full_data()
+ D = full_data(DIR=DATADIR)
  C, HH, T = consumption_data(D,WRITE=False,include2016=False)
  HH['log HHSIZE'] = HH["hh_size"].apply(np.log)
  HH = HH.drop("hh_size",1)
@@ -1022,11 +986,11 @@ return tab
  bphi,logL=nd.get_loglambdas(ce,TEST="warn")
  try:
     xrange
-    logL.to_pickle("../../data/ss-lambdas.df")
- except NameError: logL.to_pickle("../../data/ss-lambdas3.df")
+    logL.to_pickle(DATADIR + "ss-lambdas.df")
+ except NameError: logL.to_pickle(DATADIR + "ss-lambdas3.df")
  
  if mobile:
-     M,Mc,Mhh = mobile_data(use_dates=True)
+     M,Mc,Mhh = mobile_data(use_dates=True,DIR = DATADIR+"Mobile/")
      y = Mc.replace(0,np.nan).apply(np.log).sort_index(level=[0,1,2]).filter(items=ConsumptionItems).copy()
      z = Mhh.sort_index(level=[0,1,2]).copy()
      y.index.names, z.index.names = ['j','t','mkt'], ['j','t','mkt']
@@ -1036,32 +1000,32 @@ return tab
      ce = ce.dropna(how='all')
      print("Getting Loglambdas")
      Mbphi,MlogL=nd.get_loglambdas(ce,TEST="warn")
+     MlogL -= MlogL.mean()
+     MlogL /= MlogL.std()
+     MlogL = MlogL.unstack('t').drop('4February',1).stack()
      try:
        xrange
-       MlogL.to_pickle("../../data/ss-lambdas_mobile.df")
-     except NameError: MlogL.to_pickle("../../data/ss-lambdas_mobile3.df")
-
+       MlogL.to_pickle(DATADIR + "ss-lambdas_mobile.df")
+     except NameError: MlogL.to_pickle(DATADIR + "ss-lambdas_mobile3.df")
 
  #+end_src 
 
  #+name: consumption_analysis
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-consumption.py
  import sys
+ DATADIR = "../../data/"
  sys.path.append("../../data")
  import numpy as np
  import pandas as pd
- import cfe.estimation as nd
  import statsmodels.api as sm
- import sys
- sys.path.append("../../data")
  from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
  food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
  month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
  year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
 
- D = full_data()
+ D = full_data(DIR=DATADIR)
  C, HH, T = consumption_data(D,WRITE=True) #"csv")
- logL = pd.read_pickle("../../data/ss-lambdas.df")
+ logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
  logL.index.names=["HH","Year","Location"]
  C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
  C = C.reorder_levels([1,2,0]).sortlevel()
@@ -1073,32 +1037,17 @@ return tab
  C["Month"]   = C.filter(items=food).sum(axis=1)
  C["Year"]   = C.filter(items=food).sum(axis=1)
  C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
+ C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
  C["FoodShr"]= C["Food"].div(C["Tot"]) #$\approx$ FoodShare variable
  C["logTot"] = C["Tot"].apply(np.log)
  C = C.join(T, how="left",lsuffix="_")
 
- M, mC,mHH= mobile_data()
- logL = pd.read_pickle("../../data/ss-lambdas_mobile.df")
- logL.index.names=["HH","Year","Location"]
- mC   = mC.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
- mC   = mC.reorder_levels([1,0,2]).sortlevel()
- keep = pd.notnull(mC.index.get_level_values("Location"))
- mC   = mC.loc[keep,:]
- # Make aggregate variables
- mC["Food"]   = mC.filter(items=food).sum(axis=1).replace(0,np.nan)
- mC["Tot"]   = mC.filter(items=month+food).sum(axis=1).replace(0,np.nan)
- mC["FoodShr"]= mC["Food"].div(mC["Tot"]) #$\approx$ FoodShare variable
- mC["logTot"] = mC["Tot"].apply(np.log)
- mC           = mC.join(T, how="left",lsuffix="_")
- mC['const']  = 1.
-
- Outcomes = ["Tot", "FoodShr", "Food",  "logTot", "Month", "Year", "$\log\lambda_{it}$"]
- mOutcomes =["Tot", "Food",  "logTot", "$\log\lambda_{it}$"]
+ Outcomes = ["Tot","FoodShr", "Food", "z-score", "$\log\lambda_{it}$"]
 
  #$\approx$ Make Baseline variable
  for var in Outcomes: 
      Bl = C.loc[2013,var].reset_index("Location",drop=True)
-     if var in mC: mC = mC.join(Bl,rsuffix="2013", how="left")
+     #if var in mC: mC = mC.join(Bl,rsuffix="2013", how="left")
      C = C.join(Bl,rsuffix="2013", how="left")
 
 
@@ -1111,14 +1060,11 @@ return tab
          interaction = C[group]*C[year]
          if interaction.sum()>0: C["{}*{}".format(group,year)] = interaction
  Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015']
- mControls= ['const', 'TUP', 'CSH']
  #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
  C = C.loc[2014:2015]
  regs  = regressions(C, outcomes=Outcomes,  controls=Controls,  Baseline=2013, baseline_na=True)
- mregs = regressions(mC,outcomes=mOutcomes, controls=mControls, Baseline=2013)
 
  results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
- mresults, mSE  = reg_table(mregs,  resultdf=True,table_info=["N","F-stat"])
 
  CTL = C["TUP"]+C["CSH"] ==0
  CTLmean = {var: C[CTL].loc[2015,var].mean() for var in Outcomes}
@@ -1138,24 +1084,58 @@ return tab
  results = results.append(diff)
  SE = SE.append(diff_se)
 
- mCTL = mC["TUP"]+mC["CSH"] ==0
- mCTLmean = {var: mC.loc[mCTL,var].mean() for var in mOutcomes}
- mCTLsd = {var: mC.loc[mCTL,var].std() for var in mOutcomes}
- mdiff, mdiff_se = pd.DataFrame(mCTLmean,index=["CTL mean"]), pd.DataFrame(mCTLsd,index=["CTL mean"])
-
- for var in mOutcomes:
-     mttest= mregs[var].t_test("TUP - CSH = 0").summary_frame()
-     mdiff.loc[   r"$\beta^{TUP}-\beta^{CSH}$", var] = mttest["coef"][0]
-     mdiff_se.loc[r"$\beta^{TUP}-\beta^{CSH}$", var] = mttest["std err"][0]
-
- mresults = mresults.append(mdiff)
- mSE = mSE.append(mdiff_se)
-
-
  tab = df_to_orgtbl(results, sedf=SE)
- tab = tab+"\n\n"+df_to_orgtbl(mresults, sedf=mSE)
  #+END_SRC
- 
+   
+ #+name: mobile_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-mobile.py
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append("../../data")
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ ITEMS = ["beans", "sugar", "fish", "nuts", "vegetables", "airtime", "fuel"]
+
+ D = full_data(DIR=DATADIR)
+ HH, T = consumption_data(D,WRITE=True)[1:] #"csv")
+ M, C,mHH= mobile_data(DIR = DATADIR+"Mobile/")
+ try: logL = pd.read_pickle(DATADIR+"ss-lambdas_mobile.df")
+ except EnvironmentError: raise IOError("Need to run SS-lambdas.py")
+ logL.index.names=["HH","Year","Location"]
+ logL.name       =["loglambda"]
+ C    = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
+ C    = C.reorder_levels([1,0,2]).sortlevel()
+ keep = pd.notnull(C.index.get_level_values("Location"))
+ C    = C.loc[keep,:]
+ # Make aggregate variables
+ C["Tot"]    = C.filter(ITEMS).sum(axis=1).replace(0,np.nan)
+ C["logTot"] = C["Tot"].apply(np.log)
+ C           = C.join(T, how="left",lsuffix="_")
+ C['const']  = 1.
+
+ Outcomes =["Tot",  "logTot", "$\log\lambda_{it}$"]
+ Controls= ['const', 'TUP', 'CSH']
+
+ regs = regressions(C,outcomes=Outcomes, controls=Controls, Baseline=2013)
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+ CTL = C["TUP"]+C["CSH"] ==0
+ CTLmean = {var: C.loc[CTL,var].mean() for var in Outcomes}
+ CTLsd = {var: C.loc[CTL,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest= regs[var].t_test("TUP - CSH = 0").summary_frame()
+     diff.loc[   r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest["std err"][0]
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+ mtab = df_to_orgtbl(results, sedf=SE)
+
+ #+end_src
+   
 ** Assets
    
 #+name: asset_analysis
