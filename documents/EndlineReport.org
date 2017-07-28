@@ -1,4 +1,3 @@
-:SETUP:    
 #+TITLE: Valuing Assets Provided to Low-Income Households in South Sudan
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
 #+DATE: December 15, 2016
@@ -21,7 +20,6 @@
 #+LATEX_HEADER_EXTRA: \newtheorem{condition}{Condition} \newcommand{\Cond}[1]{Condition \ref{cond:#1}}
 #+LATEX_HEADER_EXTRA: \newtheorem{lemma}{Lemma} \newcommand{\Lem}[1]{Lemma \ref{prop:#1}}
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
-:END:
 
 #+begin_abstract
 
@@ -31,15 +29,21 @@ that prevent extremely poor households from increasing their productivity. The
 framework consists of a sizable transfer of productive physical capital, coupled with
 training and continuous support over the course of one or two years. A second and
 related literature suggests that unconditional cash transfers (UCT's) may have a
-comparable effect. This field experiment, examining the first two years of BRAC's TUP
-pilot in South Sudan, offers a direct comparison of these very different (but
-similarly expensive) approaches to alleviating capital constraints. We consider how
-households' response to each may be affected by South Sudan's unique economic
-conditions in 2014 and 2015, which has faced a level of instability against which TUP
-framework has not been rigorously studied. We find evidence of positive consumption
-effects from both treatments, but a persistent wealth effect only from the TUP. We
-also elicit suggestive evidence that BRAC's support may have helped TUP beneficiaries
-cope with the short-term economic effects of the outbreak of violence in 2014.
+comparable effect on productivity and welfare (with fewer fixed costs). This field
+experiment, examining the first two years of BRAC's TUP pilot in South Sudan, offers
+a direct comparison of these very different approaches to alleviating capital
+constraints. We consider the effect of each on consumption, income, asset holdings,
+and a number of intangible outcomes. We also consider the TUP program's effect on
+households' response to the outbreak of violence in 2014, which led to a level of
+instability in which the Graduation framework has not been previously tested. We find
+evidence of positive consumption effects from both treatments, but only in the
+short-run, and a persistent wealth effect only from the TUP. We also elicit
+suggestive evidence that BRAC's support may have helped TUP beneficiaries cope with
+the short-term economic effects of the outbreak of violence in 2014. We tentatively
+conclude that targeted asset transfers can play a constructive role in helping poor,
+self-employed households when they face economic uncertainty. And while cash
+increases household consumption, the goal of improving income or wealth is aided by
+the additional services that the ultra-poor graduation framework offer.
 
 #+end_abstract
 \newpage
@@ -47,30 +51,32 @@ cope with the short-term economic effects of the outbreak of violence in 2014.
 * Introduction
  
 Poor rural households typically earn money from low-return activities like
-small-scale cultivation or casual day labor. One can reasonably expect that they will
-face both financial and human capital constraints, keeping them from investing 
-and expanding into more lucrative activities. Experience and research over many years
-has lead many to believe that households facing particularly acute poverty are unable
-to solve this problem through the small, high-interest loans typically marketed to
-them. It was these considerations that lead to the development of the initial
-``Transfers to the Ultra-Poor'' (TUP) program in Bangladesh. First implemented by
-BRAC in 2007, the program aims to simultaneously alleviate physical and human capital
-constraints by providing households with a significant transfer of food and productive assets,
-followed by two years of training and support by extension officers. The general
-framework[fn:: known as the ``graduation framework'' pointing to the original
-ambition to move households into an activity where they are able to finance further
-income growth without costly transfers.]
-has since expanded to a wide range of countries, with a general pattern of
-success in increasing aggregate investment, labor supply, and aggregate consumption.
-(Banerjee et al., 2015) (Bandiera et al., 2016)
+small-scale cultivation or casual day labor, and face both financial and human
+capital constraints, keeping them from investing and expanding into more lucrative
+activities. Experience and research over many years has lead many to believe that
+households facing particularly acute poverty are unable to solve this problem through
+the small, high-interest loans typically marketed to them. It was these
+considerations that lead to the development of the initial ``Targeting the
+Ultra-Poor'' (TUP) program in Bangladesh as a supplement or precursor to credit
+services. First implemented by BRAC in 2007, the program aims to simultaneously
+alleviate physical and human capital constraints by providing households with a
+significant transfer of food and productive assets, followed by two years of training
+and support by extension officers. The general framework[fn:: known as the
+``graduation framework'' pointing to the original ambition to move households into an
+activity where they are able to finance further income growth without costly
+transfers.] has since expanded to a wide range of countries, with a general pattern
+of success in increasing aggregate investment, labor supply, and aggregate
+consumption. (Banerjee et al., 2015) (Bandiera et al., 2016)
 
-A second and related literature has gained new interest in parallel with this
+A second, older literature has gained new interest in parallel with this
 literature which examines the effect of offering direct unconditional cash transfers
 (UCT's) to poor households. (Haushoffer & Shapiro, 2016) (Blattman et al., 2014)
 (Blattman et al., 2013) While this and the TUP framework are both direct capital transfer
 interventions, they are very different in their approach, with TUP programs guiding
 and constraining the use of capital towards productive investment while UCT's allow
-households to invest and consume as they see fit.
+households to invest and consume as they see fit. The natural question that arises is
+how these additional features and constraints in the TUP framework change how
+households use their capital transfers.
 
 Here, we examine the experimental evaluation of BRAC's pilot TUP program in South
 Sudan and compare it to a round of unconditional cash transfers. Our results
@@ -160,9 +166,17 @@ providing a second baseline for the Cash transfers. Likewise, the 2015 survey
 allows us to estimate treatment effects one year after the cash transfers, and 15-18
 months after the asset transfers.
 
+This unfortunately left us without data past one year for the cash transfer effects.
+To get some point estimates on household welfare for this group in the slightly
+longer term, we conducted a series of five short surveys on a monthly basis from
+November of 2015 to March of 2016. These collected only a subset of the full
+consumption modules and a few questions tracking major transactions and shocks. The
+short length of the survey allowed them to be administered via the mobile network,
+reducing cost and improving response rate.
+
 ** Empirical Strategy 
 
-We estimate a single model using interactions between time effects and group
+For the main panel, we estimate a single model using interactions between time effects and group
 assignment, as well as baseline values of the outcome variable where available. 
 
 \begin{equation*}
@@ -170,19 +184,27 @@ Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{Cash}I_{t}*Cash_{it}+\beta_{t}
 \end{equation*}
 
 where $\delta_{t}$ are time fixed effects and $I_{t}$ is an indicator if the year
-/t/, and $Y_{it}$ is an outcome of interest for household /i/ in year /t/. The
-interaction of /Cash/ and /2015/ is the endline treatment effect of the cash
-treatment. We take the interactions of TUP assignment with 2014 and 2015 indicators
-as the treatment effects at 3-6 and 15-18 months respectively. The analagous
-interactions with the Cash group offer a second baseline and a 12-month treatment
-effect, respectively. Since those transfers happened after the midline survey, its
-interaction with /2014/ acts as a placebo; there is no /ex ante/ reason to expect
-that they were different from the rest of the control group at that point.
-Given the slight difference in timing, we report a t-test of the hypothesis
-\beta_{TUP,t}-\beta_{Cash,2015}=0 for both $t \in {2014,2015}$. Since the difference
-in timing is much smaller, we consider \beta_{TUP,2015}-\beta_{Cash,2015}=0 to be the
-central hypothesis of interest.
+/t/, and $Y_{it}$ is an outcome of interest for household /i/ in year /t/. We take
+the interactions of TUP assignment with 2014 and 2015 indicators as the treatment
+effects at 6-8 and 15-17 months respectively. The analagous interactions with the
+Cash group offer a second baseline and a 12-month treatment effect, respectively.
+Since those transfers happened after the midline survey, its interaction with /2014/
+acts as a placebo; there is no /ex ante/ reason to expect that they were different
+from the rest of the control group at that point. Given the slight difference in
+timing, we report a t-test of the hypothesis \beta_{TUP,t}-\beta_{Cash,2015}=0 for
+both \(t \in {2014,2015}\). Since the difference in timing is much smaller, we consider
+\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the central hypothesis of interest.
  
+For the supplementary analysis of the high-frequency panel, we estimate a separate
+model, since the underlying data is so different. A constant parameter takes the
+place of the fixed effects. We include 2013 levels as a covariate where possible.
+Since we collect expenditures on only ten consumption items, we report not only the
+total value of spending on those goods, but also a more theoretically grounded
+measure described in Collins & Ligon (2017), which uses the composition of
+expenditures to derive the marginal utility of expenditures for each household. We
+chose ten relatively demand-elastic items specifically for this purpose, as those
+will tend to be the most responsive to changes in welfare.
+
 * Results
 ** Randomization Check
 
@@ -263,7 +285,7 @@ was not too far from creating comparable groups.
 
 ** Consumption
 
-The first measure of welfare to consider is household consumption, defined as the
+The first measure of welfare we consider is household consumption, defined as the
 market value of goods or services used by the household. A sizable basket of goods
 were included in the survey module. These are separated into three categories: Food
 items (with a 3-day recall window), non-durables (a 30-day recall window), and
@@ -274,11 +296,10 @@ The results for several important consumption measures are presented in Table
 \ref{tab:consumption}. Importantly, we do not know about prices for each good in this
 time, though we can say that inflation was as high as 100% between 2014 and 2015.
 Nonetheless, we take the sum of all consumption and expenditure questions together as
-a measure of welfare. [fn:: Details on this issue are discussed further in Beegle
-(2012).] In light of the fact that we have data on an incomplete basket, we also
+a measure of welfare. In light of the fact that we have data on an incomplete basket, we also
 follow Collins and Ligon (2015), which details a method for deriving treatment
 effects on a model-based estimate of households' marginal utility, which we include
-here as \log\lambda_{it}.
+here as \(\log\lambda_{it}\).
 
 The main result is that TUP participants had higher consumption consumption in 2014,
 several months into the primary monitoring phase after the asset transfers.
@@ -286,7 +307,7 @@ Similarly, the cash group has higher consumption in 2015, measured just over a y
 after disbursal. Food transfers had ceased weeks before the 2014 survey was
 conducted, and the assets had been transferred 6-8 months prior. The TUP group sees
 no notable effect in 2015. The short-term consumption effects of either program are
-economically significant, representing a roughly 15% increase in average total
+economically significant, representing a roughly 16% increase in average total
 consumption for both TUP and Cash. These results are consistent with a story in which
 either sort of transfer has a short-term consumption effect. Importantly, we do not
 reject the null hypothesis that the two effects are equal to one another. In either
@@ -338,17 +359,16 @@ return tab
 | N                                | $1291.000$      | $1296.000$         | $1291.000$     | $1291.000$    |
 |----------------------------------+-----------------+--------------------+----------------+---------------|
 
+
 This result leaves open the question of whether the cash treatment had a persistent effect
-on consumption, or whether the short-term effect found in 2015 is similarly;;:w
+on consumption, or whether the short-term effect found in 2015 is similarly
 temporary. It was this question that motivated the collection of an additional five
-rounds of data collection over a 6-month period in late 2015 and early 2016, in which
-we asked about ten items, five food and five non-food. This survey forms the basis
-for further estimates of \log\lambda_{it}. We consider the average treatment effect
-on households sampled for these mobile interviews, both for \log\lambda_{it} and for
+rounds of data over a 6-month period in late 2015 and early 2016, in which
+we asked about ten items, five food and five non-food. We consider the average treatment effect
+on households sampled for these phone interviews, both for \log\lambda_{it} and for
 "Total consumption", which in this case we take a simple sum over the goods
-discussed. We find that, consistent with the TUP program, all evidence of an effect
-seem to be washed out by these subsequent survey.  Since the structure of this data
-is so different, we conduct this analysis separately.
+discussed. We find that, consistent with the TUP program's results in 2015, all evidence of an effect
+seem to be gone by 18th months after the transfer date.
 
 #+name: mobile_results
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
@@ -389,7 +409,8 @@ left to right) going a whole day without eating, going to sleep hungry, being wi
 any food in the house, eating fewer meals than normal at mealtimes, and limiting
 portions. We report the percentage of people who report experiencing each in a
 typical week, as well as a standardized composite z-score using all of these
-questions. There is little evidence of a significant treatment effect at endline.
+questions. There is little evidence of a significant treatment effect at endline
+in 2015.
 
 #+name: foodsecure_results
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
@@ -434,16 +455,15 @@ return tab
 
 ** Assets
    
-We turn now to asset holdings for the households. Controlling for baseline asset holdings
-where possible, we estimate treatment effects for total value of assets owned, total
-value of potentially "productive" assets, as well as land and financial assets. 
+Turning now to asset holdings for the households, we estimate treatment effects for total value of assets owned, total
+value of potentially productive assets, as well as land and financial assets. 
 
 *** Total Asset Holdings
 
-Perhaps interestingly, the cash group does not appear to have seen an increase in the
+The cash group does not appear to have seen an increase in the
 value of assets measured, with negative and imprecise point estimates. The most
 important result is that the TUP group has significantly more asset wealth than the
-cash or control groups in the short term and two years after receipt of transfers.
+cash or control groups in both 2014 and 2015, 18 months after receipt of transfers.
 The TUP group has a change of 536 SSP on average (43% increase over controls, p<.01).
 So-called "Productive" assets include anything that could plausibly be used in
 productive activity. [fn:: For now, we include in this list: small and large
@@ -457,7 +477,9 @@ effect on productive asset value, suggesting that the increased wealth cannot be
 explained purely by households holding onto asset transfers for the length of the
 program's monitoring phase. Instead, the TUP group is the only one for whom total
 measured asset holdings did not fall on average over these two years, which saw
-hyperinflation and a significant aggregate economic downturn.
+hyperinflation and a significant aggregate economic downturn. This asset effect
+(including the savings effect below) is the only feature of households' financial
+situation on which we we see a persistent effect.
 
 #+CAPTION: Measured asset wealth by group-year
 #+NAME: fig:AssetTotal
@@ -507,8 +529,8 @@ return tab
 
 *** Savings
 
-Both treatment arms had significant impact on the average level of cash savings
-within households. The TUP households are strongly encouraged to pay into a savings
+Both treatment arms had significant impact on the average value of cash savings
+within households in 2015. The TUP households are strongly encouraged to pay into a savings
 account maintained by BRAC each time they meet. Anecdotally, this has discouraged
 some women from attending the meetings, but it results in TUP participants being 44%
 (20 pp) more likely to report having any savings at all. It's
@@ -519,10 +541,12 @@ saving when asked. Among those who have savings, TUP households report having ro
 43% (81 SSP) more in value.
 
 Cash households appear no more likely than the control households to report having
-cash savings (around 45% in each group), but households that report saving report
+cash savings (around 45% in each group), but households that report having any
+savings at all report
 having 47% (91.4 SSP) more in value. This is significantly less than was given to
 these households, but combined with the short-term consumption results, goes some
-distance in explaining the lack of effect on physical asset wealth. 
+distance in explaining the lack of effect on physical asset wealth. The cash seems to
+have gone primarily to consumption and savings.
 
 It is common in this community (and most in the region) to store non-perishable food
 like maize, cassava, or millet as a form of savings. This would seem particularly
@@ -612,13 +636,20 @@ return Table
 *** Land Holdings
 
 We also examine land ownership and cultivation in each year. We find no evidence that
-either group is more or less likely to report owning or cultivating land, though this
+either group is more or less likely to report owning or cultivating at least some land, though this
 may be in part because land ownership and cultivation is already very common.
+Anecdotaly, divesting from land ownership entirely could be seen as a relatively
+drastic decision. 
 However, members of the cash group who are involved in agriculture are found to be
 cultivating significantly less land after the fact, which reports cultivating 65%
 less and owning 70% less land than the control group. This raises the interesting
 question of whether the cash group was likely to switch occupations from farming to
 non-farm self-employment.
+It could also raise questions around the underlying logic of the more agrarian
+transfer in the TUP program, if unconstrained transfers prompt households to divest
+from these opportunities. This concern may be validated somewhat by the fact that TUP
+participants primarily stated a preference for small retail training and transfers
+over small animal husbandry or vegetable gardening.
 
 ** Income
 
@@ -631,7 +662,7 @@ income is not particularly different among groups. Perhaps the main lesson is th
 the TUP group has measurably more reported livestock-related income, and less farm
 income, indicating a shift away from farming. The cash group may exhibit some
 substitution away from farm and livestock, but as is evident graphically, we do not
-observe sizable changes in income for either treatment group. 
+observe sizable changes in total income for either treatment group. 
 
 #+name: income_results
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
@@ -688,8 +719,8 @@ Baseline:
 In 2014, households were surveyed shortly after the NGO's offices had re-opened in
 the wake of the outbreak of widespread armed conflict. Respondents were asked a short
 set of questions about whether they were directly affected, and if so, in what way.
-There were only a few incidents of violence near Yei town at that point, and the most
-directly involved ethnic groups made up a small portion of the local populace. There
+There has only been a few incidents of violence near Yei town at that point, and the most
+directly involved ethnic groups made up a small portion of the local population. There
 is no clear comparison group to which we might compare our sample, and the economic
 climate changed over this same period in several ways that were probably not directly
 caused by the violence. As such, we have no clear means of identifying the effect of
@@ -707,7 +738,8 @@ are 24% (13 pp.) less likely to report having been "affected" by the conflict, a
 unable to plant crops or invest in their business. This was the second most common
 way in which households reported being affected behind "needed to relocate or
 migrate", where respondents are not clearly different. Nonetheless, this raises the
-possibility that having received a significant asset transfer around the outbreak of
+possibility that having received a significant asset transfer and the expectation of
+NGO support around the outbreak of
 conflict may have helped mitigate the conflict's negative effect on investment and
 protect households from being affected overall.
 
@@ -758,6 +790,10 @@ households when they face economic uncertainty. And while cash increases househo
 consumption, the goal of improving income or wealth is aided by the additional
 services that the ultra-poor graduation framework offer.
   
+
+* References
+   \renewcommand{\refname}{}
+   \printbibliography
 
 
 * COMMENT Extra Analysis
@@ -878,9 +914,10 @@ return tab
  import pandas as pd
  import statsmodels.api as sm
  import sys
- sys.path.append("../../data")
+ DATADIR = "../../data/"
+ sys.path.append(DATADIR)
  from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
- D = full_data(balance=[])
+ D = full_data(DIR = DATADIR,balance=[])
  WEEKLY = True
 
  codes = {"1-2 times a week": 3,
@@ -1037,12 +1074,116 @@ return tab
  C["Month"]   = C.filter(items=food).sum(axis=1)
  C["Year"]   = C.filter(items=food).sum(axis=1)
  C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
+
+ def align_indices(df1,df2):
+    """
+    Reorder levels of df2 to match that of df1
+    Must have same index.names
+    """
+    I1, I2 = df1.index, df2.index
+    try: assert(not set(I1.names).difference(I2.names))
+    except AssertionError: raise ValueError("Index names must be the same")
+    new_order = []
+    for lvl in I1.names: new_order.append(I2.names.index(lvl))
+    df2 = df2.reorder_levels(new_order)
+    return df1, df2
+ def winsorize(Series, **kwargs):
+    """
+    Need to implement two-sided censoring as well.
+    WARNING: if Top<0, all zeros will be changed to Top
+    """
+
+    percent    = kwargs.setdefault("percent",99)
+    stdev      = kwargs.setdefault("stdev",False)
+    drop       = kwargs.setdefault("drop",False)
+    drop_zeros = kwargs.setdefault("drop_zeros",True)
+    twoway     = kwargs.setdefault("twoway",False)
+
+    if drop_zeros: S = Series.replace(0,np.nan).dropna()
+    else: S = Series.dropna()
+    N_OBS = S.notnull().sum()
+    if N_OBS<10: return S
+
+    if percent: Top = np.percentile(S, percent)
+    if stdev:   
+        Top =  S.dropna().mean()
+        Top += stdev*S.dropna().std()
+    try: assert((not drop_zeros) or Top>0)
+    except AssertionError: raise ValueError("Top < 0 but zeros excluded")
+    if drop: replace_with = np.nan
+    else:    replace_with = Top
+
+    _Series = Series.copy()
+    _Series[_Series>Top]=replace_with
+
+    if not twoway: return _Series
+    else:
+        kwargs['twoway'] = False
+        return -1*winsorize(-1*_Series, **kwargs)
+ def USD_conversion(Exp,exchange_rate=1.,PPP=1.,inflation=1.,time='Year'):
+    """
+    Convert nominal local currency into price- and inflation-adjusted USD
+
+    Exp - A numeric or pd.Series object 
+    exchange_rate - Taken as LCU/USD. 
+    PPP - Taken as $Real/$nominal
+    inflation - Taken as % inflation compared to some baseline.
+    time - If a list is passed, `time' indicates the name or position of the time level in Exp.index
+        NOTE: This has to be a cumulative number, so if inflation is 20% for two straight years, that year should be divided by (1+.2)**2
+    Final calculation will basically be Exp_usdppp = Exp*(exchange_rate*PPP)/inflation
+
+    if pd.Series are passed for any kwarg, index name needs to be in the multi-index of Exp.
+    """
+    if type(inflation)==list: inflation=[1./i for i in inflation]
+    else: inflation = 1/inflation
+    if type(exchange_rate)==list: exchange_rate=[1./i for i in exchange_rate]
+    else: exchange_rate = 1/exchange_rate
+    
+    _Exp = Exp.copy()
+    VARS = (exchange_rate, PPP,inflation)
+    if list in map(type,VARS):
+        if time in _Exp.index.names: time=_Exp.index.names.index(time)
+        time = _Exp.index.levels[time]
+    for var in VARS:
+        if type(var)==list: var=pd.Series(var,index=time)
+        try: _Exp = _Exp.mul(var)
+        except ValueError: #~ If Series index doesn't have a name, try this...
+            var.index.name = var.name
+            _Exp = _Exp.mul(var)
+    return _Exp
+ def percapita_conversion(Exp,HH,children=["boys","girls"],adult_equivalent=1.,minus_children='hh_size'):
+    """
+    Returns household per-capita expenditures given:
+        `Exp'- Total household expenditures
+        `HH' - Total number of individuals in the household
+            If HH is a pd.DataFrame, Exp is divided by HH.sum(1)
+            if `children' is the name of a column or a list of column names, 
+            those first get divided by the factor adult_equivalent
+    """
+    try: HH.columns #~ If HH is a series, just divide though
+    except AttributeError: return Exp.div(HH)
+    _HH = HH.copy()
+    if type(children)==str: children=[children]
+    children = _HH.columns.intersection(children).tolist()
+    if minus_children: _HH[minus_children] -= _HH[children].sum(1)
+    if children: _HH[children] *= adult_equivalent
+    Exp,_HH = align_indices(Exp,_HH)
+    return Exp.div(_HH.sum(1).replace(0,1))
+
+ #~ Source: http://data.worldbank.org/indicator/PA.NUS.PRVT.PP?locations=SS&name_desc=false
+ xrate = [ 2.161, 2.196, 3.293] #~ To avoid confusion, using PPP adjusted xrate and just setting PPP=1.
+ PPP = 1.
+ inflation= 1. #~ Bank data uses international $, which is inflation adjusted.
+ C["Exp_usd"] = winsorize(USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation))
+ C["Tot_pc"] = percapita_conversion(C["Exp_usd"],HH,adult_equivalent=.5)
+ #C["Exp_usdpc_tc"] = winsorize(C["Exp_usdpc"])
+
  C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
  C["FoodShr"]= C["Food"].div(C["Tot"]) #$\approx$ FoodShare variable
  C["logTot"] = C["Tot"].apply(np.log)
  C = C.join(T, how="left",lsuffix="_")
 
- Outcomes = ["Tot","FoodShr", "Food", "z-score", "$\log\lambda_{it}$"]
+ Outcomes = ["Tot","FoodShr", "Food", "$\log\lambda_{it}$","z-score"]
 
  #$\approx$ Make Baseline variable
  for var in Outcomes: 
@@ -1634,143 +1775,190 @@ return Table
 
 ** Confidence & Autonomy
 
-#+name: autonomy_analysis
+#+name: decision_analysis
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
-import numpy as np
-import pandas as pd
-import statsmodels.api as sm
-import sys
-sys.path.append("../../data")
-from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append(DATADIR)
+ from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ D = full_data(DIR = DATADIR,balance=[])
 
-D = full_data(balance=[])
-E = D.filter(regex="^(access|decide|conf|gone)")
-years = {"_b":2013, "_m":2014, "_e": 2015}
-E = E.rename(columns = lambda x: x[:-2]+years[x[-2:]])
+ Decide14 = D.filter(regex="^decide_.*_m").rename(columns=lambda x: x[:-2].split("_")[-1])#~.applymap(recode)
+ Decide15 = D.filter(regex="^decide_.*_e").rename(columns=lambda x: x[:-2].split("_")[-1])#~.applymap(recode)
 
-print("THIS IS UNFINISHED...")
+{'decide_arguments',
+ 'decide_fearful',
 
-by_year = []
-for yr in ("2013","2014","2015"): #~ Provide Baseline Values & put in long format
-    E_Year = E.filter(like=yr).rename(columns=lambda x:x[:-4])
-    for var in Outcomes: 
-        if var+"2013" in Sav: S_Year[var+"2013"] = Sav[var+"2013"]
-    #~ Note that adding "Year" has to come after topcode, which switches strings to Nan...
-    S_Year["Year"] = yr
-    by_year.append(S_Year)
+ 'decide_pressuretospend'}
 
-Sav = pd.DataFrame(index=D.index) #~ Set up empty DataFrame to fill
+ who_decides = ['dailypurchase', 'familyvisits', 'healthchild', 'healthown', 'majorpurchase', 'moneyown']
+ who_recode  = lambda x: float("Herself" in x) if pd.notnull(x) else x
 
-for suff,year in years: #~ Make Aggregate savings and land holding variables
-    E["Savings{}".format(year)]  = D.filter(regex="^savings_(home|bank|BRAC|NGOs|other){}".format(suff)).sum(1)
-    Sav["Food Sav{}".format(year)] = D.filter(regex="^savings_(maize|sorghum|otherfood)_val{}".format(suff)).sum(1)
+ if WEEKLY:
+     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
+     Aval2013 = Aval2013.applymap(weekly)
+     Aval2014 = Aval2014.applymap(weekly)      
+     Aval2015 = Aval2015.applymap(weekly)
+ 
+ index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
+ Outcomes = index_vars+["z-score"]
+ #~ Creates Year dummies, z-scores and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     if not weekly:
+        for var in index_vars:
+            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
+     FS_sum = Aval[index_vars].sum(axis=1)
+     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+    
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["TUP","CSH"]])
 
-    Sav["LandCult{}".format(year)] = D.filter(regex="^land_(owncult|rentcult|communitycult){}".format(suff)).sum(1)
-    Sav["LandOwn{}".format(year)]  = D.filter(regex="^land_own.*{}".format(suff)).sum(1)
+ for group in ("TUP", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
 
-    Sav["Get Trans{}".format(year)]  = D.filter(regex="^transfers_get.*{}".format(suff)).sum(1)
-    Sav["Give Trans{}".format(year)] = D.filter(regex="^transfers_give.*{}".format(suff)).sum(1)
+ Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
 
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
 
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
 
-#~ In long format with Year,HH index
-Sav = pd.concat(by_year).reset_index().set_index(["Year", "HH"], drop=False)
-#~ Make Year Dummies for fixed effects
+ CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
+ for var in Outcomes:
+     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
 
-Sav = Sav.join(pd.get_dummies(Sav["Year"]).rename(columns=lambda col: str(int(col))), how="left")
-Sav = Sav.drop(["HH","Year"],1)
-Sav = Sav.join(D[["TUP","CSH"]])
+     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-for group in ("TUP", "CSH"): #~ Make Treatment-by-year interactions
-    for year in ("2013", "2014", "2015"):
-        Sav["{}*{}".format(group,year)] = Sav[group]*Sav[year]
-
-def isPositive(i):
-    #~ Returns 1 if number is positive, 0 if number<=0, nan if already nan, and self if string.
-    #~ Note that it's safe to run dummy variables through.
-    try:
-        if np.isnan(i): return i
-        else: return float(i>0)
-    except TypeError: return i
-
-too_many_null = 30
-Nonzero = Sav.applymap(isPositive)
-
-#~ Naturally, only do this after Creating Nonzero dataframe.
-for var in Outcomes: #~ Set zeros to missing And topcode among non-zero values
-    for outcome in (var,var+"2013"):
-       if outcome in Sav:
-           Sav[outcome] = Sav[outcome].replace(0,np.nan)
-           Sav[outcome] = Sav.groupby(level="Year")[outcome].apply(topcode) #~ (Untested)
-
-many_null = [item for item in Sav if Sav[item].notnull().sum()<too_many_null]
-Sav = Sav.drop(many_null,1).copy()
-
-Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
-
-Sav = Sav.loc["2014":"2015"]
-Nonzero = Nonzero.loc["2014":"2015"]
-Sav_regs = regressions(Sav,     outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-Zer_regs = regressions(Nonzero, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-
-Sav_results, Sav_SE  = reg_table(Sav_regs,  resultdf=True,table_info=["N","F-stat"])
-Zer_results, Zer_SE  = reg_table(Zer_regs,  resultdf=True,table_info=["N","F-stat"])
-
-CTL = Sav["TUP"]+Sav["CSH"] ==0
-#~ Get control group means and standard deviations
-Sav_CTLmean = {var: Sav[CTL].loc["2015",var].mean() for var in Outcomes}
-Zer_CTLmean = {var: Nonzero[CTL].loc["2015",var].mean() for var in Outcomes}
-Sav_CTLsd = {var: Sav[CTL].loc["2015",var].std() for var in Outcomes}
-Zer_CTLsd = {var: Nonzero[CTL].loc["2015",var].std() for var in Outcomes}
-Sav_diff, Sav_diff_se = pd.DataFrame(Sav_CTLmean,index=["CTL mean"]), pd.DataFrame(Sav_CTLsd,index=["CTL mean"])
-Zer_diff, Zer_diff_se = pd.DataFrame(Zer_CTLmean,index=["CTL mean"]), pd.DataFrame(Zer_CTLsd,index=["CTL mean"])
-
-for var in Outcomes:
-    #~ Savings regressions first
-    ttest1= Sav_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Sav_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
-
-    Sav_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Sav_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-    Sav_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Sav_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-    #~ Nonzero regressions second
-    ttest1= Zer_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Zer_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
-
-    Zer_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Zer_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-    Zer_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Zer_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
 
-Land = ["LandCult","LandOwn"] 
-Savings = ["Savings","Food Sav", "Get Trans", "Give Trans"] 
+ results = results.append(diff)
+ SE = SE.append(diff_se)
 
-Save_results = Sav_results.append(Sav_diff)
-Zero_results = Zer_results.append(Zer_diff)
-Save_SE = Sav_SE.append(Sav_diff_se)
-Zero_SE = Zer_SE.append(Zer_diff_se)
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
 
-#~ Land_results = Sav_results[Land]
-#~ zLan_results = Zer_results[Land]
-#~ Land_SE = Sav_SE[Land]
-#~ zLan_SE = Zer_SE[Land]
-#~ 
-#~ Sav_results = Sav_results[Savings]
-#~ Zer_results = Zer_results[Savings]
-#~ Sav_SE =           Sav_SE[Savings]
-#~ Zer_SE =           Zer_SE[Savings]
+#+name: confidence_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append(DATADIR)
+ from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ D = full_data(DIR = DATADIR,balance=[])
 
-Save_tab = df_to_orgtbl(Save_results, sedf=Sav_SE)
-Zero_tab = df_to_orgtbl(Zero_results, sedf=Zer_SE)
+ autonomy_codes = {'go_NGO',
+                   'go_church',
+                   'go_healthcenter',
+                   'go_housenonrelative',
+                   'go_houserelative',
+                   'go_market',
+                   'go_school',
+                   'go_water'}
 
-Table = Zero_tab +"\n"+ Save_tab
-#+end_src
+ codes = {"1-2 times a week": 3,
+         "3-6 times a week": 2,
+         "Everyday": 1,
+         "everyday": 1,
+         "Less than once a week": 4,
+         "less than once a week": 4,
+         "Never": 5,
+         "never": 5}
+
+ recode = lambda x: codes.setdefault(x,x)
+
+ Autnmy14 = D.filter(regex="^cango_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Autnmy15 = D.filter(regex="^cango_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
+
+{'decide_arguments',
+ 'decide_fearful',
+
+ 'decide_dailypurchase',
+ 'decide_familyvisits',
+ 'decide_healthchild',
+ 'decide_healthown',
+ 'decide_majorpurchase',
+ 'decide_moneyown',
+ 'decide_pressuretospend'}
+
+ Decide14 = D.filter(regex="^decide_.*_m").rename(columns=lambda x: x[:-2])#~.applymap(recode)
+ Decide15 = D.filter(regex="^decide_.*_e").rename(columns=lambda x: x[:-2])#~.applymap(recode)
+
+ Confid14 = D.filter(regex="^conf_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Confid15 = D.filter(regex="^conf_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
+
+ if WEEKLY:
+     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
+     Aval2013 = Aval2013.applymap(weekly)
+     Aval2014 = Aval2014.applymap(weekly)      
+     Aval2015 = Aval2015.applymap(weekly)
+ 
+ index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
+ Outcomes = index_vars+["z-score"]
+ #~ Creates Year dummies, z-scores and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     if not weekly:
+        for var in index_vars:
+            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
+     FS_sum = Aval[index_vars].sum(axis=1)
+     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+    
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["TUP","CSH"]])
+
+ for group in ("TUP", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+ Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
 
 
 

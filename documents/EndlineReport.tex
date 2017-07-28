@@ -1,4 +1,4 @@
-% Created 2017-06-29 Thu 13:08
+% Created 2017-07-26 Wed 21:02
 \documentclass[12pt,article]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -43,9 +43,6 @@
 \begin{document}
 
 \maketitle
-:SETUP:    
-:END:
-
 \begin{abstract}
 
 
@@ -55,15 +52,21 @@ that prevent extremely poor households from increasing their productivity. The
 framework consists of a sizable transfer of productive physical capital, coupled with
 training and continuous support over the course of one or two years. A second and
 related literature suggests that unconditional cash transfers (UCT's) may have a
-comparable effect. This field experiment, examining the first two years of BRAC's TUP
-pilot in South Sudan, offers a direct comparison of these very different (but
-similarly expensive) approaches to alleviating capital constraints. We consider how
-households' response to each may be affected by South Sudan's unique economic
-conditions in 2014 and 2015, which has faced a level of instability against which TUP
-framework has not been rigorously studied. We find evidence of positive consumption
-effects from both treatments, but a persistent wealth effect only from the TUP. We
-also elicit suggestive evidence that BRAC's support may have helped TUP beneficiaries
-cope with the short-term economic effects of the outbreak of violence in 2014.
+comparable effect on productivity and welfare (with fewer fixed costs). This field
+experiment, examining the first two years of BRAC's TUP pilot in South Sudan, offers
+a direct comparison of these very different approaches to alleviating capital
+constraints. We consider the effect of each on consumption, income, asset holdings,
+and a number of intangible outcomes. We also consider the TUP program's effect on
+households' response to the outbreak of violence in 2014, which led to a level of
+instability in which the Graduation framework has not been previously tested. We find
+evidence of positive consumption effects from both treatments, but only in the
+short-run, and a persistent wealth effect only from the TUP. We also elicit
+suggestive evidence that BRAC's support may have helped TUP beneficiaries cope with
+the short-term economic effects of the outbreak of violence in 2014. We tentatively
+conclude that targeted asset transfers can play a constructive role in helping poor,
+self-employed households when they face economic uncertainty. And while cash
+increases household consumption, the goal of improving income or wealth is aided by
+the additional services that the ultra-poor graduation framework offer.
 \end{abstract}
 \newpage
 
@@ -71,30 +74,32 @@ cope with the short-term economic effects of the outbreak of violence in 2014.
 \label{sec-1}
 
 Poor rural households typically earn money from low-return activities like
-small-scale cultivation or casual day labor. One can reasonably expect that they will
-face both financial and human capital constraints, keeping them from investing 
-and expanding into more lucrative activities. Experience and research over many years
-has lead many to believe that households facing particularly acute poverty are unable
-to solve this problem through the small, high-interest loans typically marketed to
-them. It was these considerations that lead to the development of the initial
-``Transfers to the Ultra-Poor'' (TUP) program in Bangladesh. First implemented by
-BRAC in 2007, the program aims to simultaneously alleviate physical and human capital
-constraints by providing households with a significant transfer of food and productive assets,
-followed by two years of training and support by extension officers. The general
-framework\footnote{known as the ``graduation framework'' pointing to the original
-ambition to move households into an activity where they are able to finance further
-income growth without costly transfers.}
-has since expanded to a wide range of countries, with a general pattern of
-success in increasing aggregate investment, labor supply, and aggregate consumption.
-(Banerjee et al., 2015) (Bandiera et al., 2016)
+small-scale cultivation or casual day labor, and face both financial and human
+capital constraints, keeping them from investing and expanding into more lucrative
+activities. Experience and research over many years has lead many to believe that
+households facing particularly acute poverty are unable to solve this problem through
+the small, high-interest loans typically marketed to them. It was these
+considerations that lead to the development of the initial ``Targeting the
+Ultra-Poor'' (TUP) program in Bangladesh as a supplement or precursor to credit
+services. First implemented by BRAC in 2007, the program aims to simultaneously
+alleviate physical and human capital constraints by providing households with a
+significant transfer of food and productive assets, followed by two years of training
+and support by extension officers. The general framework\footnote{known as the
+``graduation framework'' pointing to the original ambition to move households into an
+activity where they are able to finance further income growth without costly
+transfers.} has since expanded to a wide range of countries, with a general pattern
+of success in increasing aggregate investment, labor supply, and aggregate
+consumption. (Banerjee et al., 2015) (Bandiera et al., 2016)
 
-A second and related literature has gained new interest in parallel with this
+A second, older literature has gained new interest in parallel with this
 literature which examines the effect of offering direct unconditional cash transfers
 (UCT's) to poor households. (Haushoffer \& Shapiro, 2016) (Blattman et al., 2014)
 (Blattman et al., 2013) While this and the TUP framework are both direct capital transfer
 interventions, they are very different in their approach, with TUP programs guiding
 and constraining the use of capital towards productive investment while UCT's allow
-households to invest and consume as they see fit.
+households to invest and consume as they see fit. The natural question that arises is
+how these additional features and constraints in the TUP framework change how
+households use their capital transfers.
 
 Here, we examine the experimental evaluation of BRAC's pilot TUP program in South
 Sudan and compare it to a round of unconditional cash transfers. Our results
@@ -188,10 +193,18 @@ providing a second baseline for the Cash transfers. Likewise, the 2015 survey
 allows us to estimate treatment effects one year after the cash transfers, and 15-18
 months after the asset transfers.
 
+This unfortunately left us without data past one year for the cash transfer effects.
+To get some point estimates on household welfare for this group in the slightly
+longer term, we conducted a series of five short surveys on a monthly basis from
+November of 2015 to March of 2016. These collected only a subset of the full
+consumption modules and a few questions tracking major transactions and shocks. The
+short length of the survey allowed them to be administered via the mobile network,
+reducing cost and improving response rate.
+
 \subsection{Empirical Strategy}
 \label{sec-2-2}
 
-We estimate a single model using interactions between time effects and group
+For the main panel, we estimate a single model using interactions between time effects and group
 assignment, as well as baseline values of the outcome variable where available. 
 
 \begin{equation*}
@@ -199,18 +212,26 @@ Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{Cash}I_{t}*Cash_{it}+\beta_{t}
 \end{equation*}
 
 where $\delta_{t}$ are time fixed effects and $I_{t}$ is an indicator if the year
-\emph{t}, and $Y_{it}$ is an outcome of interest for household \emph{i} in year \emph{t}. The
-interaction of \emph{Cash} and \emph{2015} is the endline treatment effect of the cash
-treatment. We take the interactions of TUP assignment with 2014 and 2015 indicators
-as the treatment effects at 3-6 and 15-18 months respectively. The analagous
-interactions with the Cash group offer a second baseline and a 12-month treatment
-effect, respectively. Since those transfers happened after the midline survey, its
-interaction with \emph{2014} acts as a placebo; there is no \emph{ex ante} reason to expect
-that they were different from the rest of the control group at that point.
-Given the slight difference in timing, we report a t-test of the hypothesis
-$\beta$$_{\text{TUP,t}}$-$\beta$$_{\text{Cash,2015}}$=0 for both $t \in {2014,2015}$. Since the difference
-in timing is much smaller, we consider $\beta$$_{\text{TUP,2015}}$-$\beta$$_{\text{Cash,2015}}$=0 to be the
-central hypothesis of interest.
+\emph{t}, and $Y_{it}$ is an outcome of interest for household \emph{i} in year \emph{t}. We take
+the interactions of TUP assignment with 2014 and 2015 indicators as the treatment
+effects at 6-8 and 15-17 months respectively. The analagous interactions with the
+Cash group offer a second baseline and a 12-month treatment effect, respectively.
+Since those transfers happened after the midline survey, its interaction with \emph{2014}
+acts as a placebo; there is no \emph{ex ante} reason to expect that they were different
+from the rest of the control group at that point. Given the slight difference in
+timing, we report a t-test of the hypothesis $\beta$$_{\text{TUP,t}}$-$\beta$$_{\text{Cash,2015}}$=0 for
+both \(t \in {2014,2015}\). Since the difference in timing is much smaller, we consider
+\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the central hypothesis of interest.
+
+For the supplementary analysis of the high-frequency panel, we estimate a separate
+model, since the underlying data is so different. A constant parameter takes the
+place of the fixed effects. We include 2013 levels as a covariate where possible.
+Since we collect expenditures on only ten consumption items, we report not only the
+total value of spending on those goods, but also a more theoretically grounded
+measure described in Collins \& Ligon (2017), which uses the composition of
+expenditures to derive the marginal utility of expenditures for each household. We
+chose ten relatively demand-elastic items specifically for this purpose, as those
+will tend to be the most responsive to changes in welfare.
 
 \section{Results}
 \label{sec-3}
@@ -294,7 +315,7 @@ was not too far from creating comparable groups.
 \subsection{Consumption}
 \label{sec-3-2}
 
-The first measure of welfare to consider is household consumption, defined as the
+The first measure of welfare we consider is household consumption, defined as the
 market value of goods or services used by the household. A sizable basket of goods
 were included in the survey module. These are separated into three categories: Food
 items (with a 3-day recall window), non-durables (a 30-day recall window), and
@@ -305,11 +326,10 @@ The results for several important consumption measures are presented in Table
 \ref{tab:consumption}. Importantly, we do not know about prices for each good in this
 time, though we can say that inflation was as high as 100\% between 2014 and 2015.
 Nonetheless, we take the sum of all consumption and expenditure questions together as
-a measure of welfare. \footnote{Details on this issue are discussed further in Beegle
-(2012).} In light of the fact that we have data on an incomplete basket, we also
+a measure of welfare. In light of the fact that we have data on an incomplete basket, we also
 follow Collins and Ligon (2015), which details a method for deriving treatment
 effects on a model-based estimate of households' marginal utility, which we include
-here as $\log$$\lambda$$_{\text{it}}$.
+here as \(\log\lambda_{it}\).
 
 The main result is that TUP participants had higher consumption consumption in 2014,
 several months into the primary monitoring phase after the asset transfers.
@@ -317,7 +337,7 @@ Similarly, the cash group has higher consumption in 2015, measured just over a y
 after disbursal. Food transfers had ceased weeks before the 2014 survey was
 conducted, and the assets had been transferred 6-8 months prior. The TUP group sees
 no notable effect in 2015. The short-term consumption effects of either program are
-economically significant, representing a roughly 15\% increase in average total
+economically significant, representing a roughly 16\% increase in average total
 consumption for both TUP and Cash. These results are consistent with a story in which
 either sort of transfer has a short-term consumption effect. Importantly, we do not
 reject the null hypothesis that the two effects are equal to one another. In either
@@ -368,17 +388,16 @@ N & $1291.000$ & $1296.000$ & $1291.000$ & $1291.000$\\
 \hline
 \end{longtable}
 
+
 This result leaves open the question of whether the cash treatment had a persistent effect
-on consumption, or whether the short-term effect found in 2015 is similarly;;:w
+on consumption, or whether the short-term effect found in 2015 is similarly
 temporary. It was this question that motivated the collection of an additional five
-rounds of data collection over a 6-month period in late 2015 and early 2016, in which
-we asked about ten items, five food and five non-food. This survey forms the basis
-for further estimates of $\log$$\lambda$$_{\text{it}}$. We consider the average treatment effect
-on households sampled for these mobile interviews, both for $\log$$\lambda$$_{\text{it}}$ and for
+rounds of data over a 6-month period in late 2015 and early 2016, in which
+we asked about ten items, five food and five non-food. We consider the average treatment effect
+on households sampled for these phone interviews, both for $\log$$\lambda$$_{\text{it}}$ and for
 "Total consumption", which in this case we take a simple sum over the goods
-discussed. We find that, consistent with the TUP program, all evidence of an effect
-seem to be washed out by these subsequent survey.  Since the structure of this data
-is so different, we conduct this analysis separately.
+discussed. We find that, consistent with the TUP program's results in 2015, all evidence of an effect
+seem to be gone by 18th months after the transfer date.
 
 \begin{longtable}{lrrrrr}
 \caption{\label{tab:mobile_consumption}Average treatment effects using mobile data collection (results are robust to controlling for baseline levels)}
@@ -419,7 +438,8 @@ left to right) going a whole day without eating, going to sleep hungry, being wi
 any food in the house, eating fewer meals than normal at mealtimes, and limiting
 portions. We report the percentage of people who report experiencing each in a
 typical week, as well as a standardized composite z-score using all of these
-questions. There is little evidence of a significant treatment effect at endline.
+questions. There is little evidence of a significant treatment effect at endline
+in 2015.
 
 \begin{longtable}{lrrrrrrr}
 \caption{\label{tab:foodsecure}Percentage of respondents reporting a food security problem occurs at least once a week.}
@@ -464,17 +484,16 @@ $\beta^{TUP}_{2015}-\beta^{CSH}$ & $-0.06$ & $-0.03$ & $-0.04$ & $-0.02$ & \$ 0.
 \subsection{Assets}
 \label{sec-3-4}
 
-We turn now to asset holdings for the households. Controlling for baseline asset holdings
-where possible, we estimate treatment effects for total value of assets owned, total
-value of potentially "productive" assets, as well as land and financial assets. 
+Turning now to asset holdings for the households, we estimate treatment effects for total value of assets owned, total
+value of potentially productive assets, as well as land and financial assets. 
 
 \subsubsection{Total Asset Holdings}
 \label{sec-3-4-1}
 
-Perhaps interestingly, the cash group does not appear to have seen an increase in the
+The cash group does not appear to have seen an increase in the
 value of assets measured, with negative and imprecise point estimates. The most
 important result is that the TUP group has significantly more asset wealth than the
-cash or control groups in the short term and two years after receipt of transfers.
+cash or control groups in both 2014 and 2015, 18 months after receipt of transfers.
 The TUP group has a change of 536 SSP on average (43\% increase over controls, p<.01).
 So-called "Productive" assets include anything that could plausibly be used in
 productive activity. \footnote{For now, we include in this list: small and large
@@ -488,7 +507,9 @@ effect on productive asset value, suggesting that the increased wealth cannot be
 explained purely by households holding onto asset transfers for the length of the
 program's monitoring phase. Instead, the TUP group is the only one for whom total
 measured asset holdings did not fall on average over these two years, which saw
-hyperinflation and a significant aggregate economic downturn.
+hyperinflation and a significant aggregate economic downturn. This asset effect
+(including the savings effect below) is the only feature of households' financial
+situation on which we we see a persistent effect.
 
 \begin{figure}[htb]
 \centering
@@ -540,8 +561,8 @@ $\beta^{TUP}_{2015}-\beta^{CSH}$ & $674.78^{***}$ & $325.74^{***}$\\
 \subsubsection{Savings}
 \label{sec-3-4-2}
 
-Both treatment arms had significant impact on the average level of cash savings
-within households. The TUP households are strongly encouraged to pay into a savings
+Both treatment arms had significant impact on the average value of cash savings
+within households in 2015. The TUP households are strongly encouraged to pay into a savings
 account maintained by BRAC each time they meet. Anecdotally, this has discouraged
 some women from attending the meetings, but it results in TUP participants being 44\%
 (20 pp) more likely to report having any savings at all. It's
@@ -552,10 +573,12 @@ saving when asked. Among those who have savings, TUP households report having ro
 43\% (81 SSP) more in value.
 
 Cash households appear no more likely than the control households to report having
-cash savings (around 45\% in each group), but households that report saving report
+cash savings (around 45\% in each group), but households that report having any
+savings at all report
 having 47\% (91.4 SSP) more in value. This is significantly less than was given to
 these households, but combined with the short-term consumption results, goes some
-distance in explaining the lack of effect on physical asset wealth. 
+distance in explaining the lack of effect on physical asset wealth. The cash seems to
+have gone primarily to consumption and savings.
 
 It is common in this community (and most in the region) to store non-perishable food
 like maize, cassava, or millet as a form of savings. This would seem particularly
@@ -650,13 +673,20 @@ N & $671.00$ & $777.00$ & $1042.00$ & $1114.00$\\
 \label{sec-3-4-3}
 
 We also examine land ownership and cultivation in each year. We find no evidence that
-either group is more or less likely to report owning or cultivating land, though this
+either group is more or less likely to report owning or cultivating at least some land, though this
 may be in part because land ownership and cultivation is already very common.
+Anecdotaly, divesting from land ownership entirely could be seen as a relatively
+drastic decision. 
 However, members of the cash group who are involved in agriculture are found to be
 cultivating significantly less land after the fact, which reports cultivating 65\%
 less and owning 70\% less land than the control group. This raises the interesting
 question of whether the cash group was likely to switch occupations from farming to
 non-farm self-employment.
+It could also raise questions around the underlying logic of the more agrarian
+transfer in the TUP program, if unconstrained transfers prompt households to divest
+from these opportunities. This concern may be validated somewhat by the fact that TUP
+participants primarily stated a preference for small retail training and transfers
+over small animal husbandry or vegetable gardening.
 
 \subsection{Income}
 \label{sec-3-5}
@@ -670,7 +700,7 @@ income is not particularly different among groups. Perhaps the main lesson is th
 the TUP group has measurably more reported livestock-related income, and less farm
 income, indicating a shift away from farming. The cash group may exhibit some
 substitution away from farm and livestock, but as is evident graphically, we do not
-observe sizable changes in income for either treatment group. 
+observe sizable changes in total income for either treatment group. 
 
 \begin{figure}[htb]
 \centering
@@ -711,8 +741,8 @@ $\beta^{TUP}-\beta^{CSH}$ & $-116.05$ & $364.94^{**}$ & $24.44$ & $319.91$\\
 In 2014, households were surveyed shortly after the NGO's offices had re-opened in
 the wake of the outbreak of widespread armed conflict. Respondents were asked a short
 set of questions about whether they were directly affected, and if so, in what way.
-There were only a few incidents of violence near Yei town at that point, and the most
-directly involved ethnic groups made up a small portion of the local populace. There
+There has only been a few incidents of violence near Yei town at that point, and the most
+directly involved ethnic groups made up a small portion of the local population. There
 is no clear comparison group to which we might compare our sample, and the economic
 climate changed over this same period in several ways that were probably not directly
 caused by the violence. As such, we have no clear means of identifying the effect of
@@ -730,7 +760,8 @@ are 24\% (13 pp.) less likely to report having been "affected" by the conflict, 
 unable to plant crops or invest in their business. This was the second most common
 way in which households reported being affected behind "needed to relocate or
 migrate", where respondents are not clearly different. Nonetheless, this raises the
-possibility that having received a significant asset transfer around the outbreak of
+possibility that having received a significant asset transfer and the expectation of
+NGO support around the outbreak of
 conflict may have helped mitigate the conflict's negative effect on investment and
 protect households from being affected overall.
 
