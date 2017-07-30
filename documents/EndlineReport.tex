@@ -1,4 +1,4 @@
-% Created 2017-07-26 Wed 21:02
+% Created 2017-07-30 Sun 02:23
 \documentclass[12pt,article]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -33,6 +33,7 @@
 \newtheorem{condition}{Condition} \newcommand{\Cond}[1]{Condition \ref{cond:#1}}
 \newtheorem{lemma}{Lemma} \newcommand{\Lem}[1]{Lemma \ref{prop:#1}}
 \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
+\usepackage{stringstrings}\renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 \author{Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman}
 \date{December 15, 2016}
 \title{Valuing Assets Provided to Low-Income Households in South Sudan}
@@ -241,7 +242,7 @@ will tend to be the most responsive to changes in welfare.
 A crucial assumption is that the treatment and control groups were selected
 appropriately. We check this by presenting summary statistics by group on a
 range of factors related to consumption, asset holdings, and household
-characteristics. We check for balance on observables in Table 1.
+characteristics. We check for balance on observables in \Tab{balance_check}.
 
 \begin{longtable}{lrrrrr}
 \caption{\label{tab:balance_check}Means of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively}
@@ -265,7 +266,6 @@ Cosmetics & 0.68 & 0.027 & -0.125 & 468\\
 Sugar & 1.71 & -0.078 & -0.189 & 604\\
 Egg & 1.10 & -0.091 & 0.038 & 276\\
 Oil & 1.36 & -0.13 & -0.141 & 613\\
-CSH & 0.00 & 0.0 & 1.0 & 125\\
 Ceremonies & 0.13 & 0.006 & 0.026 & 152\\
 Beans & 0.70 & 0.232 & 0.226 & 192\\
 Fruit & 0.69 & -0.089 & 0.001 & 272\\
@@ -273,7 +273,6 @@ Textiles & 0.16 & -0.004 & 0.056$^{\text{*}}$ & 376\\
 Utensils & 0.25 & -0.009 & 0.008 & 442\\
 Dowry & 1.27 & -0.041 & 0.028 & 126\\
 Furniture & 0.20 & -0.014 & 0.045 & 368\\
-TUP & 0.00 & 1.0 & 0.0 & 249\\
 Salt & 0.45 & -0.026 & 0.007 & 617\\
 Vegetables & 1.54 & -0.165 & -0.18 & 471\\
 \hline
@@ -281,10 +280,8 @@ Assets & CTL & $\Delta$ TUP & $\Delta$ CSH & $N$\\
 \hline
 Smallanimals & 236.60 & -86.068 & -123.133 & 123\\
 Bicycle & 109.08 & -12.555 & -11.414 & 171\\
-CSH & 0.00 & 0.0 & 1.0 & 125\\
 Radio & 58.45 & -5.968 & -16.529 & 260\\
 Motorcycle & 341.74 & 192.956 & 353.836$^{\text{**}}$ & 93\\
-TUP & 0.00 & 1.0 & 0.0 & 249\\
 Net & 19.16 & 0.668 & 0.247 & 423\\
 Poultry & 42.40 & -3.365 & -8.894 & 161\\
 Bed & 241.27 & 7.992 & 32.762 & 521\\
@@ -312,8 +309,132 @@ in observables at baseline, with the exception that the cash group has atypicall
 more motorcycles and clothing. But it does suggests that our stratified randomization
 was not too far from creating comparable groups.
 
-\subsection{Consumption}
+\subsection{Attrition}
 \label{sec-3-2}
+
+Another crucial question is to what extent attrition in 2014 and 2015 was small or
+balanced. \Tab{attrition_count} reports the total number of households identified in
+each treatment arm and year for the whole sample. \Tab{attrition_balanced_count}
+reports the same numbers restricting ourselves to households with baseline surveys.
+In the TUP group, we were unable to find 21 participants in 2014 (8\% attrition), but
+found 5 not identified in the baseline survey. We found 8 additional TUP households
+with baseline surveys again in 2015 for a final attrition rate of 5\%. Of those in the
+Cash group, 12 were lost (9.6\%), then two more in 2015 (11\%). The control group saw
+very high attrition in 2014 (22\%), but also found a large number of households not
+found at baseline, yielding a comparison group only 6\% smaller. The high attrition
+was due largely to the fact that these households did not enjoy the same consitent
+contact that BRAC had with the TUP group, and the local area lacked infrastructure to
+easily locate people. This was exacerbated by the uncertain political situation and
+early harvest. Attrition in 2015 was 6.7\%, with a full 85 more households identified
+who were not in the baseline survey. In order to take advantage of the households not
+included in the baseline, the main specification below includes an indicator for
+whether the household was in the baseline.
+
+
+\newpage
+
+\begin{longtable}{lrrrrr}
+\caption{\label{tab:attrition_count}Total number of households in sample by group and round}
+\\
+\hline
+Full Sample & 2013 & 2014 & 2015\\
+\hline
+\endhead
+\hline\multicolumn{4}{r}{Continued on next page} \\
+\endfoot
+\endlastfoot
+Cash & 124.0 & 113.0 & 111.0\\
+Control & 281.0 & 265.0 & 347.0\\
+TUP & 244.0 & 228.0 & 236.0\\
+\hline
+All & 649.0 & 606.0 & 694.0\\
+\hline
+\end{longtable}
+
+\begin{table}[htb]
+\caption{\label{tab:attrition_balanced_count}Number of households in sample with baseline survey by group and round}
+\centering
+\begin{tabular}{lrrr}
+\hline
+Balanced Sample & 2013 & 2014 & 2015\\
+\hline
+Cash & 124.000 & 112.000 & 110.000\\
+Control & 281.000 & 219.000 & 262.000\\
+TUP & 244.000 & 223.000 & 231.000\\
+\hline
+All & 649.000 & 554.000 & 603.000\\
+\hline
+\end{tabular}
+\end{table}
+
+Next we ask how those who did not turn up in subsequent rounds differed by a range of
+baseline characteristics. \Tab{attrition_balance} reports the average level of
+various characteristics in 2013. Then we report the coefficient from a linear
+regression on indicators for whether they were in the midline or endline surveys.
+Here we see that overall, households found in the mideline survey were larger with
+more children and larger reported asset stocks. Households found in 2015 seemed to
+have, at baseline, significantly smaller asset stocks and less consumption.
+
+\begin{longtable}{lrrrrr}
+\caption{\label{tab:attrition_balance}Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).}
+\\
+\hline
+HH Features & Mean$_{\text{Bsln}}$ & $\beta$$_{\text{Mid}}$ & $\beta$$_{\text{End}}$\\
+\hline
+\endhead
+\hline\multicolumn{4}{r}{Continued on next page} \\
+\endfoot
+\endlastfoot
+HH size & 7.223 & 0.595** & 0.428\\
+\# Child & 3.328 & 0.656*** & 0.423\\
+Asset Prod. & 512.822 & 126.360 & -369.190\\
+Asset Tot. & 1494.324 & 361.889 & -689.174*\\
+Daily Exp & 25.212 & 1.257 & -4.150\\
+Daily Food & 24.300 & 0.299 & -4.790*\\
+In Business & 0.415 & 0.038 & 0.007\\
+Land Access & 2.324 & 0.014 & 0.305\\
+No. Houses & 2.863 & 0.305 & 0.367\\
+Cash Savings & 178.662 & 46.322 & 54.295\\
+\hline
+Assets &  &  & \\
+\hline
+Bed & 250.534 & 12.649 & -51.133\\
+Bicycle & 102.174 & 11.179 & 4.212\\
+Mobile & 101.482 & 6.336 & -13.028\\
+Motorcycle & 481.885 & 213.002 & -241.819\\
+Carts & 2.751 & 1.929 & 2.962\\
+Cows & 181.402 & 67.862 & -89.273\\
+Smallanimals & 180.716 & 18.966 & -79.014\\
+\hline
+Consumption &  &  & \\
+\hline
+Cereals & 8.882 & -0.084 & -3.714**\\
+Beans & 0.826 & 0.269 & -0.382\\
+Ceremonies & 0.141 & -0.020 & -0.038\\
+Charities & 0.027 & 0.007 & -0.001\\
+Clothesfootwear & 0.663 & 0.180* & -0.206\\
+Cosmetics & 0.668 & 0.005 & 0.229\\
+Dowry & 1.263 & 0.755 & -0.399\\
+Egg & 1.069 & -0.005 & 0.106\\
+Fish & 2.417 & -0.132 & 0.036\\
+Fruit & 0.656 & 0.009 & -0.151\\
+Fuel & 0.733 & 0.105 & -0.049\\
+Meat & 3.981 & 0.254 & 0.300\\
+Other & 0.0 & 0.000 & 0.000\\
+Poultry & 39.437 & 23.634* & -2.243\\
+Salt & 0.438 & -0.140*** & -0.043\\
+Soap & 0.475 & -0.181* & 0.047\\
+Sugar & 1.647 & -0.285 & -0.020\\
+Textiles & 0.165 & 0.010 & 0.011\\
+Transport & 0.163 & 0.004 & 0.018\\
+Tv & 39.915 & -16.377 & 0.845\\
+Utensils & 0.247 & 0.062 & -0.023\\
+Vegetables & 1.446 & 0.096 & -0.151\\
+\hline
+\end{longtable}
+
+\subsection{Consumption}
+\label{sec-3-3}
 
 The first measure of welfare we consider is household consumption, defined as the
 market value of goods or services used by the household. A sizable basket of goods
@@ -429,7 +550,7 @@ N & $2877.000$ & $2878.000$ & $2878.000$\\
 
 
 \subsection{Food Security}
-\label{sec-3-3}
+\label{sec-3-4}
 
 Generally speaking, observed changes in total consumption don't translate into an
 increase in reported food security. In each year, we ask how often in a given week
@@ -482,13 +603,13 @@ $\beta^{TUP}_{2015}-\beta^{CSH}$ & $-0.06$ & $-0.03$ & $-0.04$ & $-0.02$ & \$ 0.
 \end{longtable}
 
 \subsection{Assets}
-\label{sec-3-4}
+\label{sec-3-5}
 
 Turning now to asset holdings for the households, we estimate treatment effects for total value of assets owned, total
 value of potentially productive assets, as well as land and financial assets. 
 
 \subsubsection{Total Asset Holdings}
-\label{sec-3-4-1}
+\label{sec-3-5-1}
 
 The cash group does not appear to have seen an increase in the
 value of assets measured, with negative and imprecise point estimates. The most
@@ -559,7 +680,7 @@ $\beta^{TUP}_{2015}-\beta^{CSH}$ & $674.78^{***}$ & $325.74^{***}$\\
 
 
 \subsubsection{Savings}
-\label{sec-3-4-2}
+\label{sec-3-5-2}
 
 Both treatment arms had significant impact on the average value of cash savings
 within households in 2015. The TUP households are strongly encouraged to pay into a savings
@@ -670,7 +791,7 @@ N & $671.00$ & $777.00$ & $1042.00$ & $1114.00$\\
 
 
 \subsubsection{Land Holdings}
-\label{sec-3-4-3}
+\label{sec-3-5-3}
 
 We also examine land ownership and cultivation in each year. We find no evidence that
 either group is more or less likely to report owning or cultivating at least some land, though this
@@ -689,7 +810,7 @@ participants primarily stated a preference for small retail training and transfe
 over small animal husbandry or vegetable gardening.
 
 \subsection{Income}
-\label{sec-3-5}
+\label{sec-3-6}
 
 Income was reliably measured only in 2015, and so our estimates do not control for
 baseline values. The control group in 2015 has a measured income of roughly 4325 SSP
@@ -736,7 +857,7 @@ $\beta^{TUP}-\beta^{CSH}$ & $-116.05$ & $364.94^{**}$ & $24.44$ & $319.91$\\
 \end{longtable}
 
 \subsection{Exposure to Conflict}
-\label{sec-3-6}
+\label{sec-3-7}
 
 In 2014, households were surveyed shortly after the NGO's offices had re-opened in
 the wake of the outbreak of widespread armed conflict. Respondents were asked a short
@@ -813,5 +934,11 @@ asset transfers can play a constructive role in helping poor, self-employed
 households when they face economic uncertainty. And while cash increases household
 consumption, the goal of improving income or wealth is aided by the additional
 services that the ultra-poor graduation framework offer.
+
+
+\section{References}
+\label{sec-5}
+\renewcommand{\refname}{}
+\printbibliography
 % Emacs 24.5.1 (Org mode 8.2.10)
 \end{document}

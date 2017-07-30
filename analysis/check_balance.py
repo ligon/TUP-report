@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
+import sys
+DATADIR = "../../data/"
+sys.path.append("../../data")
+
 import pandas as pd
 import numpy as np
 from scipy.stats import ttest_ind
+
 from TUP import full_data, consumption_data, asset_vars
 
 def df_to_orgtbl(df,float_fmt='%5.3f'):
@@ -50,12 +55,12 @@ def topcode(var, Nstd=3, drop=False):
     else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
     return var
 
-
 if True: #~ Make DataFrame
-    D = full_data("../../data/TUP_full.dta", balance=[])
+    D = full_data(DIR=DATADIR)
 
     D['livestock_val_m'] = D.filter(regex='^asset_val_(cows|smallanimals|chickens|ducks|poultry)_m').sum(axis=1)
     D['livestock_val'] = D.filter(regex='^asset_val_(cows|smallanimals|chickens|ducks|poultry)').sum(axis=1) - D['livestock_val_m']
+
     A = asset_vars(D,year=2013)[0]
     D['Asset Tot'] = A['Total']
     D["Cash Savings"] = D.filter(regex="^savings_.*_b$").sum(axis=1)
