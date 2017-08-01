@@ -1,26 +1,13 @@
 #+TITLE: Valuing Assets Provided to Low-Income Households in South Sudan
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
-#+DATE: December 15, 2016
+#+DATE: \today
 #+OPTIONS: texht:t toc:nil
 #+LATEX_CLASS_OPTIONS: [12pt,article]
-#+LATEX_HEADER:       \newcommand{\T}{\top}
-#+LATEX_HEADER:       \newcommand{\E}{\ensuremath{\mbox{E}}}
-#+LATEX_HEADER:       \newcommand{\R}{\ensuremath{\mathbb{R}}}
-#+LATEX_HEADER:       \newcommand{\one}{\ensuremath{\mathbbm{1}}}
 #+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
-#+LATEX_HEADER:       \renewcommand{\vec}[1]{\boldsymbol{#1}}
-#+LaTeX_HEADER:       \usepackage{biblatex}
-#+LaTeX_HEADER:       \bibliography{prospectus}
-#+LaTeX_HEADER:       \usepackage[style=authordate]{biblatex}
-#+LATEX_HEADER_EXTRA: \usepackage{bbm}
-#+LATEX_HEADER_EXTRA: \usepackage{dcolumn}\newcolumntype{d}[1]{D{.}{.}{#1}}
-#+LATEX_HEADER_EXTRA: \newtheorem{proposition}{Proposition} \newcommand{\Prop}[1]{Proposition \ref{prop:#1}}
-#+LATEX_HEADER_EXTRA: \newtheorem{theorem}{Theorem} \newcommand{\Thm}[1]{Theorem \ref{thm:#1}}
-#+LATEX_HEADER_EXTRA: \newtheorem{remark}{Remark} \newcommand{\Rem}[1]{Remark \ref{rem:#1}}
-#+LATEX_HEADER_EXTRA: \newtheorem{condition}{Condition} \newcommand{\Cond}[1]{Condition \ref{cond:#1}}
-#+LATEX_HEADER_EXTRA: \newtheorem{lemma}{Lemma} \newcommand{\Lem}[1]{Lemma \ref{prop:#1}}
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
-#+LATEX_HEADER_EXTRA: \usepackage{stringstrings}\renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
+#+LaTeX_HEADER:       \usepackage[backend=biber,style=authoryear,natbib=true]{biblatex}
+#+LaTeX_HEADER:       \addbibresource{prospectus.bib}
+#+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 
 #+begin_abstract
 
@@ -62,17 +49,17 @@ Ultra-Poor'' (TUP) program in Bangladesh as a supplement or precursor to credit
 services. First implemented by BRAC in 2007, the program aims to simultaneously
 alleviate physical and human capital constraints by providing households with a
 significant transfer of food and productive assets, followed by two years of training
-and support by extension officers. The general framework[fn:: known as the
+and support by extension officers. (\cite{bandiera2017}) The general framework[fn:: known as the
 ``graduation framework'' pointing to the original ambition to move households into an
 activity where they are able to finance further income growth without costly
 transfers.] has since expanded to a wide range of countries, with a general pattern
 of success in increasing aggregate investment, labor supply, and aggregate
-consumption. (Banerjee et al., 2015) (Bandiera et al., 2016)
+consumption. (\cite{banerjee2015})
 
 A second, older literature has gained new interest in parallel with this
 literature which examines the effect of offering direct unconditional cash transfers
-(UCT's) to poor households. (Haushoffer & Shapiro, 2016) (Blattman et al., 2014)
-(Blattman et al., 2013) While this and the TUP framework are both direct capital transfer
+(UCT's) to poor households. (\cite{haushofer-shapiro2013} \cite{blattman2014} \cite{blattman2013})
+While this and the TUP framework are both direct capital transfer
 interventions, they are very different in their approach, with TUP programs guiding
 and constraining the use of capital towards productive investment while UCT's allow
 households to invest and consume as they see fit. The natural question that arises is
@@ -201,7 +188,7 @@ model, since the underlying data is so different. A constant parameter takes the
 place of the fixed effects. We include 2013 levels as a covariate where possible.
 Since we collect expenditures on only ten consumption items, we report not only the
 total value of spending on those goods, but also a more theoretically grounded
-measure described in Collins & Ligon (2017), which uses the composition of
+measure described in \cite{collins-ligon17}, which uses the composition of
 expenditures to derive the marginal utility of expenditures for each household. We
 chose ten relatively demand-elastic items specifically for this purpose, as those
 will tend to be the most responsive to changes in welfare.

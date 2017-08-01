@@ -1,34 +1,279 @@
-\begin{thebibliography}{1}
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.8 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
 
-\bibitem{bandiera2016}
-Oriana Bandiera, Robin Burgess, Narayan Das, Selim Gulesci, Imran Rasul, and
-  Munshi Sulaiman.
-\newblock Labor markets and poverty in village economies.
-\newblock 2016.
 
-\bibitem{banerjee2015}
-Abhijit Banerjee, Esther Duflo, Nathanael Goldberg, Dean Karlan, Robert Osei,
-  William Parient{\'e}, Jeremy Shapiro, Bram Thuysbaert, and Christopher Udry.
-\newblock A multifaceted program causes lasting progress for the very poor:
-  Evidence from six countries.
-\newblock {\em Science}, 348(6236):1260799, 2015.
+\refsection{0}
+  \sortlist[entry]{nyt/global/}
+    \entry{bandiera2017}{article}{}
+      \name{author}{6}{}{%
+        {{uniquename=0,hash=c0b3369a69cfdd849f836d77957c1f9a}{%
+           family={Bandiera},
+           familyi={B\bibinitperiod},
+           given={Oriana},
+           giveni={O\bibinitperiod}}}%
+        {{uniquename=0,hash=db80c60d2e8ac9e800afb943771980ba}{%
+           family={Burgess},
+           familyi={B\bibinitperiod},
+           given={Robin},
+           giveni={R\bibinitperiod}}}%
+        {{uniquename=0,hash=6308d44ecc1a5d1c6d60a4c463e4c4ae}{%
+           family={Das},
+           familyi={D\bibinitperiod},
+           given={Narayan},
+           giveni={N\bibinitperiod}}}%
+        {{uniquename=0,hash=068c2184293adb9027e40d84745afea8}{%
+           family={Gulesci},
+           familyi={G\bibinitperiod},
+           given={Selim},
+           giveni={S\bibinitperiod}}}%
+        {{uniquename=0,hash=5f5b6b3ff741152e984a5e38264a941d}{%
+           family={Rasul},
+           familyi={R\bibinitperiod},
+           given={Imran},
+           giveni={I\bibinitperiod}}}%
+        {{uniquename=0,hash=816621da60c69f8e83912acdfb391af9}{%
+           family={Sulaiman},
+           familyi={S\bibinitperiod},
+           given={Munshi},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press}%
+      }
+      \strng{namehash}{be18d0259ad9bcb93d278b17c1f2282a}
+      \strng{fullhash}{392e5a651d6305a1055253c4f8d97e20}
+      \strng{authornamehash}{be18d0259ad9bcb93d278b17c1f2282a}
+      \strng{authorfullhash}{392e5a651d6305a1055253c4f8d97e20}
+      \field{sortinit}{B}
+      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Quarterly Journal of Economics}
+      \field{number}{2}
+      \field{title}{Labor markets and poverty in village economies}
+      \field{volume}{132}
+      \field{year}{2017}
+      \field{pages}{811\bibrangedash 870}
+      \range{pages}{60}
+    \endentry
+    \entry{banerjee2015}{article}{}
+      \name{author}{9}{}{%
+        {{uniquename=0,hash=027abafc894615db04e1c3f3dc5931c4}{%
+           family={Banerjee},
+           familyi={B\bibinitperiod},
+           given={Abhijit},
+           giveni={A\bibinitperiod}}}%
+        {{uniquename=0,hash=7e6b0ea4eee38822cdb0a4361e98752c}{%
+           family={Duflo},
+           familyi={D\bibinitperiod},
+           given={Esther},
+           giveni={E\bibinitperiod}}}%
+        {{uniquename=0,hash=7ae22dca41e314e69585d5430c940c17}{%
+           family={Goldberg},
+           familyi={G\bibinitperiod},
+           given={Nathanael},
+           giveni={N\bibinitperiod}}}%
+        {{uniquename=0,hash=940678209828a76685d3c727e9e1463f}{%
+           family={Karlan},
+           familyi={K\bibinitperiod},
+           given={Dean},
+           giveni={D\bibinitperiod}}}%
+        {{uniquename=0,hash=3e985c6aaae2b1f43eed6be51c797919}{%
+           family={Osei},
+           familyi={O\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{uniquename=0,hash=feb68a83643468f0d60a11afe20b0dd4}{%
+           family={Parienté},
+           familyi={P\bibinitperiod},
+           given={William},
+           giveni={W\bibinitperiod}}}%
+        {{uniquename=0,hash=9adc6252a18618747de3ba2d08c11c3b}{%
+           family={Shapiro},
+           familyi={S\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+        {{uniquename=0,hash=61a3d2cc66edc82a33a1d2f16d091c0a}{%
+           family={Thuysbaert},
+           familyi={T\bibinitperiod},
+           given={Bram},
+           giveni={B\bibinitperiod}}}%
+        {{uniquename=0,hash=afa67f70458fab65065bb4a800577162}{%
+           family={Udry},
+           familyi={U\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {American Association for the Advancement of Science}%
+      }
+      \strng{namehash}{18edac96fea31ae12a7b321c919f67db}
+      \strng{fullhash}{dc5eb683ea8abfd9cc4040d109650ffe}
+      \strng{authornamehash}{18edac96fea31ae12a7b321c919f67db}
+      \strng{authorfullhash}{dc5eb683ea8abfd9cc4040d109650ffe}
+      \field{sortinit}{B}
+      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{6236}
+      \field{title}{A multifaceted program causes lasting progress for the very poor: Evidence from six countries}
+      \field{volume}{348}
+      \field{year}{2015}
+      \field{pages}{1260799}
+      \range{pages}{1}
+    \endentry
+    \entry{blattman2013}{article}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,hash=3161f9ccd6231fd52bfe5bb5c0f01499}{%
+           family={Blattman},
+           familyi={B\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+        {{uniquename=0,hash=9b2932fd2b4e738c647083755cc49f4e}{%
+           family={Fiala},
+           familyi={F\bibinitperiod},
+           given={Nathan},
+           giveni={N\bibinitperiod}}}%
+        {{uniquename=0,hash=88866e85d0063946103da19588883d74}{%
+           family={Martinez},
+           familyi={M\bibinitperiod},
+           given={Sebastian},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{fullhash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{authornamehash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{authorfullhash}{0c2152abca322020ff2e1afcb4d60cac}
+      \field{sortinit}{B}
+      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{QJE}
+      \field{month}{11}
+      \field{title}{Generating Skilled Self-Employment in Developing Countries: Experimental Evidence from {U}ganda}
+      \field{year}{2013}
+      \verb{url}
+      \verb http://ssrn.com/abstract=2268552
+      \endverb
+    \endentry
+    \entry{blattman2014}{article}{}
+      \name{author}{4}{uniquelist=2}{%
+        {{uniquename=0,hash=3161f9ccd6231fd52bfe5bb5c0f01499}{%
+           family={Blattman},
+           familyi={B\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+        {{uniquename=0,hash=16abb40db0c6e5095201f8724244bfd7}{%
+           family={Jamison},
+           familyi={J\bibinitperiod},
+           given={Julian},
+           giveni={J\bibinitperiod}}}%
+        {{uniquename=0,hash=31ab764b98427b8780e5ce028f6b6131}{%
+           family={Green},
+           familyi={G\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+        {{uniquename=0,hash=750d5fb32f3e9cb643b45433cc7323bb}{%
+           family={Annan},
+           familyi={A\bibinitperiod},
+           given={Jeannie},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{bfb7dbf089d74eb0db6c9b7946658616}
+      \strng{fullhash}{0a4d18621c7fef639f94d3b4c42c033c}
+      \strng{authornamehash}{bfb7dbf089d74eb0db6c9b7946658616}
+      \strng{authorfullhash}{0a4d18621c7fef639f94d3b4c42c033c}
+      \field{sortinit}{B}
+      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Available at SSRN}
+      \field{month}{5}
+      \field{title}{The Returns to Cash and Microenterprise Support Among the Ultra-Poor: A Field Experiment}
+      \field{year}{2014}
+      \verb{url}
+      \verb http://ssrn.com/abstract=2439488
+      \endverb
+    \endentry
+    \entry{collins-ligon17}{unpublished}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=bb36a7d73a7c6c016c4913fd58a0385d}{%
+           family={Collins},
+           familyi={C\bibinitperiod},
+           given={Elliott},
+           giveni={E\bibinitperiod}}}%
+        {{uniquename=0,hash=484f8393ba2d926fbb6f2f0ac6e5612b}{%
+           family={Ligon},
+           familyi={L\bibinitperiod},
+           given={Ethan},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{cb8d5e15c117e998115da3b406a49448}
+      \strng{fullhash}{cb8d5e15c117e998115da3b406a49448}
+      \strng{authornamehash}{cb8d5e15c117e998115da3b406a49448}
+      \strng{authorfullhash}{cb8d5e15c117e998115da3b406a49448}
+      \field{sortinit}{C}
+      \field{sortinithash}{095692fd22cc3c74d7fe223d02314dbd}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{CUDARE Working Paper}
+      \field{title}{Asset transfers and household neediness}
+      \field{year}{2017}
+      \verb{url}
+      \verb http://escholarship.org/uc/item/24t720fk
+      \endverb
+    \endentry
+    \entry{haushofer-shapiro2013}{unpublished}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,hash=e34924a13640a37a189137933c2148ab}{%
+           family={Haushofer},
+           familyi={H\bibinitperiod},
+           given={Johannes},
+           giveni={J\bibinitperiod}}}%
+        {{uniquename=0,hash=9adc6252a18618747de3ba2d08c11c3b}{%
+           family={Shapiro},
+           familyi={S\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Massachusetts Institute of Technology}%
+      }
+      \strng{namehash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{fullhash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{authornamehash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{authorfullhash}{49b302332ea54fdb54d79964d7b6df58}
+      \field{sortinit}{H}
+      \field{sortinithash}{2f664b453ec75da1fe3804ca92633405}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Unpublished manuscript}
+      \field{title}{Policy Brief: Impacts of Unconditional Cash Transfers}
+      \field{year}{2013}
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
 
-\bibitem{blattman2013}
-Christopher Blattman, Nathan Fiala, and Sebastian Martinez.
-\newblock Generating skilled self-employment in developing countries:
-  Experimental evidence from {U}ganda.
-\newblock {\em QJE}, Nov 2013.
-
-\bibitem{blattman2014}
-Christopher Blattman, Julian Jamison, Eric Green, and Jeannie Annan.
-\newblock The returns to cash and microenterprise support among the ultra-poor:
-  A field experiment.
-\newblock {\em Available at SSRN}, May 2014.
-
-\bibitem{haushofer2016}
-Johannes Haushofer and Jeremy Shapiro.
-\newblock The short-term impact of unconditional cash transfers to the poor:
-  Experimental evidence from kenya.
-\newblock 2016.
-
-\end{thebibliography}
