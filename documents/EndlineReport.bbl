@@ -158,6 +158,9 @@
            given={Sebastian},
            giveni={S\bibinitperiod}}}%
       }
+      \list{publisher}{1}{%
+        {MIT Press}%
+      }
       \strng{namehash}{0c2152abca322020ff2e1afcb4d60cac}
       \strng{fullhash}{0c2152abca322020ff2e1afcb4d60cac}
       \strng{authornamehash}{0c2152abca322020ff2e1afcb4d60cac}
@@ -167,13 +170,13 @@
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{journaltitle}{QJE}
-      \field{month}{11}
-      \field{title}{Generating Skilled Self-Employment in Developing Countries: Experimental Evidence from {U}ganda}
+      \field{journaltitle}{The Quarterly Journal of Economics}
+      \field{number}{2}
+      \field{title}{Generating skilled self-employment in developing countries: Experimental evidence from Uganda}
+      \field{volume}{129}
       \field{year}{2013}
-      \verb{url}
-      \verb http://ssrn.com/abstract=2268552
-      \endverb
+      \field{pages}{697\bibrangedash 752}
+      \range{pages}{56}
     \endentry
     \entry{blattman2014}{article}{}
       \name{author}{4}{uniquelist=2}{%
