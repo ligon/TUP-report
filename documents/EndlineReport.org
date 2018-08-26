@@ -17,29 +17,27 @@ Ultra-Poor'' (TUP) framework is an effective approach to alleviating the constra
 that prevent extremely poor households from increasing their productivity. The
 framework consists of a sizable transfer of productive physical capital, coupled with
 training and continuous support over the course of one or two years. A second and
-related literature suggests that unconditional cash transfers (UCT's) may have a
-comparable effect on productivity and welfare (with fewer fixed costs). This field
-experiment, examining the first two years of BRAC's TUP pilot in South Sudan, offers
-a direct comparison of these very different approaches to alleviating capital
-constraints. We consider the effect of each on consumption, income, asset holdings,
-and a number of intangible outcomes. We also consider the TUP program's effect on
-households' response to the outbreak of violence in 2014, which led to a level of
-instability in which the Graduation framework has not been previously tested. We find
-evidence of positive consumption effects from both treatments, but only in the
-short-run, and a persistent wealth effect only from the TUP. We also elicit
-suggestive evidence that BRAC's support may have helped TUP beneficiaries cope with
-the short-term economic effects of the outbreak of violence in 2014. We tentatively
-conclude that targeted asset transfers can play a constructive role in helping poor,
-self-employed households when they face economic uncertainty. And while cash
-increases household consumption, the goal of improving income or wealth is aided by
-the additional services that the ultra-poor graduation framework offer.
+related literature has found some evidence that unconditional cash transfers (UCT's)
+may also improve household productivity and welfare with fewer fixed costs. Our field
+experiment provides a comparison of these two approaches to transfering wealth to
+low-income households during the first two years of BRAC's TUP pilot in South Sudan.
+We consider the effect of each on consumption, income, asset holdings, and a number
+of intangible outcomes. We also consider the TUP program's effect on households'
+responses to the outbreak of violence in 2014. We find evidence that both types of
+transfer have positive effects on consumption, but only in the short-run. We find a
+persistent increase in asset stock, but only from the TUP. We also elicit suggestive
+evidence that BRAC's support may have helped TUP beneficiaries cope with the
+short-term economic effects of the outbreak of violence in 2014. We tentatively
+conclude that in this economic context cash can increase household consumption, but
+the goal of improving income or wealth is aided by the additional services that the
+ultra-poor graduation framework offer.
 
 #+end_abstract
 \newpage
 
 * Introduction
  
-Poor rural households typically earn money from low-return activities like
+Poor rural households often earn money from low-return activities like
 small-scale cultivation or casual day labor, and face both financial and human
 capital constraints, keeping them from investing and expanding into more lucrative
 activities. Experience and research over many years has led many to believe that
@@ -57,26 +55,24 @@ transfers.] has since expanded to a wide range of countries, with a general patt
 of success in increasing aggregate investment, labor supply, and aggregate
 consumption. \citep{banerjee2015}
 
-A second, older literature has gained new interest in parallel with this
-literature which examines the effect of offering direct unconditional cash transfers
-(UCT's) to poor households. \citep{haushofer-shapiro2013} \citep{blattman2014} \citep{blattman2013}
-While this and the TUP framework are both direct capital transfer
-interventions, they are very different in their approach, with TUP programs guiding
-and constraining the use of capital towards productive investment while UCT's allow
-households to invest and consume as they see fit. The natural question that arises is
-how these additional features and constraints in the TUP framework change how
-households use their capital transfers.
+A second, older literature that has gained new interest in recent years studies the
+effect of offering poor households direct unconditional cash transfers (UCT's).
+\citep{haushofer-shapiro2013} \citep{blattman2014} \citep{blattman2013} While this
+and the TUP framework are both direct capital transfer interventions, they are very
+different in their approach, with TUP programs guiding and constraining the use of
+capital towards productive investment while UCT's allow households to invest, save,
+and consume as they see fit. The natural question that arises is how these additional
+features and constraints in the TUP framework change how households use their capital
+transfers.
 
-Here, we examine the experimental evaluation of BRAC's pilot TUP program in South
-Sudan and compare it to a round of unconditional cash transfers. Our results
-contribute to the general literature in two important ways. First, South Sudan's
-political and economic institutions have overwhelmingly politically unstable since
-this study's inception, which may affect the value of the program for
-households in important ways. Second, a randomly selected group of households
-received cash transfers equal in market value to the assets provided to the TUP
-households. While an experimental literature has been established studying the
-graduation framework in isolation, this is among the first experiments attempting to
-directly compare it to a obvious alternative investment.
+To provide some insight into this question, we worked with BRAC's South Sudanese
+branch office in Yei county to randomize selection for their pilot TUP program. After
+a census identified 745 eligible households, 250 were enrolled in the pilot TUP
+program, and another 125 were later given cash roughly equal to the value of the
+physical assets provided to TUP households. Another 274 households were assigned to a
+control group. While a full body of research exists on each of these two approaches
+to wealth transfers, this study provides one of the most direct side-by-side
+experimental evaluations to date. 
 
 * The Program
    
@@ -92,14 +88,19 @@ questions to assess eligibility for the program. First, households were excluded
 they had a salaried worker in the household, were participating in another NGO
 program, or had no access to cultivable land (which was in some cases necessary for
 the program's model). Households were then deemed eligible if they fit at least three
-criteria in a list of five poverty indicators.[fn:: These criteria were that the
-household had a head working as a day laborer (generally an occupation with poverty
-wages), two or more children, at least one child working, fewer than three rooms, or
-a woman who has not completed secondary school.] The census was completed in April of
-2013 and 745 were identified as eligible. Of these, 649 were identified in a baseline
-survey. These households were stratified on employment, asset ownership, and size and
-selected into treatment groups. 250 were enrolled in the TUP program, 125 in the UCT
-group, and the final 274 in a pure control group.
+criteria in a list of five poverty indicators:
+
+1) The household head was working as a day laborer (generally an occupation with poverty wages),
+2) The household had two or more children,
+3) At least one child in the household was working,
+4) The household had fewer than three rooms, or
+5) A woman in the household had not completed secondary school.
+
+The census was completed in April of 2013 and 745 were identified as eligible. Of
+these, 649 were identified in a baseline survey. These households were stratified on
+employment, asset ownership, and size and selected into treatment groups. 250 were
+enrolled in the TUP program, 125 in the UCT group, and the final 274 in a pure
+control group.
 
 *** Asset Transfers & Monitoring
 
@@ -122,13 +123,40 @@ BRAC extension officer the details of their businesses. These meetings also incl
 food transfers for a while, which were designed to help get households to the point
 of receiving revenue from their assets without having to sell them.
 
+*** Cash Transfers 
+
 In all, the market value of these food transfers were valued at $110, bringing the
 total value of all transfers to $350-$410. The 125 households in the UCT group were
-randomly divided in half to receive cash in these amounts. Unfortunately, political
+randomly divided in half to receive cash in these two amounts. Unfortunately, political
 instability disrupted NGO operations throughtout South Sudan, preventing the
 simultaneous disbursal of the cash and asset transfers. Instead, a second survey was
 conducted in June of 2014, with the cash transfers being disbursed immediately
-thereafter. This resulted in a timing difference of 3 to 6 months between the two.
+thereafter. This resulted in a timing difference of 3 to 6 months between the two
+(since the asset transfers were rolled out over around 12 weeks).
+This naturally complicates the comparison of treatment effects between the two
+treatments. We will describe our empirical strategy in light of these challenges in
+the Empirical Strategy section.
+
+Cash transfers were delivered by field officers in person and in local currency. That
+they were delivered in cash distinguishes it from several other cash transfer
+programs (e.g. \cite{haushoffer-shapiro}, \cite{progressa-paper}), which deposited
+cash in a bank or mobile money account. \cite{mckinzie-fafchamps13} used cash
+(right?). Experiments studies of the behavioral implications of savings accounts like
+\cite{robinson-dupas} and \cite{banking-the-unbanked} might make us expect disbursal
+method will affect the propensity of households to save a cash transfer. Like this
+experiment, each of these programs and experiments also disbursed cash in local
+currency. However, our context is unique in that the local economy was facing
+significant inflation at the time, with our cursory year-on-year estimates ranging
+between 80% and 100%. This would naturally make cash savings a less appealing option
+relative to consumption or investing in some real asset.
+
+Local community leaders were approached in advance of talking to individual
+households to reassure recipients of BRAC's intentions. It was made clear that the
+transfers were there for their benefit, that while they were encouraged to put them
+towards some productive use, their use was unrestricted, and that under no
+circunstances would they receive a second transfer in the future. BRAC was a
+well-established institution in the greater Yei community, so these assurances were
+taken as credible and no refused to accept the money. 
 
 ** The Data
 
@@ -161,12 +189,16 @@ longer term, we conducted a series of five short surveys on a monthly basis from
 November of 2015 to March of 2016. These collected only a subset of the full
 consumption modules and a few questions tracking major transactions and shocks. The
 short length of the survey allowed them to be administered via the mobile network,
-reducing cost and improving response rate.
+reducing cost and improving response rate. These data provide a slightly longer
+estimate of treatment effects for both cash transfers and the TUP program, but will
+be especially valuable in assessing whether the cash transfers had a long-term imact
+on consumption.
 
 ** Empirical Strategy 
 
-For the main panel, we estimate a single model using interactions between time effects and group
-assignment, as well as baseline values of the outcome variable where available. 
+For the main panel (excluding the high-frequency mobile surveys), we estimate a
+single model using interactions between time effects and group assignment, as well as
+baseline values of the outcome variable where available.
 
 \begin{equation*}
 Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{Cash}I_{t}*Cash_{it}+\beta_{t}^{TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}+\epsilon_{i}
@@ -182,8 +214,9 @@ Since those transfers happened after the midline survey, its interaction with /2
 acts as a placebo; there is no /ex ante/ reason to expect that they were different
 from the rest of the control group at that point. Given the slight difference in
 timing, we report a t-test of the hypothesis \(\beta_{TUP,t}-\beta_{Cash,2015}=0\) for
-both \(t \in {2014,2015}\). Since the difference in timing is much smaller, we consider
-\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the central hypothesis of interest.
+both \(t \in {2014,2015}\). Since the difference in timing is smaller, we consider
+\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the prefered hypothesis, but examine
+adn report \(\beta_{TUP,2014}-\beta_{Cash,2015}=0\) as well.
  
 For the supplementary analysis of the high-frequency panel, we estimate a separate
 model, since the underlying data is so different. A constant parameter takes the
@@ -193,15 +226,20 @@ total value of spending on those goods, but also a more theoretically grounded
 measure described in \cite{collins-ligon17}, which uses the composition of
 expenditures to derive the marginal utility of expenditures for each household. We
 chose ten relatively demand-elastic items specifically for this purpose, as those
-will tend to be the most responsive to changes in welfare.
+will tend to be the most responsive to changes in welfare. 
+
+******* TODO
+        Include a scatter plot of df[10items].sum(1) vs df[AllItems].sum(1) to speak
+        to whether that basket tracks "total" spending.
+******* 
 
 * Results
-** Randomization Check
+** Balance on Obervables
 
-A crucial assumption is that the treatment and control groups were selected
-appropriately. We check this by presenting summary statistics by group on a
-range of factors related to consumption, asset holdings, and household
-characteristics. We check for balance on observables in \Tab{balance_check}.
+We start by checking whether either treatment arm appears significantly different
+from the control group in terms of average baseline observable characteristics.
+\Tab{balance_check} presents summary statistics by group on a range of factors
+related to consumption, asset holdings, and household characteristics.
 
 #+name: balance_check
 #+BEGIN_SRC python :dir ../analysis :results value table :exports none
@@ -271,22 +309,26 @@ was not too far from creating comparable groups.
 
 ** Attrition
 
-Another crucial question is to what extent attrition in 2014 and 2015 was small or
-balanced. \Tab{attrition_count} reports the total number of households identified in
+Another crucial question is to what extent attrition in 2014 and 2015 will bias our
+results. \Tab{attrition_count} reports the total number of households identified in
 each treatment arm and year for the whole sample. \Tab{attrition_balanced_count}
 reports the same numbers restricting ourselves to households with baseline surveys.
 In the TUP group, we were unable to find 21 participants in 2014 (8% attrition), but
 found 5 not identified in the baseline survey. We found 8 additional TUP households
 with baseline surveys again in 2015 for a final attrition rate of 5%. Of those in the
-Cash group, 12 were lost (9.6%), then two more in 2015 (11%). The control group saw
-very high attrition in 2014 (22%), but also found a large number of households not
-found at baseline, yielding a comparison group only 6% smaller. The high attrition
-was due largely to the fact that these households did not enjoy the same consitent
-contact that BRAC had with the TUP group, and the local area lacked infrastructure to
-easily locate people. This was exacerbated by the uncertain political situation and
-early harvest. Attrition in 2015 was 6.7%, with a full 85 more households identified
-who were not in the baseline survey. In order to take advantage of the households not
-included in the baseline, the main specification below includes an indicator for
+Cash group, 12 were lost (9.6%) in 2014, then two more in 2015 (11%). The control
+group saw very high attrition in 2014, missing 60 peope (22%). Enumerators also found
+a large number of households not found at baseline, such that there were only 16
+fewer surveys collected in 2014 than in 2013. The high attrition was due largely to
+the fact that these households did not enjoy the same consitent contact that BRAC had
+with the TUP group, and the local area lacked infrastructure to easily locate people.
+This was exacerbated by the uncertain political situation and early harvest.
+Attrition in 2015 was 6.7%, with 19 baseline control households not responding, with
+85 households found who were originally identified as control households from the
+survey but not in the baseline survey. In order to take advantage of the households
+not included in the baseline, the main specification below follows
+\cite{banerjee-etal} by setting missing values to zero when controlling for baseline
+levels of the dependent variable, and including an indicator for
 whether the household was in the baseline.
 
    
@@ -325,11 +367,12 @@ return check_attrition.TAB
 
 Next we ask how those who did not turn up in subsequent rounds differed by a range of
 baseline characteristics. \Tab{attrition_balance} reports the average level of
-various characteristics in 2013. Then we report the coefficient from a linear
-regression on indicators for whether they were in the midline or endline surveys.
+various characteristics in 2013. Then we report the difference in means between
+households that were in and out of the midline or endline surveys.
 Here we see that overall, households found in the mideline survey were larger with
 more children and larger reported asset stocks. Households found in 2015 seemed to
-have, at baseline, significantly smaller asset stocks and less consumption.
+have, at baseline, significantly smaller asset stocks and less consumption. This
+imbalance highlights the need for a difference-in-difference or ancova design.
 
 #+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
 #+attr_latex: :environment longtable :align lrrrrr
@@ -395,27 +438,35 @@ appropriate measure of the welfare or poverty of a household in our survey.
 
 The results for several important consumption measures are presented in Table
 \ref{tab:consumption}. Importantly, we do not know about prices for each good in this
-time, though we can say that inflation was as high as 100% between 2014 and 2015.
-Nonetheless, we take the sum of all consumption and expenditure questions together as
-a measure of welfare. In light of the fact that we have data on an incomplete basket, we also
+time, though we can say that inflation was as high as 100% between 2014 and 2015. We
+take the sum of all consumption and expenditure questions together as a measure of
+welfare. In light of the fact that we have data on an incomplete basket, we also
 follow Collins and Ligon (2015), which details a method for deriving treatment
-effects on a model-based estimate of households' marginal utility, which we include
-here as \(\log\lambda_{it}\).
+effects on a structurally estimated index of households' marginal utility, which we
+include here as \(\log\lambda_{it}\).
 
-The main result is that TUP participants had higher consumption consumption in 2014,
-several months into the primary monitoring phase after the asset transfers.
-Similarly, the cash group has higher consumption in 2015, measured just over a year
-after disbursal. Food transfers had ceased weeks before the 2014 survey was
-conducted, and the assets had been transferred 6-8 months prior. The TUP group sees
-no notable effect in 2015. The short-term consumption effects of either program are
-economically significant, representing a roughly 16% increase in average total
-consumption for both TUP and Cash. These results are consistent with a story in which
-either sort of transfer has a short-term consumption effect. Importantly, we do not
-reject the null hypothesis that the two effects are equal to one another. In either
-group, the increase in total consumption appears to be driven mainly by increased
-food consumption, with smaller effects on non-food consumption goods and durables. As
-such, there is no evidence that the share of food consumed falls, as might be
-predicted by Engel's law.
+We measured the effect of cash on consumption 12 months after the fact, where we find
+a statistically significant increase of 18 SSP per day, representing a roughly 16%
+increase over the control-group average. We first measured the consumption effect of
+the TUP program 6-9 months after the asset transfers, where we found a similarly
+sized effect of 18SSP. However we find no evidence of a consumption effect 18-21
+months after the transfers (and reject equality with the 12-month cash results). This
+result leaves open the question of whether the cash treatment had a persistent effect
+on consumption, or whether the short-term effect found in 2015 is similarly
+temporary. It was this question that motivated the collection of an additional five
+rounds of data over a 6-month period in late 2015 and early 2016, in which we asked
+about ten items, five food and five non-food. In Table \Tab{tab:mobile_consumption},
+we consider the average treatment effect on households sampled for these phone
+interviews, both for \(\log\lambda_{it}\) and for total consumption of this basket of
+goods. We find that, consistent with the TUP program's results in 2015, all evidence
+of an effect seem to be gone by 18th months after the transfer date.
+
+These results are consistent with a story in which either sort of transfer has a
+short-term consumption effect, but with the result fading in the year after. In
+either group, the increase in total consumption appears to be driven mainly by
+increased food consumption, with smaller effects on non-food consumption goods and
+durables. As such, there is no evidence that the share of food consumed falls, as
+might be predicted by Engel's law.
 
 \newpage
 
@@ -491,31 +542,19 @@ return mtab
 | N                         | $2877.000$         | $2878.000$     | $2878.000$    |
 |---------------------------+--------------------+----------------+---------------|
 
+** Food Insecurity
 
-This result leaves open the question of whether the cash treatment had a persistent
-effect on consumption, or whether the short-term effect found in 2015 is similarly
-temporary. It was this question that motivated the collection of an additional five
-rounds of data over a 6-month period in late 2015 and early 2016, in which we asked
-about ten items, five food and five non-food. We consider the average treatment
-effect on households sampled for these phone interviews, both for
-\(\log\lambda_{it}\) and for "Total consumption", which in this case we take a simple
-sum over the goods discussed. We find that, consistent with the TUP program's results
-in 2015, all evidence of an effect seem to be gone by 18th months after the transfer
-date.
-
-
-
-** Food Security
-
-Generally speaking, observed changes in total consumption don't translate into an
-increase in reported food security. In each year, we ask how often in a given week
-the respondent has had experiences indicative of food insecurity. Included are (from
-left to right) going a whole day without eating, going to sleep hungry, being without
-any food in the house, eating fewer meals than normal at mealtimes, and limiting
-portions. We report the percentage of people who report experiencing each in a
-typical week, as well as a standardized composite z-score using all of these
-questions. There is little evidence of a significant treatment effect at endline
-in 2015.
+Observed changes in total consumption don't translate into an increase in reported
+food security. In each year, we ask how often in a given week the respondent has had
+experiences indicative of food insecurity. Included are (from left to right) going a
+whole day without eating, going to sleep hungry, being without any food in the house,
+eating fewer meals than normal at mealtimes, and limiting portions. We report the
+percentage of people who report experiencing each in a typical week, as well as a
+standardized composite z-score using all of these questions. Coefficients and
+standard errors are both small relative to average levels and statistically
+insignificant. The first column also aggregates these values as a weighted average
+with inverse covariance weighting, yielding an index we call Food Insecurity. Again,
+we find no systematic difference in food security.
 
 #+name: foodsecure_results
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
@@ -523,68 +562,102 @@ in 2015.
 return tab
 #+end_src
 
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+|                                  | Food Insecurity | Whole Day       | Hungry          | No Food         | Few Meals       | Portions        |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| CTL mean                         | \(0.024\)       | \(0.790^{*}\)   | \(0.797^{**}\)  | \(0.716\)       | \(0.679\)       | \(0.638\)       |
+|                                  | \((0.713)\)     | \((0.408)\)     | \((0.403)\)     | \((0.452)\)     | \((0.467)\)     | \((0.481)\)     |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| CSH*2014                         | \(0.044\)       | \(0.004\)       | \(0.040\)       | \(0.011\)       | \(0.032\)       | \(0.004\)       |
+|                                  | \((0.076)\)     | \((0.041)\)     | \((0.039)\)     | \((0.043)\)     | \((0.050)\)     | \((0.051)\)     |
+| CSH*2015                         | \(-0.069\)      | \(-0.063\)      | \(-0.032\)      | \(0.014\)       | \(0.003\)       | \(0.034\)       |
+|                                  | \((0.074)\)     | \((0.040)\)     | \((0.039)\)     | \((0.042)\)     | \((0.049)\)     | \((0.050)\)     |
+| TUP*2014                         | \(0.058\)       | \(0.017\)       | \(0.052^{*}\)   | \(0.024\)       | \(-0.009\)      | \(-0.012\)      |
+|                                  | \((0.061)\)     | \((0.033)\)     | \((0.032)\)     | \((0.035)\)     | \((0.040)\)     | \((0.041)\)     |
+| TUP*2015                         | \(-0.005\)      | \(-0.030\)      | \(0.006\)       | \(0.030\)       | \(-0.054\)      | \(0.016\)       |
+|                                  | \((0.058)\)     | \((0.031)\)     | \((0.030)\)     | \((0.033)\)     | \((0.038)\)     | \((0.039)\)     |
+| 2014                             | \(-0.040\)      | \(0.914^{***}\) | \(0.904^{***}\) | \(0.915^{***}\) | \(0.834^{***}\) | \(0.779^{***}\) |
+|                                  | \((0.043)\)     | \((0.024)\)     | \((0.023)\)     | \((0.026)\)     | \((0.033)\)     | \((0.031)\)     |
+| 2015                             | \(-0.002\)      | \(0.784^{***}\) | \(0.793^{***}\) | \(0.736^{***}\) | \(0.703^{***}\) | \(0.609^{***}\) |
+|                                  | \((0.038)\)     | \((0.022)\)     | \((0.022)\)     | \((0.024)\)     | \((0.031)\)     | \((0.029)\)     |
+| Bsln2013                         | \(-0.081^{**}\) | \(0.002\)       | \(-0.017\)      | \(-0.032\)      | \(-0.056^{**}\) | \(0.023\)       |
+|                                  | \((0.034)\)     | \((0.023)\)     | \((0.021)\)     | \((0.023)\)     | \((0.027)\)     | \((0.027)\)     |
+| Bsln_NAN                         | \(0.109^{**}\)  | \(0.022\)       | \(0.033\)       | \(-0.038\)      | \(0.019\)       | \(0.083^{**}\)  |
+|                                  | \((0.053)\)     | \((0.031)\)     | \((0.032)\)     | \((0.035)\)     | \((0.043)\)     | \((0.041)\)     |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(0.128\)       | \(0.080\)       | \(0.085^{*}\)   | \(0.011\)       | \(-0.013\)      | \(-0.046\)      |
+|                                  | \((0.095)\)     | \((0.051)\)     | \((0.049)\)     | \((0.054)\)     | \((0.062)\)     | \((0.064)\)     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(0.064\)       | \(0.033\)       | \(0.038\)       | \(0.017\)       | \(-0.057\)      | \(-0.018\)      |
+|                                  | \((0.078)\)     | \((0.042)\)     | \((0.040)\)     | \((0.044)\)     | \((0.051)\)     | \((0.052)\)     |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| F-stat                           | \(1.742\)       | \(9.300\)       | \(8.328\)       | \(10.945\)      | \(6.700\)       | \(5.879\)       |
+| N                                | \(1255.000\)    | \(1276.000\)    | \(1291.000\)    | \(1287.000\)    | \(1291.000\)    | \(1286.000\)    |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+
+
+
 #+name: tab:foodsecure
 #+caption: Percentage of respondents reporting a food security problem occurs at least once a week.
 #+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+--------------+---------------+---------------+---------------+---------------+---------------|
-|                                  | Z-score      | Whole Day     | Hungry        | No Food       | Fewmeals      | Portions      |
-|----------------------------------+--------------+---------------+---------------+---------------+---------------+---------------|
-| CTL mean                         | $-0.01$      | $0.21$       | $0.21$       | $0.28$       | $0.32$       | $0.36$       |
-|                                  | $( 1.00)$    | $( 0.41)$     | $( 0.40)$     | $( 0.45)$     | $( 0.47)$     | $( 0.48)$     |
-|----------------------------------+--------------+---------------+---------------+---------------+---------------+---------------|
-| TUP*2014                         | $-0.10$      | $-0.02$       | $-0.05$       | $-0.03$       | $0.01$       | $0.01$       |
-|                                  | $( 0.09)$    | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     | $( 0.04)$     | $( 0.04)$     |
-| TUP*2015                         | $-0.02$      | $0.03$       | $-0.01$       | $-0.03$       | $0.05$       | $-0.02$       |
-|                                  | $( 0.09)$    | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     | $( 0.04)$     | $( 0.04)$     |
-| CSH*2014                         | $-0.05$      | $-0.00$       | $-0.04$       | $-0.01$       | $-0.03$       | $-0.00$       |
-|                                  | $( 0.11)$    | $( 0.04)$     | $( 0.04)$     | $( 0.04)$     | $( 0.05)$     | $( 0.05)$     |
-| CSH*2015                         | $0.03$      | $0.06$       | $0.03$       | $-0.01$       | $-0.00$       | $-0.04$       |
-|                                  | $( 0.11)$    | $( 0.04)$     | $( 0.04)$     | $( 0.04)$     | $( 0.05)$     | $( 0.05)$     |
-| Bsln2013                         | $0.07^{**}$ | $-0.00$       | $0.02$       | $0.03$       | $0.06^{**}$  | $-0.02$       |
-|                                  | $( 0.03)$    | $( 0.02)$     | $( 0.02)$     | $( 0.02)$     | $( 0.03)$     | $( 0.03)$     |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+|                                  | Z-score     | Whole Day    | Hungry       | No Food      | Fewmeals     | Portions     |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| CTL mean                         | $-0.01$     | $0.21$       | $0.21$       | $0.28$       | $0.32$       | $0.36$       |
+|                                  | $( 1.00)$   | $( 0.41)$    | $( 0.40)$    | $( 0.45)$    | $( 0.47)$    | $( 0.48)$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| TUP*2014                         | $-0.10$     | $-0.02$      | $-0.05$      | $-0.03$      | $0.01$       | $0.01$       |
+|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
+| TUP*2015                         | $-0.02$     | $0.03$       | $-0.01$      | $-0.03$      | $0.05$       | $-0.02$      |
+|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
+| CSH*2014                         | $-0.05$     | $-0.00$      | $-0.04$      | $-0.01$      | $-0.03$      | $-0.00$      |
+|                                  | $( 0.11)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
+| CSH*2015                         | $0.03$      | $0.06$       | $0.03$       | $-0.01$      | $-0.00$      | $-0.04$      |
+|                                  | $( 0.11)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
+| Bsln2013                         | $0.07^{**}$ | $-0.00$      | $0.02$       | $0.03$       | $0.06^{**}$  | $-0.02$      |
+|                                  | $( 0.03)$   | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    |
 | 2014                             | $0.07$      | $0.09^{***}$ | $0.10^{***}$ | $0.09^{***}$ | $0.17^{***}$ | $0.22^{***}$ |
-|                                  | $( 0.06)$    | $( 0.02)$     | $( 0.02)$     | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     |
+|                                  | $( 0.06)$   | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
 | 2015                             | $0.03$      | $0.22^{***}$ | $0.21^{***}$ | $0.26^{***}$ | $0.30^{***}$ | $0.39^{***}$ |
-|                                  | $( 0.06)$    | $( 0.02)$     | $( 0.02)$     | $( 0.02)$     | $( 0.03)$     | $( 0.03)$     |
-| Bsln NA                          | $-0.17^{*}$  | $-0.02$       | $-0.03$       | $0.03$       | $-0.02$       | $-0.08^{*}$   |
-|                                  | $( 0.09)$    | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     | $( 0.04)$     | $( 0.04)$     |
-|----------------------------------+--------------+---------------+---------------+---------------+---------------+---------------|
-| F-stat                           | $1.45$      | $9.34$       | $8.36$       | $10.84$       | $6.70$       | $5.91$       |
-| N                                | $1299.00$    | $1282.00$     | $1297.00$     | $1293.00$     | $1297.00$     | $1292.00$     |
-|----------------------------------+--------------+---------------+---------------+---------------+---------------+---------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-0.13$      | $-0.08$       | $-0.08^{*}$   | $-0.01$       | $0.01$       | $0.05$       |
-|                                  | $( 0.14)$    | $( 0.05)$     | $( 0.05)$     | $( 0.05)$     | $( 0.06)$     | $( 0.06)$     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-0.06$      | $-0.03$       | $-0.04$       | $-0.02$       | $0.06$       | $0.02$       |
-|                                  | $( 0.12)$    | $( 0.04)$     | $( 0.04)$     | $( 0.04)$     | $( 0.05)$     | $( 0.05)$     |
-|----------------------------------+--------------+---------------+---------------+---------------+---------------+---------------|
+|                                  | $( 0.06)$   | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    |
+| Bsln NA                          | $-0.17^{*}$ | $-0.02$      | $-0.03$      | $0.03$       | $-0.02$      | $-0.08^{*}$  |
+|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| F-stat                           | $1.45$      | $9.34$       | $8.36$       | $10.84$      | $6.70$       | $5.91$       |
+| N                                | $1299.00$   | $1282.00$    | $1297.00$    | $1293.00$    | $1297.00$    | $1292.00$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-0.13$     | $-0.08$      | $-0.08^{*}$  | $-0.01$      | $0.01$       | $0.05$       |
+|                                  | $( 0.14)$   | $( 0.05)$    | $( 0.05)$    | $( 0.05)$    | $( 0.06)$    | $( 0.06)$    |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-0.06$     | $-0.03$      | $-0.04$      | $-0.02$      | $0.06$       | $0.02$       |
+|                                  | $( 0.12)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
 
 ** Assets
    
-Turning now to asset holdings for the households, we estimate treatment effects for total value of assets owned, total
-value of potentially productive assets, as well as land and financial assets. 
+Turning now to asset holdings for the households, we estimate treatment effects for
+total value of physical assets owned, total value of potentially productive assets,
+as well as land and cash savings.
 
 *** Total Asset Holdings
 
-The cash group does not appear to have seen an increase in the
-value of assets measured, with negative and imprecise point estimates. The most
-important result is that the TUP group has significantly more asset wealth than the
-cash or control groups in both 2014 and 2015, 18 months after receipt of transfers.
-The TUP group has a change of 536 SSP on average (43% increase over controls, p<.01).
-So-called "Productive" assets include anything that could plausibly be used in
-productive activity.[fn:: For now, we include in this list: small and large
-livestock, farm equipment, mobiles, carts, sewing equipment, sheds, and shop
-premises.] Here we see the TUP group has 320 SSP (95%) more in this area over the
-control group, with a similar magnitude at midline.
+The cash group does not appear to have seen an increase in the value of assets
+measured, with negative and imprecise point estimates. This contrasts sharply with
+the TUP group, which seems to get notably wealthier and stay wealthier over time. The
+TUP group has significantly more asset wealth than the cash or control groups in both
+2014 and 2015, 18 months after receipt of transfers. They have 536 SSP more on
+average in 2014 and 624 SSP more in 2015. So-called "Productive" assets include
+anything that could plausibly be used in productive activity.[fn:: For now, we
+include in this list: small and large livestock, farm equipment, mobiles, carts,
+sewing equipment, sheds, and shop premises.] Here we see the TUP group has 320 SSP
+(95%) more in this area over the control group, with a similar magnitude at midline.
 
-Importantly, this is not due to a precipitous increase in assets reported over this
-time. Note also that the effect on total assets is higher in absolute value than the
-effect on productive asset value, suggesting that the increased wealth cannot be
-explained purely by households holding onto asset transfers for the length of the
-program's monitoring phase. Instead, the TUP group is the only one for whom total
-measured asset holdings did not fall on average over these two years, which saw
-hyperinflation and a significant aggregate economic downturn. This asset effect
-(including the savings effect below) is the only feature of households' financial
-situation on which we we see a persistent effect.
+Note also that the effect on total assets is higher in absolute value than the effect
+on productive asset value, suggesting that the increased wealth cannot be explained
+purely by households holding onto asset transfers for the length of the program's
+monitoring phase. Indeed, we see in \Fig{fig:AssetTotal} that the TUP group is the
+only one for whom total measured asset holdings did not fall on average over these
+two years, which saw hyperinflation and a significant aggregate economic downturn.
+This asset effect (including the savings effect below) is the only feature of
+households' financial situation on which we we see a persistent effect.
 
 #+CAPTION: Measured asset wealth by group-year
 #+NAME: fig:AssetTotal
@@ -634,24 +707,30 @@ return tab
 
 *** Savings
 
-Both treatment arms had significant impact on the average value of cash savings
-within households in 2015. The TUP households are strongly encouraged to pay into a savings
-account maintained by BRAC each time they meet. Anecdotally, this has discouraged
-some women from attending the meetings, but it results in TUP participants being 44%
-(20 pp) more likely to report having any savings at all. It's
+The TUP households were strongly encouraged to pay into a savings account maintained
+by BRAC at each of their weekly meetings. Anecdotally, this discouraged some women
+from attending the meetings, but we can see in Table \Tab{tab:Nonzero} that did
+manage to change behavior. TUP participants appear to be 48% (19 pp.) more likely to
+report having any savings at all at endline compared to control households. It's
 worth noting though that since the TUP households also regard their savings behavior
 as much more transparent to BRAC (and have received pressure to save from them) than
 the other groups, these households may simply be more likely to reveal that they are
-saving when asked. Among those who have savings, TUP households report having roughly
-43% (81 SSP) more in value.
+saving when asked. Nonetheless, it seems notable that among the group that
+received cash, households were no more likely than the control group to report having
+positive cash savings. This suggests to us that receiving cash is not in itself
+sufficient to induce households to start holding cash on hand or in an account.
+Conversely, increases in savings among TUP households were due not only to their
+increased wealth, but also to additional pressure to hold cash in a savings account.
 
-Cash households appear no more likely than the control households to report having
-cash savings (around 45% in each group), but households that report having any
-savings at all report
-having 47% (91.4 SSP) more in value. This is significantly less than was given to
-these households, but combined with the short-term consumption results, goes some
-distance in explaining the lack of effect on physical asset wealth. The cash seems to
-have gone primarily to consumption and savings.
+In Table \Tab{tab:Savings}, we consider the amount of cash saved in each year among
+those who reported savings. Here we see that cash and TUP groups increase the amount
+saved by a similar amount, with cash transfer recipients holding 47% (91.4 SSP) more
+and TUP households saving 42% (81.3 SSP) more. This is significantly less than was
+given to these households, but combined with the short-term consumption results, goes
+some distance in explaining the lack of effect on physical asset wealth. The cash
+seems to have gone primarily to consumption and savings. The asset transfer program
+on the other hand seems to have achieved a similar result among a greater proportion
+of households in addition to a notable increase in asset wealth.
 
 It is common in this community (and most in the region) to store non-perishable food
 like maize, cassava, or millet as a form of savings. This would seem particularly
@@ -675,35 +754,34 @@ return Table
 #+name: tab:Nonzero
 #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access 
 #+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+---------------+---------------+---------------+---------------|
-| % > 0                            | Savings       | Food Sav      | LandCult      | LandOwn       |
-|----------------------------------+---------------+---------------+---------------+---------------|
+|----------------------------------+--------------+--------------+--------------+--------------|
+| % > 0                            | Savings      | Food Sav     | LandCult     | LandOwn      |
+|----------------------------------+--------------+--------------+--------------+--------------|
 | CTL mean                         | $0.45$       | $0.82$       | $0.82$       | $0.90$       |
-|----------------------------------+---------------+---------------+---------------+---------------|
-| CSH*2014                         | $-0.06$       | $0.00$       | $-0.04$       | $-0.01$       |
-|                                  | $( 0.06)$     | $( 0.04)$     | $( 0.04)$     | $( 0.04)$     |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| CSH*2014                         | $-0.06$      | $0.00$       | $-0.04$      | $-0.01$      |
+|                                  | $( 0.06)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
 | CSH*2015                         | $0.03$       | $0.02$       | $0.05$       | $0.02$       |
-|                                  | $( 0.05)$     | $( 0.04)$     | $( 0.04)$     | $( 0.04)$     |
-| TUP*2014                         | $0.22^{***}$ | $-0.02$       | $-0.03$       | $-0.00$       |
-|                                  | $( 0.04)$     | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     |
-| TUP*2015                         | $0.21^{***}$ | $-0.03$       | $0.01$       | $-0.01$       |
-|                                  | $( 0.04)$     | $( 0.03)$     | $( 0.03)$     | $( 0.03)$     |
+|                                  | $( 0.05)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
+| TUP*2014                         | $0.22^{***}$ | $-0.02$      | $-0.03$      | $-0.00$      |
+|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
+| TUP*2015                         | $0.21^{***}$ | $-0.03$      | $0.01$       | $-0.01$      |
+|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
 | 2014                             | $0.43^{***}$ | $1.00^{***}$ | $0.83^{***}$ | $0.82^{***}$ |
-|                                  | $( 0.04)$     | $( 0.02)$     | $( 0.06)$     | $( 0.05)$     |
+|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.06)$    | $( 0.05)$    |
 | 2015                             | $0.39^{***}$ | $0.82^{***}$ | $0.77^{***}$ | $0.84^{***}$ |
-|                                  | $( 0.04)$     | $( 0.02)$     | $( 0.05)$     | $( 0.05)$     |
-| Bsln2013                         | $0.05$       |               | $0.05$       | $0.07$       |
-|                                  | $( 0.04)$     |               | $( 0.05)$     | $( 0.04)$     |
-| Bsln NA                          | $0.08^{*}$   |               | $0.05$       | $0.05$       |
-|                                  | $( 0.04)$     |               | $( 0.06)$     | $( 0.05)$     |
-|----------------------------------+---------------+---------------+---------------+---------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.19$       | $-0.04$       | $-0.07$       | $-0.02$       |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $0.18$       | $-0.05$       | $-0.03$       | $-0.03$       |
-|----------------------------------+---------------+---------------+---------------+---------------|
-| F-stat                           | $8.83$       | $15.60$       | $0.79$       | $0.76$       |
-| N                                | $1259.00$     | $870.00$      | $1231.00$     | $1251.00$     |
-|----------------------------------+---------------+---------------+---------------+---------------|
-
+|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.05)$    | $( 0.05)$    |
+| Bsln2013                         | $0.05$       |              | $0.05$       | $0.07$       |
+|                                  | $( 0.04)$    |              | $( 0.05)$    | $( 0.04)$    |
+| Bsln NA                          | $0.08^{*}$   |              | $0.05$       | $0.05$       |
+|                                  | $( 0.04)$    |              | $( 0.06)$    | $( 0.05)$    |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.19$       | $-0.04$      | $-0.07$      | $-0.02$      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $0.18$       | $-0.05$      | $-0.03$      | $-0.03$      |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| F-stat                           | $8.83$       | $15.60$      | $0.79$       | $0.76$       |
+| N                                | $1259.00$    | $870.00$     | $1231.00$    | $1251.00$    |
+|----------------------------------+--------------+--------------+--------------+--------------|
 
 #+name: tab:Savings
 #+caption: Average treatment effects by group-year on total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
@@ -713,19 +791,19 @@ return Table
 |----------------------------------+----------------+----------------+----------------+----------------|
 | CTL mean                         | $191.19$       | $114.78$       | $61.88$        | $46.00$        |
 |----------------------------------+----------------+----------------+----------------+----------------|
-| CSH*2014                         | $28.74$        | $0.22$        | $10.18$        | $10.50$        |
+| CSH*2014                         | $28.74$        | $0.22$         | $10.18$        | $10.50$        |
 |                                  | $(42.93)$      | $(15.38)$      | $(15.07)$      | $(12.57)$      |
 | CSH*2015                         | $91.40^{**}$   | $-14.34$       | $-39.18^{***}$ | $-32.37^{***}$ |
 |                                  | $(40.89)$      | $(14.98)$      | $(14.90)$      | $(11.95)$      |
 | TUP*2014                         | $-27.09$       | $17.16$        | $-4.76$        | $-3.02$        |
 |                                  | $(29.76)$      | $(12.33)$      | $(11.94)$      | $(10.04)$      |
-| TUP*2015                         | $81.33^{***}$  | $1.13$        | $-17.38$       | $-12.56$       |
+| TUP*2015                         | $81.33^{***}$  | $1.13$         | $-17.38$       | $-12.56$       |
 |                                  | $(29.32)$      | $(12.26)$      | $(11.65)$      | $( 9.41)$      |
 | 2014                             | $106.72^{***}$ | $62.03^{***}$  | $11.37$        | $17.31^{**}$   |
 |                                  | $(24.85)$      | $( 8.36)$      | $( 9.94)$      | $( 8.56)$      |
 | 2015                             | $163.04^{***}$ | $114.78^{***}$ | $61.52^{***}$  | $51.89^{***}$  |
 |                                  | $(24.13)$      | $( 7.60)$      | $( 9.54)$      | $( 7.88)$      |
-| Bsln2013                         | $0.05^{**}$   |                | $0.94$        | $-2.43$        |
+| Bsln2013                         | $0.05^{**}$    |                | $0.94$         | $-2.43$        |
 |                                  | $( 0.02)$      |                | $( 3.07)$      | $( 1.95)$      |
 | Bsln NA                          | $40.07^{*}$    |                | $-1.60$        | $-6.02$        |
 |                                  | $(21.24)$      |                | $( 9.92)$      | $( 8.29)$      |
@@ -733,7 +811,7 @@ return Table
 | $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-118.49$      | $31.50$        | $34.42$        | $29.35$        |
 | $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-10.07$       | $15.47$        | $21.79$        | $19.80$        |
 |----------------------------------+----------------+----------------+----------------+----------------|
-| F-stat                           | $7.41$        | $7.14$        | $4.91$        | $3.72$        |
+| F-stat                           | $7.41$         | $7.14$         | $4.91$         | $3.72$         |
 | N                                | $671.00$       | $777.00$       | $1042.00$      | $1114.00$      |
 |----------------------------------+----------------+----------------+----------------+----------------|
 
@@ -741,16 +819,15 @@ return Table
 *** Land Holdings
 
 We also examine land ownership and cultivation in each year. We find no evidence that
-either group is more or less likely to report owning or cultivating at least some land, though this
-may be in part because land ownership and cultivation is already very common.
-Anecdotaly, divesting from land ownership entirely could be seen as a relatively
-drastic decision. 
-However, members of the cash group who are involved in agriculture are found to be
-cultivating significantly less land after the fact, which reports cultivating 65%
-less and owning 70% less land than the control group. This raises the interesting
-question of whether the cash group was likely to switch occupations from farming to
-non-farm self-employment.
-It could also raise questions around the underlying logic of the more agrarian
+either group is more or less likely to report owning or cultivating at least some
+land, though this may be in part because land ownership and cultivation is already
+very common. Anecdotaly, divesting from land ownership entirely could be seen as a
+relatively drastic decision. However, members of the cash group who are involved in
+agriculture report cultivating 65% less and owning 70% less land than the control
+group. This raises the interesting question of whether the cash group was likely to
+switch occupations from farming to non-farm self-employment.
+
+It could also raise questions around the underlying logic of the agrarian focus
 transfer in the TUP program, if unconstrained transfers prompt households to divest
 from these opportunities. This concern may be validated somewhat by the fact that TUP
 participants primarily stated a preference for small retail training and transfers
@@ -761,8 +838,8 @@ over small animal husbandry or vegetable gardening.
 Income was reliably measured only in 2015, and so our estimates do not control for
 baseline values. The control group in 2015 has a measured income of roughly 4325 SSP
 per year, or roughly $540 US (assuming an exchange rate of around 8). The TUP group
-sees a 327 SSP ($41 US, 7%) increase in annual average income, but with a fairly
-skewed distribution and high standard errors. The related figure shows that total
+sees a 327 SSP ($41 US, 7%) increase in annual average income, but with a highly
+skewed distribution and large standard errors. The related figure shows that total
 income is not particularly different among groups. Perhaps the main lesson is that
 the TUP group has measurably more reported livestock-related income, and less farm
 income, indicating a shift away from farming. The cash group may exhibit some
@@ -799,24 +876,6 @@ return tab
 | $\beta^{TUP}-\beta^{CSH}$ | $-116.05$      | $364.94^{**}$  | $24.44$         | $319.91$        |
 |                           | $(105.79)$     | $(174.74)$     | $(651.27)$      | $(629.93)$      |
 |---------------------------+----------------+----------------+-----------------+-----------------|
-
-** COMMENT Occupation
-    
-*** TODO Occupation 
-
-Endline:
-    household_roster.dta S1_6
-    Check relationship code: S1_2
-
-Baseline:
-    income activities.dta (or income.dta, post income_cleanup.do)
-    Occupation code: S3_2
-    Check relationship code by merging on id and line no. from household roster.dta. 
-
-** COMMENT Other Outcomes
-   
-*** Confidence & Autonomy
-*** Vulnerability
 
 ** Exposure to Conflict
 
@@ -878,10 +937,12 @@ return Table
   
 BRAC's South Sudan pilot of the TUP program represents the only such test of the
 ultra-poor graduation framework conducted in an area of significant political and
-economic instability. It also represents among the only direct comparisons of this
+economic instability. It also represents one of the only direct comparisons of this
 model to a similarly expensive unconditional cash transfer, arguably its most
-sensible benchmark for success. As such, it provides suggestive evidence as to the
-best way of transfering wealth in order to help poor and vulnerable households.
+sensible benchmark for success. As such, while our study may not generalize to
+contexts with high-functioning cash economies and relative political stability, it
+provides suggestive evidence as to the best way of transfering wealth in order to
+help poor and vulnerable households.
 
 Cash transfers appear to increase consumption and possibly shift investment from
 agriculture to non-farm activities, without a related increase in wealth or income.
@@ -892,10 +953,9 @@ following the outbreak of violence.[fn:: Whether a cash transfer would have had 
 similar mitigating effect is hard to say.] We tentatively conclude that targeted
 asset transfers can play a constructive role in helping poor, self-employed
 households when they face economic uncertainty. And while cash increases household
-consumption, the goal of improving income or wealth is aided by the additional
+consumption, the goal of improving income or wealth is well served by the additional
 services that the ultra-poor graduation framework offer.
   
-
 * References
    \renewcommand{\refname}{}
    \printbibliography
@@ -1013,7 +1073,8 @@ return tab
 ** Food Security
 
  #+name: foodsecure_analysis
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle foodsecurity.py
+ #~ DevLunch_analysis.py
  import numpy as np
  import pandas as pd
  import statsmodels.api as sm
@@ -1528,7 +1589,7 @@ return AllTables
 ** Savings
 
 #+name: savings_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/savings_analysis.py
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm

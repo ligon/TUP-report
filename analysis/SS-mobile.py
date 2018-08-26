@@ -14,6 +14,7 @@ M, C,mHH= mobile_data(DIR = DATADIR+"Mobile/")
 try: logL = pd.read_pickle(DATADIR+"ss-lambdas_mobile.df")
 except EnvironmentError: raise IOError("Need to run SS-lambdas.py")
 logL.index.names=["HH","Year","Location"]
+logL.name       =["loglambda"]
 C    = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
 C    = C.reorder_levels([1,0,2]).sortlevel()
 keep = pd.notnull(C.index.get_level_values("Location"))

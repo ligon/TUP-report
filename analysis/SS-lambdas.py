@@ -42,6 +42,7 @@ if mobile:
     Mbphi,MlogL=nd.get_loglambdas(ce,TEST="warn")
     MlogL -= MlogL.mean()
     MlogL /= MlogL.std()
+    MlogL = MlogL.unstack('t').drop('4February',1).stack()
     try:
       xrange
       MlogL.to_pickle(DATADIR + "ss-lambdas_mobile.df")

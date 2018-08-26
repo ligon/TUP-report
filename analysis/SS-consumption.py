@@ -12,9 +12,9 @@ year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeim
 
 D = full_data(DIR=DATADIR)
 C, HH, T = consumption_data(D,WRITE=True) #"csv")
-logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
-logL.index.names=["HH","Year","Location"]
-C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
+#logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
+#logL.index.names=["HH","Year","Location"]
+#C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
 C = C.reorder_levels([1,2,0]).sortlevel()
 keep = pd.notnull(C.index.get_level_values("Location"))
 C = C.loc[keep,:]
@@ -124,17 +124,17 @@ def percapita_conversion(Exp,HH,children=["boys","girls"],adult_equivalent=1.,mi
 xrate = [ 2.161, 2.196, 3.293] #~ To avoid confusion, using PPP adjusted xrate and just setting PPP=1.
 PPP = 1.
 inflation= 1. #~ Bank data uses international $, which is inflation adjusted.
-C["Exp_usd"] = winsorize(USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation))
+C["Exp_usd_"] = winsorize(USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation))
+C["Exp_usd"] =  USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation)
 C["Tot_pc"] = percapita_conversion(C["Exp_usd"],HH,adult_equivalent=.5)
 #C["Exp_usdpc_tc"] = winsorize(C["Exp_usdpc"])
-
 
 C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
 C["FoodShr"]= C["Food"].div(C["Tot"]) #$\approx$ FoodShare variable
 C["logTot"] = C["Tot"].apply(np.log)
 C = C.join(T, how="left",lsuffix="_")
 
-Outcomes = ["Tot","FoodShr", "Food", "$\log\lambda_{it}$","z-score"]
+Outcomes = ["Exp_usd","Tot_pc","Tot","FoodShr", "Food"]
 
 #$\approx$ Make Baseline variable
 for var in Outcomes: 
@@ -151,9 +151,9 @@ for group in ("TUP", "CSH"):
     for year in ("2013", "2014", "2015"):
         interaction = C[group]*C[year]
         if interaction.sum()>0: C["{}*{}".format(group,year)] = interaction
-Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015']
+Controls = ["2014","2015",'TUP','CSH', 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015']
 #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
-C = C.loc[2014:2015]
+#~C = C.loc[2014:2015]
 regs  = regressions(C, outcomes=Outcomes,  controls=Controls,  Baseline=2013, baseline_na=True)
 
 results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
