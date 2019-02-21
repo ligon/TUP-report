@@ -5,33 +5,36 @@
 #+LATEX_CLASS_OPTIONS: [12pt,article]
 #+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
-#+LaTeX_HEADER:       \usepackage[backend=biber,style=authoryear,natbib=true]{biblatex}
-#+LaTeX_HEADER:       \addbibresource{prospectus.bib}
+#+LaTeX_HEADER:       \addbibresource{./prospectus.bib}
+#+LaTeX_HEADER:       \addbibresource{main.bib}
 #+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 #+LaTeX_HEADER:       \usepackage[T1]{fontenc}
+#+LaTeX_HEADER:       %\usepackage[backend=biber,style=authoryear,natbib=true]{biblatex}
 
 #+begin_abstract
-
-Several previous studies have found that the ``graduation'' or ``Transfers to the
-Ultra-Poor'' (TUP) framework is an effective approach to alleviating the constraints
-that prevent extremely poor households from increasing their productivity. The
-framework consists of a sizable transfer of productive physical capital, coupled with
-training and continuous support over the course of one or two years. A second and
-related literature has found some evidence that unconditional cash transfers (UCT's)
-may also improve household productivity and welfare with fewer fixed costs. Our field
-experiment provides a comparison of these two approaches to transfering wealth to
-low-income households during the first two years of BRAC's TUP pilot in South Sudan.
-We consider the effect of each on consumption, income, asset holdings, and a number
-of intangible outcomes. We also consider the TUP program's effect on households'
-responses to the outbreak of violence in 2014. We find evidence that both types of
-transfer have positive effects on consumption, but only in the short-run. We find a
-persistent increase in asset stock, but only from the TUP. We also elicit suggestive
-evidence that BRAC's support may have helped TUP beneficiaries cope with the
-short-term economic effects of the outbreak of violence in 2014. We tentatively
-conclude that in this economic context cash can increase household consumption, but
-the goal of improving income or wealth is aided by the additional services that the
-ultra-poor graduation framework offer.
-
+Several previous studies have found that the ``graduation'' or
+``Transfers to the Ultra-Poor'' (TUP) framework is an effective
+approach to alleviating the constraints that prevent extremely poor
+households from increasing their productivity.  The framework consists
+of a sizable transfer of productive physical capital, coupled with
+training and continuous support over the course of one or two years.
+A second and related literature has found some evidence that
+unconditional cash transfers (UCT's) may also improve household
+productivity and welfare with fewer fixed costs.  Our field experiment
+provides a comparison of these two approaches to transferring wealth to
+low-income households during the first two years of BRAC's TUP pilot
+in South Sudan.  We consider the effect of each on consumption,
+income, asset holdings, and a number of intangible outcomes. We also
+consider the TUP program's effect on households' responses to the
+outbreak of violence in 2014. We find evidence that both types of
+transfer have positive effects on consumption, but only in the
+short-run.  We find a persistent increase in asset stocks, but only from
+the TUP. We also elicit suggestive evidence that BRAC's support may
+have helped TUP beneficiaries cope with the short-term economic
+effects of the outbreak of violence in 2014. We tentatively conclude
+that in this economic context cash can increase household consumption,
+but the goal of improving income or wealth is aided by the additional
+services that the ultra-poor graduation framework offer.
 #+end_abstract
 \newpage
 
@@ -137,18 +140,20 @@ This naturally complicates the comparison of treatment effects between the two
 treatments. We will describe our empirical strategy in light of these challenges in
 the Empirical Strategy section.
 
-Cash transfers were delivered by field officers in person and in local currency. That
-they were delivered in cash distinguishes it from several other cash transfer
-programs (e.g. \cite{haushoffer-shapiro}, \cite{progressa-paper}), which deposited
-cash in a bank or mobile money account. \cite{mckinzie-fafchamps13} used cash
-(right?). Experiments studies of the behavioral implications of savings accounts like
-\cite{robinson-dupas} and \cite{banking-the-unbanked} might make us expect disbursal
-method will affect the propensity of households to save a cash transfer. Like this
-experiment, each of these programs and experiments also disbursed cash in local
-currency. However, our context is unique in that the local economy was facing
-significant inflation at the time, with our cursory year-on-year estimates ranging
-between 80% and 100%. This would naturally make cash savings a less appealing option
-relative to consumption or investing in some real asset.
+Cash transfers were delivered by field officers in person and in local
+currency. That they were delivered in cash distinguishes it from
+several other cash transfer programs.[fn:: For example,
+cite:haushofer-shapiro16 deposited funds in a bank or mobile money
+account, while \cite{fafchamps-etal14} used money transfers.]
+Experimental studies of the behavioral implications of savings
+accounts citep:dupas-robinson13 would lead one to expect that the
+method of disbursal method might affect the propensity to save a cash
+transfer.  In all of these experiments transfers were denominated in
+the local currency.  However, our context is unusual in that the local
+economy was facing significant inflation at the time, with
+year-on-year estimates ranging between 80% and 100%.  This would
+naturally make holding cash a less appealing option relative to
+consumption or investing in some real asset.
 
 Local community leaders were approached in advance of talking to individual
 households to reassure recipients of BRAC's intentions. It was made clear that the
