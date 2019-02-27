@@ -1,4 +1,4 @@
-+TITLE: Comparing Cash and Asset Transfers to Low-Income Households in South Sudan
+#+TITLE: Comparing Cash and Asset Transfers to Low-Income Households in South Sudan
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
 #+DATE: \today
 #+OPTIONS: texht:t toc:nil num:nil ':t

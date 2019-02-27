@@ -1,0 +1,340 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={TUP\_report},
+            pdfauthor={Reajul Chowdhury, Elliott Collins, Ethan A. Ligon, Munshi Sulaiman},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{TUP\_report}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Reajul Chowdhury, Elliott Collins, Ethan A. Ligon, Munshi Sulaiman}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{December 03, 2018}
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}\label{introduction}
+
+Despite remarkable progress on reducing poverty over the last decades,
+the United Nations (UN) and the World Bank admit that we are far behind
+and might fail in achieving the goal of ending extreme poverty\footnote{population
+  living on less than US\$1.90 a day} by 2030 (World Bank 2018). The
+reasons behind this slow progress are mainly two. First, it is difficult
+to reach the poor - specially the poorest among the poor. Second,
+development models or interventions which effectively alleviate poverty
+and provide sustainable livelihoods to extreme poor are rare in number.
+So, the biggest challenge in poverty alleviation is reaching the
+`poorest' with an `effective' intervention. The poorest or the
+`ultra-poor'\footnote{The term ultra-poor was coined by Lipton (1983) in
+  reference to a group of people that spend 80 per cent of their total
+  income for food and eat below 80 per cent of their caloric needs.
+  Later, a report by the International Food Policy Research Institute,
+  defined as ultra-poor those living with less than US\$0.50 a day
+  (Akhter U. Ahmed et al. 2007)} people are the most vulnerable subgroup
+within the population living under extreme poverty line. They are
+severely food insecure, own little or no productive assets, have no
+education and skills, and earn money from low return activities like
+small-scale cultivation or causal day labor.
+
+NGOs and development organizations tried to help the ultra-poor
+households with traditional microcredit product - which is a proven tool
+in reducing vulnerability, creating economic opportunities, and
+increasing income of poor people by giving them access to finance
+(Hashemi and Umaira 2011). But the traditional microcredit does not fit
+the needs of the poorest, and has failed to reach the ultra-poor
+(Hashemi and Umaira 2011). Microcredit products are mainly small,
+high-interest loans, usually designed for micro entrepreneurs- who are
+already involved with or more likely to start some self-employment
+activities, and will be able to make use of the credit to take advantage
+of market opportunities (Banerjee et al. 2015; Hashemi and Umaira 2011).
+The ultra-poor households are much poorer than the targeted groups of
+microcredit providers and therefore, have been excluded from the most
+microcredit programs (Evans et al. 1999; Thorp, Stewart, and Heyer 2005;
+Kaur 2016). Even when offered with microcredit, the ultra-poor
+households lack the human capital and entrepreneurial skills to
+effectively use the credit, and might fall in credit-based poverty trap.
+Another strategy through which governments and donor organizations reach
+the ultra-poor is safety net programs such as food aid, school feeding,
+temporary employment programs, free health services, unemployment
+benefits, pensions, etc. Countries hosting most of the world's poor
+population cannot often afford such safety net programs in long run. The
+safety net programs often fail to reach the ultra-poor\footnote{Evidence
+  shows that India's Integrated Rural Development Program (IRDP) had
+  poor performance in targeting the poorest.(Dreze 1990; {\textbf{???}})}.
+Such programs are also widely criticized for focusing only on protecting
+the poor rather than helping them to improve their livelihoods and get
+out of extreme poverty.
+
+Over the last few decades, NGOs and development organizations learned
+that a single product or service cannot fit the dynamic needs of the
+ultra-poor and help them overcoming extreme poverty. Giving them a
+sustainable livelihoods will require a comprehensive, integrated set of
+interventions. Building on this insight, BRAC -- a Bangladesh origin
+NGO, pioneered a program called Targeting the Ultra-poor (TUP) to build
+secure, sustainable, and resilient livelihoods for the ultra-poor. The
+TUP program follows a `Graduation' approach that combines multifaceted
+support services addressing both immediate needs of the ultra-poor by
+giving them consumption supports, and their long-term need for a
+sustainable livelihoods by providing technical skills training, and a
+grant of productive assets. BRAC first implemented the TUP program in
+2002 in Bangladesh. Several non-experimental studies (Akhter U Ahmed et
+al. 2009; Mallick 2013; Matin and Hulme 2003; Rabbani, Sulaiman, and
+Prakash 2006) found the TUP program very effective in increasing
+household consumption, assets holdings, and self-employment among the
+ultra-poor. The holistic treatment of poverty in the Graduation approach
+(or BRAC's TUP program) drew the attention of the donor community, and
+other stakeholders in the extreme poverty affected countries. The TUP
+model has later been replicated and adapted by 114 programs in 45
+countries by NGOs, governments, and donor organizations\footnote{BRAC
+  website: \url{http://www.brac.net/program/targeting-ultra-poor/}} .
+Through its TUP program in Bangladesh, BRAC alone reached a total of
+1.77 million ultra-poor households till 2016, and aims to reach 0.5
+million more households by 2020\footnote{\url{http://www.brac.net/images/index/tup/brac_TUP-briefNote-Jun17.pdf}}.
+
+Taking advantage of the large scale replication of the TUP program in
+Bangladesh and other countries, a number of experimental studies (
+(Banarjee, Duflo, Chattopadhyay, \& Shapiro, 2011) (Banerjee et al.
+2011; Bandiera et al. 2013; Bandiera et al. 2017; Banerjee et al. 2015)
+have been conducted to assess the impact of the program. In Bangladesh,
+Bandiera et al. (2013) found that after four years of the program
+inception, the beneficiary households expanded their self-employment
+activities, increased labor supply, accumulated more productive assets,
+which led to increased household income and per capita consumption. A
+follow-up survey on the same households seven years after the program
+began, found that the long-term effect of the program is at least as
+large as the four-years effect (Bandiera et al. 2017). Banarjee et al.
+(2015) documented the findings from 6 randomized trail studies assessing
+the impact of the TUP program implemented in 6 countries\footnote{Ethiopia,
+  Ghana, Honduras, India, Pakistan, and Peru}. The study found effect of
+the program on income, assets holdings, food security, and consumption
+similar to the Bangladesh study.
+
+While the graduation approach (BRAC's TUP model) was getting popular and
+being replicated in many countries, Haushofer \& Shapiro (2013), and
+Chrsi Blattman et al. (2015) were experimenting the effect of a very
+simple unconditional cash transfer (UCT) to help the ultra-poor
+households fighting extreme poverty in Kenya and Uganda. The rational
+for such simple cash transfer is straight forward -- putting the
+development and social protection resources directly in the hands of
+poor people and let them fight the dimensions of poverty in their own
+way. Findings from both studies show significant effect of the cash
+transfer on assets holdings (both productive and overall household
+assets), consumption, and food security. For instance, the study from
+Kenya found that compared to the control group mean, the recipients'
+total assets holding increased by 58\%, and household consumption
+increased by 20\% (Haushofer \& Shapiro,2013). A three-years follow up
+survey on these households show a similar magnitude of effects persist
+on the same welfare outcomes (Haushofer \& Shapiro, 2018). The study in
+Uganda also found the unconditional cash transfer to be effective in
+terms of increased self-employment activities, assets holdings, and
+consumption of the recipients (Blattman et al. 2016). Though whether
+such unconditional cash transfer can offer sustainable routs out of
+poverty on a large scale still remains a question, the low operational
+costs and significant effect on particular welfare outcomes (at least in
+short run) made such transfer program an attractive alternative to
+relatively more expensive Graduation approach/BRAC's TUP model. These
+two competitive approaches of transfer program put an obvious question
+to the development economists -- is it worth to invest on the additional
+features of the TUP framework and which type of transfer is more
+effective in a given context.
+
+In this paper, we present results from a randomized trial study
+comparing the BRAC's TUP program with unconditional cash transfers in
+South Sudan. We aim to answer the research questions -- \textbf{does the
+type of transfer matter and do the different types of transfer result
+different welfare change?} Our results contribute to the general
+literature in two important ways. First, to the best of our knowledge,
+this is the first experiment attempting to directly compare these two
+competitive approaches of transfer programs in the same setup. In our
+study, a randomly selected group of households received cash transfers
+equal in market value to the assets provided to the TUP households.
+Second, South Sudan's long-history of ongoing conflict and volatile
+economy, which may affect the value of the program for households in
+important ways. South Sudan earned its independence after five decades
+of civil war with North Sudan. The youngest nation of the world had some
+of the worst development indicators in the world; under five and
+maternal mortality in the county is world's highest (WHO 2014), the
+whole country has only 124 miles of paved road, the unemployment rate in
+the country is one of the highest in the world. The country fall into
+another civil war that broke out in December, 2013. After the latest
+round of the civil war, around 1.74 million people have been internally
+displaced, and 640,000 people took refuges in the neighboring
+countries\footnote{\url{https://reliefweb.int/report/south-sudan/south-sudan-humanitarian-bulletin-issue-6-16-july-2018}}
+. The government had little control on the market, and the economy
+experienced unprecedented hyperinflation over the last 5
+years\ldots{}\ldots{}\ldots{}\ldots{}
+
+\paragraph*{Works Cited}\label{works-cited}
+\addcontentsline{toc}{paragraph}{Works Cited}
+
+\hypertarget{refs}{}
+\hypertarget{ref-Ahmed2009}{}
+Ahmed, Akhter U, Mehnaz Rabbani, Munshi Sulaiman, and Narayan C. Das.
+2009. \emph{The Impact of Asset Transfer on Livelihoods of the Ultra
+Poor in Bangladesh}. Vol. 7. 39.
+
+\hypertarget{ref-Ahmed2007}{}
+Ahmed, Akhter U., Ruth Vargas Hill, Lisa C. Smith, Doris M. Wiesmann,
+and Tim Frankenberger. 2007. ``The World's Most Deprived;
+Characteristics and Causes of Extreme Poverty and Hunger.'' October.
+
+\hypertarget{ref-Bandiera2017}{}
+Bandiera, Oriana, Robin Burgess, Narayan Das, Selim Gulesci, Imran
+Rasul, and Munshi Sulaiman. 2017. ``Labor markets and poverty in village
+economies.'' \emph{Quarterly Journal of Economics} 132 (2): 811--70.
+doi:\href{https://doi.org/10.1093/qje/qjx003}{10.1093/qje/qjx003}.
+
+\hypertarget{ref-Bandiera2013}{}
+Bandiera, Oriana, Robin Burgess, Narayan Das, Selim Gulesci, Imran
+Rasul, Munshi Sulaiman, Francisco Buera, et al. 2013. ``Can basic
+entrepreneurship transform the economic lives of the poor?''
+\emph{Working Paper}, no. April.
+
+\hypertarget{ref-Voropaeva1966}{}
+Banerjee, Abhijit, Esther Duflo, Raghabendra Chattopadhyay, and Jeremy
+Shapiro. 2011. ``Targeting the Hard-Core Poor: An Impact Assessment.''
+
+\hypertarget{ref-Banerjee2015}{}
+Banerjee, Abhijit, Esther Duflo, Nathanael Goldberg, Dean Karlan, Robert
+Osei, William ParientÃ©, Jeremy Shapiro, Bram Thuysbaert, and Christopher
+Udry. 2015. ``A multifaceted program causes lasting progress for the
+very poor: Evidence from six countries.'' \emph{Science} 348 (6236).
+doi:\href{https://doi.org/10.1126/science.1260799}{10.1126/science.1260799}.
+
+\hypertarget{ref-Blattman2016}{}
+Blattman, Christopher, Eric P. Green, Julian Jamison, M. Christian
+Lehmann, and Jeannie Annan. 2016. ``Blattman 2015.'' \emph{American
+Economic Journal: Applied Economics} 8 (2): 35--64.
+doi:\href{https://doi.org/10.1257/app.20150023}{10.1257/app.20150023}.
+
+\hypertarget{ref-Dreze1990}{}
+Dreze, J. 1990. ``Poverty in India and the IRDP Delusion.''
+\emph{Economic and Political Weekly} 25 (39): A95--A104.
+\href{http://www.jstor.org/discover/10.2307/4396805?uid=3738456\%7B/\&\%7Duid=2\%7B/\&\%7Duid=4\%7B/\&\%7Dsid=21102145880963}{http://www.jstor.org/discover/10.2307/4396805?uid=3738456\{\textbackslash{}\&\}uid=2\{\textbackslash{}\&\}uid=4\{\textbackslash{}\&\}sid=21102145880963}.
+
+\hypertarget{ref-Evans1999}{}
+Evans, Timothy G., Alayne M. Adams, Rafi Mohammed, and Alison H. Norris.
+1999. ``Demystifying nonparticipation in microcredit: A population-based
+analysis.'' \emph{World Development} 27 (2): 419--30.
+doi:\href{https://doi.org/10.1016/S0305-750X(98)00134-X}{10.1016/S0305-750X(98)00134-X}.
+
+\hypertarget{ref-Hashemi2011}{}
+Hashemi, Syed M, and Wamiq Umaira. 2011. ``New pathways for the
+poorest\_Hashemi,S.M. \& Umaira, W. (2011),'' no. January: 1--20.
+
+\hypertarget{ref-Kaur2016}{}
+Kaur, Prabhjot. 2016. ``Efficiency of microfinance institutions in
+India: Are they reaching the poorest of the poor?'' \emph{Vision} 20
+(1): 54--65.
+doi:\href{https://doi.org/10.1177/0972262916628988}{10.1177/0972262916628988}.
+
+\hypertarget{ref-Mallick2013}{}
+Mallick, Debdulal. 2013. ``How Effective is a Big Push to the Small?
+Evidence from a Quasi-Experiment.'' \emph{World Development} 41 (1).
+Elsevier Ltd: 168--82.
+doi:\href{https://doi.org/10.1016/j.worlddev.2012.05.021}{10.1016/j.worlddev.2012.05.021}.
+
+\hypertarget{ref-Matin2003}{}
+Matin, Imran, and David Hulme. 2003. ``Programs for the Poorest:
+Learning from the IGVGD Program in Bangladesh.'' \emph{World
+Development} 31 (3): 647--65.
+doi:\href{https://doi.org/10.1016/S0305-750X(02)00223-1}{10.1016/S0305-750X(02)00223-1}.
+
+\hypertarget{ref-Rabbani2006}{}
+Rabbani, Mehnaz, Munshi Sulaiman, and Vivek A. Prakash. 2006. ``Impact
+Assessment of CFPR/TUP: A Descriptive Analysis Based on 2002-2005 Panel
+Data.'' \emph{CFPR/TUP Working Paper} 12 (July): 1--35.
+\href{https://www.researchgate.net/profile/Munshi\%7B/_\%7DSulaiman/publication/46476816\%7B/_\%7DImpact\%7B/_\%7DAssessment\%7B/_\%7Dof\%7B/_\%7DCFPRTUP\%7B/_\%7DA\%7B/_\%7DDescriptive\%7B/_\%7DAnalysis\%7B/_\%7DBased\%7B/_\%7Don\%7B/_\%7D2002-2005\%7B/_\%7DPanel\%7B/_\%7DData/links/5750604e08ae1f765f9265e4/Impact-Assessment-of-CFPR-TUP-A-Descriptive-Analysis-Based-on-2002-2}{https://www.researchgate.net/profile/Munshi\{\textbackslash{}\_\}Sulaiman/publication/46476816\{\textbackslash{}\_\}Impact\{\textbackslash{}\_\}Assessment\{\textbackslash{}\_\}of\{\textbackslash{}\_\}CFPRTUP\{\textbackslash{}\_\}A\{\textbackslash{}\_\}Descriptive\{\textbackslash{}\_\}Analysis\{\textbackslash{}\_\}Based\{\textbackslash{}\_\}on\{\textbackslash{}\_\}2002-2005\{\textbackslash{}\_\}Panel\{\textbackslash{}\_\}Data/links/5750604e08ae1f765f9265e4/Impact-Assessment-of-CFPR-TUP-A-Descriptive-Analysis-Based-on-2002-2}.
+
+\hypertarget{ref-Thorp2005}{}
+Thorp, Rosemary, Frances Stewart, and Amrik Heyer. 2005. ``When and how
+far is group formation a route out of chronic poverty?'' \emph{World
+Development} 33 (6): 907--20.
+doi:\href{https://doi.org/10.1016/j.worlddev.2004.09.016}{10.1016/j.worlddev.2004.09.016}.
+
+\hypertarget{ref-WHO2014}{}
+WHO. 2014. ``Republic of South Sudan Fact Sheet: Emergency Risk and
+Crisis Management,'' no. JANUARY: 2013--5.
+\href{http://www.who.int/hac/crises/ssd/sitreps/south\%7B/_\%7Dsudan\%7B/_\%7Dcountry\%7B/_\%7Dfact\%7B/_\%7Dsheet\%7B/_\%7DMarch2014.pdf}{http://www.who.int/hac/crises/ssd/sitreps/south\{\textbackslash{}\_\}sudan\{\textbackslash{}\_\}country\{\textbackslash{}\_\}fact\{\textbackslash{}\_\}sheet\{\textbackslash{}\_\}March2014.pdf}.
+
+\hypertarget{ref-WorldBank2018}{}
+World Bank. 2018. ``Poverty and Shared Prosperity 2018,'' 19--48.
+doi:\href{https://doi.org/10.1596/978-1-4648-0958-3}{10.1596/978-1-4648-0958-3}.
+
+
+\end{document}
