@@ -706,6 +706,78 @@ households' financial situation on which we we see a persistent effect.
 return tab
 #+end_src
 
+RESULTS: asset_results WITH Tgroup Fixed Effects
+|----------------------------------+--------------------+-------------------+-------------------|
+|                                  | Total              | Productive        | Livestock         |
+|----------------------------------+--------------------+-------------------+-------------------|
+| CTL mean                         | \(1149.392\)       | \(303.427\)       | \(191.478\)       |
+|                                  | \((1494.992)\)     | \((586.417)\)     | \((529.489)\)     |
+|----------------------------------+--------------------+-------------------+-------------------|
+| TUP*2014                         | \(301.119^{***}\)  | \(185.870^{***}\) | \(145.139^{***}\) |
+|                                  | \((100.921)\)      | \((45.928)\)      | \((39.745)\)      |
+| TUP*2015                         | \(152.392\)        | \(76.187^{*}\)    | \(87.150^{**}\)   |
+|                                  | \((100.921)\)      | \((45.928)\)      | \((39.745)\)      |
+| CSH*2014                         | \(124.143\)        | \(50.705\)        | \(10.077\)        |
+|                                  | \((127.384)\)      | \((57.967)\)      | \((50.161)\)      |
+| CSH*2015                         | \(-112.701\)       | \(-16.201\)       | \(2.840\)         |
+|                                  | \((127.384)\)      | \((57.967)\)      | \((50.161)\)      |
+| TUP                              | \(453.511^{***}\)  | \(262.057^{***}\) | \(232.289^{***}\) |
+|                                  | \((63.925)\)       | \((29.053)\)      | \((25.152)\)      |
+| CSH                              | \(11.442\)         | \(34.504\)        | \(12.917\)        |
+|                                  | \((80.739)\)       | \((36.668)\)      | \((31.734)\)      |
+| 2014                             | \(895.043^{***}\)  | \(268.534^{***}\) | \(136.818^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| 2015                             | \(1056.150^{***}\) | \(295.315^{***}\) | \(183.214^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| Bsln2013                         | \(0.072^{***}\)    | \(0.015\)         | \(0.021\)         |
+|                                  | \((0.017)\)        | \((0.012)\)       | \((0.013)\)       |
+| Bsln_NAN                         | \(0.000\)          | \(0.000\)         | \(0.000\)         |
+|                                  | \((0.000)\)        | \((0.000)\)       | \((0.000)\)       |
+|----------------------------------+--------------------+-------------------+-------------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(413.820^{**}\)   | \(202.071^{**}\)  | \(142.298^{**}\)  |
+|                                  | \((181.534)\)      | \((82.625)\)      | \((71.498)\)      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(265.093^{**}\)   | \(92.388\)        | \(84.310\)        |
+|                                  | \((134.945)\)      | \((61.419)\)      | \((53.148)\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+| F-stat                           | \(12.984\)         | \(14.753\)        | \(15.917\)        |
+| N                                | \(1488.000\)       | \(1488.000\)      | \(1488.000\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+
+RESULTS: asset_results WITHOUT Tgroup Fixed Effects
+|----------------------------------+--------------------+-------------------+-------------------|
+|                                  | Total              | Productive        | Livestock         |
+|----------------------------------+--------------------+-------------------+-------------------|
+| CTL mean                         | \(1149.392\)       | \(303.427\)       | \(191.478\)       |
+|                                  | \((1494.992)\)     | \((586.417)\)     | \((529.489)\)     |
+|----------------------------------+--------------------+-------------------+-------------------|
+| TUP*2014                         | \(754.630^{***}\)  | \(447.927^{***}\) | \(377.428^{***}\) |
+|                                  | \((135.492)\)      | \((61.624)\)      | \((53.338)\)      |
+| TUP*2015                         | \(605.902^{***}\)  | \(338.244^{***}\) | \(319.439^{***}\) |
+|                                  | \((135.492)\)      | \((61.624)\)      | \((53.338)\)      |
+| CSH*2014                         | \(135.584\)        | \(85.208\)        | \(22.994\)        |
+|                                  | \((171.069)\)      | \((77.777)\)      | \((67.307)\)      |
+| CSH*2015                         | \(-101.259\)       | \(18.303\)        | \(15.757\)        |
+|                                  | \((171.069)\)      | \((77.777)\)      | \((67.307)\)      |
+| 2014                             | \(895.043^{***}\)  | \(268.534^{***}\) | \(136.818^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| 2015                             | \(1056.150^{***}\) | \(295.315^{***}\) | \(183.214^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| Bsln2013                         | \(0.072^{***}\)    | \(0.015\)         | \(0.021\)         |
+|                                  | \((0.017)\)        | \((0.012)\)       | \((0.013)\)       |
+| Bsln_NAN                         | \(0.000\)          | \(0.000\)         | \(0.000\)         |
+|                                  | \((0.000)\)        | \((0.000)\)       | \((0.000)\)       |
+|----------------------------------+--------------------+-------------------+-------------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(855.889^{***}\)  | \(429.624^{***}\) | \(361.670^{***}\) |
+|                                  | \((218.012)\)      | \((99.221)\)      | \((85.859)\)      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(707.162^{***}\)  | \(319.941^{***}\) | \(303.682^{***}\) |
+|                                  | \((181.065)\)      | \((82.403)\)      | \((71.306)\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+| F-stat                           | \(12.984\)         | \(14.753\)        | \(15.917\)        |
+| N                                | \(1488.000\)       | \(1488.000\)      | \(1488.000\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+#+end_example
+
+
 #+name: tab:assets
 #+caption: Average treatment effects by group-year on total value (in SSP) of all assets measured and of productive assets measured
 #+attr_latex: :environment longtable :align lrrrrrrr
@@ -1492,7 +1564,7 @@ return tab
 ** Assets
    
 #+name: asset_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle Endline_analysis.py
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/asset_analysis.py
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
@@ -1505,7 +1577,9 @@ def topcode(var, Nstd=3, drop=False):
     else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
     return var
 
-D = full_data(balance=[])
+TGROUP_FE = True
+
+D = full_data(DIR="../../data/")
 
 Outcomes = ["Total", "Productive","Livestock"]
 Aval2013 = asset_vars(D,year=2013)[0][Outcomes]
@@ -1537,22 +1611,24 @@ ase = astd/np.sqrt(aN)
 asset_pctchange = (amean/amean.ix[2013]).unstack("Year") - 1
 
 for var in ("Total","Productive","Livestock"):
-   fig,ax = plt.subplots(1,2)
-   for i,yr in enumerate((2014,2015)):
-       Vals.ix[yr].dropna(subset=[[var,"TUP","CSH","CTL"]]).groupby("Group")[var].plot(kind="kde",ax=ax[i])
-       ax[i].set_title("{} Asset Value in {}".format(var,yr))
-       ax[i].legend()
-       #~ ax[i].set_aspect(1)
-       ax[i].set_xlim(left=0)
-   plt.savefig("../figures/Asset{}_kde.png".format(var))
-   plt.clf()
+   #~ fig,ax = plt.subplots(1,2)
+   #~ for i,yr in enumerate((2014,2015)):
+   #~     Vals.ix[yr].dropna(subset=[[var,"TUP","CSH","CTL"]]).groupby("Group")[var].plot(kind="kde",ax=ax[i])
+   #~     ax[i].set_title("{} Asset Value in {}".format(var,yr))
+   #~     ax[i].legend()
+   #~     #~ ax[i].set_aspect(1)
+   #~     ax[i].set_xlim(left=0)
+   #~ plt.savefig("../figures/Asset{}_kde.png".format(var))
+   #~ plt.clf()
    amean.unstack("Group")["Total"].plot(kind="bar",yerr=ase.unstack("Group")["Total"].values)
    plt.tight_layout()
    plt.xticks(rotation=45)
    plt.savefig("../figures/Asset{}_groupyear.png".format(var))
    plt.clf()
 
-Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+if TGROUP_FE: Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015', 'TUP','CSH']
+else:         Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015']
+
 
 #$\approx$ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
 Vals=Vals.loc[2014:2015]
@@ -1581,9 +1657,6 @@ SE = SE.append(diff_se)
 
 tab = df_to_orgtbl(results, sedf=SE)
 #+end_src
-
-#+RESULTS: asset_analysis
-: None
 
 #+name: assets_disaggreate_analysis
 #+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
