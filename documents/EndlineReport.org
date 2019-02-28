@@ -476,40 +476,42 @@ might be predicted by Engel's law.
 return tab
 #+end_src
 
+#+RESULTS: consumption_results
+
 #+caption: Average treatment effects by Group-Year, controlling for baseline levels.
 #+attr_latex: :environment longtable :align lrrrrrrr
 #+name: tab:consumption
-|----------------------------------+-----------------+--------------------+----------------+---------------|
-|                                  | Tot             | $\log\lambda_{it}$ | Food           | logTot        |
-|----------------------------------+-----------------+--------------------+----------------+---------------|
-| CTL mean                         | $115.404$       | $0.159$            | $38.468$       | $4.509^{***}$ |
-|                                  | $(78.750)$      | $(0.967)$          | $(26.250)$     | $(0.756)$     |
-|----------------------------------+-----------------+--------------------+----------------+---------------|
-| CSH*2014                         | $-2.745$        | $0.127$            | $-0.915$       | $0.007$       |
-|                                  | $(8.008)$       | $(0.110)$          | $(2.669)$      | $(0.079)$     |
-| CSH*2015                         | $18.023^{**}$   | $-0.145$           | $6.008^{**}$   | $0.160^{**}$  |
-|                                  | $(7.831)$       | $(0.108)$          | $(2.610)$      | $(0.077)$     |
-| TUP*2014                         | $18.590^{***}$  | $-0.365^{***}$     | $6.197^{***}$  | $0.212^{***}$ |
-|                                  | $(6.426)$       | $(0.089)$          | $(2.142)$      | $(0.063)$     |
-| TUP*2015                         | $4.179$         | $-0.055$           | $1.393$        | $0.045$       |
-|                                  | $(6.130)$       | $(0.084)$          | $(2.043)$      | $(0.060)$     |
-| 2014                             | $76.831^{***}$  | $0.214^{***}$      | $25.610^{***}$ | $3.931^{***}$ |
-|                                  | $(5.318)$       | $(0.062)$          | $(1.773)$      | $(0.113)$     |
-| 2015                             | $105.702^{***}$ | $0.188^{***}$      | $35.234^{***}$ | $4.175^{***}$ |
-|                                  | $(5.001)$       | $(0.057)$          | $(1.667)$      | $(0.111)$     |
-| Bsln2013                         | $0.081^{**}$    | $0.022$            | $0.081^{**}$   | $0.073^{***}$ |
-|                                  | $(0.038)$       | $(0.029)$          | $(0.038)$      | $(0.026)$     |
-| Bsln NA                          | $20.521^{***}$  | $-0.119$           | $6.840^{***}$  | $0.447^{***}$ |
-|                                  | $(6.964)$       | $(0.088)$          | $(2.321)$      | $(0.121)$     |
-|----------------------------------+-----------------+--------------------+----------------+---------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.566$         | $-0.220$           | $0.189$        | $0.052$       |
-|                                  | $(9.994)$       | $(0.137)$          | $(3.331)$      | $(0.098)$     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-13.844^{*}$   | $0.090$            | $-4.615^{*}$   | $-0.115$      |
-|                                  | $(8.125)$       | $(0.111)$          | $(2.708)$      | $(0.080)$     |
-|----------------------------------+-----------------+--------------------+----------------+---------------|
-| F-stat                           | $10.142$        | $4.169$            | $10.142$       | $8.131$       |
-| N                                | $1291.000$      | $1296.000$         | $1291.000$     | $1291.000$    |
-|----------------------------------+-----------------+--------------------+----------------+---------------|
+|----------------------------------+-------------------+-----------------+------------------+-----------------|
+|                                  | Tot               | logTot          | Food             | FoodShr         |
+|----------------------------------+-------------------+-----------------+------------------+-----------------|
+| CTL mean                         | \(115.404\)       | \(4.509^{***}\) | \(38.468\)       | \(0.333^{***}\) |
+|                                  | \((78.750)\)      | \((0.756)\)     | \((26.250)\)     | \((0.000)\)     |
+|----------------------------------+-------------------+-----------------+------------------+-----------------|
+| CSH*2014                         | \(-2.745\)        | \(0.007\)       | \(-0.915\)       | \(0.000^{***}\) |
+|                                  | \((8.008)\)       | \((0.079)\)     | \((2.669)\)      | \((0.000)\)     |
+| CSH*2015                         | \(18.023^{**}\)   | \(0.160^{**}\)  | \(6.008^{**}\)   | \(-0.000\)      |
+|                                  | \((7.831)\)       | \((0.077)\)     | \((2.610)\)      | \((0.000)\)     |
+| TUP*2014                         | \(18.590^{***}\)  | \(0.212^{***}\) | \(6.197^{***}\)  | \(0.000^{***}\) |
+|                                  | \((6.426)\)       | \((0.063)\)     | \((2.142)\)      | \((0.000)\)     |
+| TUP*2015                         | \(4.179\)         | \(0.045\)       | \(1.393\)        | \(0.000^{***}\) |
+|                                  | \((6.130)\)       | \((0.060)\)     | \((2.043)\)      | \((0.000)\)     |
+| 2014                             | \(76.831^{***}\)  | \(3.931^{***}\) | \(25.610^{***}\) | \(0.278^{***}\) |
+|                                  | \((5.318)\)       | \((0.113)\)     | \((1.773)\)      | \((0.000)\)     |
+| 2015                             | \(105.702^{***}\) | \(4.175^{***}\) | \(35.234^{***}\) | \(0.278^{***}\) |
+|                                  | \((5.001)\)       | \((0.111)\)     | \((1.667)\)      | \((0.000)\)     |
+| Bsln2013                         | \(0.081^{**}\)    | \(0.073^{***}\) | \(0.081^{**}\)   | \(0.167^{***}\) |
+|                                  | \((0.038)\)       | \((0.026)\)     | \((0.038)\)      | \((0.000)\)     |
+| Bsln NA                          | \(20.521^{***}\)  | \(0.447^{***}\) | \(6.840^{***}\)  | \(0.056^{***}\) |
+|                                  | \((6.964)\)       | \((0.121)\)     | \((2.321)\)      | \((0.000)\)     |
+|----------------------------------+-------------------+-----------------+------------------+-----------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(0.566\)         | \(0.052\)       | \(0.189\)        | \(0.000^{***}\) |
+|                                  | \((9.994)\)       | \((0.098)\)     | \((3.331)\)      | \((0.000)\)     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(-13.844^{*}\)   | \(-0.115\)      | \(-4.615^{*}\)   | \(0.000^{***}\) |
+|                                  | \((8.125)\)       | \((0.080)\)     | \((2.708)\)      | \((0.000)\)     |
+|----------------------------------+-------------------+-----------------+------------------+-----------------|
+| F-stat                           | \(10.142\)        | \(8.131\)       | \(10.142\)       | \(-210.422\)    |
+| N                                | \(1291.000\)      | \(1291.000\)    | \(1291.000\)     | \(1291.000\)    |
+|----------------------------------+-------------------+-----------------+------------------+-----------------|
 
 #+name: mobile_results
 #+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
@@ -1221,16 +1223,21 @@ return tab
  import pandas as pd
  import statsmodels.api as sm
  from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ 
+ USE_LAMBDAS = False
+
  food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
  month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
  year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
 
+
  D = full_data(DIR=DATADIR)
  C, HH, T = consumption_data(D,WRITE=True) #"csv")
- logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
- logL.index.names=["HH","Year","Location"]
- C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
- C = C.reorder_levels([1,2,0]).sortlevel()
+ if USE_LAMBDAS:
+    logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
+    logL.index.names=["HH","Year","Location"]
+    C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
+ C = C.reorder_levels([1,2,0])#.sort_index(level=0)
  keep = pd.notnull(C.index.get_level_values("Location"))
  C = C.loc[keep,:]
 
@@ -1258,7 +1265,7 @@ return tab
     WARNING: if Top<0, all zeros will be changed to Top
     """
 
-    percent    = kwargs.setdefault("percent",99)
+    percent    = kwargs.setdefault("percent",99.9)
     stdev      = kwargs.setdefault("stdev",False)
     drop       = kwargs.setdefault("drop",False)
     drop_zeros = kwargs.setdefault("drop_zeros",True)
@@ -1336,19 +1343,20 @@ return tab
     return Exp.div(_HH.sum(1).replace(0,1))
 
  #~ Source: http://data.worldbank.org/indicator/PA.NUS.PRVT.PP?locations=SS&name_desc=false
- xrate = [ 2.161, 2.196, 3.293] #~ To avoid confusion, using PPP adjusted xrate and just setting PPP=1.
+ xrate = [ 2.161, 2.162, 3.293] #~ Using PPP adjusted xrate and just setting PPP=1.
  PPP = 1.
  inflation= 1. #~ Bank data uses international $, which is inflation adjusted.
  C["Exp_usd"] = winsorize(USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation))
  C["Tot_pc"] = percapita_conversion(C["Exp_usd"],HH,adult_equivalent=.5)
  #C["Exp_usdpc_tc"] = winsorize(C["Exp_usdpc"])
 
- C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
+ #C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
  C["FoodShr"]= C["Food"].div(C["Tot"]) #$\approx$ FoodShare variable
  C["logTot"] = C["Tot"].apply(np.log)
  C = C.join(T, how="left",lsuffix="_")
 
- Outcomes = ["Tot","FoodShr", "Food", "$\log\lambda_{it}$","z-score"]
+ if USE_LAMBDAS: Outcomes = ["Tot","logTot","FoodShr", "Food", "$\log\lambda_{it}$"]
+ else: Outcomes = ["Tot","logTot","FoodShr", "Food"]
 
  #$\approx$ Make Baseline variable
  for var in Outcomes: 
@@ -2122,9 +2130,6 @@ return Table
 
  tab = df_to_orgtbl(results, sedf=SE)
  #+end_src
-
-
-
 
 ** Extras
 #+name: get_loglambdas
