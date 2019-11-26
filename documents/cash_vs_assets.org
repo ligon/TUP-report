@@ -1,0 +1,1353 @@
+#+TITLE: Comparing Cash and Asset Transfers to Low-Income Households in South Sudan
+#+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
+#+DATE: \today
+#+OPTIONS: texht:t toc:nil num:nil ':t
+#+LATEX_CLASS_OPTIONS: [12pt,article]
+#+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
+#+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
+#+LaTeX_HEADER:       %\addbibresource{./prospectus.bib}
+#+LaTeX_HEADER:       \addbibresource{~/bibtex/main.bib}
+#+LaTeX_HEADER:       \addbibresource{~/bibtex/ligon.bib}
+#+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
+
+* Introduction
+
+What is the best way to help the poor?  In recent years a number of
+researchers have experimented with some very direct approaches: giving
+poor people productive assets citep:bandiera-etal17.[fn:: A number of
+attempted replications of the experiment described in
+cite:bandiera-etal17 are described in cite:banerjee-etal15.] and
+giving poor people cash
+citep:haushofer-shapiro14,blattman-etal16. 
+
+Typically these experiments find positive effects on consumption
+expenditures and assets, and sometimes shifts in time-use.  Yet while
+there's evidence that these programs work, the experiments conducted
+to date are not designed to say which intervention works /better/.
+
+In this paper we describe the first experiment designed to answer the
+"which works better" question.  The experiment was conducted on a
+population of "ultra-poor" women in South Sudan.  Some women were
+randomly assigned to receive productive assets, as part of a
+"graduation" program modeled on the program described in
+cite:bandiera-etal17; other women were randomly assigned to receive
+lump-sum transfers of cash; yet other women were randomly assigned to
+a control group, and received neither assets nor cash.
+
+* The Setting
+
+* The Experiment
+
+The pilot program itself was similar to the other TUP programs completed by BRAC. It
+consisted of four phases: targeting and selection, training and enterprise selection,
+asset transfers, and monitoring. 
+
+** Targeting, Selection, & Training
+
+The first phase of the program was to complete a census of households in the area
+around BRAC's office in the town of Yei in Western Equatoria. This census contained
+questions to assess eligibility for the program. First, households were excluded if
+they had a salaried worker in the household, were participating in another NGO
+program, or had no access to cultivable land (which was in some cases necessary for
+the program's model). Households were then deemed eligible if they fit at least three
+criteria in a list of five poverty indicators:
+
+1) The household head was working as a day laborer (generally an occupation with poverty wages),
+2) The household had two or more children,
+3) At least one child in the household was working,
+4) The household had fewer than three rooms, or
+5) A woman in the household had not completed secondary school.
+
+The census was completed in April of 2013 and 745 were identified as eligible. Of
+these, 649 were identified in a baseline survey. These households were stratified on
+employment, asset ownership, and size and selected into treatment groups. 250 were
+enrolled in the TUP program, 125 in the UCT group, and the final 274 in a pure
+control group.
+
+** Asset Transfers & Monitoring
+
+The second phase of the program was training and enterprise selection. Unlike most
+programs of this type, the number of households given each kind of asset was set in
+advance, with 75 enrolled in agricultural activities (vegetable cultivation), 85 in
+duck rearing, 45 in goat rearing, and the rest in small trade businesses. While the
+staff tried to map housheolds' asset types to their respective preferences and
+skills, a disproportionate number stated a preferences for goats and small trade.
+Households then atttended training sessions. The first of these were for general
+business skills around literacy, numercacy, and financial management. The next were
+sector specific and focused on how to properly raise livestock or gardens. 
+
+Once training is completed, asset transfers began in late 2013 and continued through
+the first few months of 2014. The productive assets related to each enterprise were
+valued at around $240 per household, with a random subset recieving an additional $60
+in assets later in 2014. Shortly thereafter, households started to attend weekly or
+semi-weekly meetings with other nearby participants to discuss with each other and a
+BRAC extension officer the details of their businesses. These meetings also included
+food transfers for a while, which were designed to help get households to the point
+of receiving revenue from their assets without having to sell them.
+
+** Cash Transfers 
+
+In all, the market value of these food transfers were valued at $110, bringing the
+total value of all transfers to $350-$410. The 125 households in the UCT group were
+randomly divided in half to receive cash in these two amounts. Unfortunately, political
+instability disrupted NGO operations throughtout South Sudan, preventing the
+simultaneous disbursal of the cash and asset transfers. Instead, a second survey was
+conducted in June of 2014, with the cash transfers being disbursed immediately
+thereafter. This resulted in a timing difference of 3 to 6 months between the two
+(since the asset transfers were rolled out over around 12 weeks).
+This naturally complicates the comparison of treatment effects between the two
+treatments. We will describe our empirical strategy in light of these challenges in
+the Empirical Strategy section.
+
+Cash transfers were delivered by field officers in person and in local
+currency. That they were delivered in cash distinguishes it from
+several other cash transfer programs.[fn:: For example,
+cite:haushofer-shapiro16 deposited funds in a bank or mobile money
+account, while cite:fafchamps-etal14 used money transfers.]
+Experimental studies of the behavioral implications of savings
+accounts citep:dupas-robinson13 would lead one to expect that the
+method of disbursal method might affect the propensity to save a cash
+transfer.  In all of these experiments transfers were denominated in
+the local currency.  However, our context is unusual in that the local
+economy was facing significant inflation at the time, with
+year-on-year estimates ranging between 80% and 100%.  This would
+naturally make holding cash a less appealing option relative to
+consumption or investing in some real asset.
+
+Local community leaders were approached in advance of talking to individual
+households to reassure recipients of BRAC's intentions. It was made clear that the
+transfers were there for their benefit, that while they were encouraged to put them
+towards some productive use, their use was unrestricted, and that under no
+circunstances would they receive a second transfer in the future. BRAC was a
+well-established institution in the greater Yei community, so these assurances were
+taken as credible and no refused to accept the money. 
+
+* The Data
+
+The census was conducted in April of 2013 in the area around BRAC's offices in Yei
+County to identify women eligible for participation. A baseline survey was conducted
+that Summer, which successfully interviewed 649 of these women and randomly selected
+them into the TUP, UCT, and control groups. Half of each beneficiary group was
+randomly selected to receive additional "top-up" transfers with market value of $60
+(around 20% of the original transfers).
+
+In response to the outbreak of violence in late 2013 and subsequent closing of the
+offices in Yei, a midline survey was conducted in June 2014 to try to separate pre-
+and post-conflict changes in outcomes. For lack of a valid comparison group, we will
+not speak with any authority about the effect of the conflict on economic conditions
+in Yei, though we will report estimates of treatment effects on the severity or
+likelihood of having been effected exposure to the conflict. Some of the original
+asset transfers were done before the office closure, which may affect estimates of
+the difference between programs if rates of return changed in the few intervening
+months. Finally, an endline survey was conducted in mid-2015 to estimate the effect
+of program participation on households' financial situation and overall welfare. The
+key here is that the survey conducted in mid-2014 provides us with /short-term/
+treatment effects of the TUP program within 6 months of the asset transfers, while
+providing a second baseline for the Cash transfers. Likewise, the 2015 survey
+allows us to estimate treatment effects one year after the cash transfers, and 15-18
+months after the asset transfers.
+
+This unfortunately left us without data past one year for the cash transfer effects.
+To get some point estimates on household welfare for this group in the slightly
+longer term, we conducted a series of five short surveys on a monthly basis from
+November of 2015 to March of 2016. These collected only a subset of the full
+consumption modules and a few questions tracking major transactions and shocks. The
+short length of the survey allowed them to be administered via the mobile network,
+reducing cost and improving response rate. These data provide a slightly longer
+estimate of treatment effects for both cash transfers and the TUP program, but will
+be especially valuable in assessing whether the cash transfers had a long-term imact
+on consumption.
+
+* Empirical Strategy 
+
+For the main panel (excluding the high-frequency mobile surveys), we estimate a
+single model using interactions between time effects and group assignment, as well as
+baseline values of the outcome variable where available.
+
+\begin{equation*}
+Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{Cash}I_{t}*Cash_{it}+\beta_{t}^{TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}+\epsilon_{i}
+\end{equation*}
+where $\delta_{t}$ are time fixed effects and $I_{t}$ is an indicator if the year
+/t/, and $Y_{it}$ is an outcome of interest for household /i/ in year /t/. We take
+the interactions of TUP assignment with 2014 and 2015 indicators as the treatment
+effects at 6-8 and 15-17 months respectively. The analagous interactions with the
+Cash group offer a second baseline and a 12-month treatment effect, respectively.
+Since those transfers happened after the midline survey, its interaction with /2014/
+acts as a placebo; there is no /ex ante/ reason to expect that they were different
+from the rest of the control group at that point. Given the slight difference in
+timing, we report a t-test of the hypothesis \(\beta_{TUP,t}-\beta_{Cash,2015}=0\) for
+both \(t \in {2014,2015}\). Since the difference in timing is smaller, we consider
+\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the prefered hypothesis, but examine
+adn report \(\beta_{TUP,2014}-\beta_{Cash,2015}=0\) as well.
+ 
+For the supplementary analysis of the high-frequency panel, we estimate a separate
+model, since the underlying data is so different. A constant parameter takes the
+place of the fixed effects. We include 2013 levels as a covariate where possible.
+Since we collect expenditures on only ten consumption items, we report not only the
+total value of spending on those goods, but also a more theoretically grounded
+measure described in cite:collins-ligon17, which uses the composition of
+expenditures to derive the marginal utility of expenditures for each household. We
+chose ten relatively demand-elastic items specifically for this purpose, as those
+will tend to be the most responsive to changes in welfare. 
+
+
+* Results
+** Balance on Obervables
+
+We start by checking whether either treatment arm appears significantly different
+from the control group in terms of average baseline observable characteristics.
+\Tab{balance_check} presents summary statistics by group on a range of factors
+related to consumption, asset holdings, and household characteristics.
+
+#+name: balance_check
+#+BEGIN_SRC python :results output raw table :dir ../analysis :var DATA="../../TUP-data/TUP_full.dta" :exports none :tangle ../analysis/check_balance.py
+"""
+Create table comparing baseline means across treatments; also build analysis dataframes:
+   - C : Consumption
+   - Z : HH characteristics
+   - Avalue : Values of assets
+"""
+
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+full = pd.read_stata(DATA)
+
+full.rename(columns={'idno':'HH', "Control":"CTL", "Cash":"CSH",'location_b':"Location"},inplace=True)
+full.set_index(["HH","Location"],inplace=True,drop=True)
+
+full.loc[full.query("TUP>0").index,'Treatment'] = 'TUP'
+full.loc[full.query("CTL>0").index,'Treatment'] = 'CTL'
+full.loc[full.query("CSH>0").index,'Treatment'] = 'CSH'
+
+# Build dataframe indicating treatment status
+Tmt = full[['CTL','CSH','TUP']]
+Tmt["CTL2"] = 1 - Tmt[["TUP","CSH"]].sum(1)
+
+mergedict = {'master only (1)':  1, 'using only (2)':  2, 'matched (3)':  3}
+for col in full.filter(like='merge_').columns:
+    full[col]=full[col].apply(lambda i: mergedict.get(i)).astype(float)
+
+Tmt['Base'] =  full['merge_census_b']>1
+Tmt['Mid']  =  full['merge_midline']>1
+Tmt['End']  =  full['merge_endline']>1
+
+# Reorganize full so that period indicates baseline, midline, endline.
+
+baseline = full.filter(axis='columns',regex="_b$").rename(columns=lambda s: s[:-2])
+baseline['Period'] = 'Baseline'
+baseline = baseline.reset_index().set_index(['HH','Period','Location'])
+
+midline = full.filter(axis='columns',regex="_m$").rename(columns=lambda s: s[:-2])
+midline['Period'] = 'Midline'
+midline = midline.reset_index().set_index(['HH','Period','Location'])
+
+endline = full.filter(axis='columns',regex="_e$").rename(columns=lambda s: s[:-2])
+endline['Period'] = 'Endline'
+endline = endline.reset_index().set_index(['HH','Period','Location'])
+
+ofull = pd.concat([baseline,midline,endline],axis=0)
+ofull = ofull.reset_index().set_index(['HH','Period','Location'])
+
+
+# Build dataframe of consumption
+
+## Different recall frequencies
+recall = {'daily':['c_cereals', 'c_maize', 'c_sorghum', 'c_millet',
+                   'c_potato', 'c_sweetpotato', 'c_rice', 'c_bread',
+                   'c_beans', 'c_oil', 'c_salt', 'c_sugar', 'c_meat',
+                   'c_livestock', 'c_poultry', 'c_fish', 'c_egg',
+                   'c_nuts', 'c_milk', 'c_vegetables', 'c_fruit',
+                   'c_tea', 'c_spices', 'c_alcohol', 'c_otherfood']}
+
+recall['monthly'] = ['c_fuel', 'c_medicine', 'c_airtime',
+                     'c_cosmetics', 'c_soap', 'c_transport',
+                     'c_entertainment', 'c_childcare', 'c_tobacco',
+                     'c_batteries', 'c_church', 'c_othermonth']    
+
+recall['annual'] = ['c_clothesfootwear', 'c_womensclothes',
+                    'c_childrensclothes', 'c_shoes', 'c_homeimprovement',
+                    'c_utensils', 'c_furniture', 'c_textiles',
+                    'c_ceremonies', 'c_funerals', 'c_charities',
+                    'c_dowry', 'c_other']
+
+# Consumption dataframe
+C = pd.concat([ofull[recall['daily']]/3,
+               ofull[recall['monthly']]/30,
+               ofull[recall['annual']]/365],axis=1).rename(columns = lambda s: s[2:].capitalize())
+
+# Rename some columns
+C = C.rename(columns={'Poultry':'Chicken, etc.',
+                      'Sweetpotato':'Sweet potato',
+                      'Otherfood':'Other foods',
+                      'Othermonth':'Other monthly',
+                      'Clothesfootwear':'Clothes & footwear',
+                      'Womensclothes':"Women's clothing",
+                      'Childrensclothes':"Children's clothing",
+                      'Homeimprovement':'Home improvements'})
+
+C.index.name = 'Good'
+
+C.to_pickle('../var/C.df')
+
+# Build dataframes for assets
+
+Avalue = ofull.filter(regex="^asset_val_").rename(columns = lambda s: s[10:].capitalize())
+Avalue.index.name = 'Asset'
+Avalue.rename(columns={'Chairtables':'Chairs & Tables',
+                       'Smallanimals':'Small animals'},inplace=True)
+
+Anumber = ofull.filter(regex="^asset_n_").rename(columns = lambda s: s[8:].capitalize())
+Anumber.rename(columns={'Chairtables':'Chairs & Tables',
+                        'Smallanimals':'Small animals'},inplace=True)
+
+# Drop some highly bogus variables
+for v in ['House','Homestead','Netitn']:
+    del Avalue[v]
+    del Anumber[v]
+
+Avalue.to_pickle('../var/Avalue.df')
+Anumber.to_pickle('../var/Anumber.df')
+
+# Build dataframe for some hh characteristics
+hh_chars = {"hh_size":"HH size",
+            "child_total": "# Children",
+            'asset_n_house':'# Houses',
+            'in_business':'In Business'}
+
+Z = ofull[list(hh_chars.keys())].rename(columns=hh_chars)
+
+Z.to_pickle('../var/Z.df')
+
+def balanced_means(df,treatment):
+    
+    dft = df.reset_index('Location',drop=True).join(treatment.reset_index('Location')).reset_index().set_index(['HH','Period','Location'])
+
+    dfmeans = dft.query("Period=='Baseline'").groupby('Treatment').mean().T.dropna()
+    dfcount = dft.query("Period=='Baseline'").groupby('Treatment').count().T.dropna()
+    dfse = dft.query("Period=='Baseline'").groupby('Treatment').std().T.dropna()/np.sqrt(dfcount)
+    dfvar = dft.query("Period=='Baseline'").groupby('Treatment').var().T.dropna()/dfcount
+    dft = dfmeans.copy()
+    dft['CTL'] = 0
+    dft['TUP'] = np.abs(dfmeans['TUP'] - dfmeans['CTL'])/np.sqrt(dfvar['TUP'] + dfvar['CTL'])
+    dft['CSH'] = np.abs(dfmeans['CSH'] - dfmeans['CTL'])/np.sqrt(dfvar['CSH'] + dfvar['CTL'])
+
+    return dfmeans[['CTL','TUP','CSH']],dfse[['CTL','TUP','CSH']],dft[['CTL','TUP','CSH']]
+
+
+full[['Treatment']].to_pickle('../var/T.df')
+
+Means, SEs, Ts = balanced_means(C,full['Treatment'])
+Means.index.name = 'Consumption'
+print(df_to_orgtbl(Means,sedf=None,tdf=Ts,float_fmt="%3.1f"),end='')
+
+print('|-')
+
+Means, SEs, Ts = balanced_means(Avalue,full['Treatment'])
+Means.index.name = 'Asset'
+print(df_to_orgtbl(Means,sedf=None,tdf=Ts,float_fmt="%3.1f"),end='')
+
+print('|-')
+
+Means, SEs, Ts = balanced_means(Z,full['Treatment'])
+Means.index.name = 'Household characteristics'
+print(df_to_orgtbl(Means,sedf=None,tdf=Ts,float_fmt="%3.1f"),end='')
+
+print('|-')
+Nstr = '|'.join(['%d ' % x for x in full.groupby('Treatment').count().T.max().tolist()])
+print('| $N$ |' + Nstr + '|')
+#+END_SRC
+
+#+results: balance_check
+| Consumption               |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| Cereals                   |   9.0 |       8.2 |        9.5 |
+| Beans                     |   0.7 |       0.9 |        0.9 |
+| Oil                       |   1.3 |       1.2 |        1.2 |
+| Salt                      |   0.4 |       0.4 |        0.5 |
+| Sugar                     |   1.7 |       1.6 |        1.5 |
+| Meat                      |   4.1 |       3.6 |        4.2 |
+| Fish                      |   2.4 |       2.4 |        2.3 |
+| Egg                       |   1.0 |       1.0 |        1.1 |
+| Milk                      |   1.0 |       1.0 |        1.1 |
+| Vegetables                |   1.5 |       1.4 |        1.4 |
+| Fruit                     |   0.6 |       0.6 |        0.7 |
+| Spices                    |   0.2 |       0.3 |        0.2 |
+| Alcohol                   |   0.0 |       0.0 |        0.0 |
+| Other foods               |   0.0 |       0.0 |        0.0 |
+| Fuel                      |   0.8 |       0.7 |        0.7 |
+| Cosmetics                 |   0.7 |       0.7 |        0.6 |
+| Soap                      |   0.5 |       0.5 |        0.5 |
+| Transport                 |   0.2 |       0.1 |        0.2 |
+| Entertainment             |   0.1 |       0.1 |        0.1 |
+| Clothes & footwear        |   0.7 |       0.6 |        0.7 |
+| Utensils                  |   0.2 |       0.2 |        0.3 |
+| Furniture                 |   0.2 |       0.2 |        0.2 |
+| Textiles                  |   0.1 |       0.1 |    0.2^{*} |
+| Ceremonies                |   0.1 |       0.1 |        0.2 |
+| Charities                 |   0.0 |       0.0 |        0.0 |
+| Dowry                     |   1.3 |       1.2 |        1.3 |
+| Other                     |   0.0 |       0.0 |        0.0 |
+|---------------------------+-------+-----------+------------|
+| Asset                     |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| Bed                       | 232.3 |     249.3 |      274.0 |
+| Bicycle                   | 112.4 |      96.5 |       97.7 |
+| Carts                     |   2.6 |       3.5 |        1.6 |
+| Chairs & Tables           | 205.6 |     177.4 |      210.4 |
+| Cows                      | 261.8 |     112.7 |      153.6 |
+| Fan                       |   1.6 |       1.8 |    6.0^{*} |
+| Mobile                    |  92.1 | 110.2^{*} |       93.3 |
+| Motorcycle                | 342.7 |     534.7 | 695.6^{**} |
+| Net                       |  19.3 |      19.8 |       19.4 |
+| Plough                    |   0.0 |       0.0 |        0.0 |
+| Poultry                   |  43.8 |      39.0 |       33.5 |
+| Radio                     |  57.6 |      52.5 |       41.9 |
+| Sewing                    |  12.5 |       5.0 |   1.2^{**} |
+| Shed                      |   1.8 |  0.0^{**} |        1.6 |
+| Shop                      |  95.5 |      79.4 |       69.8 |
+| Small animals             | 252.1 |     150.5 | 113.5^{**} |
+| Tv                        |  29.0 |      45.9 |       36.1 |
+|---------------------------+-------+-----------+------------|
+| Household characteristics |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| HH size                   |   7.3 |       7.1 |        7.5 |
+| # Children                |   3.3 |       3.4 |        3.4 |
+| # Houses                  |   2.8 |       2.9 |        2.9 |
+| In Business               |   0.4 |       0.4 |        0.4 |
+|---------------------------+-------+-----------+------------|
+| $N$                       |   125 |       262 |        249 |
+
+#+name: tab:balance_check
+#+caption: Means of some analysis variables at baseline.  Asterisks indicate significant differences from CTL values at $p<0.1f$, $0.05$, and $0.01$ respectively.
+#+attr_latex: :environment longtable :align lrrr
+| Consumption               |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| Cereals                   |   9.0 |       8.2 |        9.5 |
+| Beans                     |   0.7 |       0.9 |        0.9 |
+| Oil                       |   1.3 |       1.2 |        1.2 |
+| Salt                      |   0.4 |       0.4 |        0.5 |
+| Sugar                     |   1.7 |       1.6 |        1.5 |
+| Meat                      |   4.1 |       3.6 |        4.2 |
+| Fish                      |   2.4 |       2.4 |        2.3 |
+| Egg                       |   1.0 |       1.0 |        1.1 |
+| Milk                      |   1.0 |       1.0 |        1.1 |
+| Vegetables                |   1.5 |       1.4 |        1.4 |
+| Fruit                     |   0.6 |       0.6 |        0.7 |
+| Spices                    |   0.2 |       0.3 |        0.2 |
+| Alcohol                   |   0.0 |       0.0 |        0.0 |
+| Other foods               |   0.0 |       0.0 |        0.0 |
+| Fuel                      |   0.8 |       0.7 |        0.7 |
+| Cosmetics                 |   0.7 |       0.7 |        0.6 |
+| Soap                      |   0.5 |       0.5 |        0.5 |
+| Transport                 |   0.2 |       0.1 |        0.2 |
+| Entertainment             |   0.1 |       0.1 |        0.1 |
+| Clothes & footwear        |   0.7 |       0.6 |        0.7 |
+| Utensils                  |   0.2 |       0.2 |        0.3 |
+| Furniture                 |   0.2 |       0.2 |        0.2 |
+| Textiles                  |   0.1 |       0.1 |    0.2^{*} |
+| Ceremonies                |   0.1 |       0.1 |        0.2 |
+| Charities                 |   0.0 |       0.0 |        0.0 |
+| Dowry                     |   1.3 |       1.2 |        1.3 |
+| Other                     |   0.0 |       0.0 |        0.0 |
+|---------------------------+-------+-----------+------------|
+| Asset                     |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| Bed                       | 232.3 |     249.3 |      274.0 |
+| Bicycle                   | 112.4 |      96.5 |       97.7 |
+| Carts                     |   2.6 |       3.5 |        1.6 |
+| Chairs & Tables           | 205.6 |     177.4 |      210.4 |
+| Cows                      | 261.8 |     112.7 |      153.6 |
+| Fan                       |   1.6 |       1.8 |    6.0^{*} |
+| Mobile                    |  92.1 | 110.2^{*} |       93.3 |
+| Motorcycle                | 342.7 |     534.7 | 695.6^{**} |
+| Net                       |  19.3 |      19.8 |       19.4 |
+| Plough                    |   0.0 |       0.0 |        0.0 |
+| Poultry                   |  43.8 |      39.0 |       33.5 |
+| Radio                     |  57.6 |      52.5 |       41.9 |
+| Sewing                    |  12.5 |       5.0 |   1.2^{**} |
+| Shed                      |   1.8 |  0.0^{**} |        1.6 |
+| Shop                      |  95.5 |      79.4 |       69.8 |
+| Small animals             | 252.1 |     150.5 | 113.5^{**} |
+| Tv                        |  29.0 |      45.9 |       36.1 |
+|---------------------------+-------+-----------+------------|
+| Household characteristics |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| HH size                   |   7.3 |       7.1 |        7.5 |
+| # Children                |   3.3 |       3.4 |        3.4 |
+| # Houses                  |   2.8 |       2.9 |        2.9 |
+| In Business               |   0.4 |       0.4 |        0.4 |
+|---------------------------+-------+-----------+------------|
+| $N$                       |   125 |       262 |        249 |
+
+
+
+This is simply suggestive evidence that the treatment and control groups were similar
+in observables at baseline, with the exception that the cash group has atypically
+more motorcycles and clothing. But it does suggests that our stratified randomization
+was not too far from creating comparable groups.
+
+** Attrition
+
+Another crucial question is to what extent attrition in the 2014
+midline and 2015 endline surveys will bias our
+results. \Tab{attrition_balanced_count} reports the same numbers
+restricting ourselves to households reporting cereal consumption (a
+minimal reporting requirement).  In the TUP group, we were unable to
+find 21 participants in 2014 (8% attrition), but found 5 not
+identified in the baseline survey. We found 8 additional TUP
+households with baseline surveys again in 2015 for a final attrition
+rate of 5%. Of those in the Cash group, 12 were lost (9.6%) in 2014,
+then two more in 2015 (11%). The control group saw very high attrition
+in 2014, missing 60 peope (22%). Enumerators also found a large number
+of households not found at baseline, such that there were only 16
+fewer surveys collected in 2014 than in 2013. The high attrition was
+due largely to the fact that these households did not enjoy the same
+consitent contact that BRAC had with the TUP group, and the local area
+lacked infrastructure to easily locate people.  This was exacerbated
+by the uncertain political situation and early harvest.  Attrition in
+2015 was 6.7%, with 19 baseline control households not responding,
+with 85 households found who were originally identified as control
+households from the survey but not in the baseline survey. In order to
+take advantage of the households not included in the baseline, the
+main specification below follows \cite{banerjee-etal} by setting
+missing values to zero when controlling for baseline levels of the
+dependent variable, and including an indicator for whether the
+household was in the baseline.
+
+   
+\newpage
+
+#+name: attrition_count
+#+BEGIN_SRC python :dir ../analysis :results output raw table :exports none
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+
+C = pd.read_pickle('../var/C.df')
+df = C.join(pd.read_pickle('../var/T.df'))
+
+counts = df.groupby(['Period','Treatment'])['Cereals'].count()
+
+print(df_to_orgtbl(counts.unstack('Period')[['Baseline','Midline','Endline']],float_fmt="%d"))
+#+END_SRC
+
+
+#+name: tab:attrition_count
+#+caption: Total number of households in sample by group and round
+| Treatment | Baseline | Midline | Endline |
+|-----------+----------+---------+---------|
+| CTL       |      251 |     212 |     246 |
+| TUP       |      244 |     228 |     236 |
+| CSH       |      124 |     113 |     111 |
+
+Next we ask how those who did not turn up in subsequent rounds
+differed by a range of baseline characteristics. \Tab{attrition_means}
+reports the average level of various characteristics at baseline
+in 2013. Then we report the difference in means between households
+that were in and out of the midline or endline surveys.  Here we see
+that overall, households found in the midline survey were larger with
+more children and larger reported asset stocks. Households found in
+2015 seemed to have, at baseline, significantly smaller asset stocks
+and less consumption. This imbalance highlights the need for a
+difference-in-difference or ancova design.
+
+#+name: attrition_means
+#+BEGIN_SRC python :dir ../analysis :results output raw table :exports none :tangle ../analysis/attrition_means.py
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+import numpy as np
+
+C = pd.read_pickle('../var/C.df')
+Z = pd.read_pickle('../var/Z.df')
+A = pd.read_pickle('../var/Avalue.df')
+T = pd.read_pickle('../var/T.df')
+
+df = pd.concat([C,Z,A],axis=1).query("Period=='Baseline'")
+
+hh_baseline = C['Cereals'].squeeze().unstack('Period')['Baseline'].dropna().index.tolist()
+
+hh_midline = (C['Cereals'].squeeze().unstack('Period')[['Baseline','Midline']].count(axis=1)==2)
+hh_midline = hh_midline[hh_midline].index.tolist() 
+
+hh_midline = sorted(set(hh_baseline).difference(hh_midline))
+
+hh_endline = (C['Cereals'].squeeze().unstack('Period')[['Baseline','Endline']].count(axis=1)==2) 
+hh_endline = hh_endline[hh_endline].index.tolist() 
+
+hh_endline = sorted(set(hh_baseline).difference(hh_endline))
+
+means = pd.DataFrame({'Baseline':df.mean(),
+                      'Midline':df.loc[hh_midline,:].mean(),
+                      'Endline':df.loc[hh_endline,:].mean()})
+
+var = pd.DataFrame({'Baseline':df.var()/len(df),
+                    'Midline':df.loc[hh_midline,:].var()/len(hh_midline),
+                    'Endline':df.loc[hh_endline,:].var()/len(hh_endline)})
+
+means.index.name = 'Consumption'
+
+means = means.dropna(axis=0,how='any')
+
+ts = means[['Baseline','Midline','Endline']].copy()
+ts['Baseline'] = 0
+ts['Midline'] = np.abs(means['Midline'] - means['Baseline'])/np.sqrt(var[['Baseline','Midline']].sum(axis=1))
+ts['Endline'] = np.abs(means['Endline'] - means['Baseline'])/np.sqrt(var[['Baseline','Endline']].sum(axis=1))
+
+print(df_to_orgtbl(means[['Baseline','Midline','Endline']],sedf=None,tdf=ts,float_fmt='%3.1f'))
+#+END_SRC
+
+
+#+name: tab:attrition_means
+#+caption: Means of household baseline characteristics for all households at (Baseline); for households with no data at (Midline); and for households with no data at (Endline).
+#+attr_latex: :environment longtable :align lrrrrr
+| Consumption        | Baseline |    Midline |   Endline |
+|--------------------+----------+------------+-----------|
+| Cereals            |      8.9 |        9.0 |      12.3 |
+| Beans              |      0.8 |    0.6^{*} |       1.2 |
+| Oil                |      1.3 |        1.3 |       1.8 |
+| Salt               |      0.4 |    0.6^{*} |       0.5 |
+| Sugar              |      1.6 |        1.9 |       1.7 |
+| Meat               |      4.0 |        3.8 |       3.7 |
+| Fish               |      2.4 |        2.5 |       2.4 |
+| Egg                |      1.1 |        1.1 |       1.0 |
+| Milk               |      1.1 |        0.9 |       0.9 |
+| Vegetables         |      1.4 |        1.4 |       1.6 |
+| Fruit              |      0.7 |        0.6 |       0.8 |
+| Spices             |      0.2 |        0.2 |       0.3 |
+| Alcohol            |      0.0 |        0.0 |       0.0 |
+| Other foods        |      0.0 |        0.0 |       0.0 |
+| Fuel               |      0.7 |        0.6 |       0.8 |
+| Cosmetics          |      0.7 |        0.7 |  0.5^{**} |
+| Soap               |      0.5 |        0.6 |       0.4 |
+| Transport          |      0.2 |        0.2 |       0.1 |
+| Entertainment      |      0.1 |        0.1 | 0.0^{***} |
+| Clothes & footwear |      0.7 |   0.5^{**} |       0.8 |
+| Utensils           |      0.2 |        0.2 |       0.3 |
+| Furniture          |      0.2 |        0.2 |       0.2 |
+| Textiles           |      0.2 |        0.2 |       0.2 |
+| Ceremonies         |      0.1 |        0.2 |       0.2 |
+| Charities          |      0.0 |        0.0 |       0.0 |
+| Dowry              |      1.2 |   0.6^{**} |       1.6 |
+| Other              |      0.0 |        0.0 |       0.0 |
+| HH size            |      7.2 |   6.7^{**} |       6.8 |
+| # Children         |      3.3 |  2.8^{***} |       2.9 |
+| # Houses           |      2.9 |        2.6 |       2.5 |
+| In Business        |      0.4 |        0.4 |       0.4 |
+| Bed                |    250.5 |      239.7 |     298.0 |
+| Bicycle            |    102.2 |       92.6 |      98.3 |
+| Carts              |      2.8 |        1.1 | 0.0^{***} |
+| Chairs & Tables    |    196.4 |      196.7 |     231.0 |
+| Cows               |    181.4 |      123.5 |     264.3 |
+| Fan                |      2.9 |        1.9 |       5.9 |
+| Mobile             |    101.5 |       96.1 |     113.6 |
+| Motorcycle         |    481.9 |      300.1 |     706.6 |
+| Net                |     19.5 |       19.2 |      16.8 |
+| Plough             |      0.0 |        0.0 |       0.0 |
+| Poultry            |     39.4 | 19.3^{***} |      41.5 |
+| Radio              |     53.0 |       58.5 |      85.7 |
+| Sewing             |      7.2 |        2.9 |       2.4 |
+| Shed               |      1.2 |        3.2 |       2.2 |
+| Shop               |     83.2 |       80.0 |     291.5 |
+| Small animals      |    180.7 |      164.5 |     254.1 |
+| Tv                 |     39.9 |       53.9 |      39.1 |
+
+** Consumption
+
+The first measure of welfare we consider is household consumption, defined as the
+market value of goods or services used by the household. A sizable basket of goods
+was included in the survey module. These are separated into three categories: Food
+items (with a 3-day recall window), non-durables (a 30-day recall window), and
+durables and large expenditures (a one-year recall window). This is perhaps the most
+obvious measure of the welfare or poverty of a household in our survey. 
+
+The results for several important consumption measures are presented in Table
+\ref{tab:consumption}.  We do not know about prices for each good in this
+time, though we can say that inflation was as high as 100% between 2014 and 2015. We
+take the sum of all consumption and expenditure questions together as a measure of
+welfare. In light of the fact that we have data on an incomplete basket, we also
+follow cite:collins-ligon17, which details a method for deriving treatment
+effects on a structurally estimated index of households' marginal utility, which we
+include here as \(\log\lambda_{it}\).
+
+We measured the effect of cash on consumption 12 months after the fact, where we find
+a statistically significant increase of 18 SSP per day, representing a roughly 16%
+increase over the control-group average. We first measured the consumption effect of
+the TUP program 6-9 months after the asset transfers, where we found a similarly
+sized effect of 18SSP. However we find no evidence of a consumption effect 18-21
+months after the transfers (and reject equality with the 12-month cash results). This
+result leaves open the question of whether the cash treatment had a persistent effect
+on consumption, or whether the short-term effect found in 2015 is similarly
+temporary. It was this question that motivated the collection of an additional five
+rounds of data over a 6-month period in late 2015 and early 2016, in which we asked
+about ten items, five food and five non-food. In Table \Tab{tab:mobile_consumption},
+we consider the average treatment effect on households sampled for these phone
+interviews, both for \(\log\lambda_{it}\) and for total consumption of this basket of
+goods. We find that, consistent with the TUP program's results in 2015, all evidence
+of an effect seem to be gone by 18th months after the transfer date.
+
+These results are consistent with a story in which either sort of transfer has a
+short-term consumption effect, but with the result fading in the year after. In
+either group, the increase in total consumption appears to be driven mainly by
+increased food consumption, with smaller effects on non-food consumption goods and
+durables. As such, there is no evidence that the share of food consumed falls, as
+might be predicted by Engel's law.
+
+\newpage
+
+#+name: consumption_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results output raw table :exports none :tangle ../analysis/SS-consumption.py
+import sys
+DATADIR = "../../data/"
+sys.path.append(DATADIR)
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+#from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+from TUP import regressions, reg_table, df_to_orgtbl, mobile_data
+food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
+month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
+year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
+
+#D = full_data(DIR=DATADIR)
+#C, HH, T = consumption_data(D,WRITE=True) #"csv")
+C = pd.read_pickle('../var/C.df')
+C.index.names = ['HH','Year']
+T = pd.read_pickle('../var/T.df')
+HH = pd.read_pickle('../var/Z.df')['HH size']
+
+#logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
+#logL.index.names=["HH","Year","Location"]
+#C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
+C = C.reorder_levels([1,2,0]).sortlevel()
+keep = pd.notnull(C.index.get_level_values("Location"))
+C = C.loc[keep,:]
+
+# Make aggregate variables
+C["Food"]   = C.filter(items=food).sum(axis=1).replace(0,np.nan)
+C["Month"]   = C.filter(items=food).sum(axis=1)
+C["Year"]   = C.filter(items=food).sum(axis=1)
+C["Total"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
+
+def align_indices(df1,df2):
+   """
+   Reorder levels of df2 to match that of df1
+   Must have same index.names
+   """
+   I1, I2 = df1.index, df2.index
+   try: assert(not set(I1.names).difference(I2.names))
+   except AssertionError: raise ValueError("Index names must be the same")
+   new_order = []
+   for lvl in I1.names: new_order.append(I2.names.index(lvl))
+   df2 = df2.reorder_levels(new_order)
+   return df1, df2
+
+def winsorize(Series, **kwargs):
+   """
+   Need to implement two-sided censoring as well.
+   WARNING: if Top<0, all zeros will be changed to Top
+   """
+   percent    = kwargs.setdefault("percent",99)
+   stdev      = kwargs.setdefault("stdev",False)
+   drop       = kwargs.setdefault("drop",False)
+   drop_zeros = kwargs.setdefault("drop_zeros",True)
+   twoway     = kwargs.setdefault("twoway",False)
+
+   if drop_zeros: S = Series.replace(0,np.nan).dropna()
+   else: S = Series.dropna()
+   N_OBS = S.notnull().sum()
+   if N_OBS<10: return S
+
+   if percent: Top = np.percentile(S, percent)
+   if stdev:   
+       Top =  S.dropna().mean()
+       Top += stdev*S.dropna().std()
+   try: assert((not drop_zeros) or Top>0)
+   except AssertionError: raise ValueError("Top < 0 but zeros excluded")
+   if drop: replace_with = np.nan
+   else:    replace_with = Top
+
+   _Series = Series.copy()
+   _Series[_Series>Top]=replace_with
+
+   if not twoway: return _Series
+   else:
+       kwargs['twoway'] = False
+       return -1*winsorize(-1*_Series, **kwargs)
+
+def USD_conversion(Exp,exchange_rate=1.,PPP=1.,inflation=1.,time='Year'):
+   """
+   Convert nominal local currency into price- and inflation-adjusted USD
+
+   Exp - A numeric or pd.Series object 
+   exchange_rate - Taken as LCU/USD. 
+   PPP - Taken as $Real/$nominal
+   inflation - Taken as % inflation compared to some baseline.
+   time - If a list is passed, `time' indicates the name or position of the time level in Exp.index
+       NOTE: This has to be a cumulative number, so if inflation is 20% for two straight years, that year should be divided by (1+.2)**2
+   Final calculation will basically be Exp_usdppp = Exp*(exchange_rate*PPP)/inflation
+
+   if pd.Series are passed for any kwarg, index name needs to be in the multi-index of Exp.
+   """
+   if type(inflation)==list: inflation=[1./i for i in inflation]
+   else: inflation = 1/inflation
+   if type(exchange_rate)==list: exchange_rate=[1./i for i in exchange_rate]
+   else: exchange_rate = 1/exchange_rate
+   
+   _Exp = Exp.copy()
+   VARS = (exchange_rate, PPP,inflation)
+   if list in map(type,VARS):
+       if time in _Exp.index.names: time=_Exp.index.names.index(time)
+       time = _Exp.index.levels[time]
+   for var in VARS:
+       if type(var)==list: var=pd.Series(var,index=time)
+       try: _Exp = _Exp.mul(var)
+       except ValueError: #~ If Series index doesn't have a name, try this...
+           var.index.name = var.name
+           _Exp = _Exp.mul(var)
+   return _Exp
+
+def percapita_conversion(Exp,HH,children=["boys","girls"],adult_equivalent=1.,minus_children='hh_size'):
+   """
+   Returns household per-capita expenditures given:
+       `Exp'- Total household expenditures
+       `HH' - Total number of individuals in the household
+           If HH is a pd.DataFrame, Exp is divided by HH.sum(1)
+           if `children' is the name of a column or a list of column names, 
+           those first get divided by the factor adult_equivalent
+   """
+   try: HH.columns #~ If HH is a series, just divide though
+   except AttributeError: return Exp.div(HH)
+   _HH = HH.copy()
+   if type(children)==str: children=[children]
+   children = _HH.columns.intersection(children).tolist()
+   if minus_children: _HH[minus_children] -= _HH[children].sum(1)
+   if children: _HH[children] *= adult_equivalent
+   Exp,_HH = align_indices(Exp,_HH)
+   return Exp.div(_HH.sum(1).replace(0,1))
+
+#~ Source: http://data.worldbank.org/indicator/PA.NUS.PRVT.PP?locations=SS&name_desc=false
+xrate = [ 2.161, 2.196, 3.293] #~ To avoid confusion, using PPP adjusted xrate and just setting PPP=1.
+PPP = 1.
+inflation= 1. #~ Bank data uses international $, which is inflation adjusted.
+#C["Exp_usd"] = winsorize(USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation))
+#C["Tot_pc"] = percapita_conversion(C["Exp_usd"],HH,adult_equivalent=.5)
+#C["Exp_usdpc_tc"] = winsorize(C["Exp_usdpc"])
+
+#C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
+#C["FoodShr"]= C["Food"].div(C["Tot"]) #$\approx$ FoodShare variable
+#C["logTot"] = C["Tot"].apply(np.log)
+C = C.join(T, how="left",lsuffix="_")
+
+#Outcomes = ["Tot","FoodShr", "Food", "$\log\lambda_{it}$","z-score"]
+Outcomes = ["Total","Food"]
+
+#$\approx$ Make Baseline variable
+for var in Outcomes: 
+    Bl = C.loc[2013,var].reset_index("Location",drop=True)
+    #if var in mC: mC = mC.join(Bl,rsuffix="2013", how="left")
+    C = C.join(Bl,rsuffix="2013", how="left")
+
+
+C["Y"]=np.nan
+for yr in (2013, 2014, 2015): C.loc[yr,"Y"]=str(int(yr))
+
+C = C.join(pd.get_dummies(C["Y"]), how="left",lsuffix="_")
+for group in ("TUP", "CSH"):
+    for year in ("2013", "2014", "2015"):
+        interaction = C[group]*C[year]
+        if interaction.sum()>0: C["{}*{}".format(group,year)] = interaction
+Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015']
+#~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+C = C.loc[2014:2015]
+regs  = regressions(C, outcomes=Outcomes,  controls=Controls,  Baseline=2013, baseline_na=True)
+
+results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+CTL = C["TUP"]+C["CSH"] ==0
+CTLmean = {var: C[CTL].loc[2015,var].mean() for var in Outcomes}
+CTLsd = {var: C[CTL].loc[2015,var].std() for var in Outcomes}
+diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+for var in Outcomes:
+    ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+
+    diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+results = results.append(diff)
+SE = SE.append(diff_se)
+
+print(df_to_orgtbl(results, sedf=SE))
+#+END_SRC
+
+
+#+caption: Average treatment effects by Group-Year, controlling for baseline levels.
+#+attr_latex: :environment longtable :align lrrrrrrr
+#+name: tab:consumption
+|----------------------------------+-----------------+----------------+---------------|
+|                                  | Tot             | Food           | logTot        |
+|----------------------------------+-----------------+----------------+---------------|
+| CTL mean                         | $115.404$       | $38.468$       | $4.509^{***}$ |
+|                                  | $(78.750)$      | $(26.250)$     | $(0.756)$     |
+|----------------------------------+-----------------+----------------+---------------|
+| CSH*2014                         | $-2.745$        | $-0.915$       | $0.007$       |
+|                                  | $(8.008)$       | $(2.669)$      | $(0.079)$     |
+| CSH*2015                         | $18.023^{**}$   | $6.008^{**}$   | $0.160^{**}$  |
+|                                  | $(7.831)$       | $(2.610)$      | $(0.077)$     |
+| TUP*2014                         | $18.590^{***}$  | $6.197^{***}$  | $0.212^{***}$ |
+|                                  | $(6.426)$       | $(2.142)$      | $(0.063)$     |
+| TUP*2015                         | $4.179$         | $1.393$        | $0.045$       |
+|                                  | $(6.130)$       | $(2.043)$      | $(0.060)$     |
+| 2014                             | $76.831^{***}$  | $25.610^{***}$ | $3.931^{***}$ |
+|                                  | $(5.318)$       | $(1.773)$      | $(0.113)$     |
+| 2015                             | $105.702^{***}$ | $35.234^{***}$ | $4.175^{***}$ |
+|                                  | $(5.001)$       | $(1.667)$      | $(0.111)$     |
+| Bsln2013                         | $0.081^{**}$    | $0.081^{**}$   | $0.073^{***}$ |
+|                                  | $(0.038)$       | $(0.038)$      | $(0.026)$     |
+| Bsln NA                          | $20.521^{***}$  | $6.840^{***}$  | $0.447^{***}$ |
+|                                  | $(6.964)$       | $(2.321)$      | $(0.121)$     |
+|----------------------------------+-----------------+----------------+---------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.566$         | $0.189$        | $0.052$       |
+|                                  | $(9.994)$       | $(3.331)$      | $(0.098)$     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-13.844^{*}$   | $-4.615^{*}$   | $-0.115$      |
+|                                  | $(8.125)$       | $(2.708)$      | $(0.080)$     |
+|----------------------------------+-----------------+----------------+---------------|
+| F-stat                           | $10.142$        | $10.142$       | $8.131$       |
+| N                                | $1291.000$      | $1291.000$     | $1291.000$    |
+|----------------------------------+-----------------+----------------+---------------|
+
+#+name: mobile_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<mobile_analysis>>
+return mtab
+#+end_src
+
+\newpage
+
+#+caption: Average treatment effects using mobile data collection (results are robust to controlling for baseline levels)
+#+attr_latex: :environment longtable :align lrrrrr
+#+name: tab:mobile_consumption
+|---------------------------+--------------------+----------------+---------------|
+|                           | $\log\lambda_{it}$ | Tot            | logTot        |
+|---------------------------+--------------------+----------------+---------------|
+| CTL mean                  | $-0.018$           | $30.851$       | $3.158^{***}$ |
+|                           | $(1.001)$          | $(27.768)$     | $(0.734)$     |
+|---------------------------+--------------------+----------------+---------------|
+| TUP                       | $0.023$            | $-0.624$       | $-0.011$      |
+|                           | $(0.041)$          | $(1.152)$      | $(0.030)$     |
+| CSH                       | $0.056$            | $0.776$        | $0.028$       |
+|                           | $(0.052)$          | $(1.459)$      | $(0.038)$     |
+| const                     | $-0.018$           | $30.851^{***}$ | $3.158^{***}$ |
+|                           | $(0.027)$          | $(0.753)$      | $(0.020)$     |
+|---------------------------+--------------------+----------------+---------------|
+| $\beta^{TUP}-\beta^{CSH}$ | $-0.033$           | $-1.399$       | $-0.039$      |
+|                           | $(0.055)$          | $(1.524)$      | $(0.040)$     |
+|---------------------------+--------------------+----------------+---------------|
+| F-stat                    | $0.584$            | $0.434$        | $0.475$       |
+| N                         | $2877.000$         | $2878.000$     | $2878.000$    |
+|---------------------------+--------------------+----------------+---------------|
+
+** Food Insecurity
+
+Observed changes in total consumption don't translate into an increase in reported
+food security. In each year, we ask how often in a given week the respondent has had
+experiences indicative of food insecurity. Included are (from left to right) going a
+whole day without eating, going to sleep hungry, being without any food in the house,
+eating fewer meals than normal at mealtimes, and limiting portions. We report the
+percentage of people who report experiencing each in a typical week, as well as a
+standardized composite z-score using all of these questions. Coefficients and
+standard errors are both small relative to average levels and statistically
+insignificant. The first column also aggregates these values as a weighted average
+with inverse covariance weighting, yielding an index we call Food Insecurity. Again,
+we find no systematic difference in food security.
+
+#+name: foodsecure_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<foodsecure_analysis>>
+return tab
+#+end_src
+
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+|                                  | Food Insecurity | Whole Day       | Hungry          | No Food         | Few Meals       | Portions        |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| CTL mean                         | \(0.024\)       | \(0.790^{*}\)   | \(0.797^{**}\)  | \(0.716\)       | \(0.679\)       | \(0.638\)       |
+|                                  | \((0.713)\)     | \((0.408)\)     | \((0.403)\)     | \((0.452)\)     | \((0.467)\)     | \((0.481)\)     |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| CSH*2014                         | \(0.044\)       | \(0.004\)       | \(0.040\)       | \(0.011\)       | \(0.032\)       | \(0.004\)       |
+|                                  | \((0.076)\)     | \((0.041)\)     | \((0.039)\)     | \((0.043)\)     | \((0.050)\)     | \((0.051)\)     |
+| CSH*2015                         | \(-0.069\)      | \(-0.063\)      | \(-0.032\)      | \(0.014\)       | \(0.003\)       | \(0.034\)       |
+|                                  | \((0.074)\)     | \((0.040)\)     | \((0.039)\)     | \((0.042)\)     | \((0.049)\)     | \((0.050)\)     |
+| TUP*2014                         | \(0.058\)       | \(0.017\)       | \(0.052^{*}\)   | \(0.024\)       | \(-0.009\)      | \(-0.012\)      |
+|                                  | \((0.061)\)     | \((0.033)\)     | \((0.032)\)     | \((0.035)\)     | \((0.040)\)     | \((0.041)\)     |
+| TUP*2015                         | \(-0.005\)      | \(-0.030\)      | \(0.006\)       | \(0.030\)       | \(-0.054\)      | \(0.016\)       |
+|                                  | \((0.058)\)     | \((0.031)\)     | \((0.030)\)     | \((0.033)\)     | \((0.038)\)     | \((0.039)\)     |
+| 2014                             | \(-0.040\)      | \(0.914^{***}\) | \(0.904^{***}\) | \(0.915^{***}\) | \(0.834^{***}\) | \(0.779^{***}\) |
+|                                  | \((0.043)\)     | \((0.024)\)     | \((0.023)\)     | \((0.026)\)     | \((0.033)\)     | \((0.031)\)     |
+| 2015                             | \(-0.002\)      | \(0.784^{***}\) | \(0.793^{***}\) | \(0.736^{***}\) | \(0.703^{***}\) | \(0.609^{***}\) |
+|                                  | \((0.038)\)     | \((0.022)\)     | \((0.022)\)     | \((0.024)\)     | \((0.031)\)     | \((0.029)\)     |
+| Bsln2013                         | \(-0.081^{**}\) | \(0.002\)       | \(-0.017\)      | \(-0.032\)      | \(-0.056^{**}\) | \(0.023\)       |
+|                                  | \((0.034)\)     | \((0.023)\)     | \((0.021)\)     | \((0.023)\)     | \((0.027)\)     | \((0.027)\)     |
+| Bsln_NAN                         | \(0.109^{**}\)  | \(0.022\)       | \(0.033\)       | \(-0.038\)      | \(0.019\)       | \(0.083^{**}\)  |
+|                                  | \((0.053)\)     | \((0.031)\)     | \((0.032)\)     | \((0.035)\)     | \((0.043)\)     | \((0.041)\)     |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(0.128\)       | \(0.080\)       | \(0.085^{*}\)   | \(0.011\)       | \(-0.013\)      | \(-0.046\)      |
+|                                  | \((0.095)\)     | \((0.051)\)     | \((0.049)\)     | \((0.054)\)     | \((0.062)\)     | \((0.064)\)     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(0.064\)       | \(0.033\)       | \(0.038\)       | \(0.017\)       | \(-0.057\)      | \(-0.018\)      |
+|                                  | \((0.078)\)     | \((0.042)\)     | \((0.040)\)     | \((0.044)\)     | \((0.051)\)     | \((0.052)\)     |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| F-stat                           | \(1.742\)       | \(9.300\)       | \(8.328\)       | \(10.945\)      | \(6.700\)       | \(5.879\)       |
+| N                                | \(1255.000\)    | \(1276.000\)    | \(1291.000\)    | \(1287.000\)    | \(1291.000\)    | \(1286.000\)    |
+|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+
+
+
+#+name: tab:foodsecure
+#+caption: Percentage of respondents reporting a food security problem occurs at least once a week.
+#+attr_latex: :environment longtable :align lrrrrrrr
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+|                                  | Z-score     | Whole Day    | Hungry       | No Food      | Fewmeals     | Portions     |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| CTL mean                         | $-0.01$     | $0.21$       | $0.21$       | $0.28$       | $0.32$       | $0.36$       |
+|                                  | $( 1.00)$   | $( 0.41)$    | $( 0.40)$    | $( 0.45)$    | $( 0.47)$    | $( 0.48)$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| TUP*2014                         | $-0.10$     | $-0.02$      | $-0.05$      | $-0.03$      | $0.01$       | $0.01$       |
+|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
+| TUP*2015                         | $-0.02$     | $0.03$       | $-0.01$      | $-0.03$      | $0.05$       | $-0.02$      |
+|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
+| CSH*2014                         | $-0.05$     | $-0.00$      | $-0.04$      | $-0.01$      | $-0.03$      | $-0.00$      |
+|                                  | $( 0.11)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
+| CSH*2015                         | $0.03$      | $0.06$       | $0.03$       | $-0.01$      | $-0.00$      | $-0.04$      |
+|                                  | $( 0.11)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
+| Bsln2013                         | $0.07^{**}$ | $-0.00$      | $0.02$       | $0.03$       | $0.06^{**}$  | $-0.02$      |
+|                                  | $( 0.03)$   | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    |
+| 2014                             | $0.07$      | $0.09^{***}$ | $0.10^{***}$ | $0.09^{***}$ | $0.17^{***}$ | $0.22^{***}$ |
+|                                  | $( 0.06)$   | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
+| 2015                             | $0.03$      | $0.22^{***}$ | $0.21^{***}$ | $0.26^{***}$ | $0.30^{***}$ | $0.39^{***}$ |
+|                                  | $( 0.06)$   | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    |
+| Bsln NA                          | $-0.17^{*}$ | $-0.02$      | $-0.03$      | $0.03$       | $-0.02$      | $-0.08^{*}$  |
+|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| F-stat                           | $1.45$      | $9.34$       | $8.36$       | $10.84$      | $6.70$       | $5.91$       |
+| N                                | $1299.00$   | $1282.00$    | $1297.00$    | $1293.00$    | $1297.00$    | $1292.00$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-0.13$     | $-0.08$      | $-0.08^{*}$  | $-0.01$      | $0.01$       | $0.05$       |
+|                                  | $( 0.14)$   | $( 0.05)$    | $( 0.05)$    | $( 0.05)$    | $( 0.06)$    | $( 0.06)$    |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-0.06$     | $-0.03$      | $-0.04$      | $-0.02$      | $0.06$       | $0.02$       |
+|                                  | $( 0.12)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
+|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
+
+** Assets
+   
+Turning now to asset holdings for the households, we estimate treatment effects for
+total value of physical assets owned, total value of potentially productive assets,
+as well as land and cash savings.
+
+*** Total Asset Holdings
+
+The cash group does not appear to have seen an increase in the value of assets
+measured, with negative and imprecise point estimates. This contrasts sharply with
+the TUP group, which seems to get notably wealthier and stay wealthier over time. The
+TUP group has significantly more asset wealth than the cash or control groups in both
+2014 and 2015, 18 months after receipt of transfers. They have 536 SSP more on
+average in 2014 and 624 SSP more in 2015. So-called "Productive" assets include
+anything that could plausibly be used in productive activity.[fn:: For now, we
+include in this list: small and large livestock, farm equipment, mobiles, carts,
+sewing equipment, sheds, and shop premises.] Here we see the TUP group has 320 SSP
+(95%) more in this area over the control group, with a similar magnitude at midline.
+
+Note also that the effect on total assets is higher in absolute value than the effect
+on productive asset value, suggesting that the increased wealth cannot be explained
+purely by households holding onto asset transfers for the length of the program's
+monitoring phase. Indeed, we see in \Fig{fig:AssetTotal} that the TUP group is the
+only one for whom total measured asset holdings did not fall on average over these
+two years, which saw hyperinflation and a significant aggregate economic downturn.
+This asset effect (including the savings effect below) is the only feature of
+households' financial situation on which we we see a persistent effect.
+
+#+CAPTION: Measured asset wealth by group-year
+#+NAME: fig:AssetTotal
+[[../figures/AssetTotal_groupyear.png]] 
+
+#+name: asset_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<asset_analysis>>
+return tab
+#+end_src
+
+#+name: tab:assets
+#+caption: Average treatment effects by group-year on total value (in SSP) of all assets measured and of productive assets measured
+#+attr_latex: :environment longtable :align lrrrrrrr
+|----------------------------------+-----------------+----------------|
+|                                  | Total           | Productive     |
+|----------------------------------+-----------------+----------------|
+| CTL mean                         | $1225.61$       | $337.60$       |
+|                                  | $(1502.46)$     | $(605.57)$     |
+|----------------------------------+-----------------+----------------|
+| TUP*2014                         | $535.79^{***}$  | $361.80^{***}$ |
+|                                  | $(154.02)$      | $(74.19)$      |
+| TUP*2015                         | $624.79^{***}$  | $320.74^{***}$ |
+|                                  | $(146.01)$      | $(68.68)$      |
+| CSH*2014                         | $-125.86$       | $18.50$        |
+|                                  | $(191.31)$      | $(95.80)$      |
+| CSH*2015                         | $-49.99$        | $-5.00$        |
+|                                  | $(187.32)$      | $(88.40)$      |
+| Bsln2013                         | $0.08^{***}$    | $0.00$         |
+|                                  | $( 0.02)$       | $( 0.01)$      |
+| 2014                             | $1259.75^{***}$ | $465.53^{***}$ |
+|                                  | $(112.68)$      | $(55.96)$      |
+| 2015                             | $1124.61^{***}$ | $392.97^{***}$ |
+|                                  | $(103.46)$      | $(50.21)$      |
+| Bsln NA                          | $21.30$         | $-131.14^{**}$ |
+|                                  | $(146.51)$      | $(51.35)$      |
+|----------------------------------+-----------------+----------------|
+| N                                | $1305.00$       | $1247.00$      |
+| F-stat                           | $8.53$          | $10.19$        |
+|----------------------------------+-----------------+----------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $585.78^{**}$   | $366.79^{***}$ |
+|                                  | $(239.76)$      | $(114.58)$     |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $674.78^{***}$  | $325.74^{***}$ |
+|                                  | $(194.72)$      | $(92.26)$      |
+|----------------------------------+-----------------+----------------|
+
+
+*** Savings
+
+The TUP households were strongly encouraged to pay into a savings account maintained
+by BRAC at each of their weekly meetings. Anecdotally, this discouraged some women
+from attending the meetings, but we can see in Table \Tab{tab:Nonzero} that did
+manage to change behavior. TUP participants appear to be 48% (19 pp.) more likely to
+report having any savings at all at endline compared to control households. It's
+worth noting though that since the TUP households also regard their savings behavior
+as much more transparent to BRAC (and have received pressure to save from them) than
+the other groups, these households may simply be more likely to reveal that they are
+saving when asked. Nonetheless, it seems notable that among the group that
+received cash, households were no more likely than the control group to report having
+positive cash savings. This suggests to us that receiving cash is not in itself
+sufficient to induce households to start holding cash on hand or in an account.
+Conversely, increases in savings among TUP households were due not only to their
+increased wealth, but also to additional pressure to hold cash in a savings account.
+
+In Table \Tab{tab:Savings}, we consider the amount of cash saved in each year among
+those who reported savings. Here we see that cash and TUP groups increase the amount
+saved by a similar amount, with cash transfer recipients holding 47% (91.4 SSP) more
+and TUP households saving 42% (81.3 SSP) more. This is significantly less than was
+given to these households, but combined with the short-term consumption results, goes
+some distance in explaining the lack of effect on physical asset wealth. The cash
+seems to have gone primarily to consumption and savings. The asset transfer program
+on the other hand seems to have achieved a similar result among a greater proportion
+of households in addition to a notable increase in asset wealth.
+
+It is common in this community (and most in the region) to store non-perishable food
+like maize, cassava, or millet as a form of savings. This would seem particularly
+reasonable in a high-inflation context, where the price of grain had doubled in the
+previous year. At least as many households report saving in food (53%) as in cash
+(46%), with an average market value of 106 SSP. However, we find no evidence that
+either treatment group increased food savings.[fn:: Note that food savings was not
+measured at baseline, so these controls are omitted.]
+
+Neither do we find evidence that either treatment increased the size or likelihood of
+giving or receiving interhousehold transfers, either in cash or in kind. These
+results are omitted since only 35 and 60 households reported giving and receiving
+transfers respectively, with no difference in group means.
+
+#+name: savings_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<savings_analysis>>
+return Table
+#+end_src
+
+#+name: tab:Nonzero
+#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access 
+#+attr_latex: :environment longtable :align lrrrrrrr
+|----------------------------------+--------------+--------------+--------------+--------------|
+| % > 0                            | Savings      | Food Sav     | LandCult     | LandOwn      |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| CTL mean                         | $0.45$       | $0.82$       | $0.82$       | $0.90$       |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| CSH*2014                         | $-0.06$      | $0.00$       | $-0.04$      | $-0.01$      |
+|                                  | $( 0.06)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
+| CSH*2015                         | $0.03$       | $0.02$       | $0.05$       | $0.02$       |
+|                                  | $( 0.05)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
+| TUP*2014                         | $0.22^{***}$ | $-0.02$      | $-0.03$      | $-0.00$      |
+|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
+| TUP*2015                         | $0.21^{***}$ | $-0.03$      | $0.01$       | $-0.01$      |
+|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
+| 2014                             | $0.43^{***}$ | $1.00^{***}$ | $0.83^{***}$ | $0.82^{***}$ |
+|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.06)$    | $( 0.05)$    |
+| 2015                             | $0.39^{***}$ | $0.82^{***}$ | $0.77^{***}$ | $0.84^{***}$ |
+|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.05)$    | $( 0.05)$    |
+| Bsln2013                         | $0.05$       |              | $0.05$       | $0.07$       |
+|                                  | $( 0.04)$    |              | $( 0.05)$    | $( 0.04)$    |
+| Bsln NA                          | $0.08^{*}$   |              | $0.05$       | $0.05$       |
+|                                  | $( 0.04)$    |              | $( 0.06)$    | $( 0.05)$    |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.19$       | $-0.04$      | $-0.07$      | $-0.02$      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $0.18$       | $-0.05$      | $-0.03$      | $-0.03$      |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| F-stat                           | $8.83$       | $15.60$      | $0.79$       | $0.76$       |
+| N                                | $1259.00$    | $870.00$     | $1231.00$    | $1251.00$    |
+|----------------------------------+--------------+--------------+--------------+--------------|
+
+#+name: tab:Savings
+#+caption: Average treatment effects by group-year on total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
+#+attr_latex: :environment longtable :align lrrrrrrr
+|----------------------------------+----------------+----------------+----------------+----------------|
+| Amt.                             | Savings        | Food Sav       | LandCult       | LandOwn        |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| CTL mean                         | $191.19$       | $114.78$       | $61.88$        | $46.00$        |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| CSH*2014                         | $28.74$        | $0.22$         | $10.18$        | $10.50$        |
+|                                  | $(42.93)$      | $(15.38)$      | $(15.07)$      | $(12.57)$      |
+| CSH*2015                         | $91.40^{**}$   | $-14.34$       | $-39.18^{***}$ | $-32.37^{***}$ |
+|                                  | $(40.89)$      | $(14.98)$      | $(14.90)$      | $(11.95)$      |
+| TUP*2014                         | $-27.09$       | $17.16$        | $-4.76$        | $-3.02$        |
+|                                  | $(29.76)$      | $(12.33)$      | $(11.94)$      | $(10.04)$      |
+| TUP*2015                         | $81.33^{***}$  | $1.13$         | $-17.38$       | $-12.56$       |
+|                                  | $(29.32)$      | $(12.26)$      | $(11.65)$      | $( 9.41)$      |
+| 2014                             | $106.72^{***}$ | $62.03^{***}$  | $11.37$        | $17.31^{**}$   |
+|                                  | $(24.85)$      | $( 8.36)$      | $( 9.94)$      | $( 8.56)$      |
+| 2015                             | $163.04^{***}$ | $114.78^{***}$ | $61.52^{***}$  | $51.89^{***}$  |
+|                                  | $(24.13)$      | $( 7.60)$      | $( 9.54)$      | $( 7.88)$      |
+| Bsln2013                         | $0.05^{**}$    |                | $0.94$         | $-2.43$        |
+|                                  | $( 0.02)$      |                | $( 3.07)$      | $( 1.95)$      |
+| Bsln NA                          | $40.07^{*}$    |                | $-1.60$        | $-6.02$        |
+|                                  | $(21.24)$      |                | $( 9.92)$      | $( 8.29)$      |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-118.49$      | $31.50$        | $34.42$        | $29.35$        |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-10.07$       | $15.47$        | $21.79$        | $19.80$        |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| F-stat                           | $7.41$         | $7.14$         | $4.91$         | $3.72$         |
+| N                                | $671.00$       | $777.00$       | $1042.00$      | $1114.00$      |
+|----------------------------------+----------------+----------------+----------------+----------------|
+
+
+*** Land Holdings
+
+We also examine land ownership and cultivation in each year. We find no evidence that
+either group is more or less likely to report owning or cultivating at least some
+land, though this may be in part because land ownership and cultivation is already
+very common. Anecdotaly, divesting from land ownership entirely could be seen as a
+relatively drastic decision. However, members of the cash group who are involved in
+agriculture report cultivating 65% less and owning 70% less land than the control
+group. This raises the interesting question of whether the cash group was likely to
+switch occupations from farming to non-farm self-employment.
+
+It could also raise questions around the underlying logic of the agrarian focus
+transfer in the TUP program, if unconstrained transfers prompt households to divest
+from these opportunities. This concern may be validated somewhat by the fact that TUP
+participants primarily stated a preference for small retail training and transfers
+over small animal husbandry or vegetable gardening.
+
+** Income
+
+Income was reliably measured only in 2015, and so our estimates do not control for
+baseline values. The control group in 2015 has a measured income of roughly 4325 SSP
+per year, or roughly $540 US (assuming an exchange rate of around 8). The TUP group
+sees a 327 SSP ($41 US, 7%) increase in annual average income, but with a highly
+skewed distribution and large standard errors. The related figure shows that total
+income is not particularly different among groups. Perhaps the main lesson is that
+the TUP group has measurably more reported livestock-related income, and less farm
+income, indicating a shift away from farming. The cash group may exhibit some
+substitution away from farm and livestock, but as is evident graphically, we do not
+observe sizable changes in total income for either treatment group. 
+
+\newpage
+#+name: income_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<income_analysis>>
+return tab
+#+end_src
+
+#+Caption: Distribution of total observed income by group
+#+NAME: fig:Income_group
+[[../figures/Income_group.png]] 
+
+#+name: tab:Income
+#+caption: Average treatment effects by group-year on total value (in SSP) of income reported in 2015 by sector.
+#+attr_latex: :environment longtable :align lrrrrrrr
+|---------------------------+----------------+----------------+-----------------+-----------------|
+|                           | Farm           | Livestock      | Non-Farm        | Total           |
+|---------------------------+----------------+----------------+-----------------+-----------------|
+| CTL mean                  | $773.05$       | $640.33$       | $3774.49$       | $4325.54$       |
+|---------------------------+----------------+----------------+-----------------+-----------------|
+| TUP                       | $-142.20^{*}$  | $281.12^{**}$  | $86.24$         | $327.83$        |
+|                           | $(77.21)$      | $(126.30)$     | $(469.48)$      | $(455.95)$      |
+| CSH                       | $-26.15$       | $-83.81$       | $61.80$         | $7.92$         |
+|                           | $(100.82)$     | $(177.25)$     | $(620.53)$      | $(600.43)$      |
+|---------------------------+----------------+----------------+-----------------+-----------------|
+| N                         | $531.00$       | $380.00$       | $606.00$        | $671.00$        |
+| F-stat                    | $1.75$        | $3.48$        | $0.02$         | $0.28$         |
+|---------------------------+----------------+----------------+-----------------+-----------------|
+| $\beta^{TUP}-\beta^{CSH}$ | $-116.05$      | $364.94^{**}$  | $24.44$         | $319.91$        |
+|                           | $(105.79)$     | $(174.74)$     | $(651.27)$      | $(629.93)$      |
+|---------------------------+----------------+----------------+-----------------+-----------------|
+
+** Exposure to Conflict
+
+In 2014, households were surveyed shortly after the NGO's offices had re-opened in
+the wake of the outbreak of widespread armed conflict. Respondents were asked a short
+set of questions about whether they were directly affected, and if so, in what way.
+There has only been a few incidents of violence near Yei town at that point, and the most
+directly involved ethnic groups made up a small portion of the local population. There
+is no clear comparison group to which we might compare our sample, and the economic
+climate changed over this same period in several ways that were probably not directly
+caused by the violence. As such, we have no clear means of identifying the effect of
+the conflict itself on household welfare. Nonetheless, it is interesting to consider
+correlates with self-reported exposure to the conflict, and to see if program
+assignment had any effect on households' exposure or response.
+
+Our main outcomes of interest are whether individuals say they were "worried" or
+"directly affected" by the violence, unable to invest in a farm or business as a
+result, migrated as a cautionary measure, or did something else to protect the lives
+of family members. A final question among those who took no cautionary measures was
+whether this because they did not have the means (i.e. "NoMeans"). TUP participants
+are 24% (13 pp.) less likely to report having been "affected" by the conflict, and
+38% (6 pp.) less likely to report that they were affected specifically by being
+unable to plant crops or invest in their business. This was the second most common
+way in which households reported being affected behind "needed to relocate or
+migrate", where respondents are not clearly different. Nonetheless, this raises the
+possibility that having received a significant asset transfer and the expectation of
+NGO support around the outbreak of
+conflict may have helped mitigate the conflict's negative effect on investment and
+protect households from being affected overall.
+
+#+name: conflict_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<conflict_analysis>>
+return Table
+#+end_src
+
+\newpage
+
+#+name: tab:conflict_exposure
+#+caption: Average treatment effects by group-year on the probability of having been affected in a significant way by the outbreak of violence in late 2013
+#+attr_latex: :environment longtable :align lrrrrrrr
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+|          | Affected      | Migrated     | NoInvest     | NoMeans      | ProtectLives | Worried      |
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+| CTL mean | $0.53^{***}$  | $0.33^{***}$ | $0.16^{***}$ | $0.33^{***}$ | $0.38^{***}$ | $0.93^{***}$ |
+|          | $( 0.03)$     | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.01)$    |
+| TUP      | $-0.13^{***}$ | $0.04$       | $-0.06^{**}$ | $-0.06$      | $0.02$       | $-0.02$      |
+|          | $( 0.04)$     | $( 0.04)$    | $( 0.03)$    | $( 0.04)$    | $( 0.05)$    | $( 0.02)$    |
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+| F-stat   | $9.20$        | $0.96$       | $3.95$       | $2.55$       | $0.19$       | $0.49$       |
+| N        | $601.00$      | $655.00$     | $655.00$     | $655.00$     | $585.00$     | $603.00$     |
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+
+#+Caption: % of Sample reporting exposure to conflict by group.
+#+NAME: fig:conflict_exposure
+[[../figures/conflict_exposure.png]] 
+
+
+
+* Conclusion
+
+* References
+   \renewcommand{\refname}{}
+   \printbibliography
+

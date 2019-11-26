@@ -1221,7 +1221,7 @@ return tab
  #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-consumption.py
  import sys
  DATADIR = "../../data/"
- sys.path.append("../../data")
+ sys.path.append(DATADIR)
  import numpy as np
  import pandas as pd
  import statsmodels.api as sm
@@ -1257,12 +1257,12 @@ return tab
     for lvl in I1.names: new_order.append(I2.names.index(lvl))
     df2 = df2.reorder_levels(new_order)
     return df1, df2
+
  def winsorize(Series, **kwargs):
     """
     Need to implement two-sided censoring as well.
     WARNING: if Top<0, all zeros will be changed to Top
     """
-
     percent    = kwargs.setdefault("percent",99)
     stdev      = kwargs.setdefault("stdev",False)
     drop       = kwargs.setdefault("drop",False)
@@ -1290,6 +1290,7 @@ return tab
     else:
         kwargs['twoway'] = False
         return -1*winsorize(-1*_Series, **kwargs)
+
  def USD_conversion(Exp,exchange_rate=1.,PPP=1.,inflation=1.,time='Year'):
     """
     Convert nominal local currency into price- and inflation-adjusted USD
@@ -1321,6 +1322,7 @@ return tab
             var.index.name = var.name
             _Exp = _Exp.mul(var)
     return _Exp
+
  def percapita_conversion(Exp,HH,children=["boys","girls"],adult_equivalent=1.,minus_children='hh_size'):
     """
     Returns household per-capita expenditures given:

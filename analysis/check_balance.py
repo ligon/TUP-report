@@ -1,106 +1,157 @@
-#!/usr/bin/env python
-
-import sys
-DATADIR = "../../data/"
-sys.path.append("../../data")
+DATA="../../TUP-data/TUP_full.dta"
+"""
+Create table comparing baseline means across treatments; also build analysis dataframes:
+   - C : Consumption
+   - Z : HH characteristics
+   - Avalue : Values of assets
+"""
 
 import pandas as pd
 import numpy as np
-from scipy.stats import ttest_ind
+from cfe.df_utils import df_to_orgtbl
 
-from TUP import full_data, consumption_data, asset_vars
+full = pd.read_stata(DATA)
 
-def df_to_orgtbl(df,float_fmt='%5.3f'):
-    """
-    Print pd.DataFrame in format which forms an org-table.
-    Note that headers for code block should include ":results table raw".
-    """
-    if len(df.shape)==1: # We have a series?
-       df=pd.DataFrame(df)
-       
-    return '|'+df.to_csv(sep='|',float_format=float_fmt,line_terminator='|\n|')
+full.rename(columns={'idno':'HH', "Control":"CTL", "Cash":"CSH",'location_b':"Location"},inplace=True)
+full.set_index(["HH","Location"],inplace=True,drop=True)
 
-def ttest_table(D,vardict,groups=["TUP","CSH"], p_stars=(.1, .05, .01)):
-    T = D[vardict.keys()]
-    T.rename(columns=vardict,inplace=True)
-    #~ There's got to be a better way to invert the get_dummies function
-    T["group"] = ""
-    for group in groups: T["group"]+= [group if i else "" for i in T[group]]
-    T["group"]=[i if i else "CTL" for i in T["group"]]
-    treat = {group: df.drop(groups+["group"],1) for group,df in T.groupby("group")}
-    Table = T.groupby('group').mean().T
+full.loc[full.query("TUP>0").index,'Treatment'] = 'TUP'
+full.loc[full.query("CTL>0").index,'Treatment'] = 'CTL'
+full.loc[full.query("CSH>0").index,'Treatment'] = 'CSH'
+
+# Build dataframe indicating treatment status
+Tmt = full[['CTL','CSH','TUP']]
+Tmt["CTL2"] = 1 - Tmt[["TUP","CSH"]].sum(1)
+
+mergedict = {'master only (1)':  1, 'using only (2)':  2, 'matched (3)':  3}
+for col in full.filter(like='merge_').columns:
+    full[col]=full[col].apply(lambda i: mergedict.get(i)).astype(float)
+
+Tmt['Base'] =  full['merge_census_b']>1
+Tmt['Mid']  =  full['merge_midline']>1
+Tmt['End']  =  full['merge_endline']>1
+
+# Reorganize full so that period indicates baseline, midline, endline.
+
+baseline = full.filter(axis='columns',regex="_b$").rename(columns=lambda s: s[:-2])
+baseline['Period'] = 'Baseline'
+baseline = baseline.reset_index().set_index(['HH','Period','Location'])
+
+midline = full.filter(axis='columns',regex="_m$").rename(columns=lambda s: s[:-2])
+midline['Period'] = 'Midline'
+midline = midline.reset_index().set_index(['HH','Period','Location'])
+
+endline = full.filter(axis='columns',regex="_e$").rename(columns=lambda s: s[:-2])
+endline['Period'] = 'Endline'
+endline = endline.reset_index().set_index(['HH','Period','Location'])
+
+ofull = pd.concat([baseline,midline,endline],axis=0)
+ofull = ofull.reset_index().set_index(['HH','Period','Location'])
+
+
+# Build dataframe of consumption
+
+## Different recall frequencies
+recall = {'daily':['c_cereals', 'c_maize', 'c_sorghum', 'c_millet',
+                   'c_potato', 'c_sweetpotato', 'c_rice', 'c_bread',
+                   'c_beans', 'c_oil', 'c_salt', 'c_sugar', 'c_meat',
+                   'c_livestock', 'c_poultry', 'c_fish', 'c_egg',
+                   'c_nuts', 'c_milk', 'c_vegetables', 'c_fruit',
+                   'c_tea', 'c_spices', 'c_alcohol', 'c_otherfood']}
+
+recall['monthly'] = ['c_fuel', 'c_medicine', 'c_airtime',
+                     'c_cosmetics', 'c_soap', 'c_transport',
+                     'c_entertainment', 'c_childcare', 'c_tobacco',
+                     'c_batteries', 'c_church', 'c_othermonth']    
+
+recall['annual'] = ['c_clothesfootwear', 'c_womensclothes',
+                    'c_childrensclothes', 'c_shoes', 'c_homeimprovement',
+                    'c_utensils', 'c_furniture', 'c_textiles',
+                    'c_ceremonies', 'c_funerals', 'c_charities',
+                    'c_dowry', 'c_other']
+
+# Consumption dataframe
+C = pd.concat([ofull[recall['daily']]/3,
+               ofull[recall['monthly']]/30,
+               ofull[recall['annual']]/365],axis=1).rename(columns = lambda s: s[2:].capitalize())
+
+# Rename some columns
+C = C.rename(columns={'Poultry':'Chicken, etc.',
+                      'Sweetpotato':'Sweet potato',
+                      'Otherfood':'Other foods',
+                      'Othermonth':'Other monthly',
+                      'Clothesfootwear':'Clothes & footwear',
+                      'Womensclothes':"Women's clothing",
+                      'Childrensclothes':"Children's clothing",
+                      'Homeimprovement':'Home improvements'})
+
+C.index.name = 'Good'
+
+C.to_pickle('../var/C.df')
+
+# Build dataframes for assets
+
+Avalue = ofull.filter(regex="^asset_val_").rename(columns = lambda s: s[10:].capitalize())
+Avalue.index.name = 'Asset'
+Avalue.rename(columns={'Chairtables':'Chairs & Tables',
+                       'Smallanimals':'Small animals'},inplace=True)
+
+Anumber = ofull.filter(regex="^asset_n_").rename(columns = lambda s: s[8:].capitalize())
+Anumber.rename(columns={'Chairtables':'Chairs & Tables',
+                        'Smallanimals':'Small animals'},inplace=True)
+
+# Drop some highly bogus variables
+for v in ['House','Homestead','Netitn']:
+    del Avalue[v]
+    del Anumber[v]
+
+Avalue.to_pickle('../var/Avalue.df')
+Anumber.to_pickle('../var/Anumber.df')
+
+# Build dataframe for some hh characteristics
+hh_chars = {"hh_size":"HH size",
+            "child_total": "# Children",
+            'asset_n_house':'# Houses',
+            'in_business':'In Business'}
+
+Z = ofull[list(hh_chars.keys())].rename(columns=hh_chars)
+
+Z.to_pickle('../var/Z.df')
+
+def balanced_means(df,treatment):
     
-    for var in Table: Table[var] = Table[var].apply(lambda x: round(x,3))
+    dft = df.reset_index('Location',drop=True).join(treatment.reset_index('Location')).reset_index().set_index(['HH','Period','Location'])
 
-    for group in groups:
-        Table['$\Delta${}'.format(group)] = map(str,Table[group]-Table['CTL'])
-        Table['$p$_{{{}}}'.format(group)] = 0
-    Table['$N$']=(T>0).sum()
+    dfmeans = dft.query("Period=='Baseline'").groupby('Treatment').mean().T.dropna()
+    dfcount = dft.query("Period=='Baseline'").groupby('Treatment').count().T.dropna()
+    dfse = dft.query("Period=='Baseline'").groupby('Treatment').std().T.dropna()/np.sqrt(dfcount)
+    dfvar = dft.query("Period=='Baseline'").groupby('Treatment').var().T.dropna()/dfcount
+    dft = dfmeans.copy()
+    dft['CTL'] = 0
+    dft['TUP'] = np.abs(dfmeans['TUP'] - dfmeans['CTL'])/np.sqrt(dfvar['TUP'] + dfvar['CTL'])
+    dft['CSH'] = np.abs(dfmeans['CSH'] - dfmeans['CTL'])/np.sqrt(dfvar['CSH'] + dfvar['CTL'])
 
-    for group in groups:
-        for var in T:
-            if var in groups+["group"]: continue
-            pval = ttest_ind(treat[group][var].dropna(), treat["CTL"][var].dropna())[1]
-            pval = round(pval,3)
-            Table.ix[var,'$p$_{{{}}}'.format(group)]+= pval
-            nstar=sum(pval<threshold for threshold in p_stars)
-            if nstar: Table.ix[var,'$\Delta${}'.format(group)]+="^{{{}}}".format("*"*nstar)
-    DROP=groups+["$p$_{{{}}}".format(group) for group in groups]
-    few=T.shape[0]/15.
-    Table = Table[Table['$N$']>few]
-    return Table.drop(DROP,1)
+    return dfmeans[['CTL','TUP','CSH']],dfse[['CTL','TUP','CSH']],dft[['CTL','TUP','CSH']]
 
-def topcode(var, Nstd=3, drop=False):
-    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
-    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
-    return var
 
-if True: #~ Make DataFrame
-    D = full_data(DIR=DATADIR)
+full[['Treatment']].to_pickle('../var/T.df')
 
-    D['livestock_val_m'] = D.filter(regex='^asset_val_(cows|smallanimals|chickens|ducks|poultry)_m').sum(axis=1)
-    D['livestock_val'] = D.filter(regex='^asset_val_(cows|smallanimals|chickens|ducks|poultry)').sum(axis=1) - D['livestock_val_m']
+Means, SEs, Ts = balanced_means(C,full['Treatment'])
+Means.index.name = 'Consumption'
+print(df_to_orgtbl(Means,sedf=None,tdf=Ts,float_fmt="%3.1f"),end='')
 
-    A = asset_vars(D,year=2013)[0]
-    D['Asset Tot'] = A['Total']
-    D["Cash Savings"] = D.filter(regex="^savings_.*_b$").sum(axis=1)
-    C = consumption_data(D)[0].ix[2013]
-    food = ['c_cereals', 'c_maize', 'c_sorghum', 'c_millet', 'c_potato', 'c_sweetpotato', 'c_rice', 'c_bread', 'c_beans', 'c_oil', 'c_salt', 'c_sugar', 'c_meat', 'c_livestock', 'c_poultry', 'c_fish', 'c_egg', 'c_nuts', 'c_milk', 'c_vegetables', 'c_fruit', 'c_tea', 'c_spices', 'c_alcohol', 'c_otherfood']
-    month = ['c_fuel', 'c_medicine', 'c_airtime', 'c_cosmetics', 'c_soap', 'c_transport', 'c_entertainment', 'c_childcare', 'c_tobacco', 'c_batteries', 'c_church', 'c_othermonth']    
-    year = ['c_clothesfootwear', 'c_womensclothes', 'c_childrensclothes', 'c_shoes', 'c_homeimprovement', 'c_utensils', 'c_furniture', 'c_textiles', 'c_ceremonies', 'c_funerals', 'c_charities', 'c_dowry', 'c_other']    
-    C["Food"]  = C[[item for item in food  if item in C]].sum(axis=1).replace(0,np.nan)
-    C["Month"] = C[[item for item in month if item in C]].sum(axis=1).replace(0,np.nan)
-    C["Year"]  = C[[item for item in year  if item in C]].sum(axis=1).replace(0,np.nan)
-    C["Tot"]   = C[["Food","Month","Year"]].sum(axis=1)
-    D["Daily Exp"] = C["Tot"]
-    D["Daily Food"] = C["Food"]
+print('|-')
 
-    drop_vars = ['c_milk', 'c_alcohol', 'c_spices', 'c_entertainment', 'c_otherfood', 'asset_val_house', 'asset_val_plough']
-    D.drop([item for item in D if any(var in item for var in drop_vars)], 1, inplace=True)
+Means, SEs, Ts = balanced_means(Avalue,full['Treatment'])
+Means.index.name = 'Asset'
+print(df_to_orgtbl(Means,sedf=None,tdf=Ts,float_fmt="%3.1f"),end='')
 
-consumption = dict([(c,c[2:-2].capitalize()) for c in D.filter(regex='^c_.*_b$').columns])
-assets = dict([(a,a[10:].capitalize()) for a in D.filter(regex='^asset_val.*_b$').columns])
-assets.pop('asset_val_homestead_b') #~ Sale value for homes was very poorly measured
-other_outcomes = {"hh_size_b":"HH size",
-        "child_total_b": "# Child",
-        'asset_n_house_b':'No. Houses',
-        'in_business_b':'In Business',
-        'c_cereals_b':'Cereals',
-        'c_cosmetics_b':'Cosmetics',
-        'Cash Savings': 'Cash Savings',
-        'Asset Tot': 'Asset Tot.',
-        'Daily Exp':'Daily Exp',
-        'Daily Food':'Daily Food',
-        'TUP':'TUP'}
-for vardict in (consumption, assets, other_outcomes):
-    for group in ("TUP","CSH"): vardict.setdefault(group,group)
+print('|-')
 
-c_table    = ttest_table(D,consumption) #~ , groups=["TUP"])
-a_table    = ttest_table(D,assets) #~ , groups=["TUP"])
-other_table= ttest_table(D,other_outcomes) #~ , groups=["TUP"])
-    
-c_orgtable     = df_to_orgtbl(c_table,float_fmt='%5.2f')
-a_orgtable     = df_to_orgtbl(a_table,float_fmt='%5.2f')
-other_orgtable = df_to_orgtbl(other_table,float_fmt='%5.2f')
-    
-tables="\n".join((c_orgtable,a_orgtable,other_orgtable))
+Means, SEs, Ts = balanced_means(Z,full['Treatment'])
+Means.index.name = 'Household characteristics'
+print(df_to_orgtbl(Means,sedf=None,tdf=Ts,float_fmt="%3.1f"),end='')
+
+print('|-')
+Nstr = '|'.join(['%d ' % x for x in full.groupby('Treatment').count().T.max().tolist()])
+print('| $N$ |' + Nstr + '|')
