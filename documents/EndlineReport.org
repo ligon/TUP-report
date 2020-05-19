@@ -240,7 +240,6 @@ will tend to be the most responsive to changes in welfare.
         to whether that basket tracks "total" spending.
 ******* 
 
-
 #+begin_src python :results output
 import matplotlib. pyplot as plt
 import pandas as pd
