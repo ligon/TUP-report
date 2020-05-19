@@ -113,9 +113,9 @@ programs of this type, the number of households given each kind of asset was set
 advance, with 75 enrolled in agricultural activities (vegetable cultivation), 85 in
 duck rearing, 45 in goat rearing, and the rest in small trade businesses. While the
 staff tried to map housheolds' asset types to their respective preferences and
-skills, a disproportionate number stated a preferences for goats and small trade.
-Households then atttended training sessions. The first of these were for general
-business skills around literacy, numercacy, and financial management. The next were
+skills, a disproportionate number stated preferences for goats and small trade.
+Households then attended training sessions. The first of these were for general
+business skills around literacy, numeracy, and financial management. The next were
 sector specific and focused on how to properly raise livestock or gardens. 
 
 Once training is completed, asset transfers began in late 2013 and continued through
@@ -148,7 +148,7 @@ cite:haushofer-shapiro16 deposited funds in a bank or mobile money
 account, while \cite{fafchamps-etal14} used money transfers.]
 Experimental studies of the behavioral implications of savings
 accounts citep:dupas-robinson13 would lead one to expect that the
-method of disbursal method might affect the propensity to save a cash
+method of disbursal might affect the propensity to save a cash
 transfer.  In all of these experiments transfers were denominated in
 the local currency.  However, our context is unusual in that the local
 economy was facing significant inflation at the time, with
@@ -198,7 +198,7 @@ consumption modules and a few questions tracking major transactions and shocks. 
 short length of the survey allowed them to be administered via the mobile network,
 reducing cost and improving response rate. These data provide a slightly longer
 estimate of treatment effects for both cash transfers and the TUP program, but will
-be especially valuable in assessing whether the cash transfers had a long-term imact
+be especially valuable in assessing whether the cash transfers had a long-term impact
 on consumption.
 
 ** Empirical Strategy 
@@ -222,8 +222,8 @@ acts as a placebo; there is no /ex ante/ reason to expect that they were differe
 from the rest of the control group at that point. Given the slight difference in
 timing, we report a t-test of the hypothesis \(\beta_{TUP,t}-\beta_{Cash,2015}=0\) for
 both \(t \in {2014,2015}\). Since the difference in timing is smaller, we consider
-\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the prefered hypothesis, but examine
-adn report \(\beta_{TUP,2014}-\beta_{Cash,2015}=0\) as well.
+\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the preferred hypothesis, but examine
+and report \(\beta_{TUP,2014}-\beta_{Cash,2015}=0\) as well.
  
 For the supplementary analysis of the high-frequency panel, we estimate a separate
 model, since the underlying data is so different. A constant parameter takes the
@@ -245,6 +245,7 @@ will tend to be the most responsive to changes in welfare.
 import matplotlib. pyplot as plt
 import pandas as pd
 
+# need to get the correct data for 10items and allitems from mobile survey
 data = [[1,2], [3,4], [5,6], [2, 12], [5, -4]]
 tenitems = pd.DataFrame(data, columns = ['Respondent 1', 'Respondent 2'])
 data = [[6,5], [4,3], [2,1], [3, 1], [6, -3]]
@@ -257,10 +258,16 @@ X = X.values.tolist()
 Y = Y.values.tolist()
 
 plt.scatter(X, Y)
-plt.show()
+plt.savefig("scatter.png")
+plt.show() # can take this out later
+
 #+end_src
 
 #+RESULTS:
+
+#+Caption: Scatter plot of basket vs total spending
+#+NAME: fig:Income_group
+[[../documents/scatter.png]]
 
 * Results
 ** Balance on Obervables
