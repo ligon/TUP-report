@@ -343,18 +343,9 @@ more motorcycles and clothing. But it does suggests that our stratified randomiz
 was not too far from creating comparable groups.
 
 # table 1 redo
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/random_assignment.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline)
-df_a = pd.read_stata(data_assignment)
-
-# merge baseline data and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b, df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
+#+name: mean_balance
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+<<load_data>>
 
 # combine low asset and high asset as TUP
 df.replace(to_replace='Low asset', value='TUP', inplace=True)
@@ -389,6 +380,41 @@ print(newdf)
 
 
 #+end_src
+
+#+results: mean_balance
+|                          | Control |     TUP |    Cash |
+|--------------------------+---------+---------+---------|
+| c_meat_b                 |  12.498 |  10.822 |  12.360 |
+| c_fuel_b                 |  23.396 |  21.518 |  20.536 |
+| c_clothesfootwear_b      | 249.849 | 229.016 | 250.080 |
+| c_soap_b                 |  14.947 |  14.137 |  13.600 |
+| c_fish_b                 |   7.363 |   6.976 |   7.024 |
+| c_charities_b            |   9.584 |   9.349 |  10.704 |
+| c_cereals_b              |  27.110 |  24.602 |  28.304 |
+| c_transport_b            |   5.510 |   4.245 |   5.296 |
+| c_cosmetics_b            |  19.955 |  21.064 |  16.568 |
+| c_sugar_b                |   5.024 |   4.980 |   4.552 |
+| c_egg_b                  |   3.020 |   3.040 |   3.384 |
+| c_oil_b                  |   3.988 |   3.679 |   3.648 |
+| c_ceremonies_b           |  34.490 |  54.108 |  57.264 |
+| c_beans_b                |   2.053 |   2.727 |   2.744 |
+| c_fruit_b                |   1.922 |   1.807 |   2.056 |
+| c_textiles_b             |  54.682 |  54.470 |  75.704 |
+| c_utensils_b             |  92.759 |  85.627 |  92.080 |
+| c_dowry_b                | 437.845 | 473.293 | 464.840 |
+| c_furniture_b            |  69.967 |  65.851 |  87.080 |
+| c_salt_b                 |   1.265 |   1.261 |   1.360 |
+| c_vegetables_b           |   4.604 |   4.092 |   4.056 |
+| asset_val_smallanimals_b | 258.306 | 147.510 | 112.560 |
+| asset_val_bicycle_b      | 111.224 |  96.390 | 100.880 |
+| asset_val_radio_b        |  58.771 |  51.506 |  41.824 |
+| asset_val_motorcycle_b   | 351.086 | 523.956 | 690.008 |
+| asset_val_net_b          |  18.980 |  20.177 |  19.336 |
+| asset_val_poultry_b      |  44.551 |  38.554 |  33.240 |
+| asset_val_bed_b          | 233.865 | 247.269 | 273.840 |
+| asset_val_chairtables_b  | 208.559 | 175.542 | 209.520 |
+| asset_val_mobile_b       |  92.727 | 109.558 |  92.592 |
+| asset_val_netITN_b       |   7.951 |   8.956 |   8.928 |
 
 #+RESULTS:
 |                          | Control |     TUP |    Cash |
@@ -2597,3 +2623,23 @@ def residuals_by_group(models, groups, outcomes=[], kind="kde", figure_dir="../f
 
 #+end_src
    
+* Code Appendix
+
+** Code block to load data & merge in treatment information
+#+name: load_data
+#+begin_src python :noweb noexport :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-data/random_assignment.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_a = pd.read_stata(data_assignment)
+
+# merge baseline data and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_b, df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
+#+end_src
+
+
+ 
