@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import sys
-DATADIR = "../../data/"
-sys.path.append("../../data")
+DATADIR = "../../TUP-data/"
+sys.path.append(DATADIR)
 
 import pandas as pd
 import numpy as np
@@ -373,7 +373,7 @@ if True: #~ Make DataFrame
     D["Cash Savings"] = D.filter(regex="^savings_.*_b$").sum(axis=1)
     D["Land Access (fedan)"] = D.filter(regex="^land_.*_b$").sum(axis=1)
     #~C = consumption_data(D)[0].ix[2014]
-    C = consumption_data(D)[0].reorder_levels([1,2,0]).sortlevel()
+    C = consumption_data(D)[0].reorder_levels([1,2,0]).sort_index()
     food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
     month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
     year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
@@ -419,7 +419,7 @@ regs15 = {}
 BASE   = pd.Series()
 for vardict in (consumption, assets, other_outcomes):
     #~for group in ("In14","In15"): vardict.setdefault(group,group)
-    df = D[vardict.keys()+["In14","In15"]].rename(columns=vardict)
+    df = D[list(vardict.keys())+["In14","In15"]].rename(columns=vardict)
     BASE = BASE.append(df.mean())
     df["const"] = 1.
     regs14.update(regressions(df,outcomes=vardict.values(),controls=["const","In14"]))
