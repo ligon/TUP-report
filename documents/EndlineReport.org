@@ -1,3 +1,4 @@
+
 #+TITLE: Comparing Cash and Asset Transfers to Low-Income Households in South Sudan
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
 #+DATE: \today
@@ -240,11 +241,18 @@ will tend to be the most responsive to changes in welfare.
         to whether that basket tracks "total" spending.
 ******* 
 
+#+name: scatter_plot
 #+begin_src python :results output
 import matplotlib. pyplot as plt
 import pandas as pd
 
-# need to get the correct data for 10items and allitems from mobile survey
+# 10 consumption items from mobile survey: treatment of sick household members, 
+# school fee (see s28 and s29 and s210?), food for household consumption, clothes, goods to resell with some profit, 
+# small size livestock, medium size livestock, construction/renovation of houses for living, 
+# construction/renovation of shop premises, hair dressing
+
+
+# need to get the correct data for 10items and allitems from mobile survey 
 data = [[1,2], [3,4], [5,6], [2, 12], [5, -4]]
 tenitems = pd.DataFrame(data, columns = ['Respondent 1', 'Respondent 2'])
 data = [[6,5], [4,3], [2,1], [3, 1], [6, -3]]
@@ -345,7 +353,18 @@ was not too far from creating comparable groups.
 # table 1 redo
 #+name: mean_balance
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-<<load_data>>
+# <<load_data>> can use this!!
+data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-data/random_assignment.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_a = pd.read_stata(data_assignment)
+
+# merge baseline data with group column from random assignment data based on respondent id/id number
+df = pd.merge(df_b, df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
 
 # combine low asset and high asset as TUP
 df.replace(to_replace='Low asset', value='TUP', inplace=True)
@@ -361,7 +380,12 @@ df = df.get(['c_meat_b', 'c_fuel_b', 'c_clothesfootwear_b', 'c_soap_b',
              'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
              'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
              'asset_val_netITN_b',
+             'asset_n_house_b',
              'group'])
+
+# have to use census data for child_total START HERE. also groups in census data
+# create new variables for Daily Food, Daily Exp, In Business, Cereals, # Child, Asset Tot., Cash Savings (combine s12_1,s12_2, s12_3, s12_4, s12_5?),  HH size
+# first looking in ssudan_survey.org then check_balanaces.py - check TUP_full.dta?
 
 means = df.groupby(['group']).mean()
 means = means.T
@@ -416,40 +440,7 @@ print(newdf)
 | asset_val_mobile_b       |  92.727 | 109.558 |  92.592 |
 | asset_val_netITN_b       |   7.951 |   8.956 |   8.928 |
 
-#+RESULTS:
-|                          | Control |     TUP |    Cash |
-|--------------------------+---------+---------+---------|
-| c_meat_b                 |  12.498 |  10.822 |  12.360 |
-| c_fuel_b                 |  23.396 |  21.518 |  20.536 |
-| c_clothesfootwear_b      | 249.849 | 229.016 | 250.080 |
-| c_soap_b                 |  14.947 |  14.137 |  13.600 |
-| c_fish_b                 |   7.363 |   6.976 |   7.024 |
-| c_charities_b            |   9.584 |   9.349 |  10.704 |
-| c_cereals_b              |  27.110 |  24.602 |  28.304 |
-| c_transport_b            |   5.510 |   4.245 |   5.296 |
-| c_cosmetics_b            |  19.955 |  21.064 |  16.568 |
-| c_sugar_b                |   5.024 |   4.980 |   4.552 |
-| c_egg_b                  |   3.020 |   3.040 |   3.384 |
-| c_oil_b                  |   3.988 |   3.679 |   3.648 |
-| c_ceremonies_b           |  34.490 |  54.108 |  57.264 |
-| c_beans_b                |   2.053 |   2.727 |   2.744 |
-| c_fruit_b                |   1.922 |   1.807 |   2.056 |
-| c_textiles_b             |  54.682 |  54.470 |  75.704 |
-| c_utensils_b             |  92.759 |  85.627 |  92.080 |
-| c_dowry_b                | 437.845 | 473.293 | 464.840 |
-| c_furniture_b            |  69.967 |  65.851 |  87.080 |
-| c_salt_b                 |   1.265 |   1.261 |   1.360 |
-| c_vegetables_b           |   4.604 |   4.092 |   4.056 |
-| asset_val_smallanimals_b | 258.306 | 147.510 | 112.560 |
-| asset_val_bicycle_b      | 111.224 |  96.390 | 100.880 |
-| asset_val_radio_b        |  58.771 |  51.506 |  41.824 |
-| asset_val_motorcycle_b   | 351.086 | 523.956 | 690.008 |
-| asset_val_net_b          |  18.980 |  20.177 |  19.336 |
-| asset_val_poultry_b      |  44.551 |  38.554 |  33.240 |
-| asset_val_bed_b          | 233.865 | 247.269 | 273.840 |
-| asset_val_chairtables_b  | 208.559 | 175.542 | 209.520 |
-| asset_val_mobile_b       |  92.727 | 109.558 |  92.592 |
-| asset_val_netITN_b       |   7.951 |   8.956 |   8.928 |
+
 
 
 
@@ -513,6 +504,7 @@ return check_attrition.TAB
 
 
 # table 2 and 3 redo
+#+name: random_assignment_attrition
 #+begin_src python :exports none  :results output table raw labels=[] :colnames no
 data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
 data_assignment  = "../../TUP-data/random_assignment.dta"
@@ -522,7 +514,7 @@ import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
 
-df_b = pd.read_stata(data_baseline)
+df_b = pd.read_stata(data_baseline) 
 df_a = pd.read_stata(data_assignment)
 df_m = pd.read_stata(data_midline)
 df_e = pd.read_stata(data_endline)
@@ -531,13 +523,13 @@ df_e = pd.read_stata(data_endline)
 # merge baseline data id number and group column from random assignment data based on respondent id/id number
 df = pd.merge(df_b[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
 
-# combine low asset and high asset as TUP
+# combine low asset and high asset as TUP 
 df.replace(to_replace='Low asset', value='TUP', inplace=True)
 df.replace(to_replace='High Asset', value='TUP', inplace=True)
 
 bygroupdf = df.groupby(['group']).count()
 
-d2013 = [bygroupdf.at['Cash','idno'],bygroupdf.at['Control','idno'], bygroupdf.at['TUP','idno'], df.group.notna().sum()]
+d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
 
 # midline (2014)
 # merge midline data id number and group column from random assignment data based on respondent id/id number
@@ -549,7 +541,8 @@ df.replace(to_replace='High Asset', value='TUP', inplace=True)
 
 bygroupdf = df.groupby(['group']).count()
 
-d2014 = [bygroupdf.at['Cash','idno'],bygroupdf.at['Control','idno'], bygroupdf.at['TUP','idno'], df.group.notna().sum()]
+d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
 
 # endline (2015)
 # merge endline data id number and group column from random assignment data based on respondent id/id number
@@ -561,7 +554,8 @@ df.replace(to_replace='High Asset', value='TUP', inplace=True)
 
 bygroupdf = df.groupby(['group']).count()
 
-d2015 = [bygroupdf.at['Cash','idno'],bygroupdf.at['Control','idno'], bygroupdf.at['TUP','idno'], df.group.notna().sum()]
+d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
 
 d = {'2013': d2013, '2014': d2014, '2015': d2015}
 table = pd.DataFrame(data = d) 
@@ -570,16 +564,157 @@ table = pd.DataFrame(data = d)
 newdf = df_to_orgtbl(table, float_fmt = '%.3f')
 print(newdf)
 
-  #+end_src
+#+end_src
 
-#+RESULTS:
-|   |    2013 |    2014 |    2015 |
-|---+---------+---------+---------|
-| 0 | 125.000 | 114.000 | 113.000 |
-| 1 | 245.000 | 206.000 | 239.000 |
-| 2 | 249.000 | 233.000 | 241.000 |
-| 3 | 619.000 | 553.000 | 593.000 |
+#+RESULTS: random_assignment_attrition
+|         |    2013 |    2014 |    2015 |
+|---------+---------+---------+---------|
+| Cash    | 125.000 | 114.000 | 113.000 |
+| Control | 245.000 | 206.000 | 239.000 |
+| TUP     | 249.000 | 233.000 | 241.000 |
+| All     | 619.000 | 553.000 | 593.000 |
 
+
+# using asset_assign.csv
+#+name: asset_assign
+#+begin_src python :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-data/csv/asset_assign.csv"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline) 
+df_a = pd.read_csv(data_assignment)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+
+# baseline (2013)
+# merge baseline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_b[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
+
+# combine low asset and high asset as TUP
+df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
+
+bygroupdf = df.groupby(['group']).count()
+
+d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
+
+# midline (2014)
+# merge midline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_m[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
+
+# combine low asset and high asset as TUP
+df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
+
+bygroupdf = df.groupby(['group']).count()
+
+d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
+
+# endline (2015)
+# merge endline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_e[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
+
+# combine low asset and high asset as TUP
+df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
+
+bygroupdf = df.groupby(['group']).count()
+
+d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
+
+d = {'2013': d2013, '2014': d2014, '2015': d2015}
+table = pd.DataFrame(data = d) 
+
+
+newdf = df_to_orgtbl(table, float_fmt = '%.3f')
+print(newdf)
+
+#+end_src
+
+#+RESULTS: asset_assign
+|         |    2013 |    2014 |    2015 |
+|---------+---------+---------+---------|
+| Cash    | 124.000 | 113.000 | 111.000 |
+| Control | 251.000 | 212.000 | 246.000 |
+| TUP     | 244.000 | 228.000 | 236.000 |
+| All     | 619.000 | 553.000 | 593.000 |
+
+# using Tgroups.csv
+#+name: Tgroups 
+#+begin_src python :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-data/Tgroups.csv"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline) 
+df_a = pd.read_csv(data_assignment)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+
+# baseline (2013)
+# merge baseline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_b[ ['idno'] ], df_a[ ['idno', 'group'] ], how='inner', left_on="idno", right_on="idno")
+
+# combine low asset and high asset as TUP
+df.replace(to_replace='Low Asset', value='TUP', inplace=True)
+df.replace(to_replace='High Asset', value='TUP', inplace=True)
+
+bygroupdf = df.groupby(['group']).count()
+
+d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
+
+# midline (2014)
+# merge midline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_m[ ['idno'] ], df_a[ ['idno', 'group'] ], how='inner', left_on="idno", right_on="idno")
+
+# combine low asset and high asset as TUP
+df.replace(to_replace='Low Asset', value='TUP', inplace=True)
+df.replace(to_replace='High Asset', value='TUP', inplace=True)
+
+bygroupdf = df.groupby(['group']).count()
+
+d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
+
+# endline (2015)
+# merge endline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_e[ ['idno'] ], df_a[ ['idno', 'group'] ], how='inner', left_on="idno", right_on="idno")
+
+# combine low asset and high asset as TUP
+df.replace(to_replace='Low Asset', value='TUP', inplace=True)
+df.replace(to_replace='High Asset', value='TUP', inplace=True)
+
+bygroupdf = df.groupby(['group']).count()
+
+d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
+
+
+d = {'2013': d2013, '2014': d2014, '2015': d2015}
+table = pd.DataFrame(data = d) 
+
+
+newdf = df_to_orgtbl(table, float_fmt = '%.3f')
+print(newdf)
+
+#+end_src
+
+#+RESULTS: Tgroups
+|         |    2013 |    2014 |    2015 |
+|---------+---------+---------+---------|
+| Cash    | 124.000 | 113.000 | 111.000 |
+| Control | 251.000 | 212.000 | 246.000 |
+| TUP     | 244.000 | 228.000 | 236.000 |
+| All     | 619.000 | 553.000 | 593.000 |
 
 Next we ask how those who did not turn up in subsequent rounds differed by a range of
 baseline characteristics. \Tab{attrition_balance} reports the average level of
