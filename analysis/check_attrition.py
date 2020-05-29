@@ -433,7 +433,7 @@ TAB["In15"] = TAB15["In15"]
 TAB = TAB.rename(columns={"In14":"Mid","In15":"End"})[["Base","Mid","End"]]
 Table = Table.append(TAB).rename(columns=dict(zip(['Base','Mid','End'], ["2013","2014","2015"])))
 TAB = df_to_orgtbl(Table)
-print(TAB) 
+#print(TAB) 
         
 
 #~c_table     = ttest_table(D,consumption,groups = ["In14", "In15"])
