@@ -350,25 +350,57 @@ in observables at baseline, with the exception that the cash group has atypicall
 more motorcycles and clothing. But it does suggests that our stratified randomization
 was not too far from creating comparable groups.
 
+#+begin_src python
+"""For making the master treatment groups .csv file"""
+
+data_locations = "../../TUP-data/csv/locations.csv"
+data_asset_assign = "../../TUP-data/csv/asset_assign.csv"
+import pandas as pd
+
+df_l = pd.read_csv(data_locations)
+df_a = pd.read_csv(data_asset_assign)
+
+df = pd.merge(df_l, df_a[ ['respid', 'group' ] ], how='outer', left_on='RespID', right_on='respid')
+df.replace(to_replace='Gift', value='Control', inplace=True)
+df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
+
+for i in range(len(df)): 
+    # if something is not in asset_assign (group), should be 'control' in locations (Group) (1157)
+    if pd.isnull(df.iloc[i, df.columns.get_loc('group')]):
+        df.iloc[i, df.columns.get_loc('Group')]='Control'
+    
+    # if something is assigned in asset_assign (group), it should be the same in locations (2131)
+    if pd.notna(df.iloc[i, df.columns.get_loc('group')]) & (df.iloc[i, df.columns.get_loc('group')] != df.iloc[i, df.columns.get_loc('Group')]):
+        df.iloc[i, df.columns.get_loc('Group')] = df.iloc[i, df.columns.get_loc('group')]
+
+df = df.drop(columns=['group', 'respid'])
+df.to_csv('master_assignment.csv')
+#+end_src
+
+#+RESULTS:
+: None
+
 # table 1 redo
 #+name: mean_balance
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 # <<load_data>> can use this!!
 data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/random_assignment.dta"
+data_assignment  = "../../TUP-data/csv/locations.csv"
 import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
 
 df_b = pd.read_stata(data_baseline)
-df_a = pd.read_stata(data_assignment)
+df_a = pd.read_csv(data_assignment)
 
-# merge baseline data with group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b, df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
+# merge baseline data with group column from locations.csv  based on respondent id/id number
+df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
 
-# combine low asset and high asset as TUP
-df.replace(to_replace='Low asset', value='TUP', inplace=True)
-df.replace(to_replace='High Asset', value='TUP', inplace=True)
+df.iloc[92, df.columns.get_loc('Group')]='Control'
+
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
 
 df = df.get(['c_meat_b', 'c_fuel_b', 'c_clothesfootwear_b', 'c_soap_b',
              'c_fish_b', 'c_charities_b', 'c_cereals_b', 'c_transport_b',
@@ -381,22 +413,19 @@ df = df.get(['c_meat_b', 'c_fuel_b', 'c_clothesfootwear_b', 'c_soap_b',
              'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
              'asset_val_netITN_b',
              'asset_n_house_b',
-             'group'])
+             'Group'])
 
 # have to use census data for child_total START HERE. also groups in census data
 # create new variables for Daily Food, Daily Exp, In Business, Cereals, # Child, Asset Tot., Cash Savings (combine s12_1,s12_2, s12_3, s12_4, s12_5?),  HH size
 # first looking in ssudan_survey.org then check_balanaces.py - check TUP_full.dta?
 
-means = df.groupby(['group']).mean()
+means = df.groupby(['Group']).mean()
 means = means.T
 
 # cosmetics repeated in consumption and assets
 # create new variables for household section
 
-means = df.groupby(['group']).mean()
-means = means.T
-
-ses = df.groupby(['group']).sem()
+ses = df.groupby(['Group']).sem()
 
 
 newdf = df_to_orgtbl(means, float_fmt = '%.3f')
@@ -405,40 +434,42 @@ print(newdf)
 
 #+end_src
 
-#+results: mean_balance
-|                          | Control |     TUP |    Cash |
+#+RESULTS: mean_balance
+|                          |    Cash | Control |     TUP |
 |--------------------------+---------+---------+---------|
-| c_meat_b                 |  12.498 |  10.822 |  12.360 |
-| c_fuel_b                 |  23.396 |  21.518 |  20.536 |
-| c_clothesfootwear_b      | 249.849 | 229.016 | 250.080 |
-| c_soap_b                 |  14.947 |  14.137 |  13.600 |
-| c_fish_b                 |   7.363 |   6.976 |   7.024 |
-| c_charities_b            |   9.584 |   9.349 |  10.704 |
-| c_cereals_b              |  27.110 |  24.602 |  28.304 |
-| c_transport_b            |   5.510 |   4.245 |   5.296 |
-| c_cosmetics_b            |  19.955 |  21.064 |  16.568 |
-| c_sugar_b                |   5.024 |   4.980 |   4.552 |
-| c_egg_b                  |   3.020 |   3.040 |   3.384 |
-| c_oil_b                  |   3.988 |   3.679 |   3.648 |
-| c_ceremonies_b           |  34.490 |  54.108 |  57.264 |
-| c_beans_b                |   2.053 |   2.727 |   2.744 |
-| c_fruit_b                |   1.922 |   1.807 |   2.056 |
-| c_textiles_b             |  54.682 |  54.470 |  75.704 |
-| c_utensils_b             |  92.759 |  85.627 |  92.080 |
-| c_dowry_b                | 437.845 | 473.293 | 464.840 |
-| c_furniture_b            |  69.967 |  65.851 |  87.080 |
-| c_salt_b                 |   1.265 |   1.261 |   1.360 |
-| c_vegetables_b           |   4.604 |   4.092 |   4.056 |
-| asset_val_smallanimals_b | 258.306 | 147.510 | 112.560 |
-| asset_val_bicycle_b      | 111.224 |  96.390 | 100.880 |
-| asset_val_radio_b        |  58.771 |  51.506 |  41.824 |
-| asset_val_motorcycle_b   | 351.086 | 523.956 | 690.008 |
-| asset_val_net_b          |  18.980 |  20.177 |  19.336 |
-| asset_val_poultry_b      |  44.551 |  38.554 |  33.240 |
-| asset_val_bed_b          | 233.865 | 247.269 | 273.840 |
-| asset_val_chairtables_b  | 208.559 | 175.542 | 209.520 |
-| asset_val_mobile_b       |  92.727 | 109.558 |  92.592 |
-| asset_val_netITN_b       |   7.951 |   8.956 |   8.928 |
+| c_meat_b                 |  12.460 |  12.616 |  10.912 |
+| c_fuel_b                 |  20.702 |  22.851 |  21.684 |
+| c_clothesfootwear_b      | 252.097 | 240.157 | 230.840 |
+| c_soap_b                 |  13.710 |  14.502 |  14.242 |
+| c_fish_b                 |   7.048 |   7.516 |   7.053 |
+| c_charities_b            |  10.790 |  10.829 |   8.721 |
+| c_cereals_b              |  28.371 |  27.562 |  24.721 |
+| c_transport_b            |   5.339 |   5.267 |   4.291 |
+| c_cosmetics_b            |  16.702 |  20.459 |  21.270 |
+| c_sugar_b                |   4.573 |   5.139 |   4.906 |
+| c_egg_b                  |   3.403 |   3.288 |   3.016 |
+| c_oil_b                  |   3.669 |   4.093 |   3.701 |
+| c_ceremonies_b           |  57.726 |  48.060 |  50.504 |
+| c_beans_b                |   2.766 |   2.089 |   2.783 |
+| c_fruit_b                |   2.073 |   2.071 |   1.803 |
+| c_textiles_b             |  76.315 |  56.217 |  54.561 |
+| c_utensils_b             |  92.823 |  89.861 |  86.766 |
+| c_dowry_b                | 468.589 | 458.548 | 444.057 |
+| c_furniture_b            |  87.782 |  71.626 |  66.463 |
+| c_salt_b                 |   1.363 |   1.342 |   1.262 |
+| c_vegetables_b           |   4.089 |   4.630 |   4.135 |
+| asset_val_smallanimals_b | 113.468 | 236.601 | 150.533 |
+| asset_val_bicycle_b      |  97.661 | 109.075 |  96.520 |
+| asset_val_radio_b        |  41.919 |  58.448 |  52.480 |
+| asset_val_motorcycle_b   | 695.573 | 341.737 | 534.693 |
+| asset_val_net_b          |  19.411 |  19.164 |  19.832 |
+| asset_val_poultry_b      |  33.508 |  42.402 |  39.037 |
+| asset_val_bed_b          | 274.032 | 241.270 | 249.262 |
+| asset_val_chairtables_b  | 210.403 | 206.786 | 177.418 |
+| asset_val_mobile_b       |  93.339 |  97.537 | 110.164 |
+| asset_val_netITN_b       |   9.000 |   7.822 |   9.037 |
+| asset_n_house_b          |   2.947 |   2.829 |   2.860 |
+
 
 
 
@@ -645,8 +676,234 @@ print(df_to_orgtbl(A[A['D']!=A['R']]))
 | 2270.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
 
 We see seven cases in which there's some discrepancy in the assignment, and 107 cases in which the 
-dataframe =D= has a household assigned to "Control" but where =random_assignment= has no assignment recorded. 
+dataframe =D= has a household assigned to "Control" but where
+=random_assignment= has no assignment recorded. 
+
+# same as above but with locations.csv
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+import sys
+sys.path.append('../analysis')
+from check_attrition import D
+
+R=pd.read_csv('../../TUP-data/csv/locations.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+R.replace(to_replace='Gift', value='Control', inplace=True)
+
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Group'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|      | D       | R       | B         | M         | E         |
+|------+---------+---------+-----------+-----------+-----------|
+| 1157 | Control | Tup     | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1248 | ---     | Tup     | ---       | ---       | ---       |
+| 1462 | ---     | Control | ---       | ---       | ---       |
+| 1647 | ---     | Control | ---       | ---       | ---       |
+| 1763 | ---     | Control | ---       | ---       | ---       |
+| 2131 | Tup     | Control | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2204 | ---     | Control | ---       | ---       | ---       |
+
+# same as above but with checklist_20150602.csv
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+import sys
+sys.path.append('../analysis')
+from check_attrition import D
+
+R=pd.read_csv( "../../ElliottTUP/endline/checklists/checklist_20150602.csv")
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+R.replace(to_replace='Gift', value='Control', inplace=True)
+R.replace(to_replace='First', value='Cash', inplace=True)
+R.replace(to_replace='Second', value='Cash', inplace=True)
+
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Give'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|      | D       | R       | B         | M         | E         |
+|------+---------+---------+-----------+-----------+-----------|
+| 1157 | Control | Tup     | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1248 | ---     | Tup     | ---       | ---       | ---       |
+| 1462 | ---     | Control | ---       | ---       | ---       |
+| 1647 | ---     | Control | ---       | ---       | ---       |
+| 1763 | ---     | Control | ---       | ---       | ---       |
+| 2131 | Tup     | Control | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2204 | ---     | Control | ---       | ---       | ---       |
+
+# same as above but with locations.csv as R and asset_assign.csv as D
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+
+R=pd.read_csv('../../TUP-data/csv/locations.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+R.replace(to_replace='Gift', value='Control', inplace=True)
+
+D = pd.read_csv('../../TUP-data/csv/asset_assign.csv')
+D=D.set_index('respid')      
+D.index.name = 'idno'
+D.replace(to_replace = 'TUP-high asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Group']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+| idno | D   | R       |
+|------+-----+---------|
+| 1042 | --- | Control |
+| 1106 | --- | Control |
+| 1154 | --- | Control |
+| 1157 | --- | Tup     |
+| 1186 | --- | Control |
+| 1190 | --- | Control |
+| 1207 | --- | Control |
+| 1222 | --- | Control |
+| 1252 | --- | Control |
+| 1264 | --- | Control |
+| 1285 | --- | Control |
+| 1293 | --- | Control |
+| 1295 | --- | Control |
+| 1305 | --- | Control |
+| 1311 | --- | Control |
+| 1314 | --- | Control |
+| 1315 | --- | Control |
+| 1316 | --- | Control |
+| 1320 | --- | Control |
+| 1338 | --- | Control |
+| 1348 | --- | Control |
+| 1350 | --- | Control |
+| 1368 | --- | Control |
+| 1403 | --- | Control |
+| 1421 | --- | Control |
+| 1436 | --- | Control |
+| 1453 | --- | Control |
+| 1462 | --- | Control |
+| 1476 | --- | Control |
+| 1480 | --- | Control |
+| 1486 | --- | Control |
+| 1496 | --- | Control |
+| 1502 | --- | Control |
+| 1505 | --- | Control |
+| 1507 | --- | Control |
+| 1548 | --- | Control |
+| 1561 | --- | Control |
+| 1591 | --- | Control |
+| 1619 | --- | Control |
+| 1642 | --- | Control |
+| 1647 | --- | Control |
+| 1667 | --- | Control |
+| 1679 | --- | Control |
+| 1690 | --- | Control |
+| 1702 | --- | Control |
+| 1703 | --- | Control |
+| 1730 | --- | Control |
+| 1731 | --- | Control |
+| 1744 | --- | Control |
+| 1747 | --- | Control |
+| 1748 | --- | Control |
+| 1749 | --- | Control |
+| 1750 | --- | Control |
+| 1755 | --- | Control |
+| 1763 | --- | Control |
+| 1773 | --- | Control |
+| 1780 | --- | Control |
+| 1792 | --- | Control |
+| 1797 | --- | Control |
+| 1802 | --- | Control |
+| 1813 | --- | Control |
+| 1814 | --- | Control |
+| 1826 | --- | Control |
+| 1878 | --- | Control |
+| 1892 | --- | Control |
+| 1894 | --- | Control |
+| 1910 | --- | Control |
+| 1915 | --- | Control |
+| 1922 | --- | Control |
+| 1927 | --- | Control |
+| 1950 | --- | Control |
+| 1967 | --- | Control |
+| 1988 | --- | Control |
+| 1991 | --- | Control |
+| 1994 | --- | Control |
+| 1995 | --- | Control |
+| 2002 | --- | Control |
+| 2012 | --- | Control |
+| 2024 | --- | Control |
+| 2030 | --- | Control |
+| 2032 | --- | Control |
+| 2039 | --- | Control |
+| 2047 | --- | Control |
+| 2061 | --- | Control |
+| 2066 | --- | Control |
+| 2071 | --- | Control |
+| 2077 | --- | Control |
+| 2079 | --- | Control |
+| 2082 | --- | Control |
+| 2094 | --- | Control |
+| 2103 | --- | Control |
+| 2106 | --- | Control |
+| 2107 | --- | Control |
+| 2114 | --- | Control |
+| 2115 | --- | Control |
+| 2131 | Tup | Control |
+| 2139 | --- | Control |
+| 2160 | --- | Control |
+| 2204 | --- | Control |
+| 2205 | --- | Control |
+| 2214 | --- | Control |
+| 2225 | --- | Control |
+| 2226 | --- | Control |
+| 2232 | --- | Control |
+| 2234 | --- | Control |
+| 2238 | --- | Control |
+| 2239 | --- | Control |
+| 2250 | --- | Control |
+| 2260 | --- | Control |
+| 2261 | --- | Control |
+| 2268 | --- | Control |
+| 2269 | --- | Control |
+| 2270 | --- | Control |
+
+
+
 *************** END
+
 
 
 # table 2 and 3 redo
@@ -861,6 +1118,301 @@ print(newdf)
 | Control | 251.000 | 212.000 | 246.000 |
 | TUP     | 244.000 | 228.000 | 236.000 |
 | All     | 619.000 | 553.000 | 593.000 |
+
+# using locations.csv
+#+name: locations.csv_attrition
+#+begin_src python :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-data/csv/locations.csv"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline) 
+df_a = pd.read_csv(data_assignment)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+
+# baseline (2013)
+# merge baseline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+bygroupdf = df.groupby(['Group']).count()
+
+d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_b = df
+
+# midline (2014)
+# merge midline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+bygroupdf = df.groupby(['Group']).count()
+
+d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_m = df
+
+# endline (2015)
+# merge endline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+bygroupdf = df.groupby(['Group']).count()
+
+d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_e = df
+
+d = {'2013': d2013, '2014': d2014, '2015': d2015}
+table = pd.DataFrame(data = d) 
+
+
+newdf = df_to_orgtbl(table, float_fmt = '%.3f')
+print(newdf)
+
+df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_m = df_b_m.groupby(['Group']).count()
+
+df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_e = df_b_e.groupby(['Group']).count()
+
+dd2013 = d2013
+dd2014 = {'Cash': bygroupdf_b_m.at['Cash','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
+dd2015 = {'Cash': bygroupdf_b_e.at['Cash','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
+
+dd = {'2013': dd2013, '2014': dd2014, '2015': dd2015}
+table2 = pd.DataFrame(data = dd) 
+
+
+newdf2 = df_to_orgtbl(table2, float_fmt = '%.3f')
+print(newdf2)
+
+#+end_src
+
+#+RESULTS: locations.csv_attrition
+|         |    2013 |    2014 |    2015 |
+|---------+---------+---------+---------|
+| Cash    | 124.000 | 113.000 | 111.000 |
+| Control | 280.000 | 266.000 | 347.000 |
+| TUP     | 245.000 | 227.000 | 236.000 |
+| All     | 649.000 | 606.000 | 694.000 |
+
+|  |2013|   2014|   2015  |
+|-
+| Cash  | 124.000 | 112.000 | 110.000 |
+| Control  | 280.000 | 219.000 | 261.000 |
+| TUP  | 245.000 | 223.000 | 232.000 |
+| All  | 649.000 | 554.000 | 603.000 |
+
+# using checklist_20150602
+#+name: checklist_20150602.csv_attrition
+#+begin_src python :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../ElliottTUP/endline/checklists/checklist_20150602.csv"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline) 
+df_a = pd.read_csv(data_assignment)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+
+# baseline (2013)
+# merge baseline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Give'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+df.replace(to_replace='First', value='Cash', inplace=True)
+df.replace(to_replace='Second', value='Cash', inplace=True)
+
+bygroupdf = df.groupby(['Give']).count()
+
+d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Give.notna().sum()}
+
+df_b = df
+
+# midline (2014)
+# merge midline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Give'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+df.replace(to_replace='First', value='Cash', inplace=True)
+df.replace(to_replace='Second', value='Cash', inplace=True)
+
+bygroupdf = df.groupby(['Give']).count()
+
+d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Give.notna().sum()}
+
+df_m = df
+
+# endline (2015)
+# merge endline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Give'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+df.replace(to_replace='First', value='Cash', inplace=True)
+df.replace(to_replace='Second', value='Cash', inplace=True)
+
+bygroupdf = df.groupby(['Give']).count()
+
+d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Give.notna().sum()}
+
+df_e = df
+
+d = {'2013': d2013, '2014': d2014, '2015': d2015}
+table = pd.DataFrame(data = d) 
+
+
+newdf = df_to_orgtbl(table, float_fmt = '%.3f')
+print(newdf)
+
+df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Give'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_m = df_b_m.groupby(['Give']).count()
+
+df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Give'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_e = df_b_e.groupby(['Give']).count()
+
+dd2013 = d2013
+dd2014 = {'Cash': bygroupdf_b_m.at['Cash','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Give.notna().sum()}
+dd2015 = {'Cash': bygroupdf_b_e.at['Cash','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Give.notna().sum()}
+
+dd = {'2013': dd2013, '2014': dd2014, '2015': dd2015}
+table2 = pd.DataFrame(data = dd) 
+
+
+newdf2 = df_to_orgtbl(table2, float_fmt = '%.3f')
+print(newdf2)
+
+#+end_src
+
+#+RESULTS: checklist_20150602.csv_attrition
+|         |    2013 |    2014 |    2015 |
+|---------+---------+---------+---------|
+| Cash    | 124.000 | 113.000 | 111.000 |
+| Control | 280.000 | 266.000 | 347.000 |
+| TUP     | 245.000 | 227.000 | 236.000 |
+| All     | 649.000 | 606.000 | 694.000 |
+
+|  |2013|   2014|   2015  |
+|-
+| Cash  | 124.000 | 112.000 | 110.000 |
+| Control  | 280.000 | 219.000 | 261.000 |
+| TUP  | 245.000 | 223.000 | 232.000 |
+| All  | 649.000 | 554.000 | 603.000 |
+
+# using master_assignment.csv
+#+name: master_assignment.csv_attrition
+#+begin_src python :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline) 
+df_a = pd.read_csv(data_assignment)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+
+# baseline (2013)
+# merge baseline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+bygroupdf = df.groupby(['Group']).count()
+
+d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_b = df
+
+# midline (2014)
+# merge midline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+bygroupdf = df.groupby(['Group']).count()
+
+d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_m = df
+
+# endline (2015)
+# merge endline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+bygroupdf = df.groupby(['Group']).count()
+
+d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_e = df
+
+d = {'2013': d2013, '2014': d2014, '2015': d2015}
+table = pd.DataFrame(data = d) 
+
+
+newdf = df_to_orgtbl(table, float_fmt = '%.3f')
+print(newdf)
+
+df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_m = df_b_m.groupby(['Group']).count()
+
+df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_e = df_b_e.groupby(['Group']).count()
+
+dd2013 = d2013
+dd2014 = {'Cash': bygroupdf_b_m.at['Cash','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
+dd2015 = {'Cash': bygroupdf_b_e.at['Cash','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
+
+dd = {'2013': dd2013, '2014': dd2014, '2015': dd2015}
+table2 = pd.DataFrame(data = dd) 
+
+
+newdf2 = df_to_orgtbl(table2, float_fmt = '%.3f')
+print(newdf2)
+
+#+end_src
+
+#+RESULTS: master_assignment.csv_attrition
+|         |    2013 |    2014 |    2015 |
+|---------+---------+---------+---------|
+| Cash    | 124.000 | 113.000 | 111.000 |
+| Control | 281.000 | 265.000 | 347.000 |
+| TUP     | 244.000 | 228.000 | 236.000 |
+| All     | 649.000 | 606.000 | 694.000 |
+
+|  |2013|   2014|   2015  |
+|-
+| Cash  | 124.000 | 112.000 | 110.000 |
+| Control  | 281.000 | 219.000 | 262.000 |
+| TUP  | 244.000 | 223.000 | 231.000 |
+| All  | 649.000 | 554.000 | 603.000 |
+
 
 Next we ask how those who did not turn up in subsequent rounds differed by a range of
 baseline characteristics. \Tab{attrition_balance} reports the average level of
