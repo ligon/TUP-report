@@ -350,6 +350,7 @@ in observables at baseline, with the exception that the cash group has atypicall
 more motorcycles and clothing. But it does suggests that our stratified randomization
 was not too far from creating comparable groups.
 
+#+name: master random  assignment file of treatment/control groups
 #+begin_src python
 """For making the master treatment groups .csv file"""
 
@@ -357,23 +358,30 @@ data_locations = "../../TUP-data/csv/locations.csv"
 data_asset_assign = "../../TUP-data/csv/asset_assign.csv"
 import pandas as pd
 
-df_l = pd.read_csv(data_locations)
-df_a = pd.read_csv(data_asset_assign)
+df_l = pd.read_csv(data_locations) # assignments at endline
+df_a = pd.read_csv(data_asset_assign) # assignments at baseline
 
+# take the union of locations.csv and asset_assign.csv, rename groups accordingly
 df = pd.merge(df_l, df_a[ ['respid', 'group' ] ], how='outer', left_on='RespID', right_on='respid')
 df.replace(to_replace='Gift', value='Control', inplace=True)
 df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
 
+# asset_assign.csv assignments are listed under 'group'
+# locations.csv assignments are listed under 'Group'
+
 for i in range(len(df)): 
-    # if something is not in asset_assign (group), should be 'control' in locations (Group) (1157)
+
+    # if a group is not assigned at baseline (in asset_assign 'group'), it should be 'Control' at endline (in locations 'Group') (takes care of observation idno 1157)
     if pd.isnull(df.iloc[i, df.columns.get_loc('group')]):
         df.iloc[i, df.columns.get_loc('Group')]='Control'
     
-    # if something is assigned in asset_assign (group), it should be the same in locations (2131)
+    # if a group is assigned in at baseline (in asset_assign 'group'), it should be the same at endline (in locations 'Group') (takes care of observation idno 2131)
     if pd.notna(df.iloc[i, df.columns.get_loc('group')]) & (df.iloc[i, df.columns.get_loc('group')] != df.iloc[i, df.columns.get_loc('Group')]):
         df.iloc[i, df.columns.get_loc('Group')] = df.iloc[i, df.columns.get_loc('group')]
 
+# now all the assignments in 'Group' should be consistent with 'group' so 'group' is a subset of 'Group' and we can drop it
 df = df.drop(columns=['group', 'respid'])
+
 df.to_csv('master_assignment.csv')
 #+end_src
 
@@ -385,7 +393,7 @@ df.to_csv('master_assignment.csv')
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 # <<load_data>> can use this!!
 data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/csv/locations.csv"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
@@ -393,14 +401,15 @@ from cfe.df_utils import df_to_orgtbl
 df_b = pd.read_stata(data_baseline)
 df_a = pd.read_csv(data_assignment)
 
-# merge baseline data with group column from locations.csv  based on respondent id/id number
 df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
 
-df.iloc[92, df.columns.get_loc('Group')]='Control'
+# merge baseline data with group column from locations.csv  based on respondent id/id number
+#df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+#df.iloc[92, df.columns.get_loc('Group')]='Control'
 
 
 # change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
+#df.replace(to_replace='Gift', value='Control', inplace=True)
 
 df = df.get(['c_meat_b', 'c_fuel_b', 'c_clothesfootwear_b', 'c_soap_b',
              'c_fish_b', 'c_charities_b', 'c_cereals_b', 'c_transport_b',
@@ -905,418 +914,6 @@ print(df_to_orgtbl(A[A['D']!=A['R']]))
 *************** END
 
 
-
-# table 2 and 3 redo
-#+name: random_assignment_attrition
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/random_assignment.dta"
-data_midline = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline) 
-df_a = pd.read_stata(data_assignment)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-
-# baseline (2013)
-# merge baseline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
-
-# combine low asset and high asset as TUP 
-df.replace(to_replace='Low asset', value='TUP', inplace=True)
-df.replace(to_replace='High Asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-# midline (2014)
-# merge midline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_m[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='Low asset', value='TUP', inplace=True)
-df.replace(to_replace='High Asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-# endline (2015)
-# merge endline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_e[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='Low asset', value='TUP', inplace=True)
-df.replace(to_replace='High Asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-d = {'2013': d2013, '2014': d2014, '2015': d2015}
-table = pd.DataFrame(data = d) 
-
-
-newdf = df_to_orgtbl(table, float_fmt = '%.3f')
-print(newdf)
-
-#+end_src
-
-#+RESULTS: random_assignment_attrition
-|         |    2013 |    2014 |    2015 |
-|---------+---------+---------+---------|
-| Cash    | 125.000 | 114.000 | 113.000 |
-| Control | 245.000 | 206.000 | 239.000 |
-| TUP     | 249.000 | 233.000 | 241.000 |
-| All     | 619.000 | 553.000 | 593.000 |
-
-
-# using asset_assign.csv
-#+name: asset_assign
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/csv/asset_assign.csv"
-data_midline = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline) 
-df_a = pd.read_csv(data_assignment)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-
-# baseline (2013)
-# merge baseline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-# midline (2014)
-# merge midline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_m[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-# endline (2015)
-# merge endline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_e[ ['idno'] ], df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-d = {'2013': d2013, '2014': d2014, '2015': d2015}
-table = pd.DataFrame(data = d) 
-
-
-newdf = df_to_orgtbl(table, float_fmt = '%.3f')
-print(newdf)
-
-#+end_src
-
-#+RESULTS: asset_assign
-|         |    2013 |    2014 |    2015 |
-|---------+---------+---------+---------|
-| Cash    | 124.000 | 113.000 | 111.000 |
-| Control | 251.000 | 212.000 | 246.000 |
-| TUP     | 244.000 | 228.000 | 236.000 |
-| All     | 619.000 | 553.000 | 593.000 |
-
-# using Tgroups.csv
-#+name: Tgroups 
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/Tgroups.csv"
-data_midline = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline) 
-df_a = pd.read_csv(data_assignment)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-
-# baseline (2013)
-# merge baseline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b[ ['idno'] ], df_a[ ['idno', 'group'] ], how='inner', left_on="idno", right_on="idno")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='Low Asset', value='TUP', inplace=True)
-df.replace(to_replace='High Asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-# midline (2014)
-# merge midline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_m[ ['idno'] ], df_a[ ['idno', 'group'] ], how='inner', left_on="idno", right_on="idno")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='Low Asset', value='TUP', inplace=True)
-df.replace(to_replace='High Asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-# endline (2015)
-# merge endline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_e[ ['idno'] ], df_a[ ['idno', 'group'] ], how='inner', left_on="idno", right_on="idno")
-
-# combine low asset and high asset as TUP
-df.replace(to_replace='Low Asset', value='TUP', inplace=True)
-df.replace(to_replace='High Asset', value='TUP', inplace=True)
-
-bygroupdf = df.groupby(['group']).count()
-
-d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.group.notna().sum()}
-
-
-d = {'2013': d2013, '2014': d2014, '2015': d2015}
-table = pd.DataFrame(data = d) 
-
-
-newdf = df_to_orgtbl(table, float_fmt = '%.3f')
-print(newdf)
-
-#+end_src
-
-#+RESULTS: Tgroups
-|         |    2013 |    2014 |    2015 |
-|---------+---------+---------+---------|
-| Cash    | 124.000 | 113.000 | 111.000 |
-| Control | 251.000 | 212.000 | 246.000 |
-| TUP     | 244.000 | 228.000 | 236.000 |
-| All     | 619.000 | 553.000 | 593.000 |
-
-# using locations.csv
-#+name: locations.csv_attrition
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/csv/locations.csv"
-data_midline = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline) 
-df_a = pd.read_csv(data_assignment)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-
-# baseline (2013)
-# merge baseline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-bygroupdf = df.groupby(['Group']).count()
-
-d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
-
-df_b = df
-
-# midline (2014)
-# merge midline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-bygroupdf = df.groupby(['Group']).count()
-
-d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
-
-df_m = df
-
-# endline (2015)
-# merge endline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-bygroupdf = df.groupby(['Group']).count()
-
-d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
-
-df_e = df
-
-d = {'2013': d2013, '2014': d2014, '2015': d2015}
-table = pd.DataFrame(data = d) 
-
-
-newdf = df_to_orgtbl(table, float_fmt = '%.3f')
-print(newdf)
-
-df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
-bygroupdf_b_m = df_b_m.groupby(['Group']).count()
-
-df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
-bygroupdf_b_e = df_b_e.groupby(['Group']).count()
-
-dd2013 = d2013
-dd2014 = {'Cash': bygroupdf_b_m.at['Cash','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
-dd2015 = {'Cash': bygroupdf_b_e.at['Cash','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
-
-dd = {'2013': dd2013, '2014': dd2014, '2015': dd2015}
-table2 = pd.DataFrame(data = dd) 
-
-
-newdf2 = df_to_orgtbl(table2, float_fmt = '%.3f')
-print(newdf2)
-
-#+end_src
-
-#+RESULTS: locations.csv_attrition
-|         |    2013 |    2014 |    2015 |
-|---------+---------+---------+---------|
-| Cash    | 124.000 | 113.000 | 111.000 |
-| Control | 280.000 | 266.000 | 347.000 |
-| TUP     | 245.000 | 227.000 | 236.000 |
-| All     | 649.000 | 606.000 | 694.000 |
-
-|  |2013|   2014|   2015  |
-|-
-| Cash  | 124.000 | 112.000 | 110.000 |
-| Control  | 280.000 | 219.000 | 261.000 |
-| TUP  | 245.000 | 223.000 | 232.000 |
-| All  | 649.000 | 554.000 | 603.000 |
-
-# using checklist_20150602
-#+name: checklist_20150602.csv_attrition
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../ElliottTUP/endline/checklists/checklist_20150602.csv"
-data_midline = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline) 
-df_a = pd.read_csv(data_assignment)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-
-# baseline (2013)
-# merge baseline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Give'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-df.replace(to_replace='First', value='Cash', inplace=True)
-df.replace(to_replace='Second', value='Cash', inplace=True)
-
-bygroupdf = df.groupby(['Give']).count()
-
-d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Give.notna().sum()}
-
-df_b = df
-
-# midline (2014)
-# merge midline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Give'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-df.replace(to_replace='First', value='Cash', inplace=True)
-df.replace(to_replace='Second', value='Cash', inplace=True)
-
-bygroupdf = df.groupby(['Give']).count()
-
-d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Give.notna().sum()}
-
-df_m = df
-
-# endline (2015)
-# merge endline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Give'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-df.replace(to_replace='First', value='Cash', inplace=True)
-df.replace(to_replace='Second', value='Cash', inplace=True)
-
-bygroupdf = df.groupby(['Give']).count()
-
-d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Give.notna().sum()}
-
-df_e = df
-
-d = {'2013': d2013, '2014': d2014, '2015': d2015}
-table = pd.DataFrame(data = d) 
-
-
-newdf = df_to_orgtbl(table, float_fmt = '%.3f')
-print(newdf)
-
-df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Give'] ], how='inner', left_on="idno", right_on="idno")
-bygroupdf_b_m = df_b_m.groupby(['Give']).count()
-
-df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Give'] ], how='inner', left_on="idno", right_on="idno")
-bygroupdf_b_e = df_b_e.groupby(['Give']).count()
-
-dd2013 = d2013
-dd2014 = {'Cash': bygroupdf_b_m.at['Cash','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Give.notna().sum()}
-dd2015 = {'Cash': bygroupdf_b_e.at['Cash','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Give.notna().sum()}
-
-dd = {'2013': dd2013, '2014': dd2014, '2015': dd2015}
-table2 = pd.DataFrame(data = dd) 
-
-
-newdf2 = df_to_orgtbl(table2, float_fmt = '%.3f')
-print(newdf2)
-
-#+end_src
-
-#+RESULTS: checklist_20150602.csv_attrition
-|         |    2013 |    2014 |    2015 |
-|---------+---------+---------+---------|
-| Cash    | 124.000 | 113.000 | 111.000 |
-| Control | 280.000 | 266.000 | 347.000 |
-| TUP     | 245.000 | 227.000 | 236.000 |
-| All     | 649.000 | 606.000 | 694.000 |
-
-|  |2013|   2014|   2015  |
-|-
-| Cash  | 124.000 | 112.000 | 110.000 |
-| Control  | 280.000 | 219.000 | 261.000 |
-| TUP  | 245.000 | 223.000 | 232.000 |
-| All  | 649.000 | 554.000 | 603.000 |
-
 # using master_assignment.csv
 #+name: master_assignment.csv_attrition
 #+begin_src python :exports none  :results output table raw labels=[] :colnames no
@@ -1333,15 +930,18 @@ df_a = pd.read_csv(data_assignment)
 df_m = pd.read_stata(data_midline)
 df_e = pd.read_stata(data_endline)
 
+"""Total number of households in sample by group and round"""
+
+
 # baseline (2013)
-# merge baseline data id number and group column from random assignment data based on respondent id/id number
+# merge baseline data id number and group column from master assignment csv based on respondent id/id number
 df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
 
 # change "Gift" to "Control"
 df.replace(to_replace='Gift', value='Control', inplace=True)
 
+# count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-
 d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
 
 df_b = df
@@ -1353,8 +953,8 @@ df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_o
 # change "Gift" to "Control"
 df.replace(to_replace='Gift', value='Control', inplace=True)
 
+# count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-
 d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
 
 df_m = df
@@ -1366,32 +966,39 @@ df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_o
 # change "Gift" to "Control"
 df.replace(to_replace='Gift', value='Control', inplace=True)
 
+# count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-
 d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
 
 df_e = df
 
+# make the table for total number of households in sample by group and round
 d = {'2013': d2013, '2014': d2014, '2015': d2015}
 table = pd.DataFrame(data = d) 
-
 
 newdf = df_to_orgtbl(table, float_fmt = '%.3f')
 print(newdf)
 
+
+"""Number of households in sample with baseline survey by group and round"""
+
+
+# find the intersection of people who had surveys at both baseline and midline
 df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
 bygroupdf_b_m = df_b_m.groupby(['Group']).count()
 
+# find the intersection of people who had surveys at both baseline and endline
 df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
 bygroupdf_b_e = df_b_e.groupby(['Group']).count()
 
+# count the number in each treatment group
 dd2013 = d2013
 dd2014 = {'Cash': bygroupdf_b_m.at['Cash','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
 dd2015 = {'Cash': bygroupdf_b_e.at['Cash','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
 
+# make the table for number of households in sample with baseline survey by group and round
 dd = {'2013': dd2013, '2014': dd2014, '2015': dd2015}
 table2 = pd.DataFrame(data = dd) 
-
 
 newdf2 = df_to_orgtbl(table2, float_fmt = '%.3f')
 print(newdf2)
@@ -1412,6 +1019,9 @@ print(newdf2)
 | Control  | 281.000 | 219.000 | 262.000 |
 | TUP  | 244.000 | 223.000 | 231.000 |
 | All  | 649.000 | 554.000 | 603.000 |
+
+
+
 
 
 Next we ask how those who did not turn up in subsequent rounds differed by a range of
