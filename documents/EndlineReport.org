@@ -1,4 +1,4 @@
-
+:SETUP:
 #+TITLE: Comparing Cash and Asset Transfers to Low-Income Households in South Sudan
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
 #+DATE: \today
@@ -11,6 +11,7 @@
 #+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 #+LaTeX_HEADER:       \usepackage[T1]{fontenc}
 #+LaTeX_HEADER:       %\usepackage[backend=biber,style=authoryear,natbib=true]{biblatex}
+:END:
 
 #+begin_abstract
 Several previous studies have found that the ``graduation'' or
@@ -37,8 +38,7 @@ that in this economic context cash can increase household consumption,
 but the goal of improving income or wealth is aided by the additional
 services that the ultra-poor graduation framework offer.
 #+end_abstract
-\newpage
-
+#+LATEX: \newpage
 
 * Introduction
  
@@ -61,8 +61,8 @@ of success in increasing aggregate investment, labor supply, and aggregate
 consumption. \citep{banerjee2015}
 
 A second, older literature that has gained new interest in recent years studies the
-effect of offering poor households direct unconditional cash transfers (UCT's).
-\citep{haushofer-shapiro2013} \citep{blattman2014} \citep{blattman2013} While this
+effect of offering poor households direct unconditional cash transfers (UCT's)
+citep:haushofer-shapiro13,blattman14,blattman13. While this
 and the TUP framework are both direct capital transfer interventions, they are very
 different in their approach, with TUP programs guiding and constraining the use of
 capital towards productive investment while UCT's allow households to invest, save,
@@ -95,13 +95,13 @@ program, or had no access to cultivable land (which was in some cases necessary 
 the program's model). Households were then deemed eligible if they fit at least three
 criteria in a list of five poverty indicators:
 
-1) The household head was working as a day laborer (generally an occupation with poverty wages),
-2) The household had two or more children,
-3) At least one child in the household was working,
-4) The household had fewer than three rooms, or
-5) A woman in the household had not completed secondary school.
+  1. The household head was working as a day laborer (generally an occupation with poverty wages),
+  2. The household had two or more children,
+  3. At least one child in the household was working,
+  4. The household had fewer than three rooms, or
+  5. A woman in the household had not completed secondary school.
 
-The census was completed in April of 2013 and 745 were identified as eligible. Of
+The census was completed in April of 2013 and 745 women were identified as eligible. Of
 these, 649 were identified in a baseline survey. These households were stratified on
 employment, asset ownership, and size and selected into treatment groups. 250 were
 enrolled in the TUP program, 125 in the UCT group, and the final 274 in a pure
@@ -146,7 +146,7 @@ Cash transfers were delivered by field officers in person and in local
 currency. That they were delivered in cash distinguishes it from
 several other cash transfer programs.[fn:: For example,
 cite:haushofer-shapiro16 deposited funds in a bank or mobile money
-account, while \cite{fafchamps-etal14} used money transfers.]
+account, while cite:fafchamps-etal14 used money transfers.]
 Experimental studies of the behavioral implications of savings
 accounts citep:dupas-robinson13 would lead one to expect that the
 method of disbursal might affect the propensity to save a cash
@@ -350,7 +350,9 @@ in observables at baseline, with the exception that the cash group has atypicall
 more motorcycles and clothing. But it does suggests that our stratified randomization
 was not too far from creating comparable groups.
 
-#+name: master random  assignment file of treatment/control groups
+*** Creation of master random assignment file
+
+#+name: master_random_assignment
 #+begin_src python
 """For making the master treatment groups .csv file"""
 
@@ -509,7 +511,7 @@ levels of the dependent variable, and including an indicator for
 whether the household was in the baseline.
 
    
-\newpage
+#+LATEX: \newpage
 
 #+name: attrition_check
 #+BEGIN_SRC python :dir ../analysis :results value table :exports none
