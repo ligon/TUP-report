@@ -378,7 +378,7 @@ for i in range(len(df)):
         df.iloc[i, df.columns.get_loc('Group')]='Control'
     
     # if a group is assigned in at baseline (in asset_assign 'group'), it should be the same at endline (in locations 'Group') (takes care of observation idno 2131)
-    if pd.notna(df.iloc[i, df.columns.get_loc('group')]) & (df.iloc[i, df.columns.get_loc('group')] != df.iloc[i, df.columns.get_loc('Group')]):
+    if pd.notna(df.iloc[i, df.columns.get_loc('group')]) and (df.iloc[i, df.columns.get_loc('group')] != df.iloc[i, df.columns.get_loc('Group')]):
         df.iloc[i, df.columns.get_loc('Group')] = df.iloc[i, df.columns.get_loc('group')]
 
 # now all the assignments in 'Group' should be consistent with 'group' so 'group' is a subset of 'Group' and we can drop it
@@ -387,10 +387,12 @@ df = df.drop(columns=['group', 'respid'])
 df.to_csv('master_assignment.csv')
 #+end_src
 
-#+RESULTS:
+#+RESULTS: master_random_assignment
 : None
 
-# table 1 redo
+
+*** Recreating the balance table
+
 #+name: mean_balance
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 # <<load_data>> can use this!!
@@ -911,13 +913,218 @@ print(df_to_orgtbl(A[A['D']!=A['R']]))
 | 2269 | --- | Control |
 | 2270 | --- | Control |
 
+# same as above but with master_assignment.csv as R and TUP_full.dta (group) as D
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+
+R=pd.read_csv('../../TUP-report/documents/master_assignment.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+
+D = pd.read_stata('../../TUP-data/TUP_full.dta')
+D=D.set_index('idno')      
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Group']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|   idno | D       | R       |
+|--------+---------+---------|
+| 1248.0 | ---     | Tup     |
+| 1359.0 | Control | ---     |
+| 1462.0 | ---     | Control |
+| 1484.0 | Control | ---     |
+| 1553.0 | Control | ---     |
+| 1647.0 | ---     | Control |
+| 1763.0 | ---     | Control |
+| 1960.0 | Control | ---     |
+| 2142.0 | Control | ---     |
+| 2174.0 | Control | ---     |
+| 2204.0 | ---     | Control |
+
+# same as above but with master_assignment.csv as R and TUP_full.dta (group_b) as D
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+
+R=pd.read_csv('../../TUP-report/documents/master_assignment.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+
+D = pd.read_stata('../../TUP-data/TUP_full.dta')
+D=D.set_index('idno')      
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group_b'],'R':R['Group']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|   idno | D   | R       |
+|--------+-----+---------|
+| 1042.0 |     | Control |
+| 1106.0 |     | Control |
+| 1151.0 |     | Control |
+| 1154.0 |     | Control |
+| 1157.0 |     | Control |
+| 1186.0 |     | Control |
+| 1187.0 |     | Tup     |
+| 1190.0 |     | Control |
+| 1207.0 |     | Control |
+| 1222.0 |     | Control |
+| 1248.0 | --- | Tup     |
+| 1252.0 |     | Control |
+| 1264.0 |     | Control |
+| 1285.0 |     | Control |
+| 1293.0 |     | Control |
+| 1295.0 |     | Control |
+| 1300.0 |     | Control |
+| 1305.0 |     | Control |
+| 1311.0 |     | Control |
+| 1314.0 |     | Control |
+| 1315.0 |     | Control |
+| 1316.0 |     | Control |
+| 1318.0 |     | Control |
+| 1320.0 |     | Control |
+| 1338.0 |     | Control |
+| 1344.0 |     | Control |
+| 1348.0 |     | Control |
+| 1350.0 |     | Control |
+| 1359.0 |     | ---     |
+| 1368.0 |     | Control |
+| 1403.0 |     | Control |
+| 1421.0 |     | Control |
+| 1436.0 |     | Control |
+| 1453.0 |     | Control |
+| 1462.0 | --- | Control |
+| 1472.0 |     | Control |
+| 1476.0 |     | Control |
+| 1480.0 |     | Control |
+| 1484.0 |     | ---     |
+| 1486.0 |     | Control |
+| 1496.0 |     | Control |
+| 1502.0 |     | Control |
+| 1505.0 |     | Control |
+| 1507.0 |     | Control |
+| 1548.0 |     | Control |
+| 1553.0 |     | ---     |
+| 1561.0 |     | Control |
+| 1591.0 |     | Control |
+| 1619.0 |     | Control |
+| 1642.0 |     | Control |
+| 1647.0 | --- | Control |
+| 1667.0 |     | Control |
+| 1679.0 |     | Control |
+| 1690.0 |     | Control |
+| 1702.0 |     | Control |
+| 1703.0 |     | Control |
+| 1730.0 |     | Control |
+| 1731.0 |     | Control |
+| 1744.0 |     | Control |
+| 1747.0 |     | Control |
+| 1748.0 |     | Control |
+| 1749.0 |     | Control |
+| 1750.0 |     | Control |
+| 1755.0 |     | Control |
+| 1758.0 |     | Tup     |
+| 1760.0 |     | Control |
+| 1763.0 | --- | Control |
+| 1773.0 |     | Control |
+| 1780.0 |     | Control |
+| 1792.0 |     | Control |
+| 1797.0 |     | Control |
+| 1802.0 |     | Control |
+| 1807.0 |     | Cash    |
+| 1813.0 |     | Control |
+| 1814.0 |     | Control |
+| 1825.0 |     | Control |
+| 1826.0 |     | Control |
+| 1878.0 |     | Control |
+| 1892.0 |     | Control |
+| 1894.0 |     | Control |
+| 1910.0 |     | Control |
+| 1915.0 |     | Control |
+| 1922.0 |     | Control |
+| 1927.0 |     | Control |
+| 1950.0 |     | Control |
+| 1960.0 |     | ---     |
+| 1966.0 |     | Control |
+| 1967.0 |     | Control |
+| 1985.0 |     | Control |
+| 1988.0 |     | Control |
+| 1991.0 |     | Control |
+| 1994.0 |     | Control |
+| 1995.0 |     | Control |
+| 2002.0 |     | Control |
+| 2012.0 |     | Control |
+| 2024.0 |     | Control |
+| 2030.0 |     | Control |
+| 2032.0 |     | Control |
+| 2039.0 |     | Control |
+| 2047.0 |     | Control |
+| 2061.0 |     | Control |
+| 2066.0 |     | Control |
+| 2071.0 |     | Control |
+| 2077.0 |     | Control |
+| 2079.0 |     | Control |
+| 2082.0 |     | Control |
+| 2094.0 |     | Control |
+| 2103.0 |     | Control |
+| 2106.0 |     | Control |
+| 2107.0 |     | Control |
+| 2114.0 |     | Control |
+| 2115.0 |     | Control |
+| 2119.0 |     | Tup     |
+| 2131.0 |     | Tup     |
+| 2134.0 |     | Control |
+| 2139.0 |     | Control |
+| 2142.0 |     | ---     |
+| 2160.0 |     | Control |
+| 2174.0 |     | ---     |
+| 2204.0 | --- | Control |
+| 2205.0 |     | Control |
+| 2212.0 |     | Control |
+| 2214.0 |     | Control |
+| 2225.0 |     | Control |
+| 2226.0 |     | Control |
+| 2232.0 |     | Control |
+| 2234.0 |     | Control |
+| 2238.0 |     | Control |
+| 2239.0 |     | Control |
+| 2250.0 |     | Control |
+| 2252.0 |     | Tup     |
+| 2260.0 |     | Control |
+| 2261.0 |     | Control |
+| 2268.0 |     | Control |
+| 2269.0 |     | Control |
+| 2270.0 |     | Control |
 
 
 *************** END
 
+*** Recreating the attrition tables
 
 # using master_assignment.csv
-#+name: master_assignment.csv_attrition
+#+name: master_assignment_attrition
 #+begin_src python :exports none  :results output table raw labels=[] :colnames no
 data_baseline  = "../../TUP-data/Baseline/TUP_baseline.dta"
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
@@ -931,6 +1138,7 @@ df_b = pd.read_stata(data_baseline)
 df_a = pd.read_csv(data_assignment)
 df_m = pd.read_stata(data_midline)
 df_e = pd.read_stata(data_endline)
+
 
 """Total number of households in sample by group and round"""
 
@@ -1021,6 +1229,7 @@ print(newdf2)
 | Control  | 281.000 | 219.000 | 262.000 |
 | TUP  | 244.000 | 223.000 | 231.000 |
 | All  | 649.000 | 554.000 | 603.000 |
+
 
 
 
