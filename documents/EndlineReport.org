@@ -399,7 +399,7 @@ df.to_csv('master_assignment.csv')
 data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 import pandas as pd
-import numpy as np
+from scipy import stats
 from cfe.df_utils import df_to_orgtbl
 
 df_b = pd.read_stata(data_baseline)
@@ -407,39 +407,74 @@ df_a = pd.read_csv(data_assignment)
 
 df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
 
-# merge baseline data with group column from locations.csv  based on respondent id/id number
-#df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-#df.iloc[92, df.columns.get_loc('Group')]='Control'
 
+df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ].transform(lambda x: x/3)
 
-# change "Gift" to "Control"
-#df.replace(to_replace='Gift', value='Control', inplace=True)
+df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ].transform(lambda x: x/30)
 
-df = df.get(['c_meat_b', 'c_fuel_b', 'c_clothesfootwear_b', 'c_soap_b',
-             'c_fish_b', 'c_charities_b', 'c_cereals_b', 'c_transport_b',
-             'c_cosmetics_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b',
-             'c_ceremonies_b', 'c_beans_b', 'c_fruit_b', 'c_textiles_b',
-             'c_utensils_b', 'c_dowry_b', 'c_furniture_b', 'c_salt_b',
-             'c_vegetables_b', 
-             'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
+df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ].transform(lambda x: x/365)
+
+df_assets = df.get(['asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
              'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
              'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
              'asset_val_netITN_b',
-             'asset_n_house_b',
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b',
              'Group'])
 
-# have to use census data for child_total START HERE. also groups in census data
-# create new variables for Daily Food, Daily Exp, In Business, Cereals, # Child, Asset Tot., Cash Savings (combine s12_1,s12_2, s12_3, s12_4, s12_5?),  HH size
-# first looking in ssudan_survey.org then check_balanaces.py - check TUP_full.dta?
+df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
 
-means = df.groupby(['Group']).mean()
+means = df_1.groupby(['Group']).mean()
 means = means.T
 
-# cosmetics repeated in consumption and assets
-# create new variables for household section
+means.insert(len(means.columns), 'Delta TUP', means['TUP'] - means['Control'])
+means.insert(len(means.columns), 'Delta Cash', means['Cash'] - means['Control'])
 
-ses = df.groupby(['Group']).sem()
+d = {'Control': means['Control'], 'Delta TUP': means['TUP'] - means['Control'], 'Delta Cash': means['Cash'] - means['Control']}
+means = pd.DataFrame(data=d)
 
+# so we can add * later
+means = means.round(decimals = 3)
+means = means.astype(str)
+means.insert(len(means.columns), 'N', 0)
+
+column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
+              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
+               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
+               'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
+             'asset_val_netITN_b', \
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
+
+# some are off by 0.001
+for column in column_list:
+    
+    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'TUP'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    
+    if pvalue_tup <= 0.01: 
+        means.at[column,'Delta TUP'] = means.at[column,'Delta TUP'] + '***'
+    elif pvalue_tup <= 0.05: 
+        means.at[column,'Delta TUP'] = means.at[column,'Delta TUP'] + '**'
+    elif pvalue_tup <= 0.1: 
+        means.at[column,'Delta TUP'] = means.at[column,'Delta TUP'] + '*'
+        
+    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'Cash'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    
+    if pvalue_cash <= 0.01: 
+        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '***'
+    elif pvalue_cash <= 0.05: 
+        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '**'
+    elif pvalue_cash <= 0.1: 
+        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '*'
+    
+    # as it is in the table, N is number of nonzero entries
+    means.at[column, 'N'] = df_1[df_1[column] > 0][column].count()
 
 newdf = df_to_orgtbl(means, float_fmt = '%.3f')
 print(newdf)
@@ -448,40 +483,49 @@ print(newdf)
 #+end_src
 
 #+RESULTS: mean_balance
-|                          |    Cash | Control |     TUP |
-|--------------------------+---------+---------+---------|
-| c_meat_b                 |  12.460 |  12.616 |  10.912 |
-| c_fuel_b                 |  20.702 |  22.851 |  21.684 |
-| c_clothesfootwear_b      | 252.097 | 240.157 | 230.840 |
-| c_soap_b                 |  13.710 |  14.502 |  14.242 |
-| c_fish_b                 |   7.048 |   7.516 |   7.053 |
-| c_charities_b            |  10.790 |  10.829 |   8.721 |
-| c_cereals_b              |  28.371 |  27.562 |  24.721 |
-| c_transport_b            |   5.339 |   5.267 |   4.291 |
-| c_cosmetics_b            |  16.702 |  20.459 |  21.270 |
-| c_sugar_b                |   4.573 |   5.139 |   4.906 |
-| c_egg_b                  |   3.403 |   3.288 |   3.016 |
-| c_oil_b                  |   3.669 |   4.093 |   3.701 |
-| c_ceremonies_b           |  57.726 |  48.060 |  50.504 |
-| c_beans_b                |   2.766 |   2.089 |   2.783 |
-| c_fruit_b                |   2.073 |   2.071 |   1.803 |
-| c_textiles_b             |  76.315 |  56.217 |  54.561 |
-| c_utensils_b             |  92.823 |  89.861 |  86.766 |
-| c_dowry_b                | 468.589 | 458.548 | 444.057 |
-| c_furniture_b            |  87.782 |  71.626 |  66.463 |
-| c_salt_b                 |   1.363 |   1.342 |   1.262 |
-| c_vegetables_b           |   4.089 |   4.630 |   4.135 |
-| asset_val_smallanimals_b | 113.468 | 236.601 | 150.533 |
-| asset_val_bicycle_b      |  97.661 | 109.075 |  96.520 |
-| asset_val_radio_b        |  41.919 |  58.448 |  52.480 |
-| asset_val_motorcycle_b   | 695.573 | 341.737 | 534.693 |
-| asset_val_net_b          |  19.411 |  19.164 |  19.832 |
-| asset_val_poultry_b      |  33.508 |  42.402 |  39.037 |
-| asset_val_bed_b          | 274.032 | 241.270 | 249.262 |
-| asset_val_chairtables_b  | 210.403 | 206.786 | 177.418 |
-| asset_val_mobile_b       |  93.339 |  97.537 | 110.164 |
-| asset_val_netITN_b       |   9.000 |   7.822 |   9.037 |
-| asset_n_house_b          |   2.947 |   2.829 |   2.860 |
+|                          | Control | Delta TUP | Delta Cash |       N |
+|--------------------------+---------+-----------+------------+---------|
+| c_meat_b                 |   4.205 |    -0.568 |     -0.052 | 378.000 |
+| c_fish_b                 |   2.505 |    -0.154 |     -0.156 | 474.000 |
+| c_cereals_b              |   9.187 |    -0.947 |       0.27 | 605.000 |
+| c_sugar_b                |   1.713 |    -0.078 |     -0.189 | 604.000 |
+| c_egg_b                  |   1.096 |    -0.091 |      0.038 | 276.000 |
+| c_oil_b                  |   1.364 |    -0.131 |     -0.141 | 613.000 |
+| c_beans_b                |   0.696 |     0.231 |      0.226 | 192.000 |
+| c_fruit_b                |    0.69 |    -0.089 |        0.0 | 272.000 |
+| c_salt_b                 |   0.447 |    -0.026 |      0.007 | 617.000 |
+| c_vegetables_b           |   1.543 |    -0.165 |      -0.18 | 471.000 |
+| c_milk_b                 |   1.284 |    -0.237 |     -0.232 | 114.000 |
+| c_spices_b               |    0.23 |     0.024 |     -0.045 | 158.000 |
+| c_alcohol_b              |   0.043 |     0.006 |     -0.029 |  18.000 |
+| c_otherfood_b            |     0.0 |       0.0 |        0.0 |   0.000 |
+| c_fuel_b                 |   0.762 |    -0.039 |     -0.072 | 456.000 |
+| c_soap_b                 |   0.483 |    -0.009 |     -0.026 | 536.000 |
+| c_transport_b            |   0.176 |    -0.033 |      0.002 | 193.000 |
+| c_cosmetics_b            |   0.682 |     0.027 |     -0.125 | 468.000 |
+| c_entertainment_b        |   0.087 |    -0.024 |      -0.02 | 145.000 |
+| c_clothesfootwear_b      |   0.658 |    -0.026 |      0.033 | 595.000 |
+| c_charities_b            |    0.03 |    -0.006 |       -0.0 | 134.000 |
+| c_ceremonies_b           |   0.132 |     0.007 |      0.026 | 152.000 |
+| c_textiles_b             |   0.154 |    -0.005 |     0.055* | 376.000 |
+| c_utensils_b             |   0.246 |    -0.008 |      0.008 | 442.000 |
+| c_dowry_b                |   1.256 |     -0.04 |      0.028 | 126.000 |
+| c_furniture_b            |   0.196 |    -0.014 |      0.044 | 368.000 |
+| c_other_b                |     0.0 |       0.0 |        0.0 |   0.000 |
+| asset_val_smallanimals_b | 236.601 |   -86.069 |   -123.134 | 123.000 |
+| asset_val_bicycle_b      | 109.075 |   -12.554 |    -11.413 | 171.000 |
+| asset_val_radio_b        |  58.448 |    -5.969 |    -16.529 | 260.000 |
+| asset_val_motorcycle_b   | 341.737 |   192.956 |  353.836** |  93.000 |
+| asset_val_net_b          |  19.164 |     0.668 |      0.248 | 423.000 |
+| asset_val_poultry_b      |  42.402 |    -3.365 |     -8.894 | 161.000 |
+| asset_val_bed_b          |  241.27 |     7.992 |     32.762 | 521.000 |
+| asset_val_chairtables_b  | 206.786 |   -29.368 |      3.617 | 531.000 |
+| asset_val_mobile_b       |  97.537 |    12.627 |     -4.199 | 414.000 |
+| asset_val_netITN_b       |   7.822 |     1.215 |      1.178 | 181.000 |
+| asset_n_house_b          |   2.829 |      0.03 |      0.118 | 543.000 |
+| in_business_b            |   0.398 |     0.038 |      0.017 | 265.000 |
+| child_total_b            |   3.263 |     0.118 |      0.108 | 594.000 |
+| hh_size_b                |   7.232 |    -0.175 |        0.3 | 648.000 |
 
 
 
