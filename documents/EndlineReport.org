@@ -613,7 +613,7 @@ plt.savefig("motorcycle_Elliott.png")
 | child_total_b            |   3.263 |     0.118 |      0.108 | 594.000 |
 | hh_size_b                |   7.232 |    -0.175 |        0.3 | 648.000 |
 
-*** Making box and whisker plots for Elliott's balance table
+*** Box and whisker plots for Elliott's balance table
 
 #+Caption: Box and whisker plot of textiles means
 #+NAME: fig:box_whisker_textiles_Elliott
@@ -637,6 +637,7 @@ import pandas as pd
 from scipy import stats
 from cfe.df_utils import df_to_orgtbl
 import matplotlib. pyplot as plt
+import numpy as np
 
 df_b = pd.read_stata(data_baseline)
 df_a = pd.read_csv(data_assignment)
@@ -719,12 +720,14 @@ for column in column_list:
 newdf = df_to_orgtbl(means, float_fmt = '%.3f')
 print(newdf)
 
+# box and whisker plots of log positive observations
+df_1['c_textiles_b'] = np.log(df_1['c_textiles_b'])
 df_1.boxplot(column = 'c_textiles_b', by = 'Group')
 plt.savefig("textiles_nonzero.png")
 
+df_1['asset_val_mobile_b'] = np.log(df_1['asset_val_mobile_b'])
 df_1.boxplot(column = 'asset_val_mobile_b', by = 'Group')
 plt.savefig("mobile_nonzero.png")
-plt.show()
 
 #+end_src
 
@@ -774,13 +777,13 @@ plt.show()
 | child_total_b            |     3.61 |     0.056 |      0.025 | 594.000 |
 | hh_size_b                |    7.232 |    -0.175 |        0.3 | 648.000 |
 
-*** Making box and whisker plots for the new balance table
+*** Box and whisker plots for the new balance table
 
-#+Caption: Box and whisker plot of textiles means for nonzero values
+#+Caption: Box and whisker plot of log(positive textiles) for nonzero values
 #+NAME: fig:box_whisker_textiles_nonzero
 [[../documents/textiles_nonzero.png]]
 
-#+Caption: Box and whisker plot of mobile means for nonzero values
+#+Caption: Box and whisker plot of log(positive mobile) for nonzero values
 #+NAME: fig:box_whisker_mobile_nonzero
 [[../documents/mobile_nonzero.png]]
 
