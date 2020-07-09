@@ -1993,6 +1993,94 @@ return tab
 |                                  | $( 0.12)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
 |----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
 
+*** Recreating food insecurity tables
+
+#+name: food_insecurity
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+# whether in baseline, midline, or endline
+df_b.insert(len(df_b.columns), '2013', 1)
+df_m.insert(len(df_m.columns), '2014', 1)
+df_e.insert(len(df_e.columns), '2015', 1)
+
+df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='outer', left_on="idno", right_on="RespID")
+
+# add in midline and endline columns
+df = pd.merge(df, df_m, how='outer', left_on='idno', right_on='idno')
+df = pd.merge(df, df_e, how='outer', left_on='idno', right_on='idno')
+
+df['2013'].fillna(value=0, inplace=True)
+df['2014'].fillna(value=0, inplace=True)
+df['2015'].fillna(value=0, inplace=True)
+    
+df.replace({"Everyday": 1,
+            "everyday": 1,
+            "3-6 times a week": 2,
+            "1-2 times a week": 3,
+            "Less than once a week": 4,
+            "less than once a week": 4,
+            "Never": 5,
+            "never": 5}, inplace=True)
+
+# for weekly, replace 4 and 5 with NaN
+df.replace({4: np.nan, 5: np.nan}, inplace=True)
+
+df.set_index('idno', inplace=True)
+
+# find columns that start with "fs_" and end with "_b", "_m", or "_e"
+# cut off the first 3 characters ("fs_") and the last 2 ("_b", "_m", or "_e")
+fs2013 = df.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2])
+fs2014 = df.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2])
+fs2015 = df.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2])
+
+fs2013['Year'] = 2013
+fs2014['Year'] = 2014
+fs2015['Year'] = 2015
+
+index_vars = ['worried', 'portions', 'fewmeals', 'nofood', 'hungry', 'wholeday']
+outcomes = index_vars + ['z-score']
+
+for FS in (fs2013, fs2014, fs2015): 
+    fs_sum = FS[index_vars].sum(axis=1)
+    FS['z-score'] = (fs_sum - fs_sum.mean())/fs_sum.std()
+    # baseline values as 'var'2013
+    for var in outcomes: 
+        FS[var+'2013'] = fs2013[var]
+        
+df2 = pd.concat((fs2013, fs2014, fs2015))
+df = df2.join(df[ ['Group', '2013', '2014', '2015'] ].join(pd.get_dummies(df['Group'])))
+
+# get rid of NaN indexes
+df = df[df.index.notnull()]
+
+# create interaction terms
+df.insert(len(df.columns), '2013*TUP', df['2013']*df['TUP'])
+df.insert(len(df.columns), '2014*TUP', df['2014']*df['TUP'])
+df.insert(len(df.columns), '2015*TUP', df['2015']*df['TUP'])
+df.insert(len(df.columns), '2013*Cash', df['2013']*df['Cash'])
+df.insert(len(df.columns), '2014*Cash', df['2014']*df['Cash'])
+df.insert(len(df.columns), '2015*Cash', df['2015']*df['Cash'])
+
+controls = ['2014', '2015', '2014*TUP', '2015*TUP', '2014*Cash', '2015*Cash']
+
+
+#+end_src
+
+#+RESULTS: food_insecurity
+
 ** Assets
    
 Turning now to asset holdings for the households, we estimate treatment effects for
