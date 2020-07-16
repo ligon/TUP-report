@@ -556,6 +556,30 @@ for column in column_list:
     # as it is in the table, N is number of nonzero entries
     means.at[column, 'N'] = df_1[df_1[column] > 0][column].count()
 
+# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
+# but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
+means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
+            'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
+            'c_egg_b': 'Egg', 'c_oil_b': 'Oil', 
+            'c_beans_b': 'Beans', 'c_fruit_b': 'Fruit', 
+            'c_salt_b': 'Salt', 'c_vegetables_b': 'Vegetables', 
+            'c_milk_b': 'Milk', 'c_spices_b': 'Spices', 
+            'c_alcohol_b': 'Alcohol', 'c_otherfood_b': 'Other food', 
+            'c_fuel_b': 'Cooking fuel', 'c_soap_b': 'Toiletries', 
+            'c_transport_b': 'Transportation', 'c_cosmetics_b': 'Cosmetics', 
+            'c_entertainment_b': 'Entertainment', 'c_clothesfootwear_b': 'Clothing, footwear', 
+            'c_charities_b': 'Charities', 'c_ceremonies_b': 'Rituals/ceremonies', 
+            'c_textiles_b': 'Textiles', 'c_utensils_b': 'Utensils',
+            'c_dowry_b': 'Dowry', 'c_furniture_b': 'Furniture', 
+            'c_other_b': 'Other non-food', 'asset_val_cows_b': 'Large livestock (cows)', 
+            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
+            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
+            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
+            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
+            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
+            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
+            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
+
 newdf = df_to_orgtbl(means, float_fmt = '%.3f')
 print(newdf)
 
@@ -568,50 +592,58 @@ plt.savefig("motorcycle_Elliott.png")
 #+end_src
 
 #+RESULTS: mean_balance
-|                          | Control | Delta TUP | Delta Cash |       N |
-|--------------------------+---------+-----------+------------+---------|
-| c_meat_b                 |   4.205 |    -0.568 |     -0.052 | 378.000 |
-| c_fish_b                 |   2.505 |    -0.154 |     -0.156 | 474.000 |
-| c_cereals_b              |   9.187 |    -0.947 |       0.27 | 605.000 |
-| c_sugar_b                |   1.713 |    -0.078 |     -0.189 | 604.000 |
-| c_egg_b                  |   1.096 |    -0.091 |      0.038 | 276.000 |
-| c_oil_b                  |   1.364 |    -0.131 |     -0.141 | 613.000 |
-| c_beans_b                |   0.696 |     0.231 |      0.226 | 192.000 |
-| c_fruit_b                |    0.69 |    -0.089 |        0.0 | 272.000 |
-| c_salt_b                 |   0.447 |    -0.026 |      0.007 | 617.000 |
-| c_vegetables_b           |   1.543 |    -0.165 |      -0.18 | 471.000 |
-| c_milk_b                 |   1.284 |    -0.237 |     -0.232 | 114.000 |
-| c_spices_b               |    0.23 |     0.024 |     -0.045 | 158.000 |
-| c_alcohol_b              |   0.043 |     0.006 |     -0.029 |  18.000 |
-| c_otherfood_b            |     0.0 |       0.0 |        0.0 |   0.000 |
-| c_fuel_b                 |   0.762 |    -0.039 |     -0.072 | 456.000 |
-| c_soap_b                 |   0.483 |    -0.009 |     -0.026 | 536.000 |
-| c_transport_b            |   0.176 |    -0.033 |      0.002 | 193.000 |
-| c_cosmetics_b            |   0.682 |     0.027 |     -0.125 | 468.000 |
-| c_entertainment_b        |   0.087 |    -0.024 |      -0.02 | 145.000 |
-| c_clothesfootwear_b      |   0.658 |    -0.026 |      0.033 | 595.000 |
-| c_charities_b            |    0.03 |    -0.006 |       -0.0 | 134.000 |
-| c_ceremonies_b           |   0.132 |     0.007 |      0.026 | 152.000 |
-| c_textiles_b             |   0.154 |    -0.005 |     0.055* | 376.000 |
-| c_utensils_b             |   0.246 |    -0.008 |      0.008 | 442.000 |
-| c_dowry_b                |   1.256 |     -0.04 |      0.028 | 126.000 |
-| c_furniture_b            |   0.196 |    -0.014 |      0.044 | 368.000 |
-| c_other_b                |     0.0 |       0.0 |        0.0 |   0.000 |
-| asset_val_cows_b         |  253.31 |  -140.605 |    -99.681 |  35.000 |
-| asset_val_smallanimals_b | 236.601 |   -86.069 |   -123.134 | 123.000 |
-| asset_val_bicycle_b      | 109.075 |   -12.554 |    -11.413 | 171.000 |
-| asset_val_radio_b        |  58.448 |    -5.969 |    -16.529 | 260.000 |
-| asset_val_motorcycle_b   | 341.737 |   192.956 |  353.836** |  93.000 |
-| asset_val_net_b          |  19.164 |     0.668 |      0.248 | 423.000 |
-| asset_val_poultry_b      |  42.402 |    -3.365 |     -8.894 | 161.000 |
-| asset_val_bed_b          |  241.27 |     7.992 |     32.762 | 521.000 |
-| asset_val_chairtables_b  | 206.786 |   -29.368 |      3.617 | 531.000 |
-| asset_val_mobile_b       |  97.537 |    12.627 |     -4.199 | 414.000 |
-| asset_val_netITN_b       |   7.822 |     1.215 |      1.178 | 181.000 |
-| asset_n_house_b          |   2.829 |      0.03 |      0.118 | 543.000 |
-| in_business_b            |   0.398 |     0.038 |      0.017 | 265.000 |
-| child_total_b            |   3.263 |     0.118 |      0.108 | 594.000 |
-| hh_size_b                |   7.232 |    -0.175 |        0.3 | 648.000 |
+|------------------------+---------+-----------+------------+---------|
+| Consumption            | Control | Delta TUP | Delta Cash |       N |
+|------------------------+---------+-----------+------------+---------|
+| Meat                   |   4.205 |    -0.568 |     -0.052 | 378.000 |
+| Fish                   |   2.505 |    -0.154 |     -0.156 | 474.000 |
+| Cereals                |   9.187 |    -0.947 |       0.27 | 605.000 |
+| Sugar                  |   1.713 |    -0.078 |     -0.189 | 604.000 |
+| Egg                    |   1.096 |    -0.091 |      0.038 | 276.000 |
+| Oil                    |   1.364 |    -0.131 |     -0.141 | 613.000 |
+| Beans                  |   0.696 |     0.231 |      0.226 | 192.000 |
+| Fruit                  |    0.69 |    -0.089 |        0.0 | 272.000 |
+| Salt                   |   0.447 |    -0.026 |      0.007 | 617.000 |
+| Vegetables             |   1.543 |    -0.165 |      -0.18 | 471.000 |
+| Milk                   |   1.284 |    -0.237 |     -0.232 | 114.000 |
+| Spices                 |    0.23 |     0.024 |     -0.045 | 158.000 |
+| Alcohol                |   0.043 |     0.006 |     -0.029 |  18.000 |
+| Other food             |     0.0 |       0.0 |        0.0 |   0.000 |
+| Cooking fuel           |   0.762 |    -0.039 |     -0.072 | 456.000 |
+| Toiletries             |   0.483 |    -0.009 |     -0.026 | 536.000 |
+| Transportation         |   0.176 |    -0.033 |      0.002 | 193.000 |
+| Cosmetics              |   0.682 |     0.027 |     -0.125 | 468.000 |
+| Entertainment          |   0.087 |    -0.024 |      -0.02 | 145.000 |
+| Clothing, footwear     |   0.658 |    -0.026 |      0.033 | 595.000 |
+| Charities              |    0.03 |    -0.006 |       -0.0 | 134.000 |
+| Rituals/ceremonies     |   0.132 |     0.007 |      0.026 | 152.000 |
+| Textiles               |   0.154 |    -0.005 |     0.055* | 376.000 |
+| Utensils               |   0.246 |    -0.008 |      0.008 | 442.000 |
+| Dowry                  |   1.256 |     -0.04 |      0.028 | 126.000 |
+| Furniture              |   0.196 |    -0.014 |      0.044 | 368.000 |
+| Other non-food         |     0.0 |       0.0 |        0.0 |   0.000 |
+|------------------------+---------+-----------+------------+---------|
+| Assets                 |         |           |            |         |
+|------------------------+---------+-----------+------------+---------|
+| Large livestock (cows) |  253.31 |  -140.605 |    -99.681 |  35.000 |
+| Small livestock        | 236.601 |   -86.069 |   -123.134 | 123.000 |
+| Bicycle                | 109.075 |   -12.554 |    -11.413 | 171.000 |
+| Radio                  |  58.448 |    -5.969 |    -16.529 | 260.000 |
+| Motorcycle             | 341.737 |   192.956 |  353.836** |  93.000 |
+| Mosquito net           |  19.164 |     0.668 |      0.248 | 423.000 |
+| Poultry                |  42.402 |    -3.365 |     -8.894 | 161.000 |
+| Bed                    |  241.27 |     7.992 |     32.762 | 521.000 |
+| Chair/table            | 206.786 |   -29.368 |      3.617 | 531.000 |
+| Mobile phone           |  97.537 |    12.627 |     -4.199 | 414.000 |
+| Mosquito net ITN       |   7.822 |     1.215 |      1.178 | 181.000 |
+|------------------------+---------+-----------+------------+---------|
+| Household              |         |           |            |         |
+|------------------------+---------+-----------+------------+---------|
+| # Houses               |   2.829 |      0.03 |      0.118 | 543.000 |
+| In business            |   0.398 |     0.038 |      0.017 | 265.000 |
+| # Child                |   3.263 |     0.118 |      0.108 | 594.000 |
+| Household size         |   7.232 |    -0.175 |        0.3 | 648.000 |
+|------------------------+---------+-----------+------------+---------|
 
 *** Box and whisker plots for Elliott's balance table
 
@@ -626,7 +658,7 @@ plt.savefig("motorcycle_Elliott.png")
 
 *** Creating a new balance table with only nonzero values counting toward the mean
 
-The following table shows the means of log expenditures. 
+The following table shows the means of log expenditures.
 
 # N represents the number of nonzero values, and only nonzero values
 # are considered in calculations of the means
@@ -760,7 +792,8 @@ plt.savefig("mobile_nonzero.png")
 #+end_src
 
 #+RESULTS: mean_balance_only_nonzero_values
-|                                | Control | Delta TUP | Delta Cash |       N |
+|--------------------------------+---------+-----------+------------+---------|
+| Consumption                    | Control | Delta TUP | Delta Cash |       N |
 |--------------------------------+---------+-----------+------------+---------|
 | Meat (last three days)         |   2.845 |     0.018 |      0.033 | 378.000 |
 | Fish (last three days)         |   2.058 |     0.041 |     -0.022 | 474.000 |
@@ -789,6 +822,9 @@ plt.savefig("mobile_nonzero.png")
 | Dowry (last year)              |   5.934 |     0.433 |      0.178 | 126.000 |
 | Furniture (last year)          |   4.224 |     0.033 |      0.185 | 368.000 |
 | Other non-food (last year)     |     nan |       nan |        nan |   0.000 |
+|--------------------------------+---------+-----------+------------+---------|
+| Assets                         |         |           |            |         |
+|--------------------------------+---------+-----------+------------+---------|
 | Large livestock (cows)         |   7.461 |    -0.072 |     -0.068 |  35.000 |
 | Small livestock                |   6.425 |    -0.195 |     -0.364 | 123.000 |
 | Bicycle                        |   5.601 |     0.051 |       0.14 | 171.000 |
@@ -800,12 +836,14 @@ plt.savefig("mobile_nonzero.png")
 | Chair/table                    |   4.889 |     0.021 |      0.025 | 531.000 |
 | Mobile phone                   |   4.811 |     0.119 |      0.031 | 414.000 |
 | Mosquito net ITN               |   3.147 |    -0.047 |       0.13 | 181.000 |
+|--------------------------------+---------+-----------+------------+---------|
+| Household                      |         |           |            |         |
+|--------------------------------+---------+-----------+------------+---------|
 | # Houses                       |   1.064 |    -0.027 |       -0.0 | 543.000 |
 | # Child                        |   1.118 |     0.043 |      0.039 | 594.000 |
 | Household size                 |   1.917 |    -0.021 |       0.05 | 648.000 |
 | In business                    |   0.398 |     0.038 |      0.017 | 638.000 |
-
-
+|--------------------------------+---------+-----------+------------+---------|
 
 *** Box and whisker plots for the new balance table
 
@@ -1453,6 +1491,8 @@ print(df_to_orgtbl(A[A['D']!=A['R']]))
 
 *** Recreating the attrition tables
 
+We get the same results as in the original attrition tables.
+
 # using master_assignment.csv
 #+name: master_assignment_attrition
 #+begin_src python :exports none  :results output table raw labels=[] :colnames no
@@ -1546,20 +1586,23 @@ print(newdf2)
 #+end_src
 
 #+RESULTS: master_assignment_attrition
+|---------+---------+---------+---------|
 |         |    2013 |    2014 |    2015 |
 |---------+---------+---------+---------|
 | Cash    | 124.000 | 113.000 | 111.000 |
 | Control | 281.000 | 265.000 | 347.000 |
 | TUP     | 244.000 | 228.000 | 236.000 |
 | All     | 649.000 | 606.000 | 694.000 |
+|---------+---------+---------+---------|
 
+|---------+---------+---------+---------|
 |         |    2013 |    2014 |    2015 |
 |---------+---------+---------+---------|
 | Cash    | 124.000 | 112.000 | 110.000 |
 | Control | 281.000 | 219.000 | 262.000 |
 | TUP     | 244.000 | 223.000 | 231.000 |
 | All     | 649.000 | 554.000 | 603.000 |
-
+|---------+---------+---------+---------|
 
 
  
@@ -1725,6 +1768,30 @@ for column in column_list:
     elif pvalue_end <= 0.1: 
         means.at[column,'beta_end'] = means.at[column,'beta_end'] + '*'
 
+# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
+# but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
+means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
+            'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
+            'c_egg_b': 'Egg', 'c_oil_b': 'Oil', 
+            'c_beans_b': 'Beans', 'c_fruit_b': 'Fruit', 
+            'c_salt_b': 'Salt', 'c_vegetables_b': 'Vegetables', 
+            'c_milk_b': 'Milk', 'c_spices_b': 'Spices', 
+            'c_alcohol_b': 'Alcohol', 'c_otherfood_b': 'Other food', 
+            'c_fuel_b': 'Cooking fuel', 'c_soap_b': 'Toiletries', 
+            'c_transport_b': 'Transportation', 'c_cosmetics_b': 'Cosmetics', 
+            'c_entertainment_b': 'Entertainment', 'c_clothesfootwear_b': 'Clothing, footwear', 
+            'c_charities_b': 'Charities', 'c_ceremonies_b': 'Rituals/ceremonies', 
+            'c_textiles_b': 'Textiles', 'c_utensils_b': 'Utensils',
+            'c_dowry_b': 'Dowry', 'c_furniture_b': 'Furniture', 
+            'c_other_b': 'Other non-food', 'asset_val_cows_b': 'Large livestock (cows)', 
+            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
+            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
+            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
+            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
+            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
+            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
+            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
+
 newdf = df_to_orgtbl(means, float_fmt = '%.3f')
 print(newdf)
 
@@ -1732,50 +1799,58 @@ print(newdf)
 #+end_src
 
 #+RESULTS: attrition_balance
-|                          | mean_baseline | beta_mid | beta_end |
-|--------------------------+---------------+----------+----------|
-| asset_n_house_b          |         2.863 |    0.305 |    0.367 |
-| asset_val_bed_b          |       250.535 |   12.649 |  -51.133 |
-| asset_val_bicycle_b      |       102.174 |   11.179 |    4.212 |
-| asset_val_chairtables_b  |       196.436 |   -0.303 |  -37.177 |
-| asset_val_cows_b         |       181.402 |   67.862 |  -89.273 |
-| asset_val_mobile_b       |       101.482 |    6.336 |  -13.028 |
-| asset_val_motorcycle_b   |       481.886 |  213.002 | -241.819 |
-| asset_val_netITN_b       |         8.504 |   -1.777 |    0.449 |
-| asset_val_net_b          |        19.462 |    0.332 |    2.814 |
-| asset_val_poultry_b      |        39.438 |  23.634* |   -2.243 |
-| asset_val_radio_b        |        53.046 |   -6.333 | -35.093* |
-| asset_val_smallanimals_b |       180.716 |   18.966 |  -79.014 |
-| c_alcohol_b              |          0.04 |    0.005 |   -0.004 |
-| c_beans_b                |         0.826 |    0.269 |   -0.382 |
-| c_cereals_b              |         8.883 |   -0.084 | -3.714** |
-| c_ceremonies_b           |         0.139 |   -0.019 |   -0.038 |
-| c_charities_b            |         0.027 |    0.007 |   -0.001 |
-| c_clothesfootwear_b      |         0.655 |   0.177* |   -0.203 |
-| c_cosmetics_b            |         0.668 |    0.005 |    0.229 |
-| c_dowry_b                |         1.247 |    0.745 |   -0.394 |
-| c_egg_b                  |         1.069 |   -0.005 |    0.106 |
-| c_entertainment_b        |         0.074 |    0.021 |   0.051* |
-| c_fish_b                 |         2.418 |   -0.132 |    0.036 |
-| c_fruit_b                |         0.657 |    0.009 |   -0.151 |
-| c_fuel_b                 |         0.733 |    0.105 |   -0.049 |
-| c_furniture_b            |         0.199 |   -0.023 |     0.02 |
-| c_meat_b                 |         3.982 |    0.254 |      0.3 |
-| c_milk_b                 |          1.15 |    0.283 |    0.239 |
-| c_oil_b                  |         1.288 |    0.037 |  -0.532* |
-| c_other_b                |           0.0 |      0.0 |      0.0 |
-| c_otherfood_b            |           0.0 |      0.0 |      0.0 |
-| c_salt_b                 |         0.439 | -0.14*** |   -0.043 |
-| c_soap_b                 |         0.475 |  -0.181* |    0.047 |
-| c_spices_b               |         0.231 |    0.024 |   -0.048 |
-| c_sugar_b                |         1.648 |   -0.285 |    -0.02 |
-| c_textiles_b             |         0.163 |     0.01 |    0.011 |
-| c_transport_b            |         0.164 |    0.004 |    0.018 |
-| c_utensils_b             |         0.245 |    0.061 |   -0.023 |
-| c_vegetables_b           |         1.447 |    0.096 |   -0.151 |
-| child_total_b            |         3.328 | 0.656*** |    0.423 |
-| hh_size_b                |         7.224 |  0.595** |    0.428 |
-| in_business_b            |         0.415 |    0.038 |    0.007 |
+|------------------------+---------------+----------+----------|
+| Assets                 | mean_baseline | beta_mid | beta_end |
+|------------------------+---------------+----------+----------|
+| # Houses               |         2.863 |    0.305 |    0.367 |
+| Bed                    |       250.535 |   12.649 |  -51.133 |
+| Bicycle                |       102.174 |   11.179 |    4.212 |
+| Chair/table            |       196.436 |   -0.303 |  -37.177 |
+| Large livestock (cows) |       181.402 |   67.862 |  -89.273 |
+| Mobile phone           |       101.482 |    6.336 |  -13.028 |
+| Motorcycle             |       481.886 |  213.002 | -241.819 |
+| Mosquito net ITN       |         8.504 |   -1.777 |    0.449 |
+| Mosquito net           |        19.462 |    0.332 |    2.814 |
+| Poultry                |        39.438 |  23.634* |   -2.243 |
+| Radio                  |        53.046 |   -6.333 | -35.093* |
+| Small livestock        |       180.716 |   18.966 |  -79.014 |
+|------------------------+---------------+----------+----------|
+| Consumption            |               |          |          |
+|------------------------+---------------+----------+----------|
+| Alcohol                |          0.04 |    0.005 |   -0.004 |
+| Beans                  |         0.826 |    0.269 |   -0.382 |
+| Cereals                |         8.883 |   -0.084 | -3.714** |
+| Rituals/ceremonies     |         0.139 |   -0.019 |   -0.038 |
+| Charities              |         0.027 |    0.007 |   -0.001 |
+| Clothing, footwear     |         0.655 |   0.177* |   -0.203 |
+| Cosmetics              |         0.668 |    0.005 |    0.229 |
+| Dowry                  |         1.247 |    0.745 |   -0.394 |
+| Egg                    |         1.069 |   -0.005 |    0.106 |
+| Entertainment          |         0.074 |    0.021 |   0.051* |
+| Fish                   |         2.418 |   -0.132 |    0.036 |
+| Fruit                  |         0.657 |    0.009 |   -0.151 |
+| Cooking fuel           |         0.733 |    0.105 |   -0.049 |
+| Furniture              |         0.199 |   -0.023 |     0.02 |
+| Meat                   |         3.982 |    0.254 |      0.3 |
+| Milk                   |          1.15 |    0.283 |    0.239 |
+| Oil                    |         1.288 |    0.037 |  -0.532* |
+| Other non-food         |           0.0 |      0.0 |      0.0 |
+| Other food             |           0.0 |      0.0 |      0.0 |
+| Salt                   |         0.439 | -0.14*** |   -0.043 |
+| Toiletries             |         0.475 |  -0.181* |    0.047 |
+| Spices                 |         0.231 |    0.024 |   -0.048 |
+| Sugar                  |         1.648 |   -0.285 |    -0.02 |
+| Textiles               |         0.163 |     0.01 |    0.011 |
+| Transportation         |         0.164 |    0.004 |    0.018 |
+| Utensils               |         0.245 |    0.061 |   -0.023 |
+| Vegetables             |         1.447 |    0.096 |   -0.151 |
+|------------------------+---------------+----------+----------|
+| Household Features     |               |          |          |
+|------------------------+---------------+----------+----------|
+| # Child                |         3.328 | 0.656*** |    0.423 |
+| Household size         |         7.224 |  0.595** |    0.428 |
+| In business            |         0.415 |    0.038 |    0.007 |
+|------------------------+---------------+----------+----------|
 
 
 *** Creating a new attrition balance table with only nonzero values counting toward the mean
@@ -1907,13 +1982,15 @@ means.rename({'c_meat_b': ' Meat (last three days)', 'c_fish_b': 'Fish (last thr
             'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
 
 newdf = df_to_orgtbl(means, float_fmt = '%.3f')
+
 print(newdf)
 
 
 #+end_src
 
 #+RESULTS: attrition_balance_nonzero
-|                                | mean_baseline |  beta_mid | beta_end |
+|--------------------------------+---------------+-----------+----------|
+| Assets                         | mean_baseline |  beta_mid | beta_end |
 |--------------------------------+---------------+-----------+----------|
 | # Houses                       |         1.054 |     0.083 |    0.071 |
 | Bed                            |         5.328 |     0.028 | -0.408** |
@@ -1927,6 +2004,9 @@ print(newdf)
 | Poultry                        |         4.582 |     0.259 |    0.111 |
 | Radio                          |         4.314 |    -0.036 |   -0.354 |
 | Small livestock                |          6.29 |     0.351 |    0.081 |
+|--------------------------------+---------------+-----------+----------|
+| Consumption                    |               |           |          |
+|--------------------------------+---------------+-----------+----------|
 | Alcohol (last three days)      |         1.367 |    -0.272 |   0.633* |
 | Beans (last three days)        |         1.746 |      0.3* |   -0.272 |
 | Cereals (last three days)      |         3.003 |    -0.052 |  -0.255* |
@@ -1954,9 +2034,14 @@ print(newdf)
 | Transportation (last month)    |         2.417 |    -0.132 |    0.022 |
 | Utensils (last year)           |         4.347 |      0.21 |    -0.24 |
 | Vegetables (last three days)   |         1.514 |     0.095 |   -0.047 |
+|--------------------------------+---------------+-----------+----------|
+| Household Features             |               |           |          |
+|--------------------------------+---------------+-----------+----------|
 | # Child                        |         1.142 |  0.219*** |   0.173* |
 | Household size                 |         1.919 |   0.081** |    0.062 |
 | In business                    |         0.415 |     0.038 |    0.007 |
+|--------------------------------+---------------+-----------+----------|
+
 
 
 ** Consumption
