@@ -626,6 +626,8 @@ plt.savefig("motorcycle_Elliott.png")
 
 *** Creating a new balance table with only nonzero values counting toward the mean
 
+The following table shows the means of log expenditures. 
+
 # N represents the number of nonzero values, and only nonzero values
 # are considered in calculations of the means
 
@@ -658,12 +660,17 @@ df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_b
              'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
              'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
              'asset_val_netITN_b',
-             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b',
-             'Group'])
+             'asset_n_house_b', 'child_total_b', 'hh_size_b'])
 
 df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
 
 df_1.replace(to_replace = 0, value = float("NaN") , inplace = True)
+
+# take the logs of expenditure for all variables except dummy variables
+df_1 = df_1.transform(lambda x: np.log(x))
+
+# add in group assignment and the dummy variables that need 0 as one of their values
+df_1 = df_1.join(df[ [ 'in_business_b', 'Group'] ])
 
 means = df_1.groupby(['Group']).mean()
 means = means.T
@@ -712,8 +719,7 @@ for column in column_list:
     elif pvalue_cash <= 0.1: 
         means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '*'
     
-    # as it is in the table, N is number of nonzero entries
-   # means.at[column, 'N'] = df_1[df_1[column] > 0][column].count()
+   # N is number of nonzero entries
     means.at[column, 'N'] = df_1[column].count()
 
 
@@ -721,61 +727,62 @@ newdf = df_to_orgtbl(means, float_fmt = '%.3f')
 print(newdf)
 
 # box and whisker plots of log positive observations
-df_1['c_textiles_b'] = np.log(df_1['c_textiles_b'])
+df_1['c_textiles_b'] = df_1['c_textiles_b']
 df_1.boxplot(column = 'c_textiles_b', by = 'Group')
 plt.savefig("textiles_nonzero.png")
 
-df_1['asset_val_mobile_b'] = np.log(df_1['asset_val_mobile_b'])
+df_1['asset_val_mobile_b'] = df_1['asset_val_mobile_b']
 df_1.boxplot(column = 'asset_val_mobile_b', by = 'Group')
 plt.savefig("mobile_nonzero.png")
 
 #+end_src
 
 #+RESULTS: mean_balance_only_nonzero_values
-|                          |  Control | Delta TUP | Delta Cash |       N |
-|--------------------------+----------+-----------+------------+---------|
-| c_meat_b                 |     6.87 |      0.01 |     -0.182 | 378.000 |
-| c_fish_b                 |    3.305 |     0.089 |     -0.138 | 474.000 |
-| c_cereals_b              |    9.706 |    -0.648 |      0.317 | 605.000 |
-| c_sugar_b                |    1.837 |    -0.087 |     -0.179 | 604.000 |
-| c_egg_b                  |    2.567 |     0.016 |     -0.261 | 276.000 |
-| c_oil_b                  |    1.425 |    -0.093 |      -0.14 | 613.000 |
-| c_beans_b                |    2.446 |     0.742 |      0.343 | 192.000 |
-| c_fruit_b                |    1.577 |      -0.0 |     -0.047 | 272.000 |
-| c_salt_b                 |    0.474 |    -0.034 |     -0.001 | 617.000 |
-| c_vegetables_b           |    2.095 |     -0.14 |     -0.258 | 471.000 |
-| c_milk_b                 |    6.936 |    -0.035 |     -1.723 | 114.000 |
-| c_spices_b               |    0.995 |    -0.026 |     -0.202 | 158.000 |
-| c_alcohol_b              |    1.333 |     0.167 |      0.333 |  18.000 |
-| c_otherfood_b            |      nan |       nan |        nan |   0.000 |
-| c_fuel_b                 |    1.065 |    -0.002 |     -0.103 | 456.000 |
-| c_soap_b                 |    0.583 |    -0.007 |     -0.027 | 536.000 |
-| c_transport_b            |     0.53 |    -0.002 |      0.119 | 193.000 |
-| c_cosmetics_b            |    0.904 |     0.108 |     -0.092 | 468.000 |
-| c_entertainment_b        |    0.341 |    -0.028 |      0.009 | 145.000 |
-| c_clothesfootwear_b      |    0.706 |    -0.001 |      0.046 | 595.000 |
-| c_charities_b            |    0.144 |    -0.032 |      0.009 | 134.000 |
-| c_ceremonies_b           |    0.514 |     0.161 |       0.14 | 152.000 |
-| c_textiles_b             |    0.259 |     0.017 |     0.078* | 376.000 |
-| c_utensils_b             |    0.357 |     0.006 |      0.002 | 442.000 |
-| c_dowry_b                |    5.694 |     1.918 |      0.674 | 126.000 |
-| c_furniture_b            |    0.338 |     0.001 |      0.065 | 368.000 |
-| c_other_b                |      nan |       nan |        nan |   0.000 |
-| asset_val_cows_b         | 3746.316 |   -690.76 |  -1024.887 |  35.000 |
-| asset_val_smallanimals_b | 1187.232 |  -388.754 |   -517.232 | 123.000 |
-| asset_val_bicycle_b      |  369.277 |     23.24 |     63.223 | 171.000 |
-| asset_val_radio_b        |   144.07 |    -16.02 |     -31.07 | 260.000 |
-| asset_val_motorcycle_b   | 2909.939 |   616.142 |    840.104 |  93.000 |
-| asset_val_net_b          |   29.588 |     0.656 |      0.128 | 423.000 |
-| asset_val_poultry_b      |  172.681 |   -16.534 |    -38.649 | 161.000 |
-| asset_val_bed_b          |  304.022 |     1.606 |      39.21 | 521.000 |
-| asset_val_chairtables_b  |  255.978 |   -45.832 |     10.247 | 531.000 |
-| asset_val_mobile_b       |  148.957 |   22.254* |      9.591 | 414.000 |
-| asset_val_netITN_b       |    30.11 |     -0.71 |      3.709 | 181.000 |
-| asset_n_house_b          |    3.216 |    -0.031 |     -0.016 | 543.000 |
-| in_business_b            |      1.0 |       0.0 |        0.0 | 265.000 |
-| child_total_b            |     3.61 |     0.056 |      0.025 | 594.000 |
-| hh_size_b                |    7.232 |    -0.175 |        0.3 | 648.000 |
+|                          | Control | Delta TUP | Delta Cash |       N |
+|--------------------------+---------+-----------+------------+---------|
+| c_meat_b                 |   1.747 |     0.018 |      0.033 | 378.000 |
+| c_fish_b                 |    0.96 |     0.041 |     -0.022 | 474.000 |
+| c_cereals_b              |   1.934 |    -0.071 |     -0.019 | 605.000 |
+| c_sugar_b                |   0.247 |     -0.06 |     -0.031 | 604.000 |
+| c_egg_b                  |   0.712 |     0.011 |     -0.077 | 276.000 |
+| c_oil_b                  |  -0.202 |     0.014 |     -0.035 | 613.000 |
+| c_beans_b                |   0.571 |     0.135 |      0.127 | 192.000 |
+| c_fruit_b                |   0.231 |     0.007 |      0.027 | 272.000 |
+| c_salt_b                 |  -0.898 |    -0.054 |      0.001 | 617.000 |
+| c_vegetables_b           |   0.433 |    -0.026 |     -0.047 | 471.000 |
+| c_milk_b                 |   1.415 |    -0.015 |     -0.217 | 114.000 |
+| c_spices_b               |   -0.24 |    -0.069 |      -0.21 | 158.000 |
+| c_alcohol_b              |   0.205 |     0.104 |      0.305 |  18.000 |
+| c_otherfood_b            |     nan |       nan |        nan |   0.000 |
+| c_fuel_b                 |  -0.461 |     -0.01 |     -0.127 | 456.000 |
+| c_soap_b                 |  -1.073 |    -0.051 |     -0.172 | 536.000 |
+| c_transport_b            |  -1.006 |    -0.003 |      0.127 | 193.000 |
+| c_cosmetics_b            |  -0.742 |     0.084 |     -0.054 | 468.000 |
+| c_entertainment_b        |  -1.313 |     -0.13 |     -0.064 | 145.000 |
+| c_clothesfootwear_b      |  -0.911 |    -0.005 |     -0.074 | 595.000 |
+| c_charities_b            |  -2.552 |    -0.229 |     -0.121 | 134.000 |
+| c_ceremonies_b           |  -1.478 |     0.261 |      0.162 | 152.000 |
+| c_textiles_b             |  -1.804 |     0.052 |      0.112 | 376.000 |
+| c_utensils_b             |  -1.548 |     -0.01 |     -0.003 | 442.000 |
+| c_dowry_b                |   0.034 |     0.433 |      0.178 | 126.000 |
+| c_furniture_b            |  -1.676 |     0.033 |      0.185 | 368.000 |
+| c_other_b                |     nan |       nan |        nan |   0.000 |
+| asset_val_cows_b         |   7.461 |    -0.072 |     -0.068 |  35.000 |
+| asset_val_smallanimals_b |   6.425 |    -0.195 |     -0.364 | 123.000 |
+| asset_val_bicycle_b      |   5.601 |     0.051 |       0.14 | 171.000 |
+| asset_val_radio_b        |     4.3 |     0.067 |     -0.071 | 260.000 |
+| asset_val_motorcycle_b   |   6.762 |     0.676 |      0.778 |  93.000 |
+| asset_val_net_b          |   3.089 |     0.024 |     -0.008 | 423.000 |
+| asset_val_poultry_b      |   4.616 |     0.002 |     -0.177 | 161.000 |
+| asset_val_bed_b          |   5.306 |    -0.001 |      0.116 | 521.000 |
+| asset_val_chairtables_b  |   4.889 |     0.021 |      0.025 | 531.000 |
+| asset_val_mobile_b       |   4.811 |     0.119 |      0.031 | 414.000 |
+| asset_val_netITN_b       |   3.147 |    -0.047 |       0.13 | 181.000 |
+| asset_n_house_b          |   1.064 |    -0.027 |       -0.0 | 543.000 |
+| child_total_b            |   1.118 |     0.043 |      0.039 | 594.000 |
+| hh_size_b                |   1.917 |    -0.021 |       0.05 | 648.000 |
+| in_business_b            |   0.398 |     0.038 |      0.017 | 638.000 |
+
 
 *** Box and whisker plots for the new balance table
 
@@ -1523,12 +1530,12 @@ print(newdf2)
 | TUP     | 244.000 | 228.000 | 236.000 |
 | All     | 649.000 | 606.000 | 694.000 |
 
-|  |2013|   2014|   2015  |
-|-
-| Cash  | 124.000 | 112.000 | 110.000 |
-| Control  | 281.000 | 219.000 | 262.000 |
-| TUP  | 244.000 | 223.000 | 231.000 |
-| All  | 649.000 | 554.000 | 603.000 |
+|         |    2013 |    2014 |    2015 |
+|---------+---------+---------+---------|
+| Cash    | 124.000 | 112.000 | 110.000 |
+| Control | 281.000 | 219.000 | 262.000 |
+| TUP     | 244.000 | 223.000 | 231.000 |
+| All     | 649.000 | 554.000 | 603.000 |
 
 
 
@@ -1750,6 +1757,8 @@ print(newdf)
 
 *** Creating a new attrition balance table with only nonzero values counting toward the mean
 
+The following table shows the means of log expenditures. 
+
 #+name: attrition_balance_nonzero
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
@@ -1757,6 +1766,7 @@ data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/TUP_midline.dta"
 data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/TUP_endline.dta"
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 import pandas as pd
+import numpy as np
 from scipy import stats
 from cfe.df_utils import df_to_orgtbl
 
@@ -1790,14 +1800,16 @@ df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_b
              'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
              'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
              'asset_val_netITN_b',
-             'asset_n_house_b', 'child_total_b', 'hh_size_b',
-             'Group'])
+             'asset_n_house_b', 'child_total_b', 'hh_size_b'])
 
 df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
 df_1.replace(to_replace = 0, value = float("NaN") , inplace = True)
 
-# add in the dummy variables that need 0 as one of their values
-df_1 = df_1.join(df[ ['in_midline', 'in_endline', 'in_business_b'] ])
+# take the logs of expenditure for all variables except dummy variables
+df_1 = df_1.transform(lambda x: np.log(x))
+
+# add in group assignment and the dummy variables that need 0 as one of their values
+df_1 = df_1.join(df[ ['in_midline', 'in_endline', 'in_business_b', 'Group'] ])
 
 means_b = df_1.mean()
 means_m = df_1.groupby(['in_midline']).mean()
@@ -1855,50 +1867,50 @@ print(newdf)
 #+end_src
 
 #+RESULTS: attrition_balance_nonzero
-|                          | mean_baseline |  beta_mid |  beta_end |
-|--------------------------+---------------+-----------+-----------|
-| asset_n_house_b          |         3.201 |    0.323* |     0.301 |
-| asset_val_bed_b          |       312.086 |    19.135 | -110.358* |
-| asset_val_bicycle_b      |       387.784 |    24.565 |    11.956 |
-| asset_val_chairtables_b  |       240.089 |    17.727 |   -42.563 |
-| asset_val_cows_b         |      3363.714 |  1187.333 |    1087.0 |
-| asset_val_mobile_b       |       159.087 |    16.765 |   -16.258 |
-| asset_val_motorcycle_b   |      3362.839 |  1133.611 |  -275.119 |
-| asset_val_netITN_b       |        30.492 |    -0.263 |    -7.101 |
-| asset_val_net_b          |        29.861 |     2.671 |     2.337 |
-| asset_val_poultry_b      |       158.975 |   71.043* |   -15.736 |
-| asset_val_radio_b        |       132.412 |   -20.601 |  -92.91** |
-| asset_val_smallanimals_b |       953.537 |   336.985 |  -119.915 |
-| c_alcohol_b              |         1.426 |    -0.271 |     0.479 |
-| c_beans_b                |         2.793 |   1.151** |    -0.899 |
-| c_cereals_b              |         9.529 |     0.213 |  -3.945** |
-| c_ceremonies_b           |         0.595 |    -0.167 |    -0.145 |
-| c_charities_b            |         0.133 |    -0.006 |     0.014 |
-| c_clothesfootwear_b      |         0.714 |      0.2* |    -0.25* |
-| c_cosmetics_b            |         0.927 |     0.074 |     0.292 |
-| c_dowry_b                |         6.421 |     2.898 |    -0.352 |
-| c_egg_b                  |         2.514 |    -0.117 |     0.035 |
-| c_entertainment_b        |         0.333 |     0.022 |      0.16 |
-| c_fish_b                 |          3.31 |    -0.088 |     0.191 |
-| c_fruit_b                |         1.567 |     0.158 |    -0.194 |
-| c_fuel_b                 |         1.044 |     0.186 |    -0.161 |
-| c_furniture_b            |         0.352 |    -0.023 |     -0.01 |
-| c_meat_b                 |         6.837 |   1.041** |     0.568 |
-| c_milk_b                 |         6.547 |     0.911 |     1.305 |
-| c_oil_b                  |         1.364 |     0.044 |  -0.682** |
-| c_other_b                |           nan |       nan |       nan |
-| c_otherfood_b            |           nan |       nan |       nan |
-| c_salt_b                 |         0.461 | -0.149*** |    -0.054 |
-| c_soap_b                 |         0.575 |   -0.182* |     -0.01 |
-| c_spices_b               |         0.947 |    -0.185 |     -0.22 |
-| c_sugar_b                |          1.77 |    -0.265 |    -0.059 |
-| c_textiles_b             |         0.281 |     0.039 |     0.033 |
-| c_transport_b            |         0.551 |    -0.042 |     0.032 |
-| c_utensils_b             |         0.359 |     0.081 |    -0.067 |
-| c_vegetables_b           |         1.994 |     0.286 |    -0.165 |
-| child_total_b            |         3.636 |  0.633*** |     0.454 |
-| hh_size_b                |         7.224 |   0.595** |     0.428 |
-| in_business_b            |         0.415 |     0.038 |     0.007 |
+|                          | mean_baseline |  beta_mid | beta_end |
+|--------------------------+---------------+-----------+----------|
+| asset_n_house_b          |         1.054 |     0.083 |    0.071 |
+| asset_val_bed_b          |         5.328 |     0.028 | -0.408** |
+| asset_val_bicycle_b      |         5.642 |     0.106 |    0.015 |
+| asset_val_chairtables_b  |         4.902 |     0.179 |   -0.224 |
+| asset_val_cows_b         |         7.428 |     0.686 |    0.133 |
+| asset_val_mobile_b       |         4.862 |     0.075 |   -0.174 |
+| asset_val_motorcycle_b   |         7.223 |     0.918 |    0.787 |
+| asset_val_netITN_b       |         3.151 |     0.034 |   -0.324 |
+| asset_val_net_b          |         3.096 |     0.009 |    0.056 |
+| asset_val_poultry_b      |         4.582 |     0.259 |    0.111 |
+| asset_val_radio_b        |         4.314 |    -0.036 |   -0.354 |
+| asset_val_smallanimals_b |          6.29 |     0.351 |    0.081 |
+| c_alcohol_b              |         0.269 |    -0.272 |   0.633* |
+| c_beans_b                |         0.648 |      0.3* |   -0.272 |
+| c_cereals_b              |         1.905 |    -0.052 |  -0.255* |
+| c_ceremonies_b           |         -1.36 |    -0.139 |   -0.085 |
+| c_charities_b            |        -2.663 |    -0.241 |    0.076 |
+| c_clothesfootwear_b      |        -0.927 |    0.234* |   -0.169 |
+| c_cosmetics_b            |        -0.721 |     -0.03 |    0.062 |
+| c_dowry_b                |         0.203 |     0.596 |    0.122 |
+| c_egg_b                  |         0.699 |    -0.081 |    0.076 |
+| c_entertainment_b        |        -1.368 |    -0.116 |    0.418 |
+| c_fish_b                 |          0.97 |       0.0 |    0.028 |
+| c_fruit_b                |         0.239 |     0.094 |   -0.114 |
+| c_fuel_b                 |        -0.489 |     0.033 |   -0.257 |
+| c_furniture_b            |        -1.627 |     0.041 |   -0.338 |
+| c_meat_b                 |          1.76 |     0.133 |    0.105 |
+| c_milk_b                 |         1.363 |     0.193 |    0.175 |
+| c_oil_b                  |        -0.203 |    -0.054 |   -0.216 |
+| c_other_b                |           nan |       nan |      nan |
+| c_otherfood_b            |           nan |       nan |      nan |
+| c_salt_b                 |        -0.918 | -0.154*** |   -0.053 |
+| c_soap_b                 |        -1.125 |     -0.17 |   -0.086 |
+| c_spices_b               |        -0.307 |     -0.19 |   -0.156 |
+| c_sugar_b                |         0.219 |    -0.092 |   -0.116 |
+| c_textiles_b             |        -1.762 |     0.099 |   -0.109 |
+| c_transport_b            |        -0.985 |    -0.132 |    0.022 |
+| c_utensils_b             |        -1.552 |      0.21 |    -0.24 |
+| c_vegetables_b           |         0.415 |     0.095 |   -0.047 |
+| child_total_b            |         1.142 |  0.219*** |   0.173* |
+| hh_size_b                |         1.919 |   0.081** |    0.062 |
+| in_business_b            |         0.415 |     0.038 |    0.007 |
 
 
 ** Consumption
