@@ -2,18 +2,26 @@
 #+TITLE: Comparing Cash and Asset Transfers to Low-Income Households in South Sudan
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
 #+DATE: \today
-#+OPTIONS: texht:t toc:nil num:nil ':t
-#+LATEX_CLASS_OPTIONS: [12pt,article]
+#+OPTIONS: texht:t toc:nil inline:nil todo:nil
+#+OPTIONS: title:nil 
+#+LATEX_CLASS_OPTIONS: [12pt,letterpaper]
+#+LATEX_HEADER: \address{University of California, Berkeley}
 #+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
-#+LaTeX_HEADER:       \addbibresource{./prospectus.bib}
 #+LaTeX_HEADER:       \addbibresource{main.bib}
 #+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 #+LaTeX_HEADER:       \usepackage[T1]{fontenc}
-#+LaTeX_HEADER:       %\usepackage[backend=biber,style=authoryear,natbib=true]{biblatex}
+#+PROPERTY: header-args:python :results output raw table :noweb no-export :exports none :prologue "# -*- coding: utf-8 -*-"
 :END:
 
-#+begin_abstract
+* Title Page                                                         :ignore:
+#+BEGIN_export latex
+\begin{titlepage}
+\title[Cash and Asset Transfers]{Comparing Cash and Asset Transfers to Low-Income Households in South Sudan}
+
+\date{\today}
+
+\begin{abstract}
 Several previous studies have found that the ``graduation'' or
 ``Transfers to the Ultra-Poor'' (TUP) framework is an effective
 approach to alleviating the constraints that prevent extremely poor
@@ -37,8 +45,20 @@ effects of the outbreak of violence in 2014. We tentatively conclude
 that in this economic context cash can increase household consumption,
 but the goal of improving income or wealth is aided by the additional
 services that the ultra-poor graduation framework offer.
-#+end_abstract
-#+LATEX: \newpage
+\end{abstract}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{center}
+  ligon@berkeley.edu\\
+  University of California\\
+  Berkeley, CA 94720--3310
+\end{center}
+
+\end{titlepage}
+#+END_export
+
 
 * Introduction
  
@@ -53,7 +73,7 @@ Ultra-Poor'' (TUP) program in Bangladesh as a supplement or precursor to credit
 services. First implemented by BRAC in 2007, the program aims to simultaneously
 alleviate physical and human capital constraints by providing households with a
 significant transfer of food and productive assets, followed by two years of training
-and support by extension officers. (\cite{bandiera2017}) The general framework[fn:: Known as the
+and support by extension officers bandiera2017} The general framework[fn:: Known as the
 ``graduation framework'' pointing to the original ambition to move households into an
 activity where they are able to finance further income growth without costly
 transfers.] has since expanded to a wide range of countries, with a general pattern
