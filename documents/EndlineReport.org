@@ -62,23 +62,26 @@ services that the ultra-poor graduation framework offer.
 
 * Introduction
  
-Poor rural households often earn money from low-return activities such as
-small-scale cultivation or casual day labor, and face both financial and human
-capital constraints, keeping them from investing and expanding into more lucrative
-activities. Experience and research over many years has led many to believe that
-households facing particularly acute poverty are unable to solve this problem through
-the small, high-interest loans typically marketed to them.  It was these
-considerations that led to the development of the initial ``Targeting the
-Ultra-Poor'' (TUP) program in Bangladesh as a supplement or precursor to credit
-services. First implemented by BRAC in 2007, the program aims to simultaneously
-alleviate physical and human capital constraints by providing households with a
-significant transfer of food and productive assets, followed by two years of training
-and support by extension officers citep:bandiera-etal17.  The general framework[fn:: Also known as the
-``graduation framework'' pointing to the original ambition to move households into an
-activity where they are able to finance further income growth without costly
-transfers.] has since expanded to a wide range of countries, with a general pattern
-of success in increasing aggregate investment, labor supply, and aggregate
-consumption citep:banerjee-etal15. 
+Poor rural households often earn money from low-return activities such
+as small-scale cultivation or casual day labor, and face both
+financial and human capital constraints, which may prevent them from
+investing and expanding into more lucrative activities. Experience and
+research over many years has led many to believe that households
+facing particularly acute poverty are unable to solve this problem
+through the small, high-interest loans typically marketed to them.  It
+was these considerations that led to the development of the initial
+``Targeting the Ultra-Poor'' (TUP) program in Bangladesh as a
+supplement or precursor to credit services. First implemented by BRAC
+in 2007, the program aims to simultaneously alleviate physical and
+human capital constraints by providing households with a significant
+transfer of food and productive assets, followed by two years of
+training and support by extension officers citep:bandiera-etal17.  The
+general framework[fn:: Also known as the ``graduation framework''
+pointing to the original ambition to move households into an activity
+where they are able to finance further income growth without costly
+transfers.] has since expanded to a wide range of countries, with a
+general pattern of success in increasing aggregate investment, labor
+supply, and aggregate consumption citep:banerjee-etal15.
 
 A second, older literature that has gained new interest in recent
 years studies the effect of offering poor households direct
@@ -105,15 +108,16 @@ experimental evaluation of the two approaches.
 
 * The TUP Program
    
-The program itself was similar to the other TUP programs completed by
-BRAC. It consisted of four phases: targeting and selection, training
-and enterprise selection, asset transfers, and monitoring.
+The TUP program itself was similar to the other TUP programs completed
+by BRAC elsewhere. It consisted of four phases: targeting and
+selection, training and enterprise selection, asset transfers, and
+monitoring.
 
 *** Targeting, Selection, & Training
 
 The fist phase of the program was to complete a census of households in the area
-around BRAC's office in the town of Yei in Western Equitoria. This census contained
-questions to assess eligibility for the program. First, households were excluded if
+around BRAC's office in the town of Yei in Western Equatoria. This census contained
+questions to assess eligibility for the program.  First, households were excluded if
 they had a salaried worker in the household, were participating in another NGO
 program, or had no access to cultivable land (which was in some cases necessary for
 the program's model). Households were then deemed eligible if they fit at least three
@@ -133,15 +137,17 @@ control group.
 
 *** Asset Transfers & Monitoring
 
-The second phase of the program was training and enterprise selection. Unlike most
-programs of this type, the number of households given each kind of asset was set in
-advance, with 75 enrolled in agricultural activities (vegetable cultivation), 85 in
-duck rearing, 45 in goat rearing, and the rest in small trade businesses. While the
-staff tried to map housheolds' asset types to their respective preferences and
-skills, a disproportionate number stated preferences for goats and small trade.
-Households then attended training sessions. The first of these were for general
-business skills around literacy, numeracy, and financial management. The next were
-sector specific and focused on how to properly raise livestock or gardens. 
+The second phase of the program was training and enterprise
+selection. Unlike most programs of this type, the number of households
+given each kind of asset was set in advance, with 75 enrolled in
+agricultural activities (vegetable cultivation), 85 in duck rearing,
+45 in goat rearing, and the rest in small trade businesses. While the
+staff tried to map households' asset types to their respective
+preferences and skills, a disproportionate number stated preferences
+for goats and small trade.  Households then attended training
+sessions. The first of these were for general business skills around
+literacy, numeracy, and financial management. The next were sector
+specific and focused on animal husbandry or crop cultivation.
 
 After training was completed, asset transfers began in late 2013 and
 continued through the first few months of 2014. The productive assets
@@ -154,15 +160,15 @@ businesses. These meetings also included food transfers for a while,
 which were designed to help get households to the point of receiving
 revenue from their assets without having to sell them.  In all, the
 market value of these food transfers were valued at $110, bringing the
-total value of all transfers to $350--$410.
+total value of all transfers to either $350 or $410.
 
 *** Cash Transfers 
 
 We randomly assigned each of the 125 households in the UCT group to
 receive a cash transfer of either $350 or $410, matching the values of
-assets received by households in the TUP treatments. Unfortunately,
-political instability disrupted NGO operations throughtout South
-Sudan, preventing the simultaneous disbursal of the cash and asset
+assets received by households in the TUP treatments.  Political
+instability disrupted NGO operations throughout South Sudan,
+preventing the simultaneous disbursal of the cash and asset
 transfers. Instead, a second survey was conducted in June of 2014,
 with the cash transfers being disbursed immediately thereafter. This
 resulted in a timing difference of 3 to 6 months between the two
@@ -171,17 +177,6 @@ This naturally complicates the comparison of treatment effects between
 the two treatments. We will describe our empirical strategy in light
 of these challenges in Section [[*Empirical Strategy]].
 
-Cash transfers were delivered by field officers in person and in local
-currency. That they were delivered in cash distinguishes these from
-several other cash transfer programs.  For example,
-cite:haushofer-shapiro16 deposited funds in a bank or mobile money
-account, while cite:fafchamps-etal14 used money transfers.  In all of
-these experiments transfers were denominated in the local currency.
-Howver, experimental studies of the behavioral implications of savings
-accounts citep:dupas-robinson13 would lead one to expect that the
-method of disbursal might affect the propensity to save a cash
-transfer.
-
 Local community leaders were approached in advance of talking to
 individual households to reassure recipients of BRAC's intentions. It
 was made clear that the transfers were there for their benefit, that
@@ -189,7 +184,19 @@ while they were encouraged to put them towards some productive use,
 their use was unrestricted, and that under no circunstances would they
 receive a second transfer in the future. BRAC was a well-established
 institution in the greater Yei community, so these assurances were
-taken as credible and no refused to accept the money.
+taken as credible and no one refused to accept the money.
+
+Cash transfers were delivered by field officers in person and in the
+local currency (South Sudanese Pounds, or SSPs).  That transfers were
+delivered in cash distinguishes these from several other cash transfer
+programs.  For example, cite:haushofer-shapiro16 deposited funds in a
+bank or mobile money account, while cite:fafchamps-etal14 used money
+transfers.  In all of these experiments transfers were denominated in
+the local currency.  Howver, experimental studies of the behavioral
+implications of savings accounts citep:dupas-robinson13 would lead one
+to expect that the method of disbursal might affect the propensity to
+save a cash transfer.
+
 
 * The Data
 
@@ -1527,8 +1534,8 @@ print(df_to_orgtbl(A[A['D']!=A['R']]))
 We get the same results as in the original attrition tables.
 
 # using master_assignment.csv
-#+name: master_assignment_attrition
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no
+#+name: master_assignment_attrition 
+#+begin_src python :exports none  :results output table raw labels=[] :colnames no :tangle master_assignment_attrition.py
 data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 data_midline = "../../TUP-data/Midline/TUP_midline.dta"
@@ -1543,8 +1550,12 @@ df_m = pd.read_stata(data_midline)
 df_e = pd.read_stata(data_endline)
 
 
-"""Total number of households in sample by group and round"""
-
+print("""#+caption: Total number of households in sample by group and round.""")
+# Initial assignment (from Census)
+dassign = df_a.Group.value_counts(ascending=True)
+# change "Cash" to "UCT"
+dassign.rename(index={'Cash':'UCT'}, inplace=True)
+dassign['All'] = dassign.sum()
 
 # baseline (2013)
 # merge baseline data id number and group column from master assignment csv based on respondent id/id number
@@ -1553,9 +1564,12 @@ df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_o
 # change "Gift" to "Control"
 df.replace(to_replace='Gift', value='Control', inplace=True)
 
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
 # count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-d2013 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+d2013 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
 
 df_b = df
 
@@ -1566,9 +1580,12 @@ df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_o
 # change "Gift" to "Control"
 df.replace(to_replace='Gift', value='Control', inplace=True)
 
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
 # count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-d2014 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+d2014 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
 
 df_m = df
 
@@ -1579,21 +1596,24 @@ df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_o
 # change "Gift" to "Control"
 df.replace(to_replace='Gift', value='Control', inplace=True)
 
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
 # count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-d2015 = {'Cash': bygroupdf.at['Cash','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+d2015 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
 
 df_e = df
 
 # make the table for total number of households in sample by group and round
-d = {'2013': d2013, '2014': d2014, '2015': d2015}
+d = {'Assigned': dassign, '2013': d2013, '2014': d2014, '2015': d2015}
 table = pd.DataFrame(data = d) 
 
-newdf = df_to_orgtbl(table, float_fmt = '%.3f')
+newdf = df_to_orgtbl(table, float_fmt = '%d')
 print(newdf)
 
 
-"""Number of households in sample with baseline survey by group and round"""
+print("""#+caption: Number of households in sample with baseline survey by group and round""")
 
 
 # find the intersection of people who had surveys at both baseline and midline
@@ -1606,41 +1626,37 @@ bygroupdf_b_e = df_b_e.groupby(['Group']).count()
 
 # count the number in each treatment group
 dd2013 = d2013
-dd2014 = {'Cash': bygroupdf_b_m.at['Cash','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
-dd2015 = {'Cash': bygroupdf_b_e.at['Cash','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
+dd2014 = {'UCT': bygroupdf_b_m.at['UCT','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
+dd2015 = {'UCT': bygroupdf_b_e.at['UCT','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
 
 # make the table for number of households in sample with baseline survey by group and round
-dd = {'2013': dd2013, '2014': dd2014, '2015': dd2015}
+dd = {'Assigned': dassign, '2013': dd2013, '2014': dd2014, '2015': dd2015}
 table2 = pd.DataFrame(data = dd) 
 
-newdf2 = df_to_orgtbl(table2, float_fmt = '%.3f')
+newdf2 = df_to_orgtbl(table2, float_fmt = '%d')
 print(newdf2)
 
 #+end_src
 
 #+RESULTS: master_assignment_attrition
-|---------+---------+---------+---------|
-|         |    2013 |    2014 |    2015 |
-|---------+---------+---------+---------|
-| UCT    | 124.000 | 113.000 | 111.000 |
-| Control | 281.000 | 265.000 | 347.000 |
-| TUP     | 244.000 | 228.000 | 236.000 |
-| All     | 649.000 | 606.000 | 694.000 |
-|---------+---------+---------+---------|
+#+caption: Total number of households in sample by group and round.
+|         | Assigned | 2013 | 2014 | 2015 |
+|---------+----------+------+------+------|
+| All     |      749 |  649 |  606 |  694 |
+| Control |      374 |  281 |  265 |  347 |
+| TUP     |      250 |  244 |  228 |  236 |
+| UCT     |      125 |  124 |  113 |  111 |
 
-|---------+---------+---------+---------|
-|         |    2013 |    2014 |    2015 |
-|---------+---------+---------+---------|
-| UCT    | 124.000 | 112.000 | 110.000 |
-| Control | 281.000 | 219.000 | 262.000 |
-| TUP     | 244.000 | 223.000 | 231.000 |
-| All     | 649.000 | 554.000 | 603.000 |
-|---------+---------+---------+---------|
-
+#+caption: Number of households in sample with baseline survey by group and round
+|         | Assigned | 2013 | 2014 | 2015 |
+|---------+----------+------+------+------|
+| All     |      749 |  649 |  554 |  603 |
+| Control |      374 |  281 |  219 |  262 |
+| TUP     |      250 |  244 |  223 |  231 |
+| UCT     |      125 |  124 |  112 |  110 |
 
  
 ** Attrition balance table
-
 
 Next we ask how those who did not turn up in subsequent rounds differed by a range of
 baseline characteristics. \Tab{attrition_balance} reports the average level of
