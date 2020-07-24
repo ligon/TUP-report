@@ -8,7 +8,7 @@
 #+LATEX_HEADER: \address{University of California, Berkeley}
 #+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
-#+LaTeX_HEADER:       \addbibresource{main.bib}
+#+LaTeX_HEADER:       \addbibresource{~/bibtex/main.bib}
 #+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 #+LaTeX_HEADER:       \usepackage[T1]{fontenc}
 #+PROPERTY: header-args:python :results output raw table :noweb no-export :exports none :prologue "# -*- coding: utf-8 -*-"
@@ -62,48 +62,52 @@ services that the ultra-poor graduation framework offer.
 
 * Introduction
  
-Poor rural households often earn money from low-return activities like
+Poor rural households often earn money from low-return activities such as
 small-scale cultivation or casual day labor, and face both financial and human
 capital constraints, keeping them from investing and expanding into more lucrative
 activities. Experience and research over many years has led many to believe that
 households facing particularly acute poverty are unable to solve this problem through
-the small, high-interest loans typically marketed to them. It was these
+the small, high-interest loans typically marketed to them.  It was these
 considerations that led to the development of the initial ``Targeting the
 Ultra-Poor'' (TUP) program in Bangladesh as a supplement or precursor to credit
 services. First implemented by BRAC in 2007, the program aims to simultaneously
 alleviate physical and human capital constraints by providing households with a
 significant transfer of food and productive assets, followed by two years of training
-and support by extension officers bandiera2017} The general framework[fn:: Known as the
+and support by extension officers citep:bandiera-etal17.  The general framework[fn:: Also known as the
 ``graduation framework'' pointing to the original ambition to move households into an
 activity where they are able to finance further income growth without costly
 transfers.] has since expanded to a wide range of countries, with a general pattern
 of success in increasing aggregate investment, labor supply, and aggregate
-consumption. \citep{banerjee2015}
+consumption citep:banerjee-etal15. 
 
-A second, older literature that has gained new interest in recent years studies the
-effect of offering poor households direct unconditional cash transfers (UCT's)
-citep:haushofer-shapiro13,blattman14,blattman13. While this
-and the TUP framework are both direct capital transfer interventions, they are very
-different in their approach, with TUP programs guiding and constraining the use of
-capital towards productive investment while UCT's allow households to invest, save,
-and consume as they see fit. The natural question that arises is how these additional
-features and constraints in the TUP framework change how households use their capital
-transfers.
+A second, older literature that has gained new interest in recent
+years studies the effect of offering poor households direct
+unconditional cash transfers (UCT's)
+citep:haushofer-shapiro16,blattman-etal16.  While this and the TUP
+framework are both direct capital transfer interventions, they are
+very different in their approach, with TUP programs guiding and
+constraining the use of capital towards productive investment while
+UCT's allow households to invest, save, and consume as they see
+fit. The natural question that arises is whether (and how) these
+additional features and constraints in the TUP framework change how
+households use their capital transfers.
 
-To provide some insight into this question, we worked with BRAC's South Sudanese
-branch office in Yei county to randomize selection for their pilot TUP program. After
-a census identified 745 eligible households, 250 were enrolled in the pilot TUP
-program, and another 125 were later given cash roughly equal to the value of the
-physical assets provided to TUP households. Another 274 households were assigned to a
-control group. While a full body of research exists on each of these two approaches
-to wealth transfers, this study provides one of the most direct side-by-side
-experimental evaluations to date. 
+To provide some insight into this question, we worked with BRAC's
+South Sudanese branch office in Yei county to randomize selection for
+their pilot TUP program. After a census identified 745 eligible
+households, 250 were enrolled in the pilot "TUP" program; another 125
+were assigned to a "UCT" group which was given cash roughly equal to
+the value of the physical assets provided to TUP households; and
+another 274 households were assigned to a control group.  While a body
+of research exists on each of these two approaches to wealth transfers
+approached singly, this study provides the first side-by-side
+experimental evaluation of the two approaches.
 
-* The Program
+* The TUP Program
    
-The pilot program itself was similar to the other TUP programs completed by BRAC. It
-consisted of four phases: targeting and selection, training and enterprise selection,
-asset transfers, and monitoring. 
+The program itself was similar to the other TUP programs completed by
+BRAC. It consisted of four phases: targeting and selection, training
+and enterprise selection, asset transfers, and monitoring.
 
 *** Targeting, Selection, & Training
 
@@ -139,43 +143,44 @@ Households then attended training sessions. The first of these were for general
 business skills around literacy, numeracy, and financial management. The next were
 sector specific and focused on how to properly raise livestock or gardens. 
 
-Once training is completed, asset transfers began in late 2013 and continued through
-the first few months of 2014. The productive assets related to each enterprise were
-valued at around $240 per household, with a random subset recieving an additional $60
-in assets later in 2014. Shortly thereafter, households started to attend weekly or
-semi-weekly meetings with other nearby participants to discuss with each other and a
-BRAC extension officer the details of their businesses. These meetings also included
-food transfers for a while, which were designed to help get households to the point
-of receiving revenue from their assets without having to sell them.
+After training was completed, asset transfers began in late 2013 and
+continued through the first few months of 2014. The productive assets
+related to each enterprise were valued at around $240 per household,
+with a random subset receiving an additional $60 in assets later
+in 2014. Shortly thereafter, households started to attend weekly or
+semi-weekly meetings with other nearby participants to discuss with
+each other and a BRAC extension officer the details of their
+businesses. These meetings also included food transfers for a while,
+which were designed to help get households to the point of receiving
+revenue from their assets without having to sell them.  In all, the
+market value of these food transfers were valued at $110, bringing the
+total value of all transfers to $350--$410.
 
 *** Cash Transfers 
 
-In all, the market value of these food transfers were valued at $110, bringing the
-total value of all transfers to $350-$410. The 125 households in the UCT group were
-randomly divided in half to receive cash in these two amounts. Unfortunately, political
-instability disrupted NGO operations throughtout South Sudan, preventing the
-simultaneous disbursal of the cash and asset transfers. Instead, a second survey was
-conducted in June of 2014, with the cash transfers being disbursed immediately
-thereafter. This resulted in a timing difference of 3 to 6 months between the two
+We randomly assigned each of the 125 households in the UCT group to
+receive a cash transfer of either $350 or $410, matching the values of
+assets received by households in the TUP treatments. Unfortunately,
+political instability disrupted NGO operations throughtout South
+Sudan, preventing the simultaneous disbursal of the cash and asset
+transfers. Instead, a second survey was conducted in June of 2014,
+with the cash transfers being disbursed immediately thereafter. This
+resulted in a timing difference of 3 to 6 months between the two
 (since the asset transfers were rolled out over around 12 weeks).
-This naturally complicates the comparison of treatment effects between the two
-treatments. We will describe our empirical strategy in light of these challenges in
-the Empirical Strategy section.
+This naturally complicates the comparison of treatment effects between
+the two treatments. We will describe our empirical strategy in light
+of these challenges in Section [[*Empirical Strategy]].
 
 Cash transfers were delivered by field officers in person and in local
-currency. That they were delivered in cash distinguishes it from
-several other cash transfer programs.[fn:: For example,
+currency. That they were delivered in cash distinguishes these from
+several other cash transfer programs.  For example,
 cite:haushofer-shapiro16 deposited funds in a bank or mobile money
-account, while cite:fafchamps-etal14 used money transfers.]
-Experimental studies of the behavioral implications of savings
+account, while cite:fafchamps-etal14 used money transfers.  In all of
+these experiments transfers were denominated in the local currency.
+Howver, experimental studies of the behavioral implications of savings
 accounts citep:dupas-robinson13 would lead one to expect that the
 method of disbursal might affect the propensity to save a cash
-transfer.  In all of these experiments transfers were denominated in
-the local currency.  However, our context is unusual in that the local
-economy was facing significant inflation at the time, with
-year-on-year estimates ranging between 80% and 100%.  This would
-naturally make holding cash a less appealing option relative to
-consumption or investing in some real asset.
+transfer.
 
 Local community leaders were approached in advance of talking to
 individual households to reassure recipients of BRAC's intentions. It
@@ -186,65 +191,71 @@ receive a second transfer in the future. BRAC was a well-established
 institution in the greater Yei community, so these assurances were
 taken as credible and no refused to accept the money.
 
-** The Data
+* The Data
 
-The census was conducted in April of 2013 in the area around BRAC's offices in Yei
-County to identify women eligible for participation. A baseline survey was conducted
-that Summer, which successfully interviewed 649 of these women and randomly selected
-them into the TUP, UCT, and control groups. Half of each beneficiary group was
-randomly selected to receive additional "top-up" transfers with market value of $60
-(around 20% of the original transfers).
+A census of households with women in the area around BRAC's offices in
+Yei County was conducted in April of 2013.  Women in a total of 1249
+households were interviewed.  Of the 1249 total, 745 were deemed to be 
+women eligible for participation.  In the summer of 2013 a baseline
+survey was conducted, which successfully interviewed 649 of these 745
+women and randomly assigned them to one of the TUP, UCT, and control
+groups. Half of each beneficiary group was randomly selected to
+receive additional "top-up" transfers with market value of $60 (around
+20% of the original transfers).
 
-In response to the outbreak of violence in late 2013 and subsequent closing of the
-offices in Yei, a midline survey was conducted in June 2014 to try to separate pre-
-and post-conflict changes in outcomes. For lack of a valid comparison group, we will
-not speak with any authority about the effect of the conflict on economic conditions
-in Yei, though we will report estimates of treatment effects on the severity or
-likelihood of having been effected exposure to the conflict. Some of the original
-asset transfers were done before the office closure, which may affect estimates of
-the difference between programs if rates of return changed in the few intervening
-months. Finally, an endline survey was conducted in mid-2015 to estimate the effect
-of program participation on households' financial situation and overall welfare. The
-key here is that the survey conducted in mid-2014 provides us with /short-term/
-treatment effects of the TUP program within 6 months of the asset transfers, while
-providing a second baseline for the Cash transfers. Likewise, the 2015 survey
-allows us to estimate treatment effects one year after the cash transfers, and 15-18
-months after the asset transfers.
+In response to the outbreak of violence in late 2013 and subsequent
+closing of the offices in Yei, a midline survey was conducted in June
+2014 to try to separate pre- and post-conflict changes in
+outcomes. For lack of a valid comparison group, we will not speak with
+any authority about the effect of the conflict on economic conditions
+in Yei, though we will report estimates of treatment effects on the
+severity or likelihood of having been effected exposure to the
+conflict. Some of the original asset transfers were done before the
+office closure, which may affect estimates of the difference between
+programs if rates of return changed in the few intervening
+months. Finally, an endline survey was conducted in mid-2015 to
+estimate the effect of program participation on households' financial
+situation and overall welfare. The key here is that the survey
+conducted in mid-2014 provides us with /short-term/ treatment effects
+of the TUP program within 6 months of the asset transfers, while
+providing a second baseline for the Cash transfers. Likewise, the 2015
+survey allows us to estimate treatment effects one year after the cash
+transfers, and 15--18 months after the asset transfers.
 
-This unfortunately left us without data past one year for the cash transfer effects.
-To get some point estimates on household welfare for this group in the slightly
-longer term, we conducted a series of five short surveys on a monthly basis from
-November of 2015 to March of 2016. These collected only a subset of the full
-consumption modules and a few questions tracking major transactions and shocks. The
-short length of the survey allowed them to be administered via the mobile network,
-reducing cost and improving response rate. These data provide a slightly longer
-estimate of treatment effects for both cash transfers and the TUP program, but will
-be especially valuable in assessing whether the cash transfers had a long-term impact
-on consumption.
+This unfortunately left us without data past one year for the cash
+transfer effects.  To get some point estimates on household welfare
+for this group in the slightly longer term, we conducted a series of
+five short surveys on a monthly basis from November of 2015 to March
+of 2016. These collected only a subset of the full consumption modules
+and a few questions tracking major transactions and shocks. The short
+length of the survey allowed them to be administered via the mobile
+network, reducing cost and improving response rate. These data provide
+a slightly longer estimate of treatment effects for both cash
+transfers and the TUP program, but will be especially valuable in
+assessing whether the cash transfers had a long-term impact on
+consumption.
 
-** Empirical Strategy 
+** Empirical Strategy
 
-For the main panel (excluding the high-frequency mobile surveys), we estimate a
-single model using interactions between time effects and group assignment, as well as
-baseline values of the outcome variable where available.
-
+For the main panel (excluding the high-frequency mobile surveys), we
+estimate a single model using interactions between time effects and
+group assignment, as well as baseline values of the outcome variable
+where available; this is 
 \begin{equation*}
-Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{Cash}I_{t}*Cash_{it}+\beta_{t}^{TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}+\epsilon_{i}
+Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{UCT}I_{t}*UCT_{it}+\beta_{t}^{TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}+\epsilon_{i}
 \end{equation*}
-
-\noindent
 where $\delta_{t}$ are time fixed effects and $I_{t}$ is an indicator if the year
 /t/, and $Y_{it}$ is an outcome of interest for household /i/ in year /t/. We take
 the interactions of TUP assignment with 2014 and 2015 indicators as the treatment
 effects at 6-8 and 15-17 months respectively. The analagous interactions with the
-Cash group offer a second baseline and a 12-month treatment effect, respectively.
+UCT group offer a second baseline and a 12-month treatment effect, respectively.
 Since those transfers happened after the midline survey, its interaction with /2014/
 acts as a placebo; there is no /ex ante/ reason to expect that they were different
 from the rest of the control group at that point. Given the slight difference in
-timing, we report a t-test of the hypothesis \(\beta_{TUP,t}-\beta_{Cash,2015}=0\) for
+timing, we report a t-test of the hypothesis \(\beta_{TUP,t}-\beta_{UCT,2015}=0\) for
 both \(t \in {2014,2015}\). Since the difference in timing is smaller, we consider
-\(\beta_{TUP,2015}-\beta_{Cash,2015}=0\) to be the preferred hypothesis, but examine
-and report \(\beta_{TUP,2014}-\beta_{Cash,2015}=0\) as well.
+\(\beta_{TUP,2015}-\beta_{UCT,2015}=0\) to be the preferred hypothesis, but examine
+and report \(\beta_{TUP,2014}-\beta_{UCT,2015}=0\) as well.
  
 For the supplementary analysis of the high-frequency panel, we estimate a separate
 model, since the underlying data is so different. A constant parameter takes the
@@ -285,16 +296,18 @@ X = X.values.tolist()
 Y = Y.values.tolist()
 
 plt.scatter(X, Y)
-plt.savefig("scatter.png")
-plt.show() # can take this out later
+plt.savefig("../figures/scatter.png")
+#plt.show() # can take this out later
 
 #+end_src
+
+#+results: scatter_plot
 
 #+RESULTS:
 
 #+Caption: Scatter plot of basket vs total spending
 #+NAME: fig:Income_group
-[[../documents/scatter.png]]
+[[../figures/scatter.png]]
 
 * Results
 ** Balance on Obervables
@@ -530,9 +543,9 @@ means = df_1.groupby(['Group']).mean()
 means = means.T
 
 means.insert(len(means.columns), 'Delta TUP', means['TUP'] - means['Control'])
-means.insert(len(means.columns), 'Delta Cash', means['Cash'] - means['Control'])
+means.insert(len(means.columns), 'Delta UCT', means['UCT'] - means['Control'])
 
-d = {'Control': means['Control'], 'Delta TUP': means['TUP'] - means['Control'], 'Delta Cash': means['Cash'] - means['Control']}
+d = {'Control': means['Control'], 'Delta TUP': means['TUP'] - means['Control'], 'Delta UCT': means['UCT'] - means['Control']}
 means = pd.DataFrame(data=d)
 
 # so we can add * later
@@ -564,14 +577,14 @@ for column in column_list:
     elif pvalue_tup <= 0.1: 
         means.at[column,'Delta TUP'] = means.at[column,'Delta TUP'] + '*'
         
-    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'Cash'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
     
     if pvalue_cash <= 0.01: 
-        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '***'
+        means.at[column,'Delta UCT'] = means.at[column,'Delta UCT'] + '***'
     elif pvalue_cash <= 0.05: 
-        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '**'
+        means.at[column,'Delta UCT'] = means.at[column,'Delta UCT'] + '**'
     elif pvalue_cash <= 0.1: 
-        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '*'
+        means.at[column,'Delta UCT'] = means.at[column,'Delta UCT'] + '*'
     
     # as it is in the table, N is number of nonzero entries
     means.at[column, 'N'] = df_1[df_1[column] > 0][column].count()
@@ -613,7 +626,7 @@ plt.savefig("motorcycle_Elliott.png")
 
 #+RESULTS: mean_balance
 |------------------------+---------+-----------+------------+---------|
-| Consumption            | Control | Delta TUP | Delta Cash |       N |
+| Consumption            | Control | Delta TUP | Delta UCT |       N |
 |------------------------+---------+-----------+------------+---------|
 | Meat                   |   4.205 |    -0.568 |     -0.052 | 378.000 |
 | Fish                   |   2.505 |    -0.154 |     -0.156 | 474.000 |
@@ -728,9 +741,9 @@ means = df_1.groupby(['Group']).mean()
 means = means.T
 
 means.insert(len(means.columns), 'Delta TUP', means['TUP'] - means['Control'])
-means.insert(len(means.columns), 'Delta Cash', means['Cash'] - means['Control'])
+means.insert(len(means.columns), 'Delta UCT', means['UCT'] - means['Control'])
 
-d = {'Control': means['Control'], 'Delta TUP': means['TUP'] - means['Control'], 'Delta Cash': means['Cash'] - means['Control']}
+d = {'Control': means['Control'], 'Delta TUP': means['TUP'] - means['Control'], 'Delta UCT': means['UCT'] - means['Control']}
 means = pd.DataFrame(data=d)
 
 # so we can add * later
@@ -762,14 +775,14 @@ for column in column_list:
     elif pvalue_tup <= 0.1: 
         means.at[column,'Delta TUP'] = means.at[column,'Delta TUP'] + '*'
         
-    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'Cash'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
     
     if pvalue_cash <= 0.01: 
-        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '***'
+        means.at[column,'Delta UCT'] = means.at[column,'Delta UCT'] + '***'
     elif pvalue_cash <= 0.05: 
-        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '**'
+        means.at[column,'Delta UCT'] = means.at[column,'Delta UCT'] + '**'
     elif pvalue_cash <= 0.1: 
-        means.at[column,'Delta Cash'] = means.at[column,'Delta Cash'] + '*'
+        means.at[column,'Delta UCT'] = means.at[column,'Delta UCT'] + '*'
     
    # N is number of nonzero entries
     means.at[column, 'N'] = df_1[column].count()
@@ -813,7 +826,7 @@ plt.savefig("mobile_nonzero.png")
 
 #+RESULTS: mean_balance_only_nonzero_values
 |--------------------------------+---------+-----------+------------+---------|
-| Consumption                    | Control | Delta TUP | Delta Cash |       N |
+| Consumption                    | Control | Delta TUP | Delta UCT |       N |
 |--------------------------------+---------+-----------+------------+---------|
 | Meat (last three days)         |   2.845 |     0.018 |      0.033 | 378.000 |
 | Fish (last three days)         |   2.058 |     0.041 |     -0.022 | 474.000 |
@@ -885,7 +898,7 @@ reports the same numbers restricting ourselves to households with baseline surve
 In the TUP group, we were unable to find 21 participants in 2014 (8% attrition), but
 found 5 not identified in the baseline survey. We found 8 additional TUP households
 with baseline surveys again in 2015 for a final attrition rate of 5%. Of those in the
-Cash group, 12 were lost (9.6%) in 2014, then two more in 2015 (11%). The control
+UCT group, 12 were lost (9.6%) in 2014, then two more in 2015 (11%). The control
 group saw very high attrition in 2014, missing 60 people (22%). Enumerators also found
 a large number of households not found at baseline, such that there were only 16
 fewer surveys collected in 2014 than in 2013. The high attrition was due largely to
@@ -915,7 +928,7 @@ return check_attrition.TAB
 |-------------+-------+-------+-------|
 | Full Sample |  2013 |  2014 |  2015 |
 |-------------+-------+-------+-------|
-| Cash        | 124.0 | 113.0 | 111.0 |
+| UCT        | 124.0 | 113.0 | 111.0 |
 | Control     | 281.0 | 265.0 | 347.0 |
 | TUP         | 244.0 | 228.0 | 236.0 |
 |-------------+-------+-------+-------|
@@ -927,7 +940,7 @@ return check_attrition.TAB
 |-----------------+---------+---------+---------|
 | Balanced Sample |    2013 |    2014 |    2015 |
 |-----------------+---------+---------+---------|
-| Cash            | 124.000 | 112.000 | 110.000 |
+| UCT            | 124.000 | 112.000 | 110.000 |
 | Control         | 281.000 | 219.000 | 262.000 |
 | TUP             | 244.000 | 223.000 | 231.000 |
 |-----------------+---------+---------+---------|
@@ -1609,7 +1622,7 @@ print(newdf2)
 |---------+---------+---------+---------|
 |         |    2013 |    2014 |    2015 |
 |---------+---------+---------+---------|
-| Cash    | 124.000 | 113.000 | 111.000 |
+| UCT    | 124.000 | 113.000 | 111.000 |
 | Control | 281.000 | 265.000 | 347.000 |
 | TUP     | 244.000 | 228.000 | 236.000 |
 | All     | 649.000 | 606.000 | 694.000 |
@@ -1618,7 +1631,7 @@ print(newdf2)
 |---------+---------+---------+---------|
 |         |    2013 |    2014 |    2015 |
 |---------+---------+---------+---------|
-| Cash    | 124.000 | 112.000 | 110.000 |
+| UCT    | 124.000 | 112.000 | 110.000 |
 | Control | 281.000 | 219.000 | 262.000 |
 | TUP     | 244.000 | 223.000 | 231.000 |
 | All     | 649.000 | 554.000 | 603.000 |
@@ -2382,11 +2395,11 @@ df = df[df.index.notnull()]
 df.insert(len(df.columns), '2013*TUP', df['2013']*df['TUP'])
 df.insert(len(df.columns), '2014*TUP', df['2014']*df['TUP'])
 df.insert(len(df.columns), '2015*TUP', df['2015']*df['TUP'])
-df.insert(len(df.columns), '2013*Cash', df['2013']*df['Cash'])
-df.insert(len(df.columns), '2014*Cash', df['2014']*df['Cash'])
-df.insert(len(df.columns), '2015*Cash', df['2015']*df['Cash'])
+df.insert(len(df.columns), '2013*UCT', df['2013']*df['UCT'])
+df.insert(len(df.columns), '2014*UCT', df['2014']*df['UCT'])
+df.insert(len(df.columns), '2015*UCT', df['2015']*df['UCT'])
 
-controls = ['2014', '2015', '2014*TUP', '2015*TUP', '2014*Cash', '2015*Cash']
+controls = ['2014', '2015', '2014*TUP', '2015*TUP', '2014*UCT', '2015*UCT']
 
 
 #+end_src
@@ -2835,7 +2848,7 @@ controls = ["cons","TUP","CSH"]
 Goods = Goods.join(C[controls],how="left")
 Nonzero = Nonzero.join(C[controls],how="left")
 Items = [item[:-2] for item in Goods if item.endswith("_e")]
-CTL = Goods[controls].sum(axis=1)==1 #~ i.e. only constant ==1, TUP & Cash ==0
+CTL = Goods[controls].sum(axis=1)==1 #~ i.e. only constant ==1, TUP & UCT ==0
 Goods_ctl_mean =   Goods.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 
@@ -2881,7 +2894,7 @@ return tab
 |--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
 |              | # own  |              |             | Value     |                |                |          |
 |--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
-| Item         | CTL    | TUP          | Cash        | CTL       | TUP            | Cash           | N        |
+| Item         | CTL    | TUP          | UCT        | CTL       | TUP            | UCT           | N        |
 |--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
 | Pangas       | $1.06$ | $0.01$       | $0.13^{**}$ | $11.86$   | $1.66^{**}$    | $0.04$         | $410.00$ |
 | Chickens     | $3.79$ | $0.70$       | $-0.32$     | $154.35$  | $23.31$        | $0.80$         | $162.00$ |
@@ -3408,27 +3421,27 @@ many_zeros = [item for item in Vals if Vals[item].notnull().sum()<too_many_zeros
 for df in (Nonzero, Count, Vals): df.drop(many_zeros,1, inplace=True)
 
 #~ Merge in Control Vars
-controls = ["cons","TUP","Cash"]
+controls = ["cons","TUP","UCT"]
 Nonzero  = Nonzero.join(D[controls],how="left")
 Count    =   Count.join(D[controls],how="left")
 Vals     =    Vals.join(D[controls],how="left")
 
 Items = [item[:-2] for item in Vals if item.endswith("_e")]
-CTL = Vals[controls].sum(axis=1)==1 #~ i.e. only constant ==1, TUP & Cash ==0
+CTL = Vals[controls].sum(axis=1)==1 #~ i.e. only constant ==1, TUP & UCT ==0
 Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 Count_ctl_mean =   Count.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 Vals_ctl_mean  =    Vals.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 
-ZeroTable       = reg_table(regressions(Nonzero,"_e", outcomes=Items, controls = ["cons",'Cash','TUP'], Baseline="_b"), orgtbl=True, Transpose=True)
-Count, Count_se = reg_table(regressions(Count,"_e",   outcomes=Items, controls = ["cons",'Cash','TUP'], Baseline="_b"), resultdf=True, Transpose=True)
-Vals, Vals_se   = reg_table(regressions(Vals,"_e",    outcomes=Items, controls = ["cons",'Cash','TUP'], Baseline="_b"), resultdf=True, Transpose=True)
+ZeroTable       = reg_table(regressions(Nonzero,"_e", outcomes=Items, controls = ["cons",'UCT','TUP'], Baseline="_b"), orgtbl=True, Transpose=True)
+Count, Count_se = reg_table(regressions(Count,"_e",   outcomes=Items, controls = ["cons",'UCT','TUP'], Baseline="_b"), resultdf=True, Transpose=True)
+Vals, Vals_se   = reg_table(regressions(Vals,"_e",    outcomes=Items, controls = ["cons",'UCT','TUP'], Baseline="_b"), resultdf=True, Transpose=True)
 
 #~ Make full table of Standard errors-- MAKE SURE YOU HAVE THE SUFFIXES RIGHT.
-SE = Count_se[["TUP","Cash"]].join(Vals_se[["TUP","Cash"]], rsuffix=" (SSP)", lsuffix=" (# own)")
+SE = Count_se[["TUP","UCT"]].join(Vals_se[["TUP","UCT"]], rsuffix=" (SSP)", lsuffix=" (# own)")
 
 #~ Make full table of point estimates and control-group means
-FullTable = pd.DataFrame({"# own (CTL)":Count_ctl_mean, "Value (CTL)":Vals_ctl_mean}).join(Count[["TUP","Cash"]])
-FullTable = FullTable.join(Vals[["TUP","Cash","N"]], rsuffix=" (SSP)", lsuffix=" (# own)")
+FullTable = pd.DataFrame({"# own (CTL)":Count_ctl_mean, "Value (CTL)":Vals_ctl_mean}).join(Count[["TUP","UCT"]])
+FullTable = FullTable.join(Vals[["TUP","UCT","N"]], rsuffix=" (SSP)", lsuffix=" (# own)")
 FullTable = df_to_orgtbl(FullTable, sedf=SE)
 AllTables = FullTable+"\n\n"+ZeroTable
 return AllTables
