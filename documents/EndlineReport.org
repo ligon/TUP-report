@@ -8,11 +8,11 @@
 #+LATEX_HEADER: \address{University of California, Berkeley}
 #+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
-#+LaTeX_HEADER:       \addbibresource{~/bibtex/main.bib}
 #+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 #+LaTeX_HEADER:       \usepackage[T1]{fontenc}
 #+PROPERTY: header-args:python :results output raw table :noweb no-export :exports none :prologue "# -*- coding: utf-8 -*-"
 :END:
+
 
 * Title Page                                                         :ignore:
 #+BEGIN_export latex
@@ -93,25 +93,27 @@ constraining the use of capital towards productive investment while
 UCT's allow households to invest, save, and consume as they see
 fit. The natural question that arises is whether (and how) these
 additional features and constraints in the TUP framework change how
-households use their capital transfers.
+households use their capital transfers.  This study provides the first
+side-by-side experimental evaluation of the two approaches.
 
-To provide some insight into this question, we worked with BRAC's
-South Sudanese branch office in Yei county to randomize selection for
-their pilot TUP program. After a census identified 745 eligible
-households, 250 were enrolled in the pilot "TUP" program; another 125
-were assigned to a "UCT" group which was given cash roughly equal to
-the value of the physical assets provided to TUP households; and
-another 274 households were assigned to a control group.  While a body
-of research exists on each of these two approaches to wealth transfers
-approached singly, this study provides the first side-by-side
-experimental evaluation of the two approaches.
+* Treatments
 
-* The TUP Program
+How do the effects of TUP differ from the effects of a UCT, when the
+resources given to recipients have roughly the same value?  To provide
+some insight into this question, we worked with BRAC's South Sudanese
+branch office in Yei county to randomize selection for a pilot TUP
+program. After a census identified 745 eligible households, 250 were
+randomly assigned to participate in the TUP program; another 125 were
+randomly assigned to a UCT group which was given cash roughly equal to
+the value of the physical assets provided to TUP households; and the
+remaining 274 households were assigned to a control group.
+
+** The TUP Program
    
-The TUP program itself was similar to the other TUP programs completed
-by BRAC elsewhere. It consisted of four phases: targeting and
-selection, training and enterprise selection, asset transfers, and
-monitoring.
+ The TUP program itself is similar to the other TUP/Graduation programs completed
+ by BRAC elsewhere.  It consists of four phases: targeting and
+ selection, training and enterprise selection, asset transfers, and
+ monitoring.
 
 *** Targeting, Selection, & Training
 
@@ -162,20 +164,12 @@ revenue from their assets without having to sell them.  In all, the
 market value of these food transfers were valued at $110, bringing the
 total value of all transfers to either $350 or $410.
 
-*** Cash Transfers 
+** Cash Transfers 
 
-We randomly assigned each of the 125 households in the UCT group to
-receive a cash transfer of either $350 or $410, matching the values of
-assets received by households in the TUP treatments.  Political
-instability disrupted NGO operations throughout South Sudan,
-preventing the simultaneous disbursal of the cash and asset
-transfers. Instead, a second survey was conducted in June of 2014,
-with the cash transfers being disbursed immediately thereafter. This
-resulted in a timing difference of 3 to 6 months between the two
-(since the asset transfers were rolled out over around 12 weeks).
-This naturally complicates the comparison of treatment effects between
-the two treatments. We will describe our empirical strategy in light
-of these challenges in Section [[*Empirical Strategy]].
+To implement an unconditional cash transfer, we randomly assigned each
+of the 125 households in the UCT group to receive a cash transfer of
+either $350 or $410, matching the values of assets received by
+households in the TUP treatments.  
 
 Local community leaders were approached in advance of talking to
 individual households to reassure recipients of BRAC's intentions. It
@@ -197,6 +191,16 @@ implications of savings accounts citep:dupas-robinson13 would lead one
 to expect that the method of disbursal might affect the propensity to
 save a cash transfer.
 
+Political instability disrupted NGO
+operations throughout South Sudan, preventing the simultaneous
+disbursal of the cash and asset transfers. Instead, a second survey
+was conducted in June of 2014, with the cash transfers being disbursed
+immediately thereafter. This resulted in a timing difference of 3 to 6
+months between the two (since the asset transfers were rolled out over
+around 12 weeks).  This naturally complicates the comparison of
+treatment effects between the two treatments. We will describe our
+empirical strategy in light of these challenges in Section [[*Empirical
+Strategy]].
 
 * The Data
 
@@ -1655,14 +1659,14 @@ print(newdf2)
 | TUP     |      250 |  244 |  223 |  231 |
 | UCT     |      125 |  124 |  112 |  110 |
 
- 
+
 ** Attrition balance table
 
 Next we ask how those who did not turn up in subsequent rounds differed by a range of
 baseline characteristics. \Tab{attrition_balance} reports the average level of
 various characteristics in 2013. Then we report the difference in means between
 households that were in and out of the midline or endline surveys.
-Here we see that overall, households found in the mideline survey were larger with
+Here we see that on average, households found in the midline survey were larger with
 more children and larger reported asset stocks. Households found in 2015 seemed to
 have, at baseline, significantly smaller asset stocks and less consumption. This
 imbalance highlights the need for a difference-in-difference or ancova design.
