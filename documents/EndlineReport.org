@@ -2801,6 +2801,149 @@ return Table
 #+NAME: fig:conflict_exposure
 [[../figures/conflict_exposure.png]] 
 
+*** Recreating the exposure to conflict table
+#+name: exposure_to_conflict
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_m = pd.read_stata(data_midline)
+df_a = pd.read_csv(data_assignment)
+
+# change 'Cash' to 'Control' because the cash transfers weren't given out until immediately after midline survey
+df_a.replace(to_replace="Cash", value="Control", inplace=True)
+
+df = pd.merge(df_m, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+df.set_index(['idno', 'Group'], inplace=True)
+named_without_conflict = df.filter(regex="^s22_.")
+df = df.filter(like='conflict')
+
+df = df.join(named_without_conflict)
+
+df.rename(columns={"conflict_affected_m": "Affected", "conflict_worried_m": "Worried"}, inplace = True)
+
+df.replace({"Didn't have the means": 1, 
+ "Not necessary/Didn't fee in danger": 0, 
+ "Didn't have the suport from othes": 0, 
+ "Felt in danger but decided to rist it": 0}, inplace=True)
+
+df.rename(columns={'conflict_whynotprotect_m': 'NoMeans'}, inplace = True)
+
+# no invest is only if directly affected by could not invest in business
+affected_business = ['conflict_affected1_m', 'conflict_affected2_m', 'conflict_affected3_m', 's22_4d_m', 's22_4e_m']
+df_business = df[affected_business]
+
+df_business.replace({"Could not plant crop or invest in business": 1, 
+ "Death in Familuy": 0, 
+ "Needed to elocate or migrate": 0, 
+ "Loss of assets": 0, 
+ "HH memebr went to fight": 0,
+ "Business was harmed": 0}, inplace=True)
+
+df_business.insert(len(df_business.columns), 'NoInvest', df_business[affected_business].sum(axis=1))
+
+df = df.join(df_business['NoInvest'])
+del df_business
+
+# migrated is only if directly affected by migration or did to protect lives 
+affected_migration = ['conflict_affected1_m', 'conflict_affected2_m', 'conflict_affected3_m', 's22_4d_m', 's22_4e_m', 'conflict_protectlives_m']
+df_migration = df[affected_migration]
+
+df_migration.replace({"Could not plant crop or invest in business": 0, 
+ "Death in Familuy": 0, 
+ "Needed to elocate or migrate": 1, 
+ "Loss of assets": 0, 
+ "HH memebr went to fight": 0,
+ "Business was harmed": 0,
+ "Migrate to stay with friend/family": 1,
+ "Migrated and found new accommodation": 1,                     
+ "Nothing": 0,                     
+ "Looked for protection with Govt. Military": 0,
+ "Looked for protection with NGO": 0}, inplace=True)
+
+df_migration.insert(len(df_migration.columns), 'Migrated', df_migration[affected_migration].sum(axis=1))
+# replace 2s with 1s because the 2s just double count migration
+df_migration.replace(to_replace=2, value=1, inplace=True)
+
+df = df.join(df_migration['Migrated'])
+del df_migration
+
+# protect lives is anything (including migration) besides nothing 
+df['conflict_protectlives_m'].replace({"Nothing": 0, 
+                                       "Migrate to stay with friend/family": 1, 
+                                       "Migrated and found new accommodation": 1, 
+                                       "Looked for protection with Govt. Military": 1,
+                                       "Looked for protection with NGO": 1}, inplace = True)
+
+df.rename(columns={'conflict_protectlives_m': 'ProtectLives'}, inplace = True)
+
+outcomes = ["Affected", "Migrated", "NoInvest", "NoMeans", "ProtectLives", "Worried"]
+
+df.insert(len(df.columns), 'constant', 1)
+
+# make 'Group' index a column
+df.reset_index(level=['Group'], inplace=True)
+
+df = df.join(pd.get_dummies(df['Group']))
+controls = ["constant", "TUP"]
+
+models_ols = {}
+d={}
+
+for outcome in outcomes: 
+    
+    temp_df = df[controls + [outcome]].dropna()
+    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[controls]).fit()
+    
+    d[outcome] = [round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
+                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+   
+    if models_ols[outcome].pvalues[0] <= 0.01: 
+        d[outcome][0] = str(d[outcome][0]) + '***'
+    elif models_ols[outcome].pvalues[0] <= 0.05: 
+        d[outcome][0] = str(d[outcome][0]) + '**'
+    elif models_ols[outcome].pvalues[0] <= 0.1:
+        d[outcome][0] = str(d[outcome][0]) + '*'
+        
+    # second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1]
+    if models_ols[outcome].pvalues[1] <= 0.01: 
+        d[outcome][2] = str(d[outcome][2]) + '***'
+    elif models_ols[outcome].pvalues[1] <= 0.05: 
+        d[outcome][2] = str(d[outcome][2]) + '**'
+    elif models_ols[outcome].pvalues[1] <= 0.1:
+        d[outcome][2] = str(d[outcome][2]) + '*'
+    
+    del temp_df
+
+final = pd.DataFrame(data=d)
+final.rename(index = {0: "CTL mean", 1: "  ", 2: "TUP", 3: "   ", 4: "F-stat", 5: "N"}, inplace=True)
+newdf1 = df_to_orgtbl(final.loc[ ["CTL mean", "  ", "TUP", "   "] ], float_fmt = '%.3f')
+newdf2 = df_to_orgtbl(final.loc[ ["F-stat", "N"] ], float_fmt = '%.3f')
+print("|-\n" + newdf1 + "|-\n" + newdf2 + "|-\n")
+
+#+end_src
+
+#+RESULTS: exposure_to_conflict
+|----------+-----------+----------+----------+----------+--------------+----------|
+|          |  Affected | Migrated | NoInvest |  NoMeans | ProtectLives |  Worried |
+|----------+-----------+----------+----------+----------+--------------+----------|
+| CTL mean |  0.532*** | 0.373*** | 0.177*** | 0.538*** |     0.311*** | 0.928*** |
+|          |     0.026 |    0.025 |    0.018 |    0.031 |        0.025 |    0.014 |
+| TUP      | -0.127*** |   -0.005 | -0.076** | -0.109** |        0.040 |   -0.016 |
+|          |     0.042 |    0.041 |    0.030 |    0.052 |        0.040 |    0.023 |
+|----------+-----------+----------+----------+----------+--------------+----------|
+|          |  Affected | Migrated | NoInvest |  NoMeans | ProtectLives |  Worried |
+|----------+-----------+----------+----------+----------+--------------+----------|
+| F-stat   |     9.203 |    0.013 |    6.609 |    4.381 |        1.003 |    0.486 |
+| N        |   601.000 |  606.000 |  606.000 |  402.000 |      585.000 |  603.000 |
+|----------+-----------+----------+----------+----------+--------------+----------|
+
 * Concluding Remarks
   
 BRAC's South Sudan pilot of the TUP program represents the only such test of the
