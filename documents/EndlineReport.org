@@ -101,29 +101,22 @@ side-by-side experimental evaluation of the two approaches.
 How do the effects of TUP differ from the effects of a UCT, when the
 resources given to recipients have roughly the same value?  To provide
 some insight into this question, we worked with BRAC's South Sudanese
-branch office in Yei county to randomize selection for a pilot TUP
-program. After a census identified 745 eligible households, 250 were
-randomly assigned to participate in the TUP program; another 125 were
-randomly assigned to a UCT group which was given cash roughly equal to
-the value of the physical assets provided to TUP households; and the
-remaining 274 households were assigned to a control group.
+branch office in Yei county to randomize selection into either a TUP
+or UCT treatment.
 
-** The TUP Program
-   
- The TUP program itself is similar to the other TUP/Graduation programs completed
- by BRAC elsewhere.  It consists of four phases: targeting and
- selection, training and enterprise selection, asset transfers, and
- monitoring.
+We began in April 2013 by conducting a census of all households having
+one or more adult women within the area around BRAC's office in the
+town of Yei in Western Equatoria, interviewing women in 1279
+households.
 
-*** Targeting, Selection, & Training
-
-The fist phase of the program was to complete a census of households in the area
-around BRAC's office in the town of Yei in Western Equatoria. This census contained
-questions to assess eligibility for the program.  First, households were excluded if
-they had a salaried worker in the household, were participating in another NGO
-program, or had no access to cultivable land (which was in some cases necessary for
-the program's model). Households were then deemed eligible if they fit at least three
-criteria in a list of five poverty indicators:
+The census interview included questions to assess eligibility for the
+program.  Eligibility depended on several criteria.  First, households
+were excluded if they had a salaried worker in the household; if they
+were participating in some other NGOs livelihoods program; or if they
+had no access to cultivable land (which was in some cases necessary
+for the program's model).  If not excluded on these grounds,
+households were then deemed eligible if they satisfied three or more
+of the following criteria: 
 
   1. The household head was working as a day laborer (generally an occupation with poverty wages),
   2. The household had two or more children,
@@ -131,11 +124,63 @@ criteria in a list of five poverty indicators:
   4. The household had fewer than three rooms, or
   5. A woman in the household had not completed secondary school.
 
-The census was completed in April of 2013 and 745 women were identified as eligible. Of
-these, 649 were identified in a baseline survey. These households were stratified on
-employment, asset ownership, and size and selected into treatment groups. 250 were
-enrolled in the TUP program, 125 in the UCT group, and the final 274 in a pure
-control group.
+Of the 1279 households interviewed in the census, 745 were deemed to
+be eligible.  We then conducted a baseline survey of these eligible
+households, successfully interviewing 649 of eligible households.  Of
+the eligible households interviewed at baseline, 250 were randomly
+assigned to participate in the TUP program, while another 125 were
+randomly assigned to a UCT group which was given cash roughly equal to
+the value of the physical assets provided to TUP households.  This
+left 274 eligible households interviewed at baseline randomly assigned
+to a control group, and another 96 eligible households who were /not/
+interviewed at baseline. 
+
+** The TUP Program
+   
+The TUP program itself is similar to the other TUP/Graduation
+programs completed by BRAC elsewhere.  BRAC designed several possible
+enterprises: goat husbandry, duck husbandry, maize cultivation,
+vegetable cultivation, duck rearing, and the selling of dried fish.
+The preferences of enrolled households over these were elicited; we
+asked both for an ordering, and a willingness to pay for both the
+training and productive assets associated with the five different
+enterprises.
+
+#+begin_src python
+import pandas as pd
+
+df = pd.read_stata('../../TUP-data/Baseline/Tup programme sudan single file.dta',convert_categoricals=False)
+
+df = df.set_index('idno').iloc[:,-15:]
+
+# Different enumerators handled this question differently; some list
+# the assets alphabetically then giving the numeric preference
+# ordering of each asset, while others wrote the asset letters in
+# order of preference.  Here we sort this out.
+
+idx = df.rename(columns=lambda s:tuple(s.split('_'))).columns
+df.columns = pd.MultiIndex.from_tuples(idx)
+
+order  = df['rank'].stack()
+
+ac = df['ac']
+ac.columns = range(5)
+myorder = order.astype(int)-1
+
+myidx=myorder.droplevel(1).reset_index().set_index(['idno',0])
+
+maybe = ac.stack()[myidx.index]
+maybe.index = maybe.sort_index().index
+maybe =  maybe[~maybe.index.duplicated()]
+maybe.name = 'Choice'
+
+ranks = maybe.unstack()
+
+freq = pd.concat([ranks[x].value_counts() for x in ranks],axis=1)
+
+
+    
+#+end_src
 
 *** Asset Transfers & Monitoring
 
