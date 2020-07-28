@@ -471,7 +471,14 @@ import check_balance
 # differences between asset_assign.csv and locations.csv. We consider
 # asset_assign.csv to be the assignment at baseline, and locations.csv
 # to be the assignment that was created at endline when some
-# respondents who were not found at baseline were still surveyed at endline.
+# respondents who were not found at baseline were still surveyed at
+# endline.
+# There are 6 households that were interviewed only at endline and
+# were not included in asset_assign.csv or locations.csv. These
+# households are manually added as Control households in 
+# master_assignment.csv, like the other households for which a 
+# group was not assigned at baseline and therefore are labeled as 
+# Control at endline.
 
 #+name: master_random_assignment
 #+begin_src python
@@ -505,11 +512,18 @@ for i in range(len(df)):
 # now all the assignments in 'Group' should be consistent with 'group' so 'group' is a subset of 'Group' and we can drop it
 df = df.drop(columns=['group', 'respid'])
 
+# manually add the 6 households which were only interviewed at endline as 'Control'
+df = df.append({'RespID': 1359,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 1484,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 1553,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 1960,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 2142,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 2174,  'Group': 'Control'}, ignore_index=True)
+
 df.to_csv('master_assignment.csv')
 #+end_src
 
 #+RESULTS: master_random_assignment
-: None
 
 
 *** Recreating Elliott's balance table (without some variables which are sums of other variables)
