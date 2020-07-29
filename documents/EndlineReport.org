@@ -1709,7 +1709,7 @@ print(newdf2)
 ** Attrition balance table
 
 Next we ask how those who did not turn up in subsequent rounds differed by a range of
-baseline characteristics. \Tab{attrition_balance} reports the average level of
+baseline characteristics.  \Tab{attrition_balance} reports the average level of
 various characteristics in 2013. Then we report the difference in means between
 households that were in and out of the midline or endline surveys.
 Here we see that on average, households found in the midline survey were larger with
