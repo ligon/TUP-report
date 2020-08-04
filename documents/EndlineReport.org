@@ -2671,6 +2671,296 @@ RESULTS: asset_results WITHOUT Tgroup Fixed Effects
 |----------------------------------+--------------------+-------------------+-------------------|
 #+end_example
 
+*** Recreating asset tables with and without treatment group fixed effects
+
+#+name: asset_values
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+# merge baseline and midline based on idno index
+df = pd.merge(df_b.filter(regex="^asset_"), 
+              df_m.filter(regex="^asset_"), 
+              how='outer', left_index=True, right_index=True)
+
+# merge baseline/midline and endline based on idno index
+df = pd.merge(df, 
+              df_e.filter(regex="^asset_"), 
+              how='outer', left_index=True, right_index=True)
+
+# merge baseline/midline/endline with 'Group' from master_assignment.csv
+df = pd.merge(df, df_a[ ['Group'] ], 
+             how = 'outer', left_index=True, right_index=True)
+
+# Some assets to ignore, either because numbers turned out to be more or less meaningless, 
+# or because they overlap (e.g. nets & ITN nets) (as commented in TUP-data/TUP.py)
+
+df = df.drop(columns = df.filter(like='house').columns)
+df = df.drop(columns = df.filter(like='homestead').columns)
+df = df.drop(columns = df.filter(like='netITN').columns)
+
+# find columns that end with "_b", "_m", or "_e"
+# cut off the last 2 "_b", "_m", or "_e"
+asset = {}
+asset[2013] = df.filter(regex="_b$").rename(columns=lambda x: x[:-2])
+asset[2014] = df.filter(regex="_m$").rename(columns=lambda x: x[:-2])
+asset[2015] = df.filter(regex="_e$").rename(columns=lambda x: x[:-2])
+
+asset_n = {}
+asset_val = {}
+price = {}
+
+# Note: value columns have format asset_val_{good}, quantity columns have format asset_n_{good}
+for year in (2013, 2014, 2015):
+    asset_n[year] = asset[year].filter(like='_n_').rename(columns=lambda col: col[8:])
+    asset_val[year] = asset[year].filter(like='_val_').rename(columns=lambda col: col[10:]) 
+    price[year] = asset_val[year]/asset_n[year]
+
+# add top code here if needed
+
+productive_2013 = ['cows', 'smallanimals', 'poultry', 'plough', 'shed', 'shop', 'mobile', 'carts', 'sewing']
+livestock_2013 = ['cows', 'smallanimals', 'poultry']
+
+# not including 'ploughs again'
+productive_2014_2015 = ['cows', 'smallanimals', 'chickens', 'ducks', 'plough', 'shed', 'shop', 'pangas', 'axes', 'mobile', 'carts', 'sewing']
+livestock_2014_2015 = ['cows', 'smallanimals', 'chickens', 'ducks']
+
+
+# for 2013
+asset_val[2013]['Productive'] = asset_val[2013][productive_2013].sum(axis=1)
+asset_val[2013]['Livestock'] = asset_val[2013][livestock_2013].sum(axis=1)
+    
+# add year 
+asset_val[2013]['Year'] = '2013'
+
+for year in (2014, 2015):
+    # 2013 only has poultry, but 2014 and 2015 have chickens and ducks separately
+    asset_val[year]['poultry'] = asset_val[year][ ['chickens', 'ducks'] ].sum(axis = 1)
+    asset_n[year]['poultry'] = asset_n[year][ ['chickens', 'ducks'] ].sum(axis = 1)
+    
+    asset_val[year]['Productive'] = asset_val[year][productive_2014_2015].sum(axis=1)
+    asset_val[year]['Livestock'] = asset_val[year][livestock_2014_2015].sum(axis=1)
+    
+    # add year
+    asset_val[year]['Year'] = str(year)
+
+outcomes = ["Total", "Productive", "Livestock"]
+
+for year in (2013, 2014, 2015): 
+    asset_val[year]['Total'] = asset_val[year].sum(axis=1)
+    
+    # set up to make year dummies
+    asset_val[year]['2013'] = 0
+    asset_val[year]['2014'] = 0
+    asset_val[year]['2015'] = 0
+    
+    # baseline values as 'var'2013
+    for var in outcomes: 
+        asset_val[year][var+'2013'] = asset_val[2013][var]
+
+# make year dummmies
+asset_val[2013]['2013'].replace(to_replace = 0, value = 1, inplace=True)
+asset_val[2014]['2014'].replace(to_replace = 0, value = 1, inplace=True)
+asset_val[2015]['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((asset_val[2013], asset_val[2014], asset_val[2015]))
+df = df2.join((df[ ['Group'] ].join(pd.get_dummies(df['Group']))))   
+
+# make interaction terms
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+models_ols_FE = {}
+models_ols_no_FE = {}
+d_FE = {}
+d_no_FE = {}
+baseline_na = True
+
+controls_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
+controls_no_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+# from above, outcomes = ["Total", "Productive", "Livestock"]
+
+# remove observations from 2013
+df = df[df['Year'] != '2013']
+
+for outcome in outcomes: 
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls_FE]
+    temp_controls_FE = controls_FE
+    temp_controls_no_FE = controls_no_FE
+    
+    if baseline_na==True:
+        
+        # indicator for whether outcome in 2013 is na, and cast it to be an integer
+        temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        
+        # code missing values of the baseline variable as 0
+        temp_df[outcome + "2013"].fillna(0,inplace=True)
+        
+        temp_controls_FE = temp_controls_FE + ['Baseline_NAN']
+        temp_controls_no_FE = temp_controls_no_FE + ['Baseline_NAN']
+    
+    temp_controls_FE = temp_controls_FE + [outcome+"2013"]
+    temp_controls_no_FE = temp_controls_no_FE + [outcome+"2013"]
+    temp_df = temp_df.dropna()
+    
+    models_ols_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_FE]).fit()
+    models_ols_no_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_no_FE]).fit()
+
+    # for computing the mean of the control group in 2015
+    controlgroup = temp_df[temp_df['Control'] == 1]
+    
+    """for table with Fixed Effects"""
+    d_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols_FE[outcome].params[0], 3), models_ols_FE[outcome].bse[0],
+                  round(models_ols_FE[outcome].params[1], 3), models_ols_FE[outcome].bse[1], 
+                  round(models_ols_FE[outcome].params[2], 3), models_ols_FE[outcome].bse[2],
+                  round(models_ols_FE[outcome].params[3], 3), models_ols_FE[outcome].bse[3],
+                  round(models_ols_FE[outcome].params[4], 3), models_ols_FE[outcome].bse[4],
+                  round(models_ols_FE[outcome].params[5], 3), models_ols_FE[outcome].bse[5],
+                  round(models_ols_FE[outcome].params[6], 3), models_ols_FE[outcome].bse[6],
+                  round(models_ols_FE[outcome].params[7], 3), models_ols_FE[outcome].bse[7],
+                  round(models_ols_FE[outcome].params[8], 3), models_ols_FE[outcome].bse[8],
+                  round(models_ols_FE[outcome].params[9], 3), models_ols_FE[outcome].bse[9],
+                  models_ols_FE[outcome].fvalue, models_ols_FE[outcome].nobs]
+    
+    for x in range(0,10):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols_FE[outcome].pvalues[x] <= 0.01: 
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '***'
+        elif models_ols_FE[outcome].pvalues[x] <= 0.05: 
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '**'
+        elif models_ols_FE[outcome].pvalues[x] <= 0.1:
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '*'
+    
+    """for table WITHOUT Fixed Effects"""
+    
+    d_no_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols_no_FE[outcome].params[0], 3), models_ols_no_FE[outcome].bse[0],
+                  round(models_ols_no_FE[outcome].params[1], 3), models_ols_no_FE[outcome].bse[1], 
+                  round(models_ols_no_FE[outcome].params[2], 3), models_ols_no_FE[outcome].bse[2],
+                  round(models_ols_no_FE[outcome].params[3], 3), models_ols_no_FE[outcome].bse[3],
+                  round(models_ols_no_FE[outcome].params[4], 3), models_ols_no_FE[outcome].bse[4],
+                  round(models_ols_no_FE[outcome].params[5], 3), models_ols_no_FE[outcome].bse[5],
+                  round(models_ols_no_FE[outcome].params[6], 3), models_ols_no_FE[outcome].bse[6],
+                  round(models_ols_no_FE[outcome].params[7], 3), models_ols_no_FE[outcome].bse[7],
+                  models_ols_no_FE[outcome].fvalue, models_ols_no_FE[outcome].nobs]
+    
+    for x in range(0,8):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols_no_FE[outcome].pvalues[x] <= 0.01: 
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '***'
+        elif models_ols_no_FE[outcome].pvalues[x] <= 0.05: 
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '**'
+        elif models_ols_no_FE[outcome].pvalues[x] <= 0.1:
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '*'
+
+    del temp_df   
+    
+final_FE = pd.DataFrame(data=d_FE)
+final_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "TUP", 15: "        ",
+                      16: "UCT", 17: "         ", 18: "Bsln NA", 19: "          ",
+                      20: "Bsln2013", 21: "           ", 22: "F-stat", 23: "N"}, inplace=True)
+
+newdf_FE = df_to_orgtbl(final_FE, float_fmt = '%.3f')
+print("""#+caption: asset results WITH Tgroup Fixed Effects""")
+print(newdf_FE)
+
+final_no_FE = pd.DataFrame(data=d_no_FE)
+final_no_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+newdf_no_FE = df_to_orgtbl(final_no_FE, float_fmt = '%.3f')
+print("""#+caption: asset results WITHOUT Tgroup Fixed Effects""")
+print(newdf_no_FE)
+
+#+end_src
+
+#+RESULTS: asset_values
+#+caption: asset results WITH Tgroup Fixed Effects
+|  |Total|   Productive|   Livestock  |
+|-
+| CTL mean  | 1634.104 | 301.364 | 189.439 |
+|    | 2406.541 | 580.913 | 523.819 |
+| TUP*2014  | 645.768*** | 186.369*** | 144.087*** |
+|     | 172.158 | 45.467 | 39.318 |
+| TUP*2015  | 326.43* | 77.655* | 89.264** |
+|      | 172.158 | 45.467 | 39.318 |
+| UCT*2014  | 207.519 | 53.612 | 10.924 |
+|       | 217.984 | 57.569 | 49.782 |
+| UCT*2015  | -122.541 | -16.568 | 3.421 |
+|        | 217.984 | 57.569 | 49.782 |
+| 2014  | 1291.392*** | 262.936*** | 134.5*** |
+|         | 149.060 | 39.001 | 33.588 |
+| 2015  | 1540.804*** | 293.132*** | 181.163*** |
+|          | 149.060 | 39.001 | 33.588 |
+| TUP  | 972.198*** | 264.023*** | 233.35*** |
+|           | 108.895 | 28.759 | 24.879 |
+| UCT  | 84.979 | 37.044 | 14.346 |
+|            | 137.905 | 36.415 | 31.494 |
+| Bsln NA  | 0.000 | 0.000 | 0.000 |
+|             | 0.000 | 0.000 | 0.000 |
+| Bsln2013  | 0.042*** | 0.015 | 0.021* |
+|              | 0.014 | 0.012 | 0.012 |
+| F-stat  | 15.911 | 15.203 | 16.350 |
+| N  | 1510.000 | 1510.000 | 1510.000 |
+
+#+caption: asset results WITHOUT Tgroup Fixed Effects
+|  |Total|   Productive|   Livestock  |
+|-
+| CTL mean  | 1634.104 | 301.364 | 189.439 |
+|    | 2406.541 | 580.913 | 523.819 |
+| TUP*2014  | 1617.966*** | 450.392*** | 377.437*** |
+|     | 230.986 | 61.004 | 52.762 |
+| TUP*2015  | 1298.628*** | 341.678*** | 322.614*** |
+|      | 230.986 | 61.004 | 52.762 |
+| UCT*2014  | 292.498 | 90.656 | 25.270 |
+|       | 292.493 | 77.242 | 66.798 |
+| UCT*2015  | -37.562 | 20.476 | 17.767 |
+|        | 292.493 | 77.242 | 66.798 |
+| 2014  | 1291.392*** | 262.936*** | 134.5*** |
+|         | 149.060 | 39.001 | 33.588 |
+| 2015  | 1540.804*** | 293.132*** | 181.163*** |
+|          | 149.060 | 39.001 | 33.588 |
+| Bsln NA  | 0.000 | 0.000 | 0.000 |
+|           | 0.000 | 0.000 | 0.000 |
+| Bsln2013  | 0.042*** | 0.015 | 0.021* |
+|            | 0.014 | 0.012 | 0.012 |
+| F-stat  | 15.911 | 15.203 | 16.350 |
+| N  | 1510.000 | 1510.000 | 1510.000 |
+
+      
+
+
 
 #+name: tab:assets
 #+caption: Average treatment effects by group-year on total value (in SSP) of all assets measured and of productive assets measured
