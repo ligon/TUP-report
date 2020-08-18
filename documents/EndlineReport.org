@@ -3108,6 +3108,316 @@ return Table
 | N                                | $671.00$       | $777.00$       | $1042.00$      | $1114.00$      |
 |----------------------------------+----------------+----------------+----------------+----------------|
 
+*** Recreating savings tables
+
+#+name: savings_tables
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+# not including 'land_ownnocult_b' or 'land_ownrent_b'
+# merge baseline and midline based on idno index
+
+#format savings_maize_q_m  savings_maize_val_m 
+#s8b_2c_m and  s8b_2d_m are for other food savings values
+#transfers_get1_m is value of transfers
+df = pd.merge(df_b[ ['savings_home_b', 'savings_bank_b', 'savings_BRAC_b', 'savings_NGOs_b', 
+                     'savings_other_b', 'land_owncult_b', 'land_rentcult_b', 'land_communitycult_b',
+                     'land_ownnocult_b', 'land_ownrent_b', 'transfers_get1_b', 'transfers_get2_b', 
+                     'transfers_get3_b', 'transfers_give1_b', 'transfers_give2_b', 'transfers_give3_b'] ], 
+              df_m[ ['savings_home_m', 'savings_bank_m', 'savings_BRAC_m', 'savings_NGOs_m', 
+                     'savings_other_m', 'savings_maize_val_m', 'savings_sorghum_val_m', 
+                     's8b_2c_m', 's8b_2d_m', 'land_owncult_m', 'land_rentcult_m', 'land_communitycult_m',
+                     'land_ownnocult_m', 'land_ownrent_m', 'transfers_get1_m', 'transfers_get2_m', 
+                     'transfers_get3_m', 'transfers_give1_m', 'transfers_give2_m', 'transfers_give3_m'] ], 
+              how='outer', left_index=True, right_index=True)
+
+
+# # merge baseline/midline and endline based on idno index
+# endline issue with how sum being calculated for 'savings_otherfood_val_e' - 40+NaN=NaN, so using s4b_oth_1b_e and s4b_oth_2b_e instead
+df = pd.merge(df, 
+              df_e[ ['savings_home_e', 'savings_bank_e', 'savings_BRAC_e', 'savings_NGOs_e', 
+                     'savings_other_e', 'savings_maize_val_e', 'savings_sorghum_val_e', 
+                     's4b_oth_1b_e', 's4b_oth_2b_e', 'land_owncult_e', 'land_rentcult_e', 'land_communitycult_e',
+                     'land_ownnocult_e', 'land_ownrent_e', 'transfers_get1_e', 'transfers_get2_e', 
+                     'transfers_get3_e', 'transfers_give1_e', 'transfers_give2_e', 'transfers_give3_e'] ], 
+              how='outer', left_index=True, right_index=True)
+
+# merge baseline/midline/endline with 'Group' from master_assignment.csv
+df = pd.merge(df, df_a[ ['Group'] ], 
+             how = 'outer', left_index=True, right_index=True)
+
+
+df.rename({'s8b_2c_m': 'savings_otherfood1_val_m',
+           's8b_2d_m': 'savings_otherfood2_val_m',
+           's4b_oth_1b_e': 'savings_otherfood1_val_e',
+           's4b_oth_2b_e': 'savings_otherfood2_val_e'}, axis=1, inplace=True)
+
+# find columns that end with "_b", "_m", or "_e"
+# cut off the the last 2 characters "_b", "_m", or "_e"
+s2013 = df.filter(regex="_b$").rename(columns=lambda x: x[:-2])
+s2014 = df.filter(regex="_m$").rename(columns=lambda x: x[:-2])
+s2015 = df.filter(regex="_e$").rename(columns=lambda x: x[:-2])
+
+s2013['Year'] = '2013'
+s2014['Year'] = '2014'
+s2015['Year'] = '2015'
+
+# make the sum variables
+for var in (s2013, s2014, s2015):
+    var["Savings"] = var[ ['savings_home', 'savings_bank', 'savings_BRAC', 'savings_NGOs', 'savings_other'] ].sum(axis=1)
+    
+    # no food savings at baseline (2013)
+    if (var['Year'] != '2013').any(): 
+        var["Food Savings"] = var[ ['savings_maize_val', 'savings_sorghum_val', 'savings_otherfood1_val', 'savings_otherfood2_val'] ].sum(axis=1)
+    
+    var["LandCult"] = var[ ['land_owncult', 'land_rentcult', 'land_communitycult'] ].sum(axis=1)
+    var["LandOwn"] = var[ ['land_owncult', 'land_ownnocult', 'land_ownrent'] ].sum(axis=1)
+    var["Get Transfer"] = var[ ['transfers_get1', 'transfers_get2', 'transfers_get3'] ].sum(axis=1)
+    var["Give Transfer"] = var[ ['transfers_give1', 'transfers_give2', 'transfers_give3'] ].sum(axis=1)
+    
+# LandOwn and LandCult are asked in fedan (unit of area)
+
+outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
+
+for var in (s2013, s2014, s2015): 
+    
+    # set up to make year dummies
+    var.insert(len(var.columns), '2013', 0)
+    var.insert(len(var.columns), '2014', 0)
+    var.insert(len(var.columns), '2015', 0)
+    
+    # baseline values as 'var'2013
+    for outcome in outcomes_with_baseline: 
+        var[outcome+'2013'] = s2013[outcome]
+    
+# make year dummmies
+s2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
+s2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
+s2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((s2013, s2014, s2015))
+df = df2.join((df[ ['Group'] ].join(pd.get_dummies(df['Group']))))
+
+# make interaction variables
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+outcomes = ['Savings', 'Food Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer']
+nonzero_df = df.copy()
+
+# make positive values = 1, 0 values = NaN, and NaN stay NaN
+for i in range(len(nonzero_df)):
+    for outcome in outcomes:
+         if pd.notna(nonzero_df.iloc[i][outcome]):
+            if nonzero_df.iloc[i][outcome] <= 0: 
+                nonzero_df.iloc[i, nonzero_df.columns.get_loc(outcome)] = 0
+            elif nonzero_df.iloc[i][outcome] > 0:
+                nonzero_df.iloc[i, nonzero_df.columns.get_loc(outcome)] = 1
+                
+
+regular_models_ols = {}
+regular_d = {}
+nonzero_models_ols = {}
+nonzero_d = {}
+
+baseline_na = True
+
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+# from above, outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
+
+# remove observations from 2013
+df = df[df['Year'] != '2013']
+nonzero_df = nonzero_df[nonzero_df['Year'] != '2013']
+
+for DF in (df, nonzero_df):
+    for outcome in outcomes_with_baseline: 
+        temp_df = DF[ [outcome, outcome + "2013", 'Control'] + controls]
+        temp_controls = controls
+    
+        if baseline_na==True:
+        
+            # indicator for whether outcome in 2013 is na, and cast it to be an integer
+            temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        
+            # code missing values of the baseline variable as 0
+            temp_df[outcome + "2013"].fillna(0,inplace=True)
+        
+            temp_controls = temp_controls + ['Baseline_NAN']
+    
+        temp_controls = temp_controls + [outcome+"2013"]
+        temp_df = temp_df.dropna()
+    
+        if DF.equals(nonzero_df): 
+            models_ols = nonzero_models_ols
+        else: 
+            models_ols = regular_models_ols
+            
+        models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
+    
+        # for computing the mean of the control group in 2015
+        controlgroup = temp_df[temp_df['Control'] == 1]
+        
+        if DF.equals(nonzero_df): 
+            d = nonzero_d 
+        else: 
+            d = regular_d
+            
+        d[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
+                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
+                  round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
+                  round(models_ols[outcome].params[3], 3), models_ols[outcome].bse[3],
+                  round(models_ols[outcome].params[4], 3), models_ols[outcome].bse[4],
+                  round(models_ols[outcome].params[5], 3), models_ols[outcome].bse[5],
+                  round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
+                  round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+    
+        for x in range(0,8):
+            # indexes account for standard errors being in the final table
+            # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+            if models_ols[outcome].pvalues[x] <= 0.01: 
+                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '***'
+            elif models_ols[outcome].pvalues[x] <= 0.05: 
+                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '**'
+            elif models_ols[outcome].pvalues[x] <= 0.1:
+                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '*'
+
+        del temp_df   
+
+# for food savings, which had no baseline value
+for DF in (df, nonzero_df):
+
+    temp_df = DF[ ["Food Savings", 'Control'] + controls]
+    temp_df = temp_df.dropna()
+    
+    if DF.equals(nonzero_df): 
+        models_ols = nonzero_models_ols
+    else: 
+        models_ols = regular_models_ols
+    
+    models_ols["Food Savings"] = sm.OLS(temp_df["Food Savings"], temp_df[controls]).fit()
+    
+    # for computing the mean of the control group in 2015
+    controlgroup = temp_df[temp_df['Control'] == 1]
+    
+    if DF.equals(nonzero_df): 
+        d = nonzero_d 
+    else: 
+        d = regular_d
+            
+    d["Food Savings"] = [controlgroup[controlgroup['2015'] == 1]["Food Savings"].mean(),
+                  controlgroup[controlgroup['2015'] == 1]["Food Savings"].std(),
+                  round(models_ols["Food Savings"].params[0], 3), models_ols["Food Savings"].bse[0],
+                  round(models_ols["Food Savings"].params[1], 3), models_ols["Food Savings"].bse[1], 
+                  round(models_ols["Food Savings"].params[2], 3), models_ols["Food Savings"].bse[2],
+                  round(models_ols["Food Savings"].params[3], 3), models_ols["Food Savings"].bse[3],
+                  round(models_ols["Food Savings"].params[4], 3), models_ols["Food Savings"].bse[4],
+                  round(models_ols["Food Savings"].params[5], 3), models_ols["Food Savings"].bse[5],
+                     "", " ", "  ", "   ",
+                  models_ols["Food Savings"].fvalue, models_ols["Food Savings"].nobs]
+    
+    for x in range(0,6):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols["Food Savings"].pvalues[x] <= 0.01: 
+            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '***'
+        elif models_ols["Food Savings"].pvalues[x] <= 0.05: 
+            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '**'
+        elif models_ols["Food Savings"].pvalues[x] <= 0.1:
+            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '*'
+
+final = pd.DataFrame(data=regular_d)
+nonzero_final = pd.DataFrame(data=nonzero_d)
+
+final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+
+newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.3f')
+print(newdf_nonzero)
+
+newdf = df_to_orgtbl(final, float_fmt = '%.3f')
+print(newdf)
+
+#+end_src
+
+#+RESULTS: savings_tables
+|          |  Savings | LandCult |  LandOwn | Get Transfer | Give Transfer | Food Savings |
+|----------+----------+----------+----------+--------------+---------------+--------------|
+| CTL mean |    0.389 |    0.711 |    0.797 |        0.168 |         0.079 |        0.718 |
+|          |    0.488 |    0.454 |    0.402 |        0.375 |         0.270 |        0.450 |
+| TUP*2014 | 0.288*** | 0.162*** | 0.184*** |     0.082*** |       0.07*** |     0.131*** |
+|          |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
+| TUP*2015 | 0.184*** |    0.017 |    0.001 |       -0.005 |         0.030 |        0.006 |
+|          |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
+| UCT*2014 |    0.034 |  0.118** | 0.148*** |      0.082** |         0.035 |     0.203*** |
+|          |    0.050 |    0.047 |    0.045 |        0.039 |         0.032 |        0.046 |
+| UCT*2015 |    0.011 |   -0.019 |   -0.023 |       -0.025 |        -0.005 |       -0.030 |
+|          |    0.050 |    0.047 |    0.045 |        0.039 |         0.032 |        0.046 |
+| 2014     |  0.33*** | 0.571*** | 0.571*** |     0.134*** |       0.09*** |     0.629*** |
+|          |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
+| 2015     | 0.385*** | 0.692*** | 0.773*** |     0.168*** |      0.074*** |     0.718*** |
+|          |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
+| Bsln NA  |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
+|          |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
+| Bsln2013 |    0.000 |  0.019** | 0.016*** |        0.000 |         0.0** |              |
+|          |    0.000 |    0.008 |    0.006 |        0.000 |         0.000 |              |
+| F-stat   |   13.914 |    5.435 |   10.908 |        1.634 |         3.516 |        5.041 |
+| N        | 1510.000 | 1510.000 | 1510.000 |     1510.000 |      1510.000 |     1510.000 |
+
+|  |Savings|   LandCult|   LandOwn|   Get Transfer|   Give Transfer|   Food Savings  |
+|-
+| CTL mean  | 77.874 | 59.268 | 52.947 | 45.355 | 11.697 | 84.232 |
+|    | 221.477 | 296.900 | 290.894 | 197.831 | 63.897 | 162.141 |
+| TUP*2014  | 16.860 | -2.306 | 2.668 | 41.972* | 2.859 | 42.649*** |
+|     | 23.810 | 15.683 | 14.708 | 22.199 | 12.156 | 14.285 |
+| TUP*2015  | 99.353*** | -13.748 | -15.752 | 1.113 | -1.097 | -0.864 |
+|      | 23.810 | 15.683 | 14.708 | 22.199 | 12.156 | 14.285 |
+| UCT*2014  | 32.947 | 16.540 | 18.160 | 18.809 | -13.676 | 12.801 |
+|       | 30.128 | 19.849 | 18.621 | 28.107 | 15.395 | 18.087 |
+| UCT*2015  | 33.092 | -43.36** | -41.645** | 8.081 | 3.656 | -3.824 |
+|        | 30.128 | 19.849 | 18.621 | 28.107 | 15.395 | 18.087 |
+| 2014  | 45.845*** | 8.691 | 12.616 | 22.381 | 17.91** | 44.303*** |
+|         | 15.103 | 10.370 | 9.936 | 14.036 | 7.709 | 8.999 |
+| 2015  | 73.739*** | 58.16*** | 56.603*** | 44.789*** | 11.187 | 84.232*** |
+|          | 15.103 | 10.370 | 9.936 | 14.036 | 7.709 | 8.999 |
+| Bsln NA  | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |  |
+|           | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |   |
+| Bsln2013  | 0.027** | 1.105 | -2.503 | 0.011 | 0.016 |    |
+|            | 0.012 | 3.181 | 2.460 | 0.026 | 0.027 |     |
+| F-stat  | 6.344 | 3.136 | 2.713 | 0.698 | 0.328 | 3.075 |
+| N  | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 |
 
 *** Land Holdings
 
@@ -3170,7 +3480,7 @@ return tab
 |                           | $(105.79)$    | $(174.74)$    | $(651.27)$ | $(629.93)$ |
 |---------------------------+---------------+---------------+------------+------------|
 
-*** Recreating income table... 
+*** Recreating income table
 
 #+name: income_table
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
@@ -3358,6 +3668,7 @@ there are 3 rows for which no one reported a market price for that animal and un
 |      | 133.947 | 298.534 | 1077.298 | 1097.625 |
 | F-stat  | 1.309 | 0.983 | 0.683 | 1.101 |
 | N  | 532.000 | 305.000 | 690.000 | 690.000 |
+
 
 ** Exposure to Conflict
 
