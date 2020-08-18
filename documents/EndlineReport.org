@@ -2397,7 +2397,7 @@ return tab
 |                                  | $( 0.12)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
 |----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
 
-*** Recreating food insecurity tables
+*** Recreating food insecurity table
 
 #+name: food_insecurity
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
@@ -2409,27 +2409,38 @@ data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
+from cfe.df_utils import df_to_orgtbl
 
 df_b = pd.read_stata(data_baseline)
 df_m = pd.read_stata(data_midline)
 df_e = pd.read_stata(data_endline)
 df_a = pd.read_csv(data_assignment)
 
-# whether in baseline, midline, or endline
-df_b.insert(len(df_b.columns), '2013', 1)
-df_m.insert(len(df_m.columns), '2014', 1)
-df_e.insert(len(df_e.columns), '2015', 1)
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
 
-df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='outer', left_on="idno", right_on="RespID")
+# merge baseline and midline based on idno index
+df = pd.merge(df_b[ ['fs_worried_b', 'fs_portions_b', 
+                     'fs_fewmeals_b', 'fs_nofood_b', 
+                     'fs_hungry_b', 'fs_wholeday_b'] ], 
+              df_m[ ['fs_worried_m', 'fs_portions_m', 
+                      'fs_fewmeals_m', 'fs_nofood_m', 
+                      'fs_hungry_m', 'fs_wholeday_m'] ], 
+              how='outer', left_index=True, right_index=True)
 
-# add in midline and endline columns
-df = pd.merge(df, df_m, how='outer', left_on='idno', right_on='idno')
-df = pd.merge(df, df_e, how='outer', left_on='idno', right_on='idno')
+# merge baseline/midline and endline based on idno index
+df = pd.merge(df, 
+              df_e[ ['fs_worried_e', 'fs_portions_e', 
+                     'fs_fewmeals_e', 'fs_nofood_e', 
+                     'fs_hungry_e', 'fs_wholeday_e'] ], 
+              how='outer', left_index=True, right_index=True)
 
-df['2013'].fillna(value=0, inplace=True)
-df['2014'].fillna(value=0, inplace=True)
-df['2015'].fillna(value=0, inplace=True)
-    
+# merge baseline/midline/endline with 'Group' from master_assignment.csv
+df = pd.merge(df, df_a[ ['Group'] ], 
+             how = 'outer', left_index=True, right_index=True)
+
 df.replace({"Everyday": 1,
             "everyday": 1,
             "3-6 times a week": 2,
@@ -2439,51 +2450,145 @@ df.replace({"Everyday": 1,
             "Never": 5,
             "never": 5}, inplace=True)
 
-# for weekly, replace 4 and 5 with NaN
-df.replace({4: np.nan, 5: np.nan}, inplace=True)
-
-df.set_index('idno', inplace=True)
+# for weekly, replace 4 and 5 with 0, and 1, 2, and 3 with 1
+df.replace({1: 1, 2: 1, 3: 1, 4: 0, 5: 0}, inplace=True)
 
 # find columns that start with "fs_" and end with "_b", "_m", or "_e"
-# cut off the first 3 characters ("fs_") and the last 2 ("_b", "_m", or "_e")
+# cut off the first 3 characters "fs_" and the last 2 "_b", "_m", or "_e"
 fs2013 = df.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2])
 fs2014 = df.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2])
 fs2015 = df.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2])
 
-fs2013['Year'] = 2013
-fs2014['Year'] = 2014
-fs2015['Year'] = 2015
+fs2013['Year'] = '2013'
+fs2014['Year'] = '2014'
+fs2015['Year'] = '2015'
 
 index_vars = ['worried', 'portions', 'fewmeals', 'nofood', 'hungry', 'wholeday']
-outcomes = index_vars + ['z-score']
+outcomes = ['z-score'] + index_vars 
 
 for FS in (fs2013, fs2014, fs2015): 
     fs_sum = FS[index_vars].sum(axis=1)
     FS['z-score'] = (fs_sum - fs_sum.mean())/fs_sum.std()
+    
+    # set up to make year dummies
+    FS.insert(len(FS.columns), '2013', 0)
+    FS.insert(len(FS.columns), '2014', 0)
+    FS.insert(len(FS.columns), '2015', 0)
+    
     # baseline values as 'var'2013
     for var in outcomes: 
         FS[var+'2013'] = fs2013[var]
-        
+    
+# make year dummmies
+fs2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
+fs2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
+fs2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
 df2 = pd.concat((fs2013, fs2014, fs2015))
-df = df2.join(df[ ['Group', '2013', '2014', '2015'] ].join(pd.get_dummies(df['Group'])))
+# make group dummies
+df = df2.join((df[ ['Group'] ].join(pd.get_dummies(df['Group']))))
 
-# get rid of NaN indexes
-df = df[df.index.notnull()]
+# make interaction variables
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
 
-# create interaction terms
-df.insert(len(df.columns), '2013*TUP', df['2013']*df['TUP'])
-df.insert(len(df.columns), '2014*TUP', df['2014']*df['TUP'])
-df.insert(len(df.columns), '2015*TUP', df['2015']*df['TUP'])
-df.insert(len(df.columns), '2013*UCT', df['2013']*df['UCT'])
-df.insert(len(df.columns), '2014*UCT', df['2014']*df['UCT'])
-df.insert(len(df.columns), '2015*UCT', df['2015']*df['UCT'])
+models_ols = {}
+d = {}
+baseline_na = True
 
-controls = ['2014', '2015', '2014*TUP', '2015*TUP', '2014*UCT', '2015*UCT']
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+outcomes = ['z-score', 'wholeday', 'hungry', 'nofood', 'fewmeals', 'portions']
 
+# remove observations from 2013
+df = df[df['Year'] != '2013']
+
+for outcome in outcomes: 
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
+    temp_controls = controls
+    
+    if baseline_na==True:
+        
+        # indicator for whether outcome in 2013 is na, and cast it to be an integer
+        temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        
+        # code missing values of the baseline variable as 0
+        temp_df[outcome + "2013"].fillna(0,inplace=True)
+        
+        temp_controls = temp_controls + ['Baseline_NAN']
+    
+    temp_controls = temp_controls + [outcome+"2013"]
+    temp_df = temp_df.dropna()
+    
+    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
+    
+    # for computing the mean of the control group in 2015
+    controlgroup = temp_df[temp_df['Control'] == 1]
+    
+    # make a dictionary including coefficients, standard errors, F-stat, and N
+    d[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
+                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
+                  round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
+                  round(models_ols[outcome].params[3], 3), models_ols[outcome].bse[3],
+                  round(models_ols[outcome].params[4], 3), models_ols[outcome].bse[4],
+                  round(models_ols[outcome].params[5], 3), models_ols[outcome].bse[5],
+                  round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
+                  round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+    
+    for x in range(0,8):
+        # indexes account for standard errors being in the final table and skipping the two rows for control mean
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols[outcome].pvalues[x] <= 0.01: 
+            d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '***'
+        elif models_ols[outcome].pvalues[x] <= 0.05: 
+            d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '**'
+        elif models_ols[outcome].pvalues[x] <= 0.1:
+            d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '*'
+
+    del temp_df   
+    
+final = pd.DataFrame(data=d)
+final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+
+newdf = df_to_orgtbl(final, float_fmt = '%.3f')
+print(newdf)
 
 #+end_src
 
 #+RESULTS: food_insecurity
+|          |   z-score | wholeday |   hungry |   nofood | fewmeals | portions |
+|----------+-----------+----------+----------+----------+----------+----------|
+| CTL mean |    -0.015 |    0.447 |    0.460 |    0.595 |    0.751 |    0.814 |
+|          |     0.973 |    0.498 |    0.499 |    0.492 |    0.433 |    0.390 |
+| TUP*2014 |  0.264*** |   -0.026 |   -0.057 | -0.095** |   -0.027 |   0.069* |
+|          |     0.081 |    0.045 |    0.045 |    0.045 |    0.040 |    0.039 |
+| TUP*2015 |     0.016 |    0.016 |   0.076* |    0.007 |    0.039 |   -0.019 |
+|          |     0.081 |    0.043 |    0.043 |    0.043 |    0.038 |    0.037 |
+| UCT*2014 |   0.28*** |   -0.033 |   -0.033 |   -0.008 |    0.001 |    0.040 |
+|          |     0.103 |    0.056 |    0.056 |    0.056 |    0.050 |    0.048 |
+| UCT*2015 |    -0.115 |   -0.006 |    0.037 |    0.037 |    0.001 |   -0.020 |
+|          |     0.103 |    0.055 |    0.055 |    0.055 |    0.049 |    0.047 |
+| 2014     | -0.134*** | 0.376*** | 0.373*** | 0.484*** | 0.707*** | 0.651*** |
+|          |     0.051 |    0.036 |    0.037 |    0.042 |    0.043 |    0.032 |
+| 2015     |     0.014 | 0.457*** | 0.433*** | 0.565*** | 0.755*** | 0.806*** |
+|          |     0.051 |    0.033 |    0.035 |    0.040 |    0.041 |    0.030 |
+| Bsln NA  |     0.000 |   -0.051 |   -0.005 |    0.007 |   -0.046 |   -0.019 |
+|          |     0.000 |    0.044 |    0.048 |    0.051 |    0.050 |    0.041 |
+| Bsln2013 |  0.119*** |    0.010 |   0.059* |    0.050 |    0.013 |    0.027 |
+|          |     0.026 |    0.030 |    0.031 |    0.036 |    0.037 |    0.026 |
+| F-stat   |     7.115 |    2.243 |    4.069 |    4.103 |    1.774 |    3.897 |
+| N        |  1510.000 | 1282.000 | 1297.000 | 1293.000 | 1297.000 | 1292.000 |
+
 
 
 ** Assets
@@ -2594,6 +2699,296 @@ RESULTS: asset_results WITHOUT Tgroup Fixed Effects
 | N                                | \(1488.000\)       | \(1488.000\)      | \(1488.000\)      |
 |----------------------------------+--------------------+-------------------+-------------------|
 #+end_example
+
+*** Recreating asset tables with and without treatment group fixed effects
+
+#+name: asset_values
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+# merge baseline and midline based on idno index
+df = pd.merge(df_b.filter(regex="^asset_"), 
+              df_m.filter(regex="^asset_"), 
+              how='outer', left_index=True, right_index=True)
+
+# merge baseline/midline and endline based on idno index
+df = pd.merge(df, 
+              df_e.filter(regex="^asset_"), 
+              how='outer', left_index=True, right_index=True)
+
+# merge baseline/midline/endline with 'Group' from master_assignment.csv
+df = pd.merge(df, df_a[ ['Group'] ], 
+             how = 'outer', left_index=True, right_index=True)
+
+# Some assets to ignore, either because numbers turned out to be more or less meaningless, 
+# or because they overlap (e.g. nets & ITN nets) (as commented in TUP-data/TUP.py)
+
+df = df.drop(columns = df.filter(like='house').columns)
+df = df.drop(columns = df.filter(like='homestead').columns)
+df = df.drop(columns = df.filter(like='netITN').columns)
+
+# find columns that end with "_b", "_m", or "_e"
+# cut off the last 2 "_b", "_m", or "_e"
+asset = {}
+asset[2013] = df.filter(regex="_b$").rename(columns=lambda x: x[:-2])
+asset[2014] = df.filter(regex="_m$").rename(columns=lambda x: x[:-2])
+asset[2015] = df.filter(regex="_e$").rename(columns=lambda x: x[:-2])
+
+asset_n = {}
+asset_val = {}
+price = {}
+
+# Note: value columns have format asset_val_{good}, quantity columns have format asset_n_{good}
+for year in (2013, 2014, 2015):
+    asset_n[year] = asset[year].filter(like='_n_').rename(columns=lambda col: col[8:])
+    asset_val[year] = asset[year].filter(like='_val_').rename(columns=lambda col: col[10:]) 
+    price[year] = asset_val[year]/asset_n[year]
+
+# add top code here if needed
+
+productive_2013 = ['cows', 'smallanimals', 'poultry', 'plough', 'shed', 'shop', 'mobile', 'carts', 'sewing']
+livestock_2013 = ['cows', 'smallanimals', 'poultry']
+
+# not including 'ploughs again'
+productive_2014_2015 = ['cows', 'smallanimals', 'chickens', 'ducks', 'plough', 'shed', 'shop', 'pangas', 'axes', 'mobile', 'carts', 'sewing']
+livestock_2014_2015 = ['cows', 'smallanimals', 'chickens', 'ducks']
+
+
+# for 2013
+asset_val[2013]['Productive'] = asset_val[2013][productive_2013].sum(axis=1)
+asset_val[2013]['Livestock'] = asset_val[2013][livestock_2013].sum(axis=1)
+    
+# add year 
+asset_val[2013]['Year'] = '2013'
+
+for year in (2014, 2015):
+    # 2013 only has poultry, but 2014 and 2015 have chickens and ducks separately
+    asset_val[year]['poultry'] = asset_val[year][ ['chickens', 'ducks'] ].sum(axis = 1)
+    asset_n[year]['poultry'] = asset_n[year][ ['chickens', 'ducks'] ].sum(axis = 1)
+    
+    asset_val[year]['Productive'] = asset_val[year][productive_2014_2015].sum(axis=1)
+    asset_val[year]['Livestock'] = asset_val[year][livestock_2014_2015].sum(axis=1)
+    
+    # add year
+    asset_val[year]['Year'] = str(year)
+
+outcomes = ["Total", "Productive", "Livestock"]
+
+for year in (2013, 2014, 2015): 
+    asset_val[year]['Total'] = asset_val[year].sum(axis=1)
+    
+    # set up to make year dummies
+    asset_val[year]['2013'] = 0
+    asset_val[year]['2014'] = 0
+    asset_val[year]['2015'] = 0
+    
+    # baseline values as 'var'2013
+    for var in outcomes: 
+        asset_val[year][var+'2013'] = asset_val[2013][var]
+
+# make year dummmies
+asset_val[2013]['2013'].replace(to_replace = 0, value = 1, inplace=True)
+asset_val[2014]['2014'].replace(to_replace = 0, value = 1, inplace=True)
+asset_val[2015]['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((asset_val[2013], asset_val[2014], asset_val[2015]))
+df = df2.join((df[ ['Group'] ].join(pd.get_dummies(df['Group']))))   
+
+# make interaction terms
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+models_ols_FE = {}
+models_ols_no_FE = {}
+d_FE = {}
+d_no_FE = {}
+baseline_na = True
+
+controls_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
+controls_no_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+# from above, outcomes = ["Total", "Productive", "Livestock"]
+
+# remove observations from 2013
+df = df[df['Year'] != '2013']
+
+for outcome in outcomes: 
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls_FE]
+    temp_controls_FE = controls_FE
+    temp_controls_no_FE = controls_no_FE
+    
+    if baseline_na==True:
+        
+        # indicator for whether outcome in 2013 is na, and cast it to be an integer
+        temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        
+        # code missing values of the baseline variable as 0
+        temp_df[outcome + "2013"].fillna(0,inplace=True)
+        
+        temp_controls_FE = temp_controls_FE + ['Baseline_NAN']
+        temp_controls_no_FE = temp_controls_no_FE + ['Baseline_NAN']
+    
+    temp_controls_FE = temp_controls_FE + [outcome+"2013"]
+    temp_controls_no_FE = temp_controls_no_FE + [outcome+"2013"]
+    temp_df = temp_df.dropna()
+    
+    models_ols_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_FE]).fit()
+    models_ols_no_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_no_FE]).fit()
+
+    # for computing the mean of the control group in 2015
+    controlgroup = temp_df[temp_df['Control'] == 1]
+    
+    """for table with Fixed Effects"""
+    d_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols_FE[outcome].params[0], 3), models_ols_FE[outcome].bse[0],
+                  round(models_ols_FE[outcome].params[1], 3), models_ols_FE[outcome].bse[1], 
+                  round(models_ols_FE[outcome].params[2], 3), models_ols_FE[outcome].bse[2],
+                  round(models_ols_FE[outcome].params[3], 3), models_ols_FE[outcome].bse[3],
+                  round(models_ols_FE[outcome].params[4], 3), models_ols_FE[outcome].bse[4],
+                  round(models_ols_FE[outcome].params[5], 3), models_ols_FE[outcome].bse[5],
+                  round(models_ols_FE[outcome].params[6], 3), models_ols_FE[outcome].bse[6],
+                  round(models_ols_FE[outcome].params[7], 3), models_ols_FE[outcome].bse[7],
+                  round(models_ols_FE[outcome].params[8], 3), models_ols_FE[outcome].bse[8],
+                  round(models_ols_FE[outcome].params[9], 3), models_ols_FE[outcome].bse[9],
+                  models_ols_FE[outcome].fvalue, models_ols_FE[outcome].nobs]
+    
+    for x in range(0,10):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols_FE[outcome].pvalues[x] <= 0.01: 
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '***'
+        elif models_ols_FE[outcome].pvalues[x] <= 0.05: 
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '**'
+        elif models_ols_FE[outcome].pvalues[x] <= 0.1:
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '*'
+    
+    """for table WITHOUT Fixed Effects"""
+    
+    d_no_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols_no_FE[outcome].params[0], 3), models_ols_no_FE[outcome].bse[0],
+                  round(models_ols_no_FE[outcome].params[1], 3), models_ols_no_FE[outcome].bse[1], 
+                  round(models_ols_no_FE[outcome].params[2], 3), models_ols_no_FE[outcome].bse[2],
+                  round(models_ols_no_FE[outcome].params[3], 3), models_ols_no_FE[outcome].bse[3],
+                  round(models_ols_no_FE[outcome].params[4], 3), models_ols_no_FE[outcome].bse[4],
+                  round(models_ols_no_FE[outcome].params[5], 3), models_ols_no_FE[outcome].bse[5],
+                  round(models_ols_no_FE[outcome].params[6], 3), models_ols_no_FE[outcome].bse[6],
+                  round(models_ols_no_FE[outcome].params[7], 3), models_ols_no_FE[outcome].bse[7],
+                  models_ols_no_FE[outcome].fvalue, models_ols_no_FE[outcome].nobs]
+    
+    for x in range(0,8):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols_no_FE[outcome].pvalues[x] <= 0.01: 
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '***'
+        elif models_ols_no_FE[outcome].pvalues[x] <= 0.05: 
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '**'
+        elif models_ols_no_FE[outcome].pvalues[x] <= 0.1:
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '*'
+
+    del temp_df   
+    
+final_FE = pd.DataFrame(data=d_FE)
+final_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "TUP", 15: "        ",
+                      16: "UCT", 17: "         ", 18: "Bsln NA", 19: "          ",
+                      20: "Bsln2013", 21: "           ", 22: "F-stat", 23: "N"}, inplace=True)
+
+newdf_FE = df_to_orgtbl(final_FE, float_fmt = '%.3f')
+print("""#+caption: asset results WITH Tgroup Fixed Effects""")
+print(newdf_FE)
+
+final_no_FE = pd.DataFrame(data=d_no_FE)
+final_no_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+newdf_no_FE = df_to_orgtbl(final_no_FE, float_fmt = '%.3f')
+print("""#+caption: asset results WITHOUT Tgroup Fixed Effects""")
+print(newdf_no_FE)
+
+#+end_src
+
+#+RESULTS: asset_values
+#+caption: asset results WITH Tgroup Fixed Effects
+|  |Total|   Productive|   Livestock  |
+|-
+| CTL mean  | 1634.104 | 301.364 | 189.439 |
+|    | 2406.541 | 580.913 | 523.819 |
+| TUP*2014  | 645.768*** | 186.369*** | 144.087*** |
+|     | 172.158 | 45.467 | 39.318 |
+| TUP*2015  | 326.43* | 77.655* | 89.264** |
+|      | 172.158 | 45.467 | 39.318 |
+| UCT*2014  | 207.519 | 53.612 | 10.924 |
+|       | 217.984 | 57.569 | 49.782 |
+| UCT*2015  | -122.541 | -16.568 | 3.421 |
+|        | 217.984 | 57.569 | 49.782 |
+| 2014  | 1291.392*** | 262.936*** | 134.5*** |
+|         | 149.060 | 39.001 | 33.588 |
+| 2015  | 1540.804*** | 293.132*** | 181.163*** |
+|          | 149.060 | 39.001 | 33.588 |
+| TUP  | 972.198*** | 264.023*** | 233.35*** |
+|           | 108.895 | 28.759 | 24.879 |
+| UCT  | 84.979 | 37.044 | 14.346 |
+|            | 137.905 | 36.415 | 31.494 |
+| Bsln NA  | 0.000 | 0.000 | 0.000 |
+|             | 0.000 | 0.000 | 0.000 |
+| Bsln2013  | 0.042*** | 0.015 | 0.021* |
+|              | 0.014 | 0.012 | 0.012 |
+| F-stat  | 15.911 | 15.203 | 16.350 |
+| N  | 1510.000 | 1510.000 | 1510.000 |
+
+#+caption: asset results WITHOUT Tgroup Fixed Effects
+|  |Total|   Productive|   Livestock  |
+|-
+| CTL mean  | 1634.104 | 301.364 | 189.439 |
+|    | 2406.541 | 580.913 | 523.819 |
+| TUP*2014  | 1617.966*** | 450.392*** | 377.437*** |
+|     | 230.986 | 61.004 | 52.762 |
+| TUP*2015  | 1298.628*** | 341.678*** | 322.614*** |
+|      | 230.986 | 61.004 | 52.762 |
+| UCT*2014  | 292.498 | 90.656 | 25.270 |
+|       | 292.493 | 77.242 | 66.798 |
+| UCT*2015  | -37.562 | 20.476 | 17.767 |
+|        | 292.493 | 77.242 | 66.798 |
+| 2014  | 1291.392*** | 262.936*** | 134.5*** |
+|         | 149.060 | 39.001 | 33.588 |
+| 2015  | 1540.804*** | 293.132*** | 181.163*** |
+|          | 149.060 | 39.001 | 33.588 |
+| Bsln NA  | 0.000 | 0.000 | 0.000 |
+|           | 0.000 | 0.000 | 0.000 |
+| Bsln2013  | 0.042*** | 0.015 | 0.021* |
+|            | 0.014 | 0.012 | 0.012 |
+| F-stat  | 15.911 | 15.203 | 16.350 |
+| N  | 1510.000 | 1510.000 | 1510.000 |
+
+      
+
 
 
 #+name: tab:assets
@@ -2742,6 +3137,316 @@ return Table
 | N                                | $671.00$       | $777.00$       | $1042.00$      | $1114.00$      |
 |----------------------------------+----------------+----------------+----------------+----------------|
 
+*** Recreating savings tables
+
+#+name: savings_tables
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+# not including 'land_ownnocult_b' or 'land_ownrent_b'
+# merge baseline and midline based on idno index
+
+#format savings_maize_q_m  savings_maize_val_m 
+#s8b_2c_m and  s8b_2d_m are for other food savings values
+#transfers_get1_m is value of transfers
+df = pd.merge(df_b[ ['savings_home_b', 'savings_bank_b', 'savings_BRAC_b', 'savings_NGOs_b', 
+                     'savings_other_b', 'land_owncult_b', 'land_rentcult_b', 'land_communitycult_b',
+                     'land_ownnocult_b', 'land_ownrent_b', 'transfers_get1_b', 'transfers_get2_b', 
+                     'transfers_get3_b', 'transfers_give1_b', 'transfers_give2_b', 'transfers_give3_b'] ], 
+              df_m[ ['savings_home_m', 'savings_bank_m', 'savings_BRAC_m', 'savings_NGOs_m', 
+                     'savings_other_m', 'savings_maize_val_m', 'savings_sorghum_val_m', 
+                     's8b_2c_m', 's8b_2d_m', 'land_owncult_m', 'land_rentcult_m', 'land_communitycult_m',
+                     'land_ownnocult_m', 'land_ownrent_m', 'transfers_get1_m', 'transfers_get2_m', 
+                     'transfers_get3_m', 'transfers_give1_m', 'transfers_give2_m', 'transfers_give3_m'] ], 
+              how='outer', left_index=True, right_index=True)
+
+
+# # merge baseline/midline and endline based on idno index
+# endline issue with how sum being calculated for 'savings_otherfood_val_e' - 40+NaN=NaN, so using s4b_oth_1b_e and s4b_oth_2b_e instead
+df = pd.merge(df, 
+              df_e[ ['savings_home_e', 'savings_bank_e', 'savings_BRAC_e', 'savings_NGOs_e', 
+                     'savings_other_e', 'savings_maize_val_e', 'savings_sorghum_val_e', 
+                     's4b_oth_1b_e', 's4b_oth_2b_e', 'land_owncult_e', 'land_rentcult_e', 'land_communitycult_e',
+                     'land_ownnocult_e', 'land_ownrent_e', 'transfers_get1_e', 'transfers_get2_e', 
+                     'transfers_get3_e', 'transfers_give1_e', 'transfers_give2_e', 'transfers_give3_e'] ], 
+              how='outer', left_index=True, right_index=True)
+
+# merge baseline/midline/endline with 'Group' from master_assignment.csv
+df = pd.merge(df, df_a[ ['Group'] ], 
+             how = 'outer', left_index=True, right_index=True)
+
+
+df.rename({'s8b_2c_m': 'savings_otherfood1_val_m',
+           's8b_2d_m': 'savings_otherfood2_val_m',
+           's4b_oth_1b_e': 'savings_otherfood1_val_e',
+           's4b_oth_2b_e': 'savings_otherfood2_val_e'}, axis=1, inplace=True)
+
+# find columns that end with "_b", "_m", or "_e"
+# cut off the the last 2 characters "_b", "_m", or "_e"
+s2013 = df.filter(regex="_b$").rename(columns=lambda x: x[:-2])
+s2014 = df.filter(regex="_m$").rename(columns=lambda x: x[:-2])
+s2015 = df.filter(regex="_e$").rename(columns=lambda x: x[:-2])
+
+s2013['Year'] = '2013'
+s2014['Year'] = '2014'
+s2015['Year'] = '2015'
+
+# make the sum variables
+for var in (s2013, s2014, s2015):
+    var["Savings"] = var[ ['savings_home', 'savings_bank', 'savings_BRAC', 'savings_NGOs', 'savings_other'] ].sum(axis=1)
+    
+    # no food savings at baseline (2013)
+    if (var['Year'] != '2013').any(): 
+        var["Food Savings"] = var[ ['savings_maize_val', 'savings_sorghum_val', 'savings_otherfood1_val', 'savings_otherfood2_val'] ].sum(axis=1)
+    
+    var["LandCult"] = var[ ['land_owncult', 'land_rentcult', 'land_communitycult'] ].sum(axis=1)
+    var["LandOwn"] = var[ ['land_owncult', 'land_ownnocult', 'land_ownrent'] ].sum(axis=1)
+    var["Get Transfer"] = var[ ['transfers_get1', 'transfers_get2', 'transfers_get3'] ].sum(axis=1)
+    var["Give Transfer"] = var[ ['transfers_give1', 'transfers_give2', 'transfers_give3'] ].sum(axis=1)
+    
+# LandOwn and LandCult are asked in fedan (unit of area)
+
+outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
+
+for var in (s2013, s2014, s2015): 
+    
+    # set up to make year dummies
+    var.insert(len(var.columns), '2013', 0)
+    var.insert(len(var.columns), '2014', 0)
+    var.insert(len(var.columns), '2015', 0)
+    
+    # baseline values as 'var'2013
+    for outcome in outcomes_with_baseline: 
+        var[outcome+'2013'] = s2013[outcome]
+    
+# make year dummmies
+s2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
+s2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
+s2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((s2013, s2014, s2015))
+df = df2.join((df[ ['Group'] ].join(pd.get_dummies(df['Group']))))
+
+# make interaction variables
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+outcomes = ['Savings', 'Food Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer']
+nonzero_df = df.copy()
+
+# make positive values = 1, 0 values = NaN, and NaN stay NaN
+for i in range(len(nonzero_df)):
+    for outcome in outcomes:
+         if pd.notna(nonzero_df.iloc[i][outcome]):
+            if nonzero_df.iloc[i][outcome] <= 0: 
+                nonzero_df.iloc[i, nonzero_df.columns.get_loc(outcome)] = 0
+            elif nonzero_df.iloc[i][outcome] > 0:
+                nonzero_df.iloc[i, nonzero_df.columns.get_loc(outcome)] = 1
+                
+
+regular_models_ols = {}
+regular_d = {}
+nonzero_models_ols = {}
+nonzero_d = {}
+
+baseline_na = True
+
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+# from above, outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
+
+# remove observations from 2013
+df = df[df['Year'] != '2013']
+nonzero_df = nonzero_df[nonzero_df['Year'] != '2013']
+
+for DF in (df, nonzero_df):
+    for outcome in outcomes_with_baseline: 
+        temp_df = DF[ [outcome, outcome + "2013", 'Control'] + controls]
+        temp_controls = controls
+    
+        if baseline_na==True:
+        
+            # indicator for whether outcome in 2013 is na, and cast it to be an integer
+            temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        
+            # code missing values of the baseline variable as 0
+            temp_df[outcome + "2013"].fillna(0,inplace=True)
+        
+            temp_controls = temp_controls + ['Baseline_NAN']
+    
+        temp_controls = temp_controls + [outcome+"2013"]
+        temp_df = temp_df.dropna()
+    
+        if DF.equals(nonzero_df): 
+            models_ols = nonzero_models_ols
+        else: 
+            models_ols = regular_models_ols
+            
+        models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
+    
+        # for computing the mean of the control group in 2015
+        controlgroup = temp_df[temp_df['Control'] == 1]
+        
+        if DF.equals(nonzero_df): 
+            d = nonzero_d 
+        else: 
+            d = regular_d
+            
+        d[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
+                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
+                  round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
+                  round(models_ols[outcome].params[3], 3), models_ols[outcome].bse[3],
+                  round(models_ols[outcome].params[4], 3), models_ols[outcome].bse[4],
+                  round(models_ols[outcome].params[5], 3), models_ols[outcome].bse[5],
+                  round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
+                  round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+    
+        for x in range(0,8):
+            # indexes account for standard errors being in the final table
+            # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+            if models_ols[outcome].pvalues[x] <= 0.01: 
+                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '***'
+            elif models_ols[outcome].pvalues[x] <= 0.05: 
+                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '**'
+            elif models_ols[outcome].pvalues[x] <= 0.1:
+                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '*'
+
+        del temp_df   
+
+# for food savings, which had no baseline value
+for DF in (df, nonzero_df):
+
+    temp_df = DF[ ["Food Savings", 'Control'] + controls]
+    temp_df = temp_df.dropna()
+    
+    if DF.equals(nonzero_df): 
+        models_ols = nonzero_models_ols
+    else: 
+        models_ols = regular_models_ols
+    
+    models_ols["Food Savings"] = sm.OLS(temp_df["Food Savings"], temp_df[controls]).fit()
+    
+    # for computing the mean of the control group in 2015
+    controlgroup = temp_df[temp_df['Control'] == 1]
+    
+    if DF.equals(nonzero_df): 
+        d = nonzero_d 
+    else: 
+        d = regular_d
+            
+    d["Food Savings"] = [controlgroup[controlgroup['2015'] == 1]["Food Savings"].mean(),
+                  controlgroup[controlgroup['2015'] == 1]["Food Savings"].std(),
+                  round(models_ols["Food Savings"].params[0], 3), models_ols["Food Savings"].bse[0],
+                  round(models_ols["Food Savings"].params[1], 3), models_ols["Food Savings"].bse[1], 
+                  round(models_ols["Food Savings"].params[2], 3), models_ols["Food Savings"].bse[2],
+                  round(models_ols["Food Savings"].params[3], 3), models_ols["Food Savings"].bse[3],
+                  round(models_ols["Food Savings"].params[4], 3), models_ols["Food Savings"].bse[4],
+                  round(models_ols["Food Savings"].params[5], 3), models_ols["Food Savings"].bse[5],
+                     "", " ", "  ", "   ",
+                  models_ols["Food Savings"].fvalue, models_ols["Food Savings"].nobs]
+    
+    for x in range(0,6):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols["Food Savings"].pvalues[x] <= 0.01: 
+            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '***'
+        elif models_ols["Food Savings"].pvalues[x] <= 0.05: 
+            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '**'
+        elif models_ols["Food Savings"].pvalues[x] <= 0.1:
+            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '*'
+
+final = pd.DataFrame(data=regular_d)
+nonzero_final = pd.DataFrame(data=nonzero_d)
+
+final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+
+newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.3f')
+print(newdf_nonzero)
+
+newdf = df_to_orgtbl(final, float_fmt = '%.3f')
+print(newdf)
+
+#+end_src
+
+#+RESULTS: savings_tables
+|          |  Savings | LandCult |  LandOwn | Get Transfer | Give Transfer | Food Savings |
+|----------+----------+----------+----------+--------------+---------------+--------------|
+| CTL mean |    0.389 |    0.711 |    0.797 |        0.168 |         0.079 |        0.718 |
+|          |    0.488 |    0.454 |    0.402 |        0.375 |         0.270 |        0.450 |
+| TUP*2014 | 0.288*** | 0.162*** | 0.184*** |     0.082*** |       0.07*** |     0.131*** |
+|          |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
+| TUP*2015 | 0.184*** |    0.017 |    0.001 |       -0.005 |         0.030 |        0.006 |
+|          |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
+| UCT*2014 |    0.034 |  0.118** | 0.148*** |      0.082** |         0.035 |     0.203*** |
+|          |    0.050 |    0.047 |    0.045 |        0.039 |         0.032 |        0.046 |
+| UCT*2015 |    0.011 |   -0.019 |   -0.023 |       -0.025 |        -0.005 |       -0.030 |
+|          |    0.050 |    0.047 |    0.045 |        0.039 |         0.032 |        0.046 |
+| 2014     |  0.33*** | 0.571*** | 0.571*** |     0.134*** |       0.09*** |     0.629*** |
+|          |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
+| 2015     | 0.385*** | 0.692*** | 0.773*** |     0.168*** |      0.074*** |     0.718*** |
+|          |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
+| Bsln NA  |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
+|          |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
+| Bsln2013 |    0.000 |  0.019** | 0.016*** |        0.000 |         0.0** |              |
+|          |    0.000 |    0.008 |    0.006 |        0.000 |         0.000 |              |
+| F-stat   |   13.914 |    5.435 |   10.908 |        1.634 |         3.516 |        5.041 |
+| N        | 1510.000 | 1510.000 | 1510.000 |     1510.000 |      1510.000 |     1510.000 |
+
+|  |Savings|   LandCult|   LandOwn|   Get Transfer|   Give Transfer|   Food Savings  |
+|-
+| CTL mean  | 77.874 | 59.268 | 52.947 | 45.355 | 11.697 | 84.232 |
+|    | 221.477 | 296.900 | 290.894 | 197.831 | 63.897 | 162.141 |
+| TUP*2014  | 16.860 | -2.306 | 2.668 | 41.972* | 2.859 | 42.649*** |
+|     | 23.810 | 15.683 | 14.708 | 22.199 | 12.156 | 14.285 |
+| TUP*2015  | 99.353*** | -13.748 | -15.752 | 1.113 | -1.097 | -0.864 |
+|      | 23.810 | 15.683 | 14.708 | 22.199 | 12.156 | 14.285 |
+| UCT*2014  | 32.947 | 16.540 | 18.160 | 18.809 | -13.676 | 12.801 |
+|       | 30.128 | 19.849 | 18.621 | 28.107 | 15.395 | 18.087 |
+| UCT*2015  | 33.092 | -43.36** | -41.645** | 8.081 | 3.656 | -3.824 |
+|        | 30.128 | 19.849 | 18.621 | 28.107 | 15.395 | 18.087 |
+| 2014  | 45.845*** | 8.691 | 12.616 | 22.381 | 17.91** | 44.303*** |
+|         | 15.103 | 10.370 | 9.936 | 14.036 | 7.709 | 8.999 |
+| 2015  | 73.739*** | 58.16*** | 56.603*** | 44.789*** | 11.187 | 84.232*** |
+|          | 15.103 | 10.370 | 9.936 | 14.036 | 7.709 | 8.999 |
+| Bsln NA  | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |  |
+|           | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |   |
+| Bsln2013  | 0.027** | 1.105 | -2.503 | 0.011 | 0.016 |    |
+|            | 0.012 | 3.181 | 2.460 | 0.026 | 0.027 |     |
+| F-stat  | 6.344 | 3.136 | 2.713 | 0.698 | 0.328 | 3.075 |
+| N  | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 |
 
 *** Land Holdings
 
@@ -2803,6 +3508,196 @@ return tab
 | $\beta^{TUP}-\beta^{CSH}$ | $-116.05$     | $364.94^{**}$ | $24.44$    | $319.91$   |
 |                           | $(105.79)$    | $(174.74)$    | $(651.27)$ | $(629.93)$ |
 |---------------------------+---------------+---------------+------------+------------|
+
+*** Recreating income table
+
+#+name: income_table
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_nonfarm = "../../TUP-data/Endline/sections_8_17.csv"
+data_farm = "../../TUP-data/Endline/Agriculture_cleaned.csv"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_a = pd.read_csv(data_assignment)
+df_n = pd.read_csv(data_nonfarm)
+df_f = pd.read_csv(data_farm)
+
+df_n.set_index('res_id', inplace=True)
+df_f.set_index('res_id', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+"""Nonagricultural income"""
+
+df_n = df_n.filter(regex='^s16')
+
+# s16_ic is nonfarm months received for a certain source of income for i = 1, 2, 3, 4, 5
+# s16_id is nonfarm average income in each month for a certain source of income for i = 1, 2, 3, 4, 5
+# using calculation from reported months and avg monthly income instead of reported annual income
+
+nonfarm_yearly = pd.DataFrame() 
+for i in range(1,6):
+    nonfarm_yearly['source' + str(i)] = df_n['s16_' + str(i) + 'c']*df_n['s16_' + str(i) + 'd']
+
+nonfarm_yearly['nonfarm_yearly_sum'] = nonfarm_yearly.sum(axis=1)
+
+
+"""Agricultural income"""
+
+# HARVEST VARIABLE NAMES: harvest_type (crop), harvest_size, harvest_unit (qty and unit harvested)
+# harvest_price (market price in SSP), harvest_price_unit (market price unit), harvest_sold (qty sold assuming same unit as harvest_unit)
+
+# in case market price unit and harvested/sold unit don't match, 
+# calculate median of reported market prices for that crop (type) and market price unit (harvest_price_unit)
+unit_prices = df_f.groupby(["harvest_type", "harvest_price_unit"])["harvest_price"].median()
+# the format of unit_prices is the first index is harvest_type, the second index is harvest_price_unit, and
+# the value is the median of market price units for that crop in that unit
+
+k = 0
+d = 0
+
+df_f.insert(len(df_f.columns), 'adjusted_harvest_price', np.nan)
+
+# iterate through each row
+for i in range(len(df_f)):
+    
+    # if neither unit is NaN
+    if pd.notna(df_f.iloc[i]['harvest_unit']):
+        if pd.notna(df_f.iloc[i]['harvest_price_unit']):
+    
+            # if units don't match
+            if df_f.iloc[i]['harvest_unit'] != df_f.iloc[i]['harvest_price_unit']:
+                d = d +1
+                # get the data frame for the particular type of crop
+                find_type = unit_prices[unit_prices.index.get_level_values(0) == df_f.iloc[i]['harvest_type']]
+        
+                # check if there is no reported market price for that crop and unit
+                if find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['harvest_unit']].empty: 
+                    k = k + 1
+                else: 
+                    # set the adjusted harvest price to be the median price for that type and harvest unit
+                    df_f['adjusted_harvest_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['harvest_unit']][0]
+        
+            # if units match
+            else: df_f['adjusted_harvest_price'].iloc[i] = df_f.iloc[i]['harvest_price']
+
+#d is the number of rows for which the harvest unit and market price unit don't match (193)
+#k is the number of rows for which the harvest unit and crop do not have any market price reported (7)
+print("there are {} rows for which no one reported a market price for that crop and unit".format(k))
+
+farm_yearly = pd.DataFrame() 
+df_f["farm_income_yearly"] = df_f["harvest_size"]*df_f["adjusted_harvest_price"]
+
+farm_yearly['farm_income_yearly_sum'] = df_f[ ['farm_income_yearly'] ].dropna().groupby("res_id")["farm_income_yearly"].sum()
+
+
+# LIVESTOCK VARIABLE NAMES: livestock_type (animal), livestock_size, livestock_unit (qty and unit produced)
+# livestock_price (market price in SSP), livestock_price_unit (market price unit), livestock_sold (qty sold assuming same unit as livestock_unit)
+
+# in case market price unit and produced/sold unit don't match, 
+# calculate median of reported market prices for that animal (type) and market price unit (livestock_price_unit)
+unit_prices = df_f.groupby(["livestock_type", "livestock_price_unit"])["livestock_price"].median()
+# the format of unit_prices is the first index is livestock_type, the second index is livestock_price_unit, and
+# the value is the median of market price units for that animal in that unit
+
+k = 0
+d = 0
+
+df_f.insert(len(df_f.columns), 'adjusted_livestock_price', np.nan)
+
+# iterate through each row
+for i in range(len(df_f)):
+    
+    # if neither unit is NaN
+    if pd.notna(df_f.iloc[i]['livestock_unit']):
+        if pd.notna(df_f.iloc[i]['livestock_price_unit']):
+    
+            # if units don't match
+            if df_f.iloc[i]['livestock_unit'] != df_f.iloc[i]['livestock_price_unit']:
+                d = d + 1
+                # get the data frame for the particular type of animal
+                find_type = unit_prices[unit_prices.index.get_level_values(0) == df_f.iloc[i]['livestock_type']]
+        
+                # check if there is no reported market price for that animal and unit
+                if find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['livestock_unit']].empty: 
+                    k = k + 1
+                else: 
+                    # set the adjusted livestock price to be the median price for that type and livestock unit
+                    df_f['adjusted_livestock_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['livestock_unit']][0]
+        
+            # if units match
+            else: df_f['adjusted_livestock_price'].iloc[i] = df_f.iloc[i]['livestock_price']
+
+#d is the number of rows for which the livestock unit and market price unit don't match (9)
+#k is the number of rows for which the livestock unit and crop do not have any market price reported (3)
+print("there are {} rows for which no one reported a market price for that animal and unit".format(k))
+ 
+df_f["livestock_income_yearly"] = df_f["livestock_size"]*df_f["adjusted_livestock_price"]
+
+farm_yearly['livestock_income_yearly_sum'] = df_f[ ['livestock_income_yearly'] ].dropna().groupby("res_id")["livestock_income_yearly"].sum()
+
+df = pd.merge(nonfarm_yearly[ ['nonfarm_yearly_sum'] ], farm_yearly, how='outer', left_index=True, right_index=True)
+df = pd.merge(df, df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group'])), how='inner', left_index=True, right_index=True)
+df.insert(len(df.columns), 'total', df[['nonfarm_yearly_sum', 'farm_income_yearly_sum', 'livestock_income_yearly_sum']].sum(axis=1))
+df.insert(len(df.columns), 'constant', 1)
+
+df.rename(columns = {'farm_income_yearly_sum': "Farm", 'livestock_income_yearly_sum': "Livestock", 
+                   'nonfarm_yearly_sum': "Non-Farm", 'total': "Total"}, inplace=True)
+
+outcomes = ["Farm", "Livestock", "Non-Farm", "Total"]
+controls = ['constant', 'TUP', 'UCT']
+models_ols = {}
+d = {}
+
+for outcome in outcomes: 
+    temp_df = df[ [outcome] + controls].dropna()
+    
+    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[controls]).fit()
+    
+    d[outcome] = [round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
+                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
+                  round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+   
+
+    for x in range(0,3):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols[outcome].pvalues[x] <= 0.01: 
+            d[outcome][x*2] = str(d[outcome][x*2]) + '***'
+        elif models_ols[outcome].pvalues[x] <= 0.05: 
+            d[outcome][x*2] = str(d[outcome][x*2]) + '**'
+        elif models_ols[outcome].pvalues[x] <= 0.1:
+            d[outcome][x*2] = str(d[outcome][x*2]) + '*'
+    
+
+final = pd.DataFrame(data=d)
+
+final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP", 3: "  ", 
+                      4: "UCT", 5: "   ", 6: "F-stat", 7: "N"}, inplace=True)
+
+newdf = df_to_orgtbl(final, float_fmt = '%.3f')
+print(newdf)
+
+#+end_src
+
+#+RESULTS: income_table
+there are 7 rows for which no one reported a market price for that crop and unit
+there are 3 rows for which no one reported a market price for that animal and unit
+|  |Farm|   Livestock|   Non-Farm|   Total  |
+|-
+| CTL mean  | 917.315*** | 924.611*** | 3326.162*** | 4317.337*** |
+|    | 64.809 | 164.390 | 527.282 | 537.231 |
+| TUP  | -139.780 | 117.096 | 964.323 | 1253.478 |
+|     | 100.918 | 215.596 | 829.082 | 844.725 |
+| UCT  | 48.833 | -282.164 | 507.132 | 510.939 |
+|      | 133.947 | 298.534 | 1077.298 | 1097.625 |
+| F-stat  | 1.309 | 0.983 | 0.683 | 1.101 |
+| N  | 532.000 | 305.000 | 690.000 | 690.000 |
+
 
 ** Exposure to Conflict
 
