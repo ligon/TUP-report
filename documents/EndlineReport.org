@@ -140,14 +140,15 @@ interviewed at baseline.
 The TUP program itself is similar to the other TUP/Graduation
 programs completed by BRAC elsewhere.  BRAC designed several possible
 enterprises: goat husbandry, duck husbandry, maize cultivation,
-vegetable cultivation, duck rearing, and the selling of dried fish.
+vegetable cultivation, and the selling of dried fish.
 The preferences of enrolled households over these were elicited; we
 asked both for an ordering, and a willingness to pay for both the
 training and productive assets associated with the five different
 enterprises.
 
-#+begin_src python
+#+begin_src python 
 import pandas as pd
+from cfe.df_utils import df_to_orgtbl
 
 df = pd.read_stata('../../TUP-data/Baseline/Tup programme sudan single file.dta',convert_categoricals=False)
 
@@ -177,30 +178,52 @@ maybe.name = 'Choice'
 ranks = maybe.unstack()
 
 freq = pd.concat([ranks[x].value_counts() for x in ranks],axis=1)
+freq.rename(index={'A':'Goats','B':'Ducks','C':'Maize','D':'Vegetables','E':'Dry Fish','':'Missing'},inplace=True)
+freq.columns = freq.columns + 1
 
-
-    
+print(df_to_orgtbl(freq,float_fmt='%d'))
 #+end_src
 
-*** Asset Transfers & Monitoring
 
-The second phase of the program was training and enterprise
-selection. Unlike most programs of this type, the number of households
-given each kind of asset was set in advance, with 75 enrolled in
-agricultural activities (vegetable cultivation), 85 in duck rearing,
-45 in goat rearing, and the rest in small trade businesses. While the
-staff tried to map households' asset types to their respective
-preferences and skills, a disproportionate number stated preferences
-for goats and small trade.  Households then attended training
-sessions. The first of these were for general business skills around
-literacy, numeracy, and financial management. The next were sector
-specific and focused on animal husbandry or crop cultivation.
+#+name: tab:enterprise_choice
+#+caption: Frequency of Rankings of Enterprise Choices
+|            |   1 |   2 |   3 |   4 |   5 |
+|------------+-----+-----+-----+-----+-----|
+| Dry Fish   | 219 | 105 | 113 |  74 |  73 |
+| Goats      | 149 | 115 | 107 | 107 | 116 |
+| Ducks      | 120 | 172 | 137 |  88 |  68 |
+| Vegetables |  65 |  85 | 108 | 138 | 164 |
+| Maize      |  55 | 127 | 127 | 145 | 122 |
+| Missing    |   2 |   1 | --- |   3 |   3 |
+
+Table [[tab:enterprise_choice]] reports on the frequency of elicited
+preference ranks over the five different choices.  Dry fish was the
+most popular single first choice, with animal husbandry (goats then
+ducks) the second and third choices.  Crop cultivation (whether of
+vegetables or maize) was less popular. 
+
+*** Enterprise Assignment & Training
+
+The second phase of the program was enterprise
+assignment and training. Unlike some other programs of this type (e.g., the TUP
+program in Bangladesh described by cite:bandiera-etal17), the number
+of households given each kind of asset was set in advance, with 75
+enrolled in agricultural activities (either maize or vegetable
+cultivation), 85 in duck rearing, 45 in goat rearing, and the rest in
+small trade involving dried fish.  Within these limits, assignment to
+particular activities was made at the discretion of program staff,
+taking into account subjects' preferences and skills.
+
+Households then attended training sessions. The first of these were
+for general business skills around literacy, numeracy, and financial
+management. The next were sector specific and focused on animal
+husbandry or crop cultivation.
 
 After training was completed, asset transfers began in late 2013 and
 continued through the first few months of 2014. The productive assets
 related to each enterprise were valued at around $240 per household,
 with a random subset receiving an additional $60 in assets later
-in 2014. Shortly thereafter, households started to attend weekly or
+in 2014.  Shortly thereafter, households started to attend weekly or
 semi-weekly meetings with other nearby participants to discuss with
 each other and a BRAC extension officer the details of their
 businesses. These meetings also included food transfers for a while,
@@ -209,7 +232,7 @@ revenue from their assets without having to sell them.  In all, the
 market value of these food transfers were valued at $110, bringing the
 total value of all transfers to either $350 or $410.
 
-** Cash Transfers 
+** Unconditional Cash Transfers 
 
 To implement an unconditional cash transfer, we randomly assigned each
 of the 125 households in the UCT group to receive a cash transfer of
@@ -236,28 +259,34 @@ implications of savings accounts citep:dupas-robinson13 would lead one
 to expect that the method of disbursal might affect the propensity to
 save a cash transfer.
 
-Political instability disrupted NGO
-operations throughout South Sudan, preventing the simultaneous
-disbursal of the cash and asset transfers. Instead, a second survey
-was conducted in June of 2014, with the cash transfers being disbursed
-immediately thereafter. This resulted in a timing difference of 3 to 6
-months between the two (since the asset transfers were rolled out over
-around 12 weeks).  This naturally complicates the comparison of
-treatment effects between the two treatments. We will describe our
-empirical strategy in light of these challenges in Section [[*Empirical
-Strategy]].
+Political instability disrupted NGO operations throughout South Sudan,
+preventing the simultaneous disbursal of the cash and asset
+transfers. Instead, a second survey was conducted in June of 2014,
+with the cash transfers being disbursed immediately thereafter. This
+resulted in a timing difference of 3 to 6 months between the two
+(since the asset transfers were rolled out over around 12 weeks).
+This naturally complicates the comparison of treatment effects between
+the two treatments. We will describe our empirical strategy in light
+of these challenges in Section [[*Empirical Strategy]].
 
-* The Data
+* Data Collection & Timeline
 
-A census of households with women in the area around BRAC's offices in
-Yei County was conducted in April of 2013.  Women in a total of 1249
-households were interviewed.  Of the 1249 total, 745 were deemed to be 
-women eligible for participation.  In the summer of 2013 a baseline
-survey was conducted, which successfully interviewed 649 of these 745
-women and randomly assigned them to one of the TUP, UCT, and control
-groups. Half of each beneficiary group was randomly selected to
-receive additional "top-up" transfers with market value of $60 (around
-20% of the original transfers).
+We have four principal sources of data.  First, as discussed above, we
+conducted a census of households with women in the area around BRAC's offices 
+in April of 2013.  Second, in the summer of 2013 we conducted a
+baseline survey of eligible households.  We randomly assigned women
+who responsed to this baseline survey to one of the TUP, UCT, or
+control groups; some randomly selected TUP and UCT assignees were further chosen
+to receive an asset/cash "top-up" valued at $60.  Third, we conducted
+a "midline" survey in June 2014, and an "endline" survey in the summer
+of 2015.
+
+Training and asset transfers for the TUP group began in late 2013; our
+intention was to make transfers of cash to the UCT group at roughly the same
+time that TUP participants were ready to begin their operations,
+during the first quarter of 2014.  However, these plans were
+complicated by an onset of broad civil unrest in South Sudan, and
+disruption of BRAC's operations.  
 
 In response to the outbreak of violence in late 2013 and subsequent
 closing of the offices in Yei, a midline survey was conducted in June
@@ -266,10 +295,10 @@ outcomes. For lack of a valid comparison group, we will not speak with
 any authority about the effect of the conflict on economic conditions
 in Yei, though we will report estimates of treatment effects on the
 severity or likelihood of having been effected exposure to the
-conflict. Some of the original asset transfers were done before the
+conflict.  Some of the original asset transfers were done before the
 office closure, which may affect estimates of the difference between
 programs if rates of return changed in the few intervening
-months. Finally, an endline survey was conducted in mid-2015 to
+months.  Finally, an endline survey was conducted in mid-2015 to
 estimate the effect of program participation on households' financial
 situation and overall welfare. The key here is that the survey
 conducted in mid-2014 provides us with /short-term/ treatment effects
