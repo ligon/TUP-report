@@ -1,0 +1,70 @@
+* Construction of First Principal Components
+  :PROPERTIES:
+  :EXPORT_FILE_NAME: principal_component.ipynb
+  :END:
+  For some groups of questions it's interesting to construct some
+  summary measure.  For example, we ask about the value of savings
+  held at banks, at home, with BRAC, with other NGOs, and in other
+  forms:
+    #+name: list_items
+    - savings_home_b
+    - savings_bank_b
+    - savings_BRAC_b
+    - savings_NGOs_b
+    - savings_other_b
+
+
+  One obvious approach is to compute the sum of these, but what if
+  some forms of savings are missing?  Should we assume these to be
+  zero?  There are also valid zeros for different forms of savings
+  (indeed, almost no one reports saving with any other NGO).
+
+
+  The following code computes the first principal component of the
+  variables in =list_items=, via a singular value decomposition and
+  reports two outputs.  The first are the weights used to compute the
+  first principal components, while the second is a histogram of the
+  log of positive values of the first principal components.
+
+#+begin_src ipython :results output :var x=list_items
+from itertools import chain
+import pandas as pd
+import numpy as np
+from cfe.estimation import svd_missing, drop_columns_wo_covariance
+import matplotlib.pyplot as plt
+
+x = list(chain.from_iterable(x))
+
+baseline = pd.read_stata('../TUP-data/data/Baseline/TUP_baseline.dta').set_index('idno')[x]
+
+# Drop households with all missing
+baseline = baseline.loc[baseline.count(axis=1)>0,:]
+
+# Drop any columns with too few observations to compute covariance matrix
+baseline = drop_columns_wo_covariance(baseline)
+
+u,s,vt = svd_missing(baseline.T,max_rank=1)
+
+u = pd.DataFrame(u,index=baseline.columns)
+vt = pd.DataFrame(vt,index=baseline.index)
+
+print(u)
+
+np.log(vt.loc[vt[0]>0,:]).hist(bins=20)
+
+plt.xlabel('Log of first principal component')
+plt.savefig('principal_components.png')
+#+end_src
+
+#+results:
+:results:
+                        0
+savings_home_b   0.207026
+savings_bank_b   0.978304
+savings_BRAC_b   0.007643
+savings_NGOs_b   0.000640
+savings_other_b  0.001666
+:end:
+
+[[file:principal_components.png]]
+  
