@@ -118,10 +118,10 @@ for the program's model).  If not excluded on these grounds,
 households were then deemed eligible if they satisfied three or more
 of the following criteria: 
 
-  1. The household head was working as a day laborer (generally an occupation with poverty wages),
-  2. The household had two or more children,
-  3. At least one child in the household was working,
-  4. The household had fewer than three rooms, or
+  1. The household head was working as a day laborer (generally an occupation with poverty wages);
+  2. The household had two or more children;
+  3. At least one child in the household was working;
+  4. The household had fewer than three rooms; or
   5. A woman in the household had not completed secondary school.
 
 Of the 1279 households interviewed in the census, 745 were deemed to
@@ -204,8 +204,8 @@ vegetables or maize) was less popular.
 
 *** Enterprise Assignment & Training
 
-The second phase of the program was enterprise
-assignment and training. Unlike some other programs of this type (e.g., the TUP
+The second phase of the program was enterprise assignment and
+training. Unlike some other programs of this type (e.g., the TUP
 program in Bangladesh described by cite:bandiera-etal17), the number
 of households given each kind of asset was set in advance, with 75
 enrolled in agricultural activities (either maize or vegetable
@@ -232,7 +232,7 @@ revenue from their assets without having to sell them.  In all, the
 market value of these food transfers were valued at $110, bringing the
 total value of all transfers to either $350 or $410.
 
-** Unconditional Cash Transfers 
+** Unconditional Cash Transfers
 
 To implement an unconditional cash transfer, we randomly assigned each
 of the 125 households in the UCT group to receive a cash transfer of
@@ -259,34 +259,24 @@ implications of savings accounts citep:dupas-robinson13 would lead one
 to expect that the method of disbursal might affect the propensity to
 save a cash transfer.
 
-Political instability disrupted NGO operations throughout South Sudan,
-preventing the simultaneous disbursal of the cash and asset
-transfers. Instead, a second survey was conducted in June of 2014,
-with the cash transfers being disbursed immediately thereafter. This
-resulted in a timing difference of 3 to 6 months between the two
-(since the asset transfers were rolled out over around 12 weeks).
-This naturally complicates the comparison of treatment effects between
-the two treatments. We will describe our empirical strategy in light
-of these challenges in Section [[*Empirical Strategy]].
-
 * Data Collection & Timeline
 
 We have four principal sources of data.  First, as discussed above, we
-conducted a census of households with women in the area around BRAC's offices 
-in April of 2013.  Second, in the summer of 2013 we conducted a
-baseline survey of eligible households.  We randomly assigned women
+conducted a census of households with women in the area around BRAC's
+offices in April of 2013.  Second, in the summer of 2013 we conducted
+a baseline survey of eligible households.  We randomly assigned women
 who responsed to this baseline survey to one of the TUP, UCT, or
-control groups; some randomly selected TUP and UCT assignees were further chosen
-to receive an asset/cash "top-up" valued at $60.  Third, we conducted
-a "midline" survey in June 2014, and an "endline" survey in the summer
-of 2015.
+control groups; some randomly selected TUP and UCT assignees were
+further chosen to receive an asset/cash "top-up" valued at $60.
+Third, we conducted a "midline" survey in June 2014, and an "endline"
+survey in the summer of 2015.
 
 Training and asset transfers for the TUP group began in late 2013; our
-intention was to make transfers of cash to the UCT group at roughly the same
-time that TUP participants were ready to begin their operations,
-during the first quarter of 2014.  However, these plans were
-complicated by an onset of broad civil unrest in South Sudan, and
-disruption of BRAC's operations.  
+intention was to make transfers of cash to the UCT group at roughly
+the same time that TUP participants were ready to begin their
+operations, during the first quarter of 2014.  However, these plans
+were complicated by an onset of broad civil unrest in South Sudan, and
+disruption of BRAC's operations.
 
 In response to the outbreak of violence in late 2013 and subsequent
 closing of the offices in Yei, a midline survey was conducted in June
@@ -332,7 +322,7 @@ Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{UCT}I_{t}*UCT_{it}+\beta_{t}^{
 where $\delta_{t}$ are time fixed effects and $I_{t}$ is an indicator if the year
 /t/, and $Y_{it}$ is an outcome of interest for household /i/ in year /t/. We take
 the interactions of TUP assignment with 2014 and 2015 indicators as the treatment
-effects at 6-8 and 15-17 months respectively. The analagous interactions with the
+effects at 6--8 and 15--17 months respectively. The analagous interactions with the
 UCT group offer a second baseline and a 12-month treatment effect, respectively.
 Since those transfers happened after the midline survey, its interaction with /2014/
 acts as a placebo; there is no /ex ante/ reason to expect that they were different
@@ -342,30 +332,37 @@ both \(t \in {2014,2015}\). Since the difference in timing is smaller, we consid
 \(\beta_{TUP,2015}-\beta_{UCT,2015}=0\) to be the preferred hypothesis, but examine
 and report \(\beta_{TUP,2014}-\beta_{UCT,2015}=0\) as well.
  
-For the supplementary analysis of the high-frequency panel, we estimate a separate
-model, since the underlying data is so different. A constant parameter takes the
-place of the fixed effects. We include 2013 levels as a covariate where possible.
-Since we collect expenditures on only ten consumption items, we report not only the
-total value of spending on those goods, but also a more theoretically grounded
-measure described in \cite{collins-ligon17}, which uses the composition of
-expenditures to derive the marginal utility of expenditures for each household. We
-chose ten relatively demand-elastic items specifically for this purpose, as those
-will tend to be the most responsive to changes in welfare. 
+For the supplementary analysis of the high-frequency panel, we
+estimate a separate model, since the underlying data is so
+different. A constant parameter takes the place of the fixed
+effects. We include 2013 levels as a covariate where possible, and a
+dummy variable where not. 
 
-******* TODO
+*** High-frequency data                                            :noexport:
+ Since we collect expenditures on only ten
+consumption items, we report not only the total value of spending on
+those goods, but also a more theoretically grounded measure described
+in \cite{collins-ligon17}, which uses the composition of expenditures
+to derive the marginal utility of expenditures for each household.  We
+chose ten relatively demand-elastic items specifically for this
+purpose, as those will tend to be the most responsive to changes in
+welfare.
+
+*************** TODO
         Include a scatter plot of df[10items].sum(1) vs df[AllItems].sum(1) to speak
         to whether that basket tracks "total" spending.
-******* 
+*************** END 
 
 #+name: scatter_plot
 #+begin_src python :results output
 import matplotlib. pyplot as plt
 import pandas as pd
 
-# 10 consumption items from mobile survey: treatment of sick household members, 
-# school fee (see s28 and s29 and s210?), food for household consumption, clothes, goods to resell with some profit, 
-# small size livestock, medium size livestock, construction/renovation of houses for living, 
-# construction/renovation of shop premises, hair dressing
+# 10 consumption items from mobile survey: treatment of sick household
+# members, school fee (see s28 and s29 and s210?), food for household
+# consumption, clothes, goods to resell with some profit, small size
+# livestock, medium size livestock, construction/renovation of houses
+# for living, construction/renovation of shop premises, hair dressing
 
 
 # need to get the correct data for 10items and allitems from mobile survey 
@@ -381,6 +378,8 @@ X = X.values.tolist()
 Y = Y.values.tolist()
 
 plt.scatter(X, Y)
+plt.xlabel('Sum of 10 Items')
+plt.ylabel('Sum of All Items')
 plt.savefig("../figures/scatter.png")
 #plt.show() # can take this out later
 
