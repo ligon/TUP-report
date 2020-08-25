@@ -3326,6 +3326,28 @@ for outcome in outcomes:
     controlgroup = temp_df[temp_df['Control'] == 1]
     
     """for table with Fixed Effects"""
+
+    # for computing the difference in TUP and Cash coefficients
+    beta_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2014 <= 0.01: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
+    elif pvalue_cash_TUP2014 <= 0.05: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
+    elif pvalue_cash_TUP2014 <= 0.1: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        
+    beta_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2015 <= 0.01: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
+    elif pvalue_cash_TUP2015 <= 0.05: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
+    elif pvalue_cash_TUP2015 <= 0.1: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+
     d_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
                   controlgroup[controlgroup['2015'] == 1][outcome].std(),
                   round(models_ols_FE[outcome].params[0], 3), models_ols_FE[outcome].bse[0],
@@ -3338,7 +3360,8 @@ for outcome in outcomes:
                   round(models_ols_FE[outcome].params[7], 3), models_ols_FE[outcome].bse[7],
                   round(models_ols_FE[outcome].params[8], 3), models_ols_FE[outcome].bse[8],
                   round(models_ols_FE[outcome].params[9], 3), models_ols_FE[outcome].bse[9],
-                  models_ols_FE[outcome].fvalue, models_ols_FE[outcome].nobs]
+                  models_ols_FE[outcome].fvalue, models_ols_FE[outcome].nobs, 
+                  beta_cash_TUP2014, beta_cash_TUP2015]
     
     for x in range(0,10):
         # indexes account for standard errors being in the final table
@@ -3351,6 +3374,27 @@ for outcome in outcomes:
             d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '*'
     
     """for table WITHOUT Fixed Effects"""
+
+    # for computing the difference in TUP and Cash coefficients
+    beta_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2014 <= 0.01: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
+    elif pvalue_cash_TUP2014 <= 0.05: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
+    elif pvalue_cash_TUP2014 <= 0.1: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        
+    beta_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2015 <= 0.01: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
+    elif pvalue_cash_TUP2015 <= 0.05: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
+    elif pvalue_cash_TUP2015 <= 0.1: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
     
     d_no_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
                   controlgroup[controlgroup['2015'] == 1][outcome].std(),
@@ -3362,7 +3406,8 @@ for outcome in outcomes:
                   round(models_ols_no_FE[outcome].params[5], 3), models_ols_no_FE[outcome].bse[5],
                   round(models_ols_no_FE[outcome].params[6], 3), models_ols_no_FE[outcome].bse[6],
                   round(models_ols_no_FE[outcome].params[7], 3), models_ols_no_FE[outcome].bse[7],
-                  models_ols_no_FE[outcome].fvalue, models_ols_no_FE[outcome].nobs]
+                  models_ols_no_FE[outcome].fvalue, models_ols_no_FE[outcome].nobs,
+                  beta_cash_TUP2014, beta_cash_TUP2015]
     
     for x in range(0,8):
         # indexes account for standard errors being in the final table
@@ -3382,7 +3427,8 @@ final_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "TUP", 15: "        ",
                       16: "UCT", 17: "         ", 18: "Bsln NA", 19: "          ",
-                      20: "Bsln2013", 21: "           ", 22: "F-stat", 23: "N"}, inplace=True)
+                      20: "Bsln2013", 21: "           ", 22: "F-stat", 23: "N", 
+                      24: "Beta_TUP_2014-Beta_Cash_2015", 25: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
 
 newdf_FE = df_to_orgtbl(final_FE, float_fmt = '%.3f')
 print("""#+caption: asset results WITH Tgroup Fixed Effects""")
@@ -3393,7 +3439,8 @@ final_no_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ",
                       4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
+                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
 newdf_no_FE = df_to_orgtbl(final_no_FE, float_fmt = '%.3f')
 print("""#+caption: asset results WITHOUT Tgroup Fixed Effects""")
 print(newdf_no_FE)
@@ -3428,6 +3475,8 @@ print(newdf_no_FE)
 |              | 0.014 | 0.012 | 0.012 |
 | F-stat  | 15.911 | 15.203 | 16.350 |
 | N  | 1510.000 | 1510.000 | 1510.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | 768.308** | 202.937** | 140.665** |
+| Beta_TUP_2015-Beta_Cash_2015  | 448.971* | 94.223 | 85.842 |
 
 #+caption: asset results WITHOUT Tgroup Fixed Effects
 |  |Total|   Productive|   Livestock  |
@@ -3452,8 +3501,9 @@ print(newdf_no_FE)
 |            | 0.014 | 0.012 | 0.012 |
 | F-stat  | 15.911 | 15.203 | 16.350 |
 | N  | 1510.000 | 1510.000 | 1510.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | 1655.528*** | 429.916*** | 359.67*** |
+| Beta_TUP_2015-Beta_Cash_2015  | 1336.19*** | 321.202*** | 304.847*** |
 
-      
 
 
 
