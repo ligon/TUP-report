@@ -4123,10 +4123,22 @@ for outcome in outcomes:
     
     models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[controls]).fit()
     
+    # for computing the difference in TUP and Cash coefficients
+    beta_cash_TUP = models_ols[outcome].t_test("TUP - UCT = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP = models_ols[outcome].t_test("TUP - UCT = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP <= 0.01: 
+        beta_cash_TUP = str(round(beta_cash_TUP, 3)) + '***'
+    elif pvalue_cash_TUP <= 0.05: 
+        beta_cash_TUP = str(round(beta_cash_TUP, 3)) + '**'
+    elif pvalue_cash_TUP <= 0.1: 
+        beta_cash_TUP = str(round(beta_cash_TUP, 3)) + '*'
+
     d[outcome] = [round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
                   round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
                   round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
-                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs, 
+                  beta_cash_TUP]
    
 
     for x in range(0,3):
@@ -4143,7 +4155,7 @@ for outcome in outcomes:
 final = pd.DataFrame(data=d)
 
 final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP", 3: "  ", 
-                      4: "UCT", 5: "   ", 6: "F-stat", 7: "N"}, inplace=True)
+                      4: "UCT", 5: "   ", 6: "F-stat", 7: "N", 8: "beta_TUP-beta_CASH"}, inplace=True)
 
 newdf = df_to_orgtbl(final, float_fmt = '%.3f')
 print(newdf)
@@ -4163,6 +4175,8 @@ there are 3 rows for which no one reported a market price for that animal and un
 |      | 133.947 | 298.534 | 1077.298 | 1097.625 |
 | F-stat  | 1.309 | 0.983 | 0.683 | 1.101 |
 | N  | 532.000 | 305.000 | 690.000 | 690.000 |
+| beta_TUP-beta_CASH  | -188.613 | 399.260 | 457.192 | 742.540 |
+
 
 
 ** Exposure to Conflict
