@@ -3823,6 +3823,27 @@ for DF in (df, nonzero_df):
     
         # for computing the mean of the control group in 2015
         controlgroup = temp_df[temp_df['Control'] == 1]
+
+        # for computing the difference in TUP and Cash coefficients
+        beta_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+        pvalue_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+        if pvalue_cash_TUP2014 <= 0.01: 
+            beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
+        elif pvalue_cash_TUP2014 <= 0.05: 
+            beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
+        elif pvalue_cash_TUP2014 <= 0.1: 
+            beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        
+        beta_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+        pvalue_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+        if pvalue_cash_TUP2015 <= 0.01: 
+            beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
+        elif pvalue_cash_TUP2015 <= 0.05: 
+            beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
+        elif pvalue_cash_TUP2015 <= 0.1: 
+            beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
         
         if DF.equals(nonzero_df): 
             d = nonzero_d 
@@ -3839,7 +3860,8 @@ for DF in (df, nonzero_df):
                   round(models_ols[outcome].params[5], 3), models_ols[outcome].bse[5],
                   round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
                   round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
-                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs,
+                  beta_cash_TUP2014, beta_cash_TUP2015]
     
         for x in range(0,8):
             # indexes account for standard errors being in the final table
@@ -3869,6 +3891,27 @@ for DF in (df, nonzero_df):
     # for computing the mean of the control group in 2015
     controlgroup = temp_df[temp_df['Control'] == 1]
     
+    # for computing the difference in TUP and Cash coefficients
+    beta_cash_TUP2014 = models_ols["Food Savings"].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2014 = models_ols["Food Savings"].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2014 <= 0.01: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
+    elif pvalue_cash_TUP2014 <= 0.05: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
+    elif pvalue_cash_TUP2014 <= 0.1: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        
+    beta_cash_TUP2015 = models_ols["Food Savings"].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2015 = models_ols["Food Savings"].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2015 <= 0.01: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
+    elif pvalue_cash_TUP2015 <= 0.05: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
+    elif pvalue_cash_TUP2015 <= 0.1: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+    
     if DF.equals(nonzero_df): 
         d = nonzero_d 
     else: 
@@ -3883,7 +3926,8 @@ for DF in (df, nonzero_df):
                   round(models_ols["Food Savings"].params[4], 3), models_ols["Food Savings"].bse[4],
                   round(models_ols["Food Savings"].params[5], 3), models_ols["Food Savings"].bse[5],
                      "", " ", "  ", "   ",
-                  models_ols["Food Savings"].fvalue, models_ols["Food Savings"].nobs]
+                  models_ols["Food Savings"].fvalue, models_ols["Food Savings"].nobs, 
+                  beta_cash_TUP2014, beta_cash_TUP2015]
     
     for x in range(0,6):
         # indexes account for standard errors being in the final table
@@ -3902,45 +3946,53 @@ final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ",
                       4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
+                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
 nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
                       4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
+                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
 
 newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.3f')
+print("""#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access""")
 print(newdf_nonzero)
 
 newdf = df_to_orgtbl(final, float_fmt = '%.3f')
+print("""#+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.""")
 print(newdf)
 
 #+end_src
 
 #+RESULTS: savings_tables
-|          |  Savings | LandCult |  LandOwn | Get Transfer | Give Transfer | Food Savings |
-|----------+----------+----------+----------+--------------+---------------+--------------|
-| CTL mean |    0.389 |    0.711 |    0.797 |        0.168 |         0.079 |        0.718 |
-|          |    0.488 |    0.454 |    0.402 |        0.375 |         0.270 |        0.450 |
-| TUP*2014 | 0.288*** | 0.162*** | 0.184*** |     0.082*** |       0.07*** |     0.131*** |
-|          |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
-| TUP*2015 | 0.184*** |    0.017 |    0.001 |       -0.005 |         0.030 |        0.006 |
-|          |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
-| UCT*2014 |    0.034 |  0.118** | 0.148*** |      0.082** |         0.035 |     0.203*** |
-|          |    0.050 |    0.047 |    0.045 |        0.039 |         0.032 |        0.046 |
-| UCT*2015 |    0.011 |   -0.019 |   -0.023 |       -0.025 |        -0.005 |       -0.030 |
-|          |    0.050 |    0.047 |    0.045 |        0.039 |         0.032 |        0.046 |
-| 2014     |  0.33*** | 0.571*** | 0.571*** |     0.134*** |       0.09*** |     0.629*** |
-|          |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
-| 2015     | 0.385*** | 0.692*** | 0.773*** |     0.168*** |      0.074*** |     0.718*** |
-|          |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
-| Bsln NA  |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
-|          |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
-| Bsln2013 |    0.000 |  0.019** | 0.016*** |        0.000 |         0.0** |              |
-|          |    0.000 |    0.008 |    0.006 |        0.000 |         0.000 |              |
-| F-stat   |   13.914 |    5.435 |   10.908 |        1.634 |         3.516 |        5.041 |
-| N        | 1510.000 | 1510.000 | 1510.000 |     1510.000 |      1510.000 |     1510.000 |
+#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access
+|  |Savings|   LandCult|   LandOwn|   Get Transfer|   Give Transfer|   Food Savings  |
+|-
+| CTL mean  | 0.389 | 0.711 | 0.797 | 0.168 | 0.079 | 0.718 |
+|    | 0.488 | 0.454 | 0.402 | 0.375 | 0.270 | 0.450 |
+| TUP*2014  | 0.288*** | 0.162*** | 0.184*** | 0.082*** | 0.07*** | 0.131*** |
+|     | 0.040 | 0.037 | 0.035 | 0.031 | 0.025 | 0.037 |
+| TUP*2015  | 0.184*** | 0.017 | 0.001 | -0.005 | 0.030 | 0.006 |
+|      | 0.040 | 0.037 | 0.035 | 0.031 | 0.025 | 0.037 |
+| UCT*2014  | 0.034 | 0.118** | 0.148*** | 0.082** | 0.035 | 0.203*** |
+|       | 0.050 | 0.047 | 0.045 | 0.039 | 0.032 | 0.046 |
+| UCT*2015  | 0.011 | -0.019 | -0.023 | -0.025 | -0.005 | -0.030 |
+|        | 0.050 | 0.047 | 0.045 | 0.039 | 0.032 | 0.046 |
+| 2014  | 0.33*** | 0.571*** | 0.571*** | 0.134*** | 0.09*** | 0.629*** |
+|         | 0.025 | 0.025 | 0.024 | 0.019 | 0.016 | 0.023 |
+| 2015  | 0.385*** | 0.692*** | 0.773*** | 0.168*** | 0.074*** | 0.718*** |
+|          | 0.025 | 0.025 | 0.024 | 0.019 | 0.016 | 0.023 |
+| Bsln NA  | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |  |
+|           | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |   |
+| Bsln2013  | 0.000 | 0.019** | 0.016*** | 0.000 | 0.0** |    |
+|            | 0.000 | 0.008 | 0.006 | 0.000 | 0.000 |     |
+| F-stat  | 13.914 | 5.435 | 10.908 | 1.634 | 3.516 | 5.041 |
+| N  | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | 0.277*** | 0.181*** | 0.207*** | 0.106** | 0.075* | 0.161*** |
+| Beta_TUP_2015-Beta_Cash_2015  | 0.174*** | 0.036 | 0.024 | 0.020 | 0.035 | 0.036 |
 
+#+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
 |  |Savings|   LandCult|   LandOwn|   Get Transfer|   Give Transfer|   Food Savings  |
 |-
 | CTL mean  | 77.874 | 59.268 | 52.947 | 45.355 | 11.697 | 84.232 |
@@ -3963,6 +4015,9 @@ print(newdf)
 |            | 0.012 | 3.181 | 2.460 | 0.026 | 0.027 |     |
 | F-stat  | 6.344 | 3.136 | 2.713 | 0.698 | 0.328 | 3.075 |
 | N  | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | -16.233 | 41.054 | 44.313* | 33.891 | -0.797 | 46.473** |
+| Beta_TUP_2015-Beta_Cash_2015  | 66.261** | 29.612 | 25.894 | -6.969 | -4.753 | 2.960 |
+
 
 *** Land Holdings
 
