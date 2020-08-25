@@ -2431,6 +2431,328 @@ return mtab
 | N                         | $2877.000$         | $2878.000$     | $2878.000$    |
 |---------------------------+--------------------+----------------+---------------|
 
+
+*** Recreating consumption tables
+
+#+name: consumption_tables
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from scipy import stats
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+# missing s20_6m_b and s20_7m_b in monthly for baseline - should be othermonth b
+df_b.insert(len(df_b.columns), 'c_othermonth_b', df_b[ ['s20_6m_b', 's20_7m_b'] ].sum(axis=1))
+
+# find variables that start with "c_" and remove "c_" and remove "_b", "_m", or "_e"
+c2013 = df_b.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
+c2014 = df_m.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
+c2015 = df_e.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
+
+c2013['Year'] = '2013'
+c2014['Year'] = '2014'
+c2015['Year'] = '2015'
+
+# missing durables from monthly for midline in previous code - added it in
+# doesn't make sense to ask for clothing and footwear in total and then women's clothes, children's clothes, school uniforms, shoes in midline and endline
+# ^ and they don't always sum up - change this?
+# #some not asked for in baseline
+
+food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
+month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'durables', 'church', 'othermonth']    
+year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
+
+# make the sum variables
+# in previous they made aggregate variables wrong?
+# Make aggregate variables
+#  C["Food"]   = C.filter(items=food).sum(axis=1).replace(0,np.nan)
+#  C["Month"]   = C.filter(items=food).sum(axis=1)
+#  C["Year"]   = C.filter(items=food).sum(axis=1)
+#  C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
+# should not all filter by items=food. makes sense why food share is 0.333 because it's 1 over itself * 3
+
+outcomes = ["Total", "logTot", "Food", "FoodShr", "Monthly", "Yearly"]
+
+# not replacing 0s with np.nan as was done in previous code - for total, seems to be 4 observations that have 0
+for var in (c2013, c2014, c2015):
+    
+    var["Food"] = var.filter(items=food).sum(axis=1)
+    var["Monthly"] = var.filter(items=month).sum(axis=1)
+    var["Yearly"] = var.filter(items=year).sum(axis=1)
+    var["Total"] = var[ ["Food", "Monthly", "Yearly"] ].sum(axis=1)
+    # make sure not taking the log of 0 or dividing by 0
+    var["logTot"] = var["Total"].replace(0, np.nan).transform(lambda x: np.log(x))
+    var["FoodShr"] = var["Food"]/var["Total"].replace(0, np.nan)
+    
+    # set up to make year dummies
+    var['2013'] = 0
+    var['2014'] = 0
+    var['2015'] = 0
+    
+    # set up baseline2013 variables
+    for outcome in outcomes: 
+        var[outcome+'2013'] = c2013[outcome]
+
+# make year dummies
+c2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
+c2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
+c2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((c2013, c2014, c2015))
+df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
+
+# make interaction terms
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+models_ols_FE = {}
+models_ols_no_FE = {}
+d_FE = {}
+d_no_FE = {}
+baseline_na = True
+
+controls_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
+controls_no_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+# from above, outcomes = ["Total", "logTot", "Food", "FoodShr", "Monthly", "Yearly"]
+
+# remove observations from 2013
+df = df[df['Year'] != '2013']
+
+for outcome in outcomes: 
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls_FE]
+    temp_controls_FE = controls_FE
+    temp_controls_no_FE = controls_no_FE
+    
+    if baseline_na==True:
+        
+        # indicator for whether outcome in 2013 is na, and cast it to be an integer
+        temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        
+        # code missing values of the baseline variable as 0
+        temp_df[outcome + "2013"].fillna(0,inplace=True)
+        
+        temp_controls_FE = temp_controls_FE + ['Baseline_NAN']
+        temp_controls_no_FE = temp_controls_no_FE + ['Baseline_NAN']
+    
+    temp_controls_FE = temp_controls_FE + [outcome+"2013"]
+    temp_controls_no_FE = temp_controls_no_FE + [outcome+"2013"]
+    temp_df = temp_df.dropna()
+    
+    models_ols_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_FE]).fit()
+    models_ols_no_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_no_FE]).fit()
+
+    # for computing the mean of the control group in 2015
+    controlgroup = temp_df[temp_df['Control'] == 1]
+    
+    """for table with Fixed Effects"""
+    
+    # for computing the difference in TUP and Cash coefficients
+    beta_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2014 <= 0.01: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
+    elif pvalue_cash_TUP2014 <= 0.05: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
+    elif pvalue_cash_TUP2014 <= 0.1: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        
+    beta_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2015 <= 0.01: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
+    elif pvalue_cash_TUP2015 <= 0.05: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
+    elif pvalue_cash_TUP2015 <= 0.1: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+    
+    
+    d_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols_FE[outcome].params[0], 3), models_ols_FE[outcome].bse[0],
+                  round(models_ols_FE[outcome].params[1], 3), models_ols_FE[outcome].bse[1], 
+                  round(models_ols_FE[outcome].params[2], 3), models_ols_FE[outcome].bse[2],
+                  round(models_ols_FE[outcome].params[3], 3), models_ols_FE[outcome].bse[3],
+                  round(models_ols_FE[outcome].params[4], 3), models_ols_FE[outcome].bse[4],
+                  round(models_ols_FE[outcome].params[5], 3), models_ols_FE[outcome].bse[5],
+                  round(models_ols_FE[outcome].params[6], 3), models_ols_FE[outcome].bse[6],
+                  round(models_ols_FE[outcome].params[7], 3), models_ols_FE[outcome].bse[7],
+                  round(models_ols_FE[outcome].params[8], 3), models_ols_FE[outcome].bse[8],
+                  round(models_ols_FE[outcome].params[9], 3), models_ols_FE[outcome].bse[9],
+                  models_ols_FE[outcome].fvalue, models_ols_FE[outcome].nobs, 
+                  beta_cash_TUP2014, beta_cash_TUP2015]
+    
+    for x in range(0,10):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols_FE[outcome].pvalues[x] <= 0.01: 
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '***'
+        elif models_ols_FE[outcome].pvalues[x] <= 0.05: 
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '**'
+        elif models_ols_FE[outcome].pvalues[x] <= 0.1:
+            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '*'
+    
+    """for table WITHOUT Fixed Effects"""
+    
+    # for computing the difference in TUP and Cash coefficients
+    beta_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2014 <= 0.01: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
+    elif pvalue_cash_TUP2014 <= 0.05: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
+    elif pvalue_cash_TUP2014 <= 0.1: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        
+    beta_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2015 <= 0.01: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
+    elif pvalue_cash_TUP2015 <= 0.05: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
+    elif pvalue_cash_TUP2015 <= 0.1: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+    
+    d_no_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
+                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
+                  round(models_ols_no_FE[outcome].params[0], 3), models_ols_no_FE[outcome].bse[0],
+                  round(models_ols_no_FE[outcome].params[1], 3), models_ols_no_FE[outcome].bse[1], 
+                  round(models_ols_no_FE[outcome].params[2], 3), models_ols_no_FE[outcome].bse[2],
+                  round(models_ols_no_FE[outcome].params[3], 3), models_ols_no_FE[outcome].bse[3],
+                  round(models_ols_no_FE[outcome].params[4], 3), models_ols_no_FE[outcome].bse[4],
+                  round(models_ols_no_FE[outcome].params[5], 3), models_ols_no_FE[outcome].bse[5],
+                  round(models_ols_no_FE[outcome].params[6], 3), models_ols_no_FE[outcome].bse[6],
+                  round(models_ols_no_FE[outcome].params[7], 3), models_ols_no_FE[outcome].bse[7],
+                  models_ols_no_FE[outcome].fvalue, models_ols_no_FE[outcome].nobs,
+                  beta_cash_TUP2014, beta_cash_TUP2015]
+    
+    for x in range(0,8):
+        # indexes account for standard errors being in the final table
+        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        if models_ols_no_FE[outcome].pvalues[x] <= 0.01: 
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '***'
+        elif models_ols_no_FE[outcome].pvalues[x] <= 0.05: 
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '**'
+        elif models_ols_no_FE[outcome].pvalues[x] <= 0.1:
+            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '*'
+
+
+    del temp_df 
+
+final_FE = pd.DataFrame(data=d_FE)
+final_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "TUP", 15: "        ",
+                      16: "UCT", 17: "         ", 18: "Bsln NA", 19: "          ",
+                      20: "Bsln2013", 21: "           ", 22: "F-stat", 23: "N", 
+                      24: "Beta_TUP_2014-Beta_Cash_2015", 25: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
+
+final_no_FE = pd.DataFrame(data=d_no_FE)
+final_no_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
+                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
+                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
+                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)    
+    
+newdf_FE = df_to_orgtbl(final_FE, float_fmt = '%.3f')
+print("""#+caption:consumption results WITH Tgroup Fixed Effects""")
+print(newdf_FE)
+
+newdf_no_FE = df_to_orgtbl(final_no_FE, float_fmt = '%.3f')
+print("""#+caption:consumption results WITHOUT Tgroup Fixed Effects""")
+print(newdf_no_FE)
+
+
+#+end_src
+
+#+RESULTS: consumption_tables
+#+caption:consumption results WITH Tgroup Fixed Effects
+|  |Total|   logTot|   Food|   FoodShr|   Monthly|   Yearly  |
+|-
+| CTL mean  | 1455.907 | 6.754 | 115.547 | 0.153 | 288.598 | 1051.762 |
+|    | 2073.394 | 1.005 | 79.634 | 0.137 | 311.211 | 1939.705 |
+| TUP*2014  | 333.466** | 0.167** | 11.561** | -0.003 | 27.903 | 293.11** |
+|     | 137.919 | 0.066 | 4.708 | 0.008 | 22.680 | 128.066 |
+| TUP*2015  | -152.399 | -0.060 | -4.330 | 0.002 | 3.427 | -150.793 |
+|      | 133.641 | 0.064 | 4.562 | 0.008 | 21.977 | 124.094 |
+| UCT*2014  | -107.001 | -0.055 | -8.112 | 0.005 | -1.299 | -97.707 |
+|       | 172.781 | 0.082 | 5.898 | 0.010 | 28.414 | 160.438 |
+| UCT*2015  | 72.251 | 0.089 | 12.481** | -0.007 | 35.555 | 24.732 |
+|        | 170.760 | 0.081 | 5.829 | 0.010 | 28.083 | 158.563 |
+| 2014  | 1125.402*** | 6.269*** | 77.477*** | 0.13*** | 259.412*** | 808.297*** |
+|         | 136.529 | 0.156 | 5.327 | 0.008 | 23.506 | 125.900 |
+| 2015  | 1405.175*** | 6.42*** | 106.761*** | 0.153*** | 294.587*** | 1022.193*** |
+|          | 125.303 | 0.153 | 4.995 | 0.008 | 21.914 | 115.484 |
+| TUP  | 181.067** | 0.106** | 7.231** | -0.001 | 31.33** | 142.317* |
+|           | 88.895 | 0.042 | 3.037 | 0.005 | 14.619 | 82.544 |
+| UCT  | -34.749 | 0.033 | 4.369 | -0.001 | 34.257* | -72.976 |
+|            | 111.380 | 0.053 | 3.802 | 0.007 | 18.320 | 103.425 |
+| Bsln NA  | 41.717 | 0.4** | 18.848*** | 0.008 | -13.309 | 17.329 |
+|             | 194.528 | 0.168 | 7.119 | 0.012 | 32.807 | 180.056 |
+| Bsln2013  | 0.051* | 0.05** | 0.072* | -0.016 | -0.053 | 0.037 |
+|              | 0.030 | 0.023 | 0.038 | 0.017 | 0.140 | 0.029 |
+| F-stat  | 2.072 | 2.811 | 9.872 | 2.119 | 1.550 | 1.673 |
+| N  | 1306.000 | 1305.000 | 1306.000 | 1305.000 | 1306.000 | 1306.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | 261.215 | 0.078 | -0.921 | 0.003 | -7.652 | 268.378 |
+| Beta_TUP_2015-Beta_Cash_2015  | -224.650 | -0.149* | -16.811*** | 0.009 | -32.129 | -175.525 |
+
+#+caption:consumption results WITHOUT Tgroup Fixed Effects
+|  |Total|   logTot|   Food|   FoodShr|   Monthly|   Yearly  |
+|-
+| CTL mean  | 1455.907 | 6.754 | 115.547 | 0.153 | 288.598 | 1051.762 |
+|    | 2073.394 | 1.005 | 79.634 | 0.137 | 311.211 | 1939.705 |
+| TUP*2014  | 514.533*** | 0.273*** | 18.791*** | -0.005 | 59.232* | 435.427** |
+|     | 189.706 | 0.090 | 6.479 | 0.011 | 31.196 | 176.152 |
+| TUP*2015  | 28.668 | 0.046 | 2.900 | 0.001 | 34.756 | -8.476 |
+|      | 180.285 | 0.086 | 6.156 | 0.011 | 29.648 | 167.407 |
+| UCT*2014  | -141.750 | -0.022 | -3.744 | 0.004 | 32.958 | -170.683 |
+|       | 235.283 | 0.112 | 8.032 | 0.014 | 38.695 | 218.476 |
+| UCT*2015  | 37.502 | 0.122 | 16.85** | -0.008 | 69.812* | -48.244 |
+|        | 230.815 | 0.110 | 7.880 | 0.014 | 37.963 | 214.330 |
+| 2014  | 1125.402*** | 6.269*** | 77.477*** | 0.13*** | 259.412*** | 808.297*** |
+|         | 136.529 | 0.156 | 5.327 | 0.008 | 23.506 | 125.900 |
+| 2015  | 1405.175*** | 6.42*** | 106.761*** | 0.153*** | 294.587*** | 1022.193*** |
+|          | 125.303 | 0.153 | 4.995 | 0.008 | 21.914 | 115.484 |
+| Bsln NA  | 41.717 | 0.4** | 18.848*** | 0.008 | -13.309 | 17.329 |
+|           | 194.528 | 0.168 | 7.119 | 0.012 | 32.807 | 180.056 |
+| Bsln2013  | 0.051* | 0.05** | 0.072* | -0.016 | -0.053 | 0.037 |
+|            | 0.030 | 0.023 | 0.038 | 0.017 | 0.140 | 0.029 |
+| F-stat  | 2.072 | 2.811 | 9.872 | 2.119 | 1.550 | 1.673 |
+| N  | 1306.000 | 1305.000 | 1306.000 | 1305.000 | 1306.000 | 1306.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | 477.031 | 0.151 | 1.941 | 0.003 | -10.580 | 483.671* |
+| Beta_TUP_2015-Beta_Cash_2015  | -8.834 | -0.076 | -13.95* | 0.009 | -35.056 | 39.768 |
+
+
+
+      
+
+
+
 ** Food Insecurity
 
 Observed changes in total consumption don't translate into an increase in reported
@@ -2711,6 +3033,8 @@ print(newdf)
 |          |     0.026 |    0.030 |    0.031 |    0.036 |    0.037 |    0.026 |
 | F-stat   |     7.115 |    2.243 |    4.069 |    4.103 |    1.774 |    3.897 |
 | N        |  1510.000 | 1282.000 | 1297.000 | 1293.000 | 1297.000 | 1292.000 |
+
+
 
 
 
