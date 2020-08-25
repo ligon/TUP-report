@@ -5793,23 +5793,7 @@ def residuals_by_group(models, groups, outcomes=[], kind="kde", figure_dir="../f
 
 #+end_src
    
-* Code Appendix
 
-** Code block to load data & merge in treatment information
-#+name: load_data
-#+begin_src python :noweb noexport :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-data/random_assignment.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline)
-df_a = pd.read_stata(data_assignment)
-
-# merge baseline data and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_b, df_a[ ['respid', 'group'] ], how='inner', left_on="idno", right_on="respid")
-#+end_src
 
 
  
