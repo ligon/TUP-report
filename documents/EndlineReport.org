@@ -2748,11 +2748,6 @@ print(newdf_no_FE)
 | Beta_TUP_2015-Beta_Cash_2015  | -8.834 | -0.076 | -13.95* | 0.009 | -35.056 | 39.768 |
 
 
-
-      
-
-
-
 ** Food Insecurity
 
 Observed changes in total consumption don't translate into an increase in reported
@@ -2972,7 +2967,29 @@ for outcome in outcomes:
     
     # for computing the mean of the control group in 2015
     controlgroup = temp_df[temp_df['Control'] == 1]
+
+    # for computing the difference in TUP and Cash coefficients
+    beta_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
     
+    if pvalue_cash_TUP2014 <= 0.01: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
+    elif pvalue_cash_TUP2014 <= 0.05: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
+    elif pvalue_cash_TUP2014 <= 0.1: 
+        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        
+    beta_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    
+    if pvalue_cash_TUP2015 <= 0.01: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
+    elif pvalue_cash_TUP2015 <= 0.05: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
+    elif pvalue_cash_TUP2015 <= 0.1: 
+        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+   
+
     # make a dictionary including coefficients, standard errors, F-stat, and N
     d[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
                   controlgroup[controlgroup['2015'] == 1][outcome].std(),
@@ -2984,7 +3001,8 @@ for outcome in outcomes:
                   round(models_ols[outcome].params[5], 3), models_ols[outcome].bse[5],
                   round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
                   round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
-                  models_ols[outcome].fvalue, models_ols[outcome].nobs]
+                  models_ols[outcome].fvalue, models_ols[outcome].nobs, 
+                  beta_cash_TUP2014, beta_cash_TUP2015]
     
     for x in range(0,8):
         # indexes account for standard errors being in the final table and skipping the two rows for control mean
@@ -3003,7 +3021,8 @@ final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ",
                       4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N"}, inplace=True)
+                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N", 
+                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
 
 newdf = df_to_orgtbl(final, float_fmt = '%.3f')
 print(newdf)
@@ -3011,30 +3030,30 @@ print(newdf)
 #+end_src
 
 #+RESULTS: food_insecurity
-|          |   z-score | wholeday |   hungry |   nofood | fewmeals | portions |
-|----------+-----------+----------+----------+----------+----------+----------|
-| CTL mean |    -0.015 |    0.447 |    0.460 |    0.595 |    0.751 |    0.814 |
-|          |     0.973 |    0.498 |    0.499 |    0.492 |    0.433 |    0.390 |
-| TUP*2014 |  0.264*** |   -0.026 |   -0.057 | -0.095** |   -0.027 |   0.069* |
-|          |     0.081 |    0.045 |    0.045 |    0.045 |    0.040 |    0.039 |
-| TUP*2015 |     0.016 |    0.016 |   0.076* |    0.007 |    0.039 |   -0.019 |
-|          |     0.081 |    0.043 |    0.043 |    0.043 |    0.038 |    0.037 |
-| UCT*2014 |   0.28*** |   -0.033 |   -0.033 |   -0.008 |    0.001 |    0.040 |
-|          |     0.103 |    0.056 |    0.056 |    0.056 |    0.050 |    0.048 |
-| UCT*2015 |    -0.115 |   -0.006 |    0.037 |    0.037 |    0.001 |   -0.020 |
-|          |     0.103 |    0.055 |    0.055 |    0.055 |    0.049 |    0.047 |
-| 2014     | -0.134*** | 0.376*** | 0.373*** | 0.484*** | 0.707*** | 0.651*** |
-|          |     0.051 |    0.036 |    0.037 |    0.042 |    0.043 |    0.032 |
-| 2015     |     0.014 | 0.457*** | 0.433*** | 0.565*** | 0.755*** | 0.806*** |
-|          |     0.051 |    0.033 |    0.035 |    0.040 |    0.041 |    0.030 |
-| Bsln NA  |     0.000 |   -0.051 |   -0.005 |    0.007 |   -0.046 |   -0.019 |
-|          |     0.000 |    0.044 |    0.048 |    0.051 |    0.050 |    0.041 |
-| Bsln2013 |  0.119*** |    0.010 |   0.059* |    0.050 |    0.013 |    0.027 |
-|          |     0.026 |    0.030 |    0.031 |    0.036 |    0.037 |    0.026 |
-| F-stat   |     7.115 |    2.243 |    4.069 |    4.103 |    1.774 |    3.897 |
-| N        |  1510.000 | 1282.000 | 1297.000 | 1293.000 | 1297.000 | 1292.000 |
-
-
+|                              |   z-score | wholeday |   hungry |   nofood | fewmeals | portions |
+|------------------------------+-----------+----------+----------+----------+----------+----------|
+| CTL mean                     |    -0.015 |    0.447 |    0.460 |    0.595 |    0.751 |    0.814 |
+|                              |     0.973 |    0.498 |    0.499 |    0.492 |    0.433 |    0.390 |
+| TUP*2014                     |  0.264*** |   -0.026 |   -0.057 | -0.095** |   -0.027 |   0.069* |
+|                              |     0.081 |    0.045 |    0.045 |    0.045 |    0.040 |    0.039 |
+| TUP*2015                     |     0.016 |    0.016 |   0.076* |    0.007 |    0.039 |   -0.019 |
+|                              |     0.081 |    0.043 |    0.043 |    0.043 |    0.038 |    0.037 |
+| UCT*2014                     |   0.28*** |   -0.033 |   -0.033 |   -0.008 |    0.001 |    0.040 |
+|                              |     0.103 |    0.056 |    0.056 |    0.056 |    0.050 |    0.048 |
+| UCT*2015                     |    -0.115 |   -0.006 |    0.037 |    0.037 |    0.001 |   -0.020 |
+|                              |     0.103 |    0.055 |    0.055 |    0.055 |    0.049 |    0.047 |
+| 2014                         | -0.134*** | 0.376*** | 0.373*** | 0.484*** | 0.707*** | 0.651*** |
+|                              |     0.051 |    0.036 |    0.037 |    0.042 |    0.043 |    0.032 |
+| 2015                         |     0.014 | 0.457*** | 0.433*** | 0.565*** | 0.755*** | 0.806*** |
+|                              |     0.051 |    0.033 |    0.035 |    0.040 |    0.041 |    0.030 |
+| Bsln NA                      |     0.000 |   -0.051 |   -0.005 |    0.007 |   -0.046 |   -0.019 |
+|                              |     0.000 |    0.044 |    0.048 |    0.051 |    0.050 |    0.041 |
+| Bsln2013                     |  0.119*** |    0.010 |   0.059* |    0.050 |    0.013 |    0.027 |
+|                              |     0.026 |    0.030 |    0.031 |    0.036 |    0.037 |    0.026 |
+| F-stat                       |     7.115 |    2.243 |    4.069 |    4.103 |    1.774 |    3.897 |
+| N                            |  1510.000 | 1282.000 | 1297.000 | 1293.000 | 1297.000 | 1292.000 |
+| Beta_TUP_2014-Beta_Cash_2015 |  0.379*** |   -0.020 |   -0.094 |  -0.131* |   -0.028 |    0.089 |
+| Beta_TUP_2015-Beta_Cash_2015 |     0.131 |    0.022 |    0.040 |   -0.030 |    0.038 |    0.001 |
 
 
 
