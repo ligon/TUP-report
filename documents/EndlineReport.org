@@ -4367,6 +4367,47 @@ return Table
 [[../figures/conflict_exposure.png]] 
 
 *** Recreating the exposure to conflict table
+
+In this table, the 'Cash' group is included within the 'Control' group
+because the cash transfers weren't given out until immediately after
+the midline survey, and this table uses data from the midline
+survey. All variables are binary variables. CTL mean comes from the constant
+and standard error in the regression.
+
+Affected and Worried are whether or not respondents answered that they were "directly affected
+by any of the violence" or "worried that the conflict would affect you
+since December," respectively. NoInvest is whether they said that one
+way they were directly affected is that they could not invest in
+business. NoMeans is whether they said they did not do anything to
+protect the lives of family members or to protect their assets, and
+listed the reason as "didn't have the means." ProtectLives is whether
+the respondent did anything (including migration) besides "nothing" to
+protect the lives of their family members - this could be migrating to
+stay with friend or family, migrating and finding own accommodation,
+looking for protection with NGO, or looking for protection with
+government or military. Migrated is if the respondent listed migration as one of
+the ways they were directly affected, and/or if they said they migrated to
+protect the lives of their family. 
+
+Differences with previous code: 
+-this code adds relevant variables ('s22_4d_m' and 's22_4e_m': other
+ways you were directly affected by conflict) which were not renamed to
+include 'conflict'
+-N for NoMeans in this table is lower than in the previous table
+because the question was: if they answered no to the previous two
+questions, 'why did you do nothing to protect yourself and assets?'
+So only a subset of people who said they didn't do anything to protect 
+the lives of their family members AND didn't do anything to protect 
+their assets would be asked this question and therefore able to answer 
+'didn't have the means' to the question. Therefore, N for NoMeans in 
+this table is lower than in the previous table because it takes into 
+account that the NaNs should not be changed to 0s because people who 
+had NaNs either did something to protect the lives of their family 
+members or to protect their assets
+
+Next steps: 
+-recreate bar graph figure
+
 #+name: exposure_to_conflict
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
@@ -4385,13 +4426,19 @@ df_a.replace(to_replace="Cash", value="Control", inplace=True)
 df = pd.merge(df_m, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
 
 df.set_index(['idno', 'Group'], inplace=True)
-named_without_conflict = df.filter(regex="^s22_.")
-df = df.filter(like='conflict')
 
+# add relevant variables which were not renamed to include 'conflict'
+named_without_conflict = df.filter(regex="^s22_.")
+
+# make a dataframe of variables with 'conflict' in them and join it with the other relevant variables
+df = df.filter(like='conflict')
 df = df.join(named_without_conflict)
 
+# Affected and Worried are the binary variables of whether they responded yes (1) or no (0) to being affected and worried
 df.rename(columns={"conflict_affected_m": "Affected", "conflict_worried_m": "Worried"}, inplace = True)
 
+# NoMeans variable is whether they answered 'didn't have the means' to question 'why did you do nothing to protect yourself and assets?'
+# NaNs should not be counted as 0s because some people were not asked this question, so the people who were asked this question would be a smaller subset 
 df.replace({"Didn't have the means": 1, 
  "Not necessary/Didn't fee in danger": 0, 
  "Didn't have the suport from othes": 0, 
@@ -4415,7 +4462,7 @@ df_business.insert(len(df_business.columns), 'NoInvest', df_business[affected_bu
 df = df.join(df_business['NoInvest'])
 del df_business
 
-# migrated is only if directly affected by migration or did to protect lives 
+# migrated is only if directly affected by migration or migrated to protect lives 
 affected_migration = ['conflict_affected1_m', 'conflict_affected2_m', 'conflict_affected3_m', 's22_4d_m', 's22_4e_m', 'conflict_protectlives_m']
 df_migration = df[affected_migration]
 
@@ -4465,6 +4512,7 @@ for outcome in outcomes:
     temp_df = df[controls + [outcome]].dropna()
     models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[controls]).fit()
     
+    # make a dictionary with the coefficients, standard errors, F-Stats and Ns
     d[outcome] = [round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
                   round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
                   models_ols[outcome].fvalue, models_ols[outcome].nobs]
@@ -4476,7 +4524,7 @@ for outcome in outcomes:
     elif models_ols[outcome].pvalues[0] <= 0.1:
         d[outcome][0] = str(d[outcome][0]) + '*'
         
-    # second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1]
+    # second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1]
     if models_ols[outcome].pvalues[1] <= 0.01: 
         d[outcome][2] = str(d[outcome][2]) + '***'
     elif models_ols[outcome].pvalues[1] <= 0.05: 
