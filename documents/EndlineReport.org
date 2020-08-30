@@ -3700,6 +3700,29 @@ return Table
 
 *** Recreating savings tables
 
+CTL mean lists the mean and standard deviation of the control group 
+in 2015. All of the Ns are the same because NaN values were
+considered as having a value of 0 for that asset (this occurs
+automatically when using .sum(axis=1) to sum values in different
+columns for a given row). The baseline survey did not ask for food
+savings, which is why Baseline2013 and BaselineNA controls are omitted.
+
+Differences with previous code: 
+-This code does not do any censoring, truncating, or converting of
+values to US dollars
+-s8b_2c_m and  s8b_2d_m for other food savings values are included in
+this code but not the previous
+-in previous code, there was an issue at endline  with how the sum was
+being calculated for 'savings_otherfood_val_e' e.g. 40+NaN=NaN, so
+this new code uses s4b_oth_1b_e and s4b_oth_2b_e instead
+-this code includes columns for 'get transfer' and 'give transfer'
+that were not included in the previous table
+
+Next steps: 
+-divide the standard deviation of CTL mean by the sqrt of the number of control
+observations to make it comparable with the other point estimates and
+standard errors in the table?
+
 #+name: savings_tables
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
@@ -3722,7 +3745,6 @@ df_m.set_index('idno', inplace=True)
 df_e.set_index('idno', inplace=True)
 df_a.set_index('RespID', inplace=True)
 
-# not including 'land_ownnocult_b' or 'land_ownrent_b'
 # merge baseline and midline based on idno index
 
 #format savings_maize_q_m  savings_maize_val_m 
@@ -3749,10 +3771,6 @@ df = pd.merge(df,
                      'land_ownnocult_e', 'land_ownrent_e', 'transfers_get1_e', 'transfers_get2_e', 
                      'transfers_get3_e', 'transfers_give1_e', 'transfers_give2_e', 'transfers_give3_e'] ], 
               how='outer', left_index=True, right_index=True)
-
-# merge baseline/midline/endline with 'Group' from master_assignment.csv
-df = pd.merge(df, df_a[ ['Group'] ], 
-             how = 'outer', left_index=True, right_index=True)
 
 
 df.rename({'s8b_2c_m': 'savings_otherfood1_val_m',
@@ -3804,7 +3822,8 @@ s2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
 s2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
 
 df2 = pd.concat((s2013, s2014, s2015))
-df = df2.join((df[ ['Group'] ].join(pd.get_dummies(df['Group']))))
+# add group dummies from master_assignment.csv
+df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
 
 # make interaction variables
 df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
@@ -3910,7 +3929,7 @@ for DF in (df, nonzero_df):
     
         for x in range(0,8):
             # indexes account for standard errors being in the final table
-            # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+            # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
             if models_ols[outcome].pvalues[x] <= 0.01: 
                 d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '***'
             elif models_ols[outcome].pvalues[x] <= 0.05: 
@@ -3976,7 +3995,7 @@ for DF in (df, nonzero_df):
     
     for x in range(0,6):
         # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
         if models_ols["Food Savings"].pvalues[x] <= 0.01: 
             d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '***'
         elif models_ols["Food Savings"].pvalues[x] <= 0.05: 
@@ -4014,55 +4033,54 @@ print(newdf)
 #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access
 |  |Savings|   LandCult|   LandOwn|   Get Transfer|   Give Transfer|   Food Savings  |
 |-
-| CTL mean  | 0.389 | 0.711 | 0.797 | 0.168 | 0.079 | 0.718 |
-|    | 0.488 | 0.454 | 0.402 | 0.375 | 0.270 | 0.450 |
-| TUP*2014  | 0.288*** | 0.162*** | 0.184*** | 0.082*** | 0.07*** | 0.131*** |
+| CTL mean  | 0.394 | 0.718 | 0.806 | 0.170 | 0.080 | 0.726 |
+|    | 0.489 | 0.451 | 0.396 | 0.376 | 0.271 | 0.447 |
+| TUP*2014  | 0.287*** | 0.159*** | 0.181*** | 0.081*** | 0.069*** | 0.127*** |
 |     | 0.040 | 0.037 | 0.035 | 0.031 | 0.025 | 0.037 |
-| TUP*2015  | 0.184*** | 0.017 | 0.001 | -0.005 | 0.030 | 0.006 |
+| TUP*2015  | 0.183*** | 0.013 | -0.004 | -0.006 | 0.029 | 0.001 |
 |      | 0.040 | 0.037 | 0.035 | 0.031 | 0.025 | 0.037 |
-| UCT*2014  | 0.034 | 0.118** | 0.148*** | 0.082** | 0.035 | 0.203*** |
-|       | 0.050 | 0.047 | 0.045 | 0.039 | 0.032 | 0.046 |
-| UCT*2015  | 0.011 | -0.019 | -0.023 | -0.025 | -0.005 | -0.030 |
-|        | 0.050 | 0.047 | 0.045 | 0.039 | 0.032 | 0.046 |
-| 2014  | 0.33*** | 0.571*** | 0.571*** | 0.134*** | 0.09*** | 0.629*** |
+| UCT*2014  | 0.030 | 0.112** | 0.142*** | 0.08** | 0.034 | 0.196*** |
+|       | 0.050 | 0.047 | 0.044 | 0.039 | 0.032 | 0.046 |
+| UCT*2015  | 0.006 | -0.026 | -0.031 | -0.026 | -0.006 | -0.038 |
+|        | 0.050 | 0.047 | 0.044 | 0.039 | 0.032 | 0.046 |
+| 2014  | 0.333*** | 0.579*** | 0.58*** | 0.136*** | 0.091*** | 0.636*** |
 |         | 0.025 | 0.025 | 0.024 | 0.019 | 0.016 | 0.023 |
-| 2015  | 0.385*** | 0.692*** | 0.773*** | 0.168*** | 0.074*** | 0.718*** |
+| 2015  | 0.389*** | 0.701*** | 0.784*** | 0.17*** | 0.075*** | 0.726*** |
 |          | 0.025 | 0.025 | 0.024 | 0.019 | 0.016 | 0.023 |
 | Bsln NA  | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |  |
 |           | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |   |
-| Bsln2013  | 0.000 | 0.019** | 0.016*** | 0.000 | 0.0** |    |
+| Bsln2013  | 0.000 | 0.017** | 0.015** | 0.000 | 0.0** |    |
 |            | 0.000 | 0.008 | 0.006 | 0.000 | 0.000 |     |
-| F-stat  | 13.914 | 5.435 | 10.908 | 1.634 | 3.516 | 5.041 |
-| N  | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 |
-| Beta_TUP_2014-Beta_Cash_2015  | 0.277*** | 0.181*** | 0.207*** | 0.106** | 0.075* | 0.161*** |
-| Beta_TUP_2015-Beta_Cash_2015  | 0.174*** | 0.036 | 0.024 | 0.020 | 0.035 | 0.036 |
+| F-stat  | 13.720 | 5.086 | 10.529 | 1.594 | 3.460 | 4.797 |
+| N  | 1500.000 | 1500.000 | 1500.000 | 1500.000 | 1500.000 | 1500.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | 0.28*** | 0.185*** | 0.212*** | 0.107** | 0.075* | 0.165*** |
+| Beta_TUP_2015-Beta_Cash_2015  | 0.176*** | 0.039 | 0.027 | 0.021 | 0.035 | 0.039 |
 
 #+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
 |  |Savings|   LandCult|   LandOwn|   Get Transfer|   Give Transfer|   Food Savings  |
 |-
-| CTL mean  | 77.874 | 59.268 | 52.947 | 45.355 | 11.697 | 84.232 |
-|    | 221.477 | 296.900 | 290.894 | 197.831 | 63.897 | 162.141 |
-| TUP*2014  | 16.860 | -2.306 | 2.668 | 41.972* | 2.859 | 42.649*** |
-|     | 23.810 | 15.683 | 14.708 | 22.199 | 12.156 | 14.285 |
-| TUP*2015  | 99.353*** | -13.748 | -15.752 | 1.113 | -1.097 | -0.864 |
-|      | 23.810 | 15.683 | 14.708 | 22.199 | 12.156 | 14.285 |
-| UCT*2014  | 32.947 | 16.540 | 18.160 | 18.809 | -13.676 | 12.801 |
-|       | 30.128 | 19.849 | 18.621 | 28.107 | 15.395 | 18.087 |
-| UCT*2015  | 33.092 | -43.36** | -41.645** | 8.081 | 3.656 | -3.824 |
-|        | 30.128 | 19.849 | 18.621 | 28.107 | 15.395 | 18.087 |
-| 2014  | 45.845*** | 8.691 | 12.616 | 22.381 | 17.91** | 44.303*** |
-|         | 15.103 | 10.370 | 9.936 | 14.036 | 7.709 | 8.999 |
-| 2015  | 73.739*** | 58.16*** | 56.603*** | 44.789*** | 11.187 | 84.232*** |
-|          | 15.103 | 10.370 | 9.936 | 14.036 | 7.709 | 8.999 |
+| CTL mean  | 78.702 | 59.899 | 53.511 | 45.838 | 11.822 | 85.128 |
+|    | 222.508 | 298.416 | 292.389 | 198.828 | 64.225 | 162.769 |
+| TUP*2014  | 16.639 | -2.350 | 2.604 | 42.001* | 2.752 | 42.527*** |
+|     | 23.963 | 15.784 | 14.803 | 22.346 | 12.237 | 14.372 |
+| TUP*2015  | 99.279*** | -14.166 | -16.181 | 0.829 | -1.176 | -1.425 |
+|      | 23.963 | 15.784 | 14.803 | 22.346 | 12.237 | 14.372 |
+| UCT*2014  | 32.459 | 16.471 | 18.034 | 18.582 | -13.868 | 12.330 |
+|       | 30.261 | 19.937 | 18.705 | 28.235 | 15.467 | 18.161 |
+| UCT*2015  | 32.307 | -43.956** | -42.239** | 7.616 | 3.535 | -4.720 |
+|        | 30.261 | 19.937 | 18.705 | 28.235 | 15.467 | 18.161 |
+| 2014  | 46.366*** | 8.877 | 12.887 | 22.631 | 18.106** | 44.774*** |
+|         | 15.232 | 10.465 | 10.030 | 14.157 | 7.776 | 9.072 |
+| 2015  | 74.558*** | 58.872*** | 57.342*** | 45.278*** | 11.311 | 85.128*** |
+|          | 15.232 | 10.465 | 10.030 | 14.157 | 7.776 | 9.072 |
 | Bsln NA  | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |  |
 |           | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |   |
-| Bsln2013  | 0.027** | 1.105 | -2.503 | 0.011 | 0.016 |    |
-|            | 0.012 | 3.181 | 2.460 | 0.026 | 0.027 |     |
-| F-stat  | 6.344 | 3.136 | 2.713 | 0.698 | 0.328 | 3.075 |
-| N  | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 | 1510.000 |
-| Beta_TUP_2014-Beta_Cash_2015  | -16.233 | 41.054 | 44.313* | 33.891 | -0.797 | 46.473** |
-| Beta_TUP_2015-Beta_Cash_2015  | 66.261** | 29.612 | 25.894 | -6.969 | -4.753 | 2.960 |
-
+| Bsln2013  | 0.027** | 1.013 | -2.596 | 0.011 | 0.015 |    |
+|            | 0.012 | 3.196 | 2.473 | 0.026 | 0.027 |     |
+| F-stat  | 6.275 | 3.148 | 2.738 | 0.687 | 0.327 | 3.052 |
+| N  | 1500.000 | 1500.000 | 1500.000 | 1500.000 | 1500.000 | 1500.000 |
+| Beta_TUP_2014-Beta_Cash_2015  | -15.668 | 41.605 | 44.843* | 34.386 | -0.783 | 47.247** |
+| Beta_TUP_2015-Beta_Cash_2015  | 66.972** | 29.790 | 26.058 | -6.786 | -4.711 | 3.295 |
 
 *** Land Holdings
 
