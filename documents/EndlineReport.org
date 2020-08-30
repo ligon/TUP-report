@@ -2433,6 +2433,50 @@ return mtab
 
 
 *** Recreating consumption tables
+CTL mean lists the mean and standard deviation of the control group 
+in 2015.  NaN values were considered as having a value of 0 for that good (this occurs
+automatically when using .sum(axis=1) to sum values in different
+columns for a given row). None of the monthly or yearly variables were
+divided by 30 or 365 respectively, and similarly none of the food
+variables were transformed. "Monthly" is the sum of all the
+goods which were asked about with a 1-month recall window, and
+"Yearly" is the sum of all the goods which were asked about with a
+1-year long recall window. "FoodShr" is the amount of "Food" divided
+by "Total", which could have strange interpretations due to all the
+different length recall windows and lack of transforming the variables
+to all be "per day consumption" for example
+
+Differences with previous code: 
+-This code does not do any censoring, truncating, or converting of
+values to US dollars
+-This code added s20_6m_b and s20_7m_b in monthly for baseline as
+c_othermonth_b (missing in previous code)
+-The previous code was missing durables from monthly for midline. This
+code adds it in
+-The previous code constructed "total" by multiplying food consumption
+by 3 due to a mistake with filtering. This was changed in this new code
+-This code does not replace 0s with np.nan as was done in previous
+code - for total, there seem to be 4 observations that have 0
+-The new tables include "Monthly" for all the goods that were asked
+about with a 1-month recall window and "Yearly" for all the goods that
+were asked about with a 1-year recall window (the values were not
+transformed by dividing by 30 or 365 or anything)
+
+Next steps: 
+-divide the standard deviation of CTL mean by the sqrt of the number of control
+observations to make it comparable with the other point estimates and
+standard errors in the table?
+-Consider that it doesn't make sense to ask for clothing and footwear
+in total and then women's clothes, children's clothes, school
+uniforms, and shoes separately in midline and endline. Both the total
+and the individual components are used in the sums here - change this?
+Also the components do not always add up to the reported sum
+-Consider what it means for the interpretation that different items
+were asked about in nbaseline, midline, and endline. For example,
+multiple items were asked about in midline and endline that were not
+asked about in baseline
+-Consider whether transformations for recall windows would help the interpretation
+
 
 #+name: consumption_tables
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
@@ -2479,13 +2523,14 @@ month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'enter
 year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
 
 # make the sum variables
-# in previous they made aggregate variables wrong?
+
+# in previous they made aggregate variables wrong?:
 # Make aggregate variables
 #  C["Food"]   = C.filter(items=food).sum(axis=1).replace(0,np.nan)
 #  C["Month"]   = C.filter(items=food).sum(axis=1)
 #  C["Year"]   = C.filter(items=food).sum(axis=1)
 #  C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
-# should not all filter by items=food. makes sense why food share is 0.333 because it's 1 over itself * 3
+# should not all filter by items=food. makes sense why food share is 0.333 because it's 1 over (itself * 3)
 
 outcomes = ["Total", "logTot", "Food", "FoodShr", "Monthly", "Yearly"]
 
@@ -2515,6 +2560,7 @@ c2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
 c2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
 
 df2 = pd.concat((c2013, c2014, c2015))
+# add group dummies from master_assignment.csv
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
 
 # make interaction terms
@@ -2605,7 +2651,7 @@ for outcome in outcomes:
     
     for x in range(0,10):
         # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
         if models_ols_FE[outcome].pvalues[x] <= 0.01: 
             d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '***'
         elif models_ols_FE[outcome].pvalues[x] <= 0.05: 
@@ -2651,7 +2697,7 @@ for outcome in outcomes:
     
     for x in range(0,8):
         # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
         if models_ols_no_FE[outcome].pvalues[x] <= 0.01: 
             d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '***'
         elif models_ols_no_FE[outcome].pvalues[x] <= 0.05: 
@@ -2686,7 +2732,6 @@ print(newdf_FE)
 newdf_no_FE = df_to_orgtbl(final_no_FE, float_fmt = '%.3f')
 print("""#+caption:consumption results WITHOUT Tgroup Fixed Effects""")
 print(newdf_no_FE)
-
 
 #+end_src
 
