@@ -4108,6 +4108,28 @@ return tab
 
 *** Recreating income table
 
+This table uses income data from the endline survey. CTL mean comes from the constant
+and its standard error in the regression.
+
+Differences with previous code: 
+-This code does not do any type of censoring, truncating, or converting of the
+original values to US dollars or anything like that
+-This code sets the price to NaN if we cannot figure out the market
+price for the crop/livestock type and unit that was harvested (7
+observations for crops and 3 observations for livestock). The
+reason we would not be able to find out the market price is if no one
+in the sample provided a market price for that crop livestock/type and
+specific unit
+- The original table does not have standard errors under CTL mean
+
+Next steps: 
+-make bar graph figure
+-consider whether multiplying (reported months of work)*(avg monthly
+income) (what is currently being used) is better than using reported
+annual income
+-run the regressions without the constant? The original table does not
+have standard errors under CTL mean
+
 #+name: income_table
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
@@ -4150,6 +4172,7 @@ nonfarm_yearly['nonfarm_yearly_sum'] = nonfarm_yearly.sum(axis=1)
 # in case market price unit and harvested/sold unit don't match, 
 # calculate median of reported market prices for that crop (type) and market price unit (harvest_price_unit)
 unit_prices = df_f.groupby(["harvest_type", "harvest_price_unit"])["harvest_price"].median()
+
 # the format of unit_prices is the first index is harvest_type, the second index is harvest_price_unit, and
 # the value is the median of market price units for that crop in that unit
 
@@ -4167,13 +4190,15 @@ for i in range(len(df_f)):
     
             # if units don't match
             if df_f.iloc[i]['harvest_unit'] != df_f.iloc[i]['harvest_price_unit']:
-                d = d +1
+                d = d + 1
                 # get the data frame for the particular type of crop
                 find_type = unit_prices[unit_prices.index.get_level_values(0) == df_f.iloc[i]['harvest_type']]
         
-                # check if there is no reported market price for that crop and unit
+                # check if there is no reported market price for that crop and unit, and if so, set adjusted harvest price to missing
                 if find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['harvest_unit']].empty: 
                     k = k + 1
+                    df_f['adjusted_harvest_price'].iloc[i] = np.nan
+    
                 else: 
                     # set the adjusted harvest price to be the median price for that type and harvest unit
                     df_f['adjusted_harvest_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['harvest_unit']][0]
@@ -4183,11 +4208,12 @@ for i in range(len(df_f)):
 
 #d is the number of rows for which the harvest unit and market price unit don't match (193)
 #k is the number of rows for which the harvest unit and crop do not have any market price reported (7)
-print("there are {} rows for which no one reported a market price for that crop and unit".format(k))
+#print("there are {} rows for which no one reported a market price for that crop and unit".format(k))
 
 farm_yearly = pd.DataFrame() 
 df_f["farm_income_yearly"] = df_f["harvest_size"]*df_f["adjusted_harvest_price"]
 
+# there could be  multiple rows for the same household, so we group by respondent ID
 farm_yearly['farm_income_yearly_sum'] = df_f[ ['farm_income_yearly'] ].dropna().groupby("res_id")["farm_income_yearly"].sum()
 
 
@@ -4218,9 +4244,10 @@ for i in range(len(df_f)):
                 # get the data frame for the particular type of animal
                 find_type = unit_prices[unit_prices.index.get_level_values(0) == df_f.iloc[i]['livestock_type']]
         
-                # check if there is no reported market price for that animal and unit
+                # check if there is no reported market price for that animal and unit, and if so, set adjusted harvest price to missing
                 if find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['livestock_unit']].empty: 
                     k = k + 1
+                    df_f['adjusted_livestock_price'].iloc[i] = np.nan
                 else: 
                     # set the adjusted livestock price to be the median price for that type and livestock unit
                     df_f['adjusted_livestock_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['livestock_unit']][0]
@@ -4230,14 +4257,16 @@ for i in range(len(df_f)):
 
 #d is the number of rows for which the livestock unit and market price unit don't match (9)
 #k is the number of rows for which the livestock unit and crop do not have any market price reported (3)
-print("there are {} rows for which no one reported a market price for that animal and unit".format(k))
+# print("there are {} rows for which no one reported a market price for that animal and unit".format(k))
  
 df_f["livestock_income_yearly"] = df_f["livestock_size"]*df_f["adjusted_livestock_price"]
 
+# there could be  multiple rows for the same household, so we group by respondent ID
 farm_yearly['livestock_income_yearly_sum'] = df_f[ ['livestock_income_yearly'] ].dropna().groupby("res_id")["livestock_income_yearly"].sum()
 
 df = pd.merge(nonfarm_yearly[ ['nonfarm_yearly_sum'] ], farm_yearly, how='outer', left_index=True, right_index=True)
 df = pd.merge(df, df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group'])), how='inner', left_index=True, right_index=True)
+
 df.insert(len(df.columns), 'total', df[['nonfarm_yearly_sum', 'farm_income_yearly_sum', 'livestock_income_yearly_sum']].sum(axis=1))
 df.insert(len(df.columns), 'constant', 1)
 
@@ -4270,21 +4299,20 @@ for outcome in outcomes:
                   round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
                   models_ols[outcome].fvalue, models_ols[outcome].nobs, 
                   beta_cash_TUP]
-   
 
     for x in range(0,3):
         # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so change d[outcome][2] not d[outcome][1] and same for next coefficients
+        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
         if models_ols[outcome].pvalues[x] <= 0.01: 
             d[outcome][x*2] = str(d[outcome][x*2]) + '***'
         elif models_ols[outcome].pvalues[x] <= 0.05: 
             d[outcome][x*2] = str(d[outcome][x*2]) + '**'
         elif models_ols[outcome].pvalues[x] <= 0.1:
             d[outcome][x*2] = str(d[outcome][x*2]) + '*'
-    
 
 final = pd.DataFrame(data=d)
 
+# name the rows of the table
 final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP", 3: "  ", 
                       4: "UCT", 5: "   ", 6: "F-stat", 7: "N", 8: "beta_TUP-beta_CASH"}, inplace=True)
 
@@ -4294,19 +4322,18 @@ print(newdf)
 #+end_src
 
 #+RESULTS: income_table
-there are 7 rows for which no one reported a market price for that crop and unit
-there are 3 rows for which no one reported a market price for that animal and unit
-|  |Farm|   Livestock|   Non-Farm|   Total  |
-|-
-| CTL mean  | 917.315*** | 924.611*** | 3326.162*** | 4317.337*** |
-|    | 64.809 | 164.390 | 527.282 | 537.231 |
-| TUP  | -139.780 | 117.096 | 964.323 | 1253.478 |
-|     | 100.918 | 215.596 | 829.082 | 844.725 |
-| UCT  | 48.833 | -282.164 | 507.132 | 510.939 |
-|      | 133.947 | 298.534 | 1077.298 | 1097.625 |
-| F-stat  | 1.309 | 0.983 | 0.683 | 1.101 |
-| N  | 532.000 | 305.000 | 690.000 | 690.000 |
-| beta_TUP-beta_CASH  | -188.613 | 399.260 | 457.192 | 742.540 |
+|                    |       Farm |  Livestock |    Non-Farm |       Total |
+|--------------------+------------+------------+-------------+-------------|
+| CTL mean           | 917.315*** | 924.611*** | 3326.162*** | 4317.337*** |
+|                    |     64.809 |    164.390 |     527.282 |     537.231 |
+| TUP                |   -139.780 |    117.096 |     964.323 |    1253.478 |
+|                    |    100.918 |    215.596 |     829.082 |     844.725 |
+| UCT                |     48.833 |   -282.164 |     507.132 |     510.939 |
+|                    |    133.947 |    298.534 |    1077.298 |    1097.625 |
+| F-stat             |      1.309 |      0.983 |       0.683 |       1.101 |
+| N                  |    532.000 |    305.000 |     690.000 |     690.000 |
+| beta_TUP-beta_CASH |   -188.613 |    399.260 |     457.192 |     742.540 |
+
 
 
 
@@ -4372,7 +4399,7 @@ In this table, the 'Cash' group is included within the 'Control' group
 because the cash transfers weren't given out until immediately after
 the midline survey, and this table uses data from the midline
 survey. All variables are binary variables. CTL mean comes from the constant
-and standard error in the regression.
+and its standard error in the regression.
 
 Affected and Worried are whether or not respondents answered that they were "directly affected
 by any of the violence" or "worried that the conflict would affect you
