@@ -6,6 +6,12 @@
 
 """The following contain personally identifiable information"""
 
+# Still need to:
+# -Check other files in TUP-data for pii (still need to check all that were not .dta or .csv)
+# -Identify redundant files and add those to a list to be deleted
+# -Probably don’t need zip files or .df files (try to find code that produces the .df files)
+# -Can defer scrubbing until we’re confident we can build all the results
+
 TUP-data/TUP_full.dta: s7_11a_b, s7_12a_b, s7_13a_b, s7_21a_b, s7_22a_b, s7_23a_b, enu_m
 TUP-data/random_assignment.dta: rname, husband_name, father_name, enumerator, respname, fathername, contact
     
