@@ -891,7 +891,7 @@ plt.savefig("mobile_nonzero.png")
 
 ** Sample Selection
 
-Our census found 745 eligible households, and made efforts to
+Our census found 755 eligible households, and made efforts to
 interview a respondent from every one of these households.  The degree
 to which we succeeded is documented in \Tab{attrition_count}.
 In the baseline survey we successfully interviewed
@@ -1529,7 +1529,12 @@ print(df_to_orgtbl(A[A['D']!=A['R']]))
 
 *** Recreating the attrition tables                         :ignore:noexport:
 
-We get the same results as in the original attrition tables.
+The results are slightly different (in the 2015 column) than in the original attrition
+tables due to the creation of master_assignment.csv, which includes
+everyone who was assigned to any group no matter whether they were
+found at baseline, midline, or endline. It added 6 households which
+were found only at endline and not accounted for in the original
+attrition tables.
 
 # using master_assignment.csv
 #+name: master_assignment_attrition 
@@ -2247,8 +2252,8 @@ import pandas as pd
 # livestock, medium size livestock, construction/renovation of houses
 # for living, construction/renovation of shop premises, hair dressing
 
-
-# need to get the correct data for 10items and allitems from mobile survey 
+# this is just a template
+# need to put in the correct data for 10items and allitems from mobile survey 
 data = [[1,2], [3,4], [5,6], [2, 12], [5, -4]]
 tenitems = pd.DataFrame(data, columns = ['Respondent 1', 'Respondent 2'])
 data = [[6,5], [4,3], [2,1], [3, 1], [6, -3]]
