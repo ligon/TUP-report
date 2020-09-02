@@ -2200,8 +2200,7 @@ print(newdf)
 
 * Empirical Strategy
 
-For the main panel (excluding the high-frequency mobile surveys), we
-estimate a single model using interactions between time effects and
+We estimate a single model using interactions between time effects and
 group assignment, as well as baseline values of the outcome variable
 where available; this is 
 \begin{equation*}
@@ -2220,87 +2219,28 @@ both \(t \in {2014,2015}\). Since the difference in timing is smaller, we consid
 \(\beta_{TUP,2015}-\beta_{UCT,2015}=0\) to be the preferred hypothesis, but examine
 and report \(\beta_{TUP,2014}-\beta_{UCT,2015}=0\) as well.
  
-For the supplementary analysis of the high-frequency panel, we
-estimate a separate model, since the underlying data is so
-different. A constant parameter takes the place of the fixed
-effects. We include 2013 levels as a covariate where possible, and a
-dummy variable where not. 
 
-*** High-frequency data                                            :noexport:
- Since we collect expenditures on only ten
-consumption items, we report not only the total value of spending on
-those goods, but also a more theoretically grounded measure described
-in \cite{collins-ligon17}, which uses the composition of expenditures
-to derive the marginal utility of expenditures for each household.  We
-chose ten relatively demand-elastic items specifically for this
-purpose, as those will tend to be the most responsive to changes in
-welfare.
-
-*************** TODO
-        Include a scatter plot of df[10items].sum(1) vs df[AllItems].sum(1) to speak
-        to whether that basket tracks "total" spending.
-*************** END 
-
-#+name: scatter_plot
-#+begin_src python :results output
-import matplotlib. pyplot as plt
-import pandas as pd
-
-# 10 consumption items from mobile survey: treatment of sick household
-# members, school fee (see s28 and s29 and s210?), food for household
-# consumption, clothes, goods to resell with some profit, small size
-# livestock, medium size livestock, construction/renovation of houses
-# for living, construction/renovation of shop premises, hair dressing
-
-# this is just a template
-# need to put in the correct data for 10items and allitems from mobile survey 
-data = [[1,2], [3,4], [5,6], [2, 12], [5, -4]]
-tenitems = pd.DataFrame(data, columns = ['Respondent 1', 'Respondent 2'])
-data = [[6,5], [4,3], [2,1], [3, 1], [6, -3]]
-AllItems = pd.DataFrame(data, columns = ['Respondent 1', 'Respondent 2'])
-
-X = tenitems.sum(1)
-Y = AllItems.sum(1)
-
-X = X.values.tolist()
-Y = Y.values.tolist()
-
-plt.scatter(X, Y)
-plt.xlabel('Sum of 10 Items')
-plt.ylabel('Sum of All Items')
-plt.savefig("../figures/scatter.png")
-#plt.show() # can take this out later
-
-#+end_src
-
-#+results: scatter_plot
-
-#+RESULTS:
-
-#+Caption: Scatter plot of basket vs total spending
-#+NAME: fig:Income_group
-[[../figures/scatter.png]]
 
 * Results
 
 ** Consumption
 
-The first outcome of interest we consider is household consumption, defined as the
-market value of goods or services used by the household.  A sizable basket of goods
-were included in the survey module. These are separated into three categories: Food
-items (with a 3-day recall window), non-durables (a 30-day recall window), and
-durables and large expenditures (a one-year recall window). This is perhaps the most
-appropriate measure of the welfare or poverty of a household in our survey. 
+The first outcome of interest we consider is household consumption,
+defined as the market value of goods or services used by the
+household.  A sizable basket of goods were included in the survey
+module. These are separated into three categories: Food items (with a
+3-day recall window), non-durables (a 30-day recall window), and
+durables and large expenditures (a one-year recall window).  We think
+that data on consumption provides the most appropriate measure of household
+welfare in our survey.
 
-The results for several important consumption measures are presented
-in \Tab{consumption}.  We do not know about prices for each good in
-this time, though we can say that inflation was as high as 100%
-between 2014 and 2015. We take the sum of all consumption and
-expenditure questions together as a measure of welfare. In light of
-the fact that we have data on an incomplete basket, we also follow
-cite:collins-ligon17, which describes a method for deriving
-treatment effects on a structurally estimated index of households'
-marginal utility, which we include here as \(\log\lambda_{it}\).
+\Tab{consumption} reports on consumption expenditures aggregated
+according to the period of recall.  There were large changes in prices
+during the course of our experiment, and small changes in the way the
+survey elicited item-level expenditures.  Both of these kinds of
+changes make comparisons across time difficult to interpret, and might
+make comparisons of total consumption misleading.  However,
+
 
 We measured the effect of cash on consumption 12 months after the fact, where we find
 a statistically significant increase of 18 SSP per day, representing a roughly 16%
@@ -2325,119 +2265,9 @@ increased food consumption, with smaller effects on non-food consumption goods a
 durables. As such, there is no evidence that the share of food consumed falls, as
 might be predicted by Engel's law.
 
-\newpage
-
-#+name: consumption_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<consumption_analysis>>
-return tab
-#+end_src
-
-#+RESULTS: consumption_results with Treatment Group Fixed Effects
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-|                                  | Tot               | logTot          | Food             | FoodShr         |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| CTL mean                         | \(115.404\)       | \(4.509^{***}\) | \(38.468\)       | \(0.333^{***}\) |
-|                                  | \((78.750)\)      | \((0.756)\)     | \((26.250)\)     | \((0.000)\)     |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| CSH*2014                         | \(-7.838\)        | \(-0.049\)      | \(-2.613\)       | \(0.000\)       |
-|                                  | \((5.891)\)       | \((0.058)\)     | \((1.964)\)      | \((0.000)\)     |
-| CSH*2015                         | \(12.931^{**}\)   | \(0.104^{*}\)   | \(4.310^{**}\)   | \(-0.000\)      |
-|                                  | \((5.811)\)       | \((0.057)\)     | \((1.937)\)      | \((0.000)\)     |
-| TUP*2014                         | \(11.000^{**}\)   | \(0.126^{***}\) | \(3.667^{**}\)   | \(0.000^{***}\) |
-|                                  | \((4.681)\)       | \((0.046)\)     | \((1.560)\)      | \((0.000)\)     |
-| TUP*2015                         | \(-3.410\)        | \(-0.040\)      | \(-1.137\)       | \(0.000^{***}\) |
-|                                  | \((4.547)\)       | \((0.045)\)     | \((1.516)\)      | \((0.000)\)     |
-| 2014                             | \(76.831^{***}\)  | \(3.931^{***}\) | \(25.610^{***}\) | \(0.278^{***}\) |
-|                                  | \((5.318)\)       | \((0.113)\)     | \((1.773)\)      | \((0.000)\)     |
-| 2015                             | \(105.702^{***}\) | \(4.175^{***}\) | \(35.234^{***}\) | \(0.278^{***}\) |
-|                                  | \((5.001)\)       | \((0.111)\)     | \((1.667)\)      | \((0.000)\)     |
-| TUP                              | \(7.590^{**}\)    | \(0.086^{***}\) | \(2.530^{**}\)   | \(0.000^{***}\) |
-|                                  | \((3.012)\)       | \((0.030)\)     | \((1.004)\)      | \((0.000)\)     |
-| CSH                              | \(5.093\)         | \(0.056\)       | \(1.698\)        | \(0.000^{***}\) |
-|                                  | \((3.774)\)       | \((0.037)\)     | \((1.258)\)      | \((0.000)\)     |
-| Bsln2013                         | \(0.081^{**}\)    | \(0.073^{***}\) | \(0.081^{**}\)   | \(0.167^{***}\) |
-|                                  | \((0.038)\)       | \((0.026)\)     | \((0.038)\)      | \((0.000)\)     |
-| Bsln NA                          | \(20.521^{***}\)  | \(0.447^{***}\) | \(6.840^{***}\)  | \(0.056^{***}\) |
-|                                  | \((6.964)\)       | \((0.121)\)     | \((2.321)\)      | \((0.000)\)     |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(-1.931\)        | \(0.022\)       | \(-0.644\)       | \(0.000^{**}\)  |
-|                                  | \((8.377)\)       | \((0.083)\)     | \((2.792)\)      | \((0.000)\)     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(-16.341^{***}\) | \(-0.145^{**}\) | \(-5.447^{***}\) | \(0.000^{***}\) |
-|                                  | \((6.057)\)       | \((0.060)\)     | \((2.019)\)      | \((0.000)\)     |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| F-stat                           | \(10.142\)        | \(8.131\)       | \(10.142\)       | \(-212.981\)    |
-| N                                | \(1291.000\)      | \(1291.000\)    | \(1291.000\)     | \(1291.000\)    |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-
-#+caption: Average treatment effects by Group-Year, controlling for baseline levels.
-#+attr_latex: :environment longtable :align lrrrrrrr
-#+name: tab:consumption
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-|                                  | Tot               | logTot          | Food             | FoodShr         |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| CTL mean                         | \(115.404\)       | \(4.509^{***}\) | \(38.468\)       | \(0.333^{***}\) |
-|                                  | \((78.750)\)      | \((0.756)\)     | \((26.250)\)     | \((0.000)\)     |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| CSH*2014                         | \(-2.745\)        | \(0.007\)       | \(-0.915\)       | \(0.000^{***}\) |
-|                                  | \((8.008)\)       | \((0.079)\)     | \((2.669)\)      | \((0.000)\)     |
-| CSH*2015                         | \(18.023^{**}\)   | \(0.160^{**}\)  | \(6.008^{**}\)   | \(-0.000\)      |
-|                                  | \((7.831)\)       | \((0.077)\)     | \((2.610)\)      | \((0.000)\)     |
-| TUP*2014                         | \(18.590^{***}\)  | \(0.212^{***}\) | \(6.197^{***}\)  | \(0.000^{***}\) |
-|                                  | \((6.426)\)       | \((0.063)\)     | \((2.142)\)      | \((0.000)\)     |
-| TUP*2015                         | \(4.179\)         | \(0.045\)       | \(1.393\)        | \(0.000^{***}\) |
-|                                  | \((6.130)\)       | \((0.060)\)     | \((2.043)\)      | \((0.000)\)     |
-| 2014                             | \(76.831^{***}\)  | \(3.931^{***}\) | \(25.610^{***}\) | \(0.278^{***}\) |
-|                                  | \((5.318)\)       | \((0.113)\)     | \((1.773)\)      | \((0.000)\)     |
-| 2015                             | \(105.702^{***}\) | \(4.175^{***}\) | \(35.234^{***}\) | \(0.278^{***}\) |
-|                                  | \((5.001)\)       | \((0.111)\)     | \((1.667)\)      | \((0.000)\)     |
-| Bsln2013                         | \(0.081^{**}\)    | \(0.073^{***}\) | \(0.081^{**}\)   | \(0.167^{***}\) |
-|                                  | \((0.038)\)       | \((0.026)\)     | \((0.038)\)      | \((0.000)\)     |
-| Bsln NA                          | \(20.521^{***}\)  | \(0.447^{***}\) | \(6.840^{***}\)  | \(0.056^{***}\) |
-|                                  | \((6.964)\)       | \((0.121)\)     | \((2.321)\)      | \((0.000)\)     |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(0.566\)         | \(0.052\)       | \(0.189\)        | \(0.000^{***}\) |
-|                                  | \((9.994)\)       | \((0.098)\)     | \((3.331)\)      | \((0.000)\)     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(-13.844^{*}\)   | \(-0.115\)      | \(-4.615^{*}\)   | \(0.000^{***}\) |
-|                                  | \((8.125)\)       | \((0.080)\)     | \((2.708)\)      | \((0.000)\)     |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-| F-stat                           | \(10.142\)        | \(8.131\)       | \(10.142\)       | \(-210.422\)    |
-| N                                | \(1291.000\)      | \(1291.000\)    | \(1291.000\)     | \(1291.000\)    |
-|----------------------------------+-------------------+-----------------+------------------+-----------------|
-
-#+name: mobile_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<mobile_analysis>>
-return mtab
-#+end_src
-
-\newpage
-
-#+caption: Average treatment effects using mobile data collection (results are robust to controlling for baseline levels)
-#+attr_latex: :environment longtable :align lrrrrr
-#+name: tab:mobile_consumption
-|---------------------------+--------------------+----------------+---------------|
-|                           | $\log\lambda_{it}$ | Tot            | logTot        |
-|---------------------------+--------------------+----------------+---------------|
-| CTL mean                  | $-0.018$           | $30.851$       | $3.158^{***}$ |
-|                           | $(1.001)$          | $(27.768)$     | $(0.734)$     |
-|---------------------------+--------------------+----------------+---------------|
-| TUP                       | $0.023$            | $-0.624$       | $-0.011$      |
-|                           | $(0.041)$          | $(1.152)$      | $(0.030)$     |
-| CSH                       | $0.056$            | $0.776$        | $0.028$       |
-|                           | $(0.052)$          | $(1.459)$      | $(0.038)$     |
-| const                     | $-0.018$           | $30.851^{***}$ | $3.158^{***}$ |
-|                           | $(0.027)$          | $(0.753)$      | $(0.020)$     |
-|---------------------------+--------------------+----------------+---------------|
-| $\beta^{TUP}-\beta^{CSH}$ | $-0.033$           | $-1.399$       | $-0.039$      |
-|                           | $(0.055)$          | $(1.524)$      | $(0.040)$     |
-|---------------------------+--------------------+----------------+---------------|
-| F-stat                    | $0.584$            | $0.434$        | $0.475$       |
-| N                         | $2877.000$         | $2878.000$     | $2878.000$    |
-|---------------------------+--------------------+----------------+---------------|
 
 
-*** Recreating consumption tables
+*** Recreating consumption tables                                    :ignore:
 CTL mean lists the mean and standard deviation of the control group 
 in 2015.  NaN values were considered as having a value of 0 for that good (this occurs
 automatically when using .sum(axis=1) to sum values in different
@@ -2484,7 +2314,7 @@ asked about in baseline
 
 
 #+name: consumption_tables
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle consumption_tables.py
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
@@ -2537,18 +2367,19 @@ year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeim
 #  C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
 # should not all filter by items=food. makes sense why food share is 0.333 because it's 1 over (itself * 3)
 
-outcomes = ["Total", "logTot", "Food", "FoodShr", "Monthly", "Yearly"]
+#outcomes = ["Total", "logTot", "Food", "FoodShr", "Monthly", "Yearly"]
+outcomes = ["Food", "Monthly", "Yearly"]
 
-# not replacing 0s with np.nan as was done in previous code - for total, seems to be 4 observations that have 0
+# not replacing 0s with np.nan; seems to be 4 observations that have legitimate 0s
 for var in (c2013, c2014, c2015):
     
     var["Food"] = var.filter(items=food).sum(axis=1)
     var["Monthly"] = var.filter(items=month).sum(axis=1)
     var["Yearly"] = var.filter(items=year).sum(axis=1)
-    var["Total"] = var[ ["Food", "Monthly", "Yearly"] ].sum(axis=1)
+    #var["Total"] = var[ ["Food", "Monthly", "Yearly"] ].sum(axis=1)
     # make sure not taking the log of 0 or dividing by 0
-    var["logTot"] = var["Total"].replace(0, np.nan).transform(lambda x: np.log(x))
-    var["FoodShr"] = var["Food"]/var["Total"].replace(0, np.nan)
+    #var["logTot"] = var["Total"].replace(0, np.nan).transform(lambda x: np.log(x))
+    #var["FoodShr"] = var["Food"]/var["Total"].replace(0, np.nan)
     
     # set up to make year dummies
     var['2013'] = 0
@@ -2578,8 +2409,10 @@ df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
 
 models_ols_FE = {}
 models_ols_no_FE = {}
-d_FE = {}
-d_no_FE = {}
+b_FE = {}
+b_no_FE = {}
+se_FE = {}
+se_no_FE = {}
 baseline_na = True
 
 controls_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
@@ -2593,20 +2426,21 @@ for outcome in outcomes:
     temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls_FE]
     temp_controls_FE = controls_FE
     temp_controls_no_FE = controls_no_FE
+    temp_df.rename(columns={outcome + "2013":'Baseline Value'},inplace=True)
     
     if baseline_na==True:
         
         # indicator for whether outcome in 2013 is na, and cast it to be an integer
-        temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        temp_df["Baseline missing"] = temp_df['Baseline Value'].isnull().apply(int)
         
         # code missing values of the baseline variable as 0
-        temp_df[outcome + "2013"].fillna(0,inplace=True)
+        temp_df['Baseline Value'].fillna(0,inplace=True)
         
-        temp_controls_FE = temp_controls_FE + ['Baseline_NAN']
-        temp_controls_no_FE = temp_controls_no_FE + ['Baseline_NAN']
+        temp_controls_FE = temp_controls_FE + ['Baseline missing']
+        temp_controls_no_FE = temp_controls_no_FE + ['Baseline missing']
     
-    temp_controls_FE = temp_controls_FE + [outcome+"2013"]
-    temp_controls_no_FE = temp_controls_no_FE + [outcome+"2013"]
+    temp_controls_FE = temp_controls_FE + ['Baseline Value']
+    temp_controls_no_FE = temp_controls_no_FE + ['Baseline Value']
     temp_df = temp_df.dropna()
     
     models_ols_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_FE]).fit()
@@ -2616,187 +2450,63 @@ for outcome in outcomes:
     controlgroup = temp_df[temp_df['Control'] == 1]
     
     """for table with Fixed Effects"""
-    
-    # for computing the difference in TUP and Cash coefficients
-    beta_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2014 <= 0.01: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
-    elif pvalue_cash_TUP2014 <= 0.05: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
-    elif pvalue_cash_TUP2014 <= 0.1: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
-        
-    beta_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2015 <= 0.01: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
-    elif pvalue_cash_TUP2015 <= 0.05: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
-    elif pvalue_cash_TUP2015 <= 0.1: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
-    
-    
-    d_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
-                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
-                  round(models_ols_FE[outcome].params[0], 3), models_ols_FE[outcome].bse[0],
-                  round(models_ols_FE[outcome].params[1], 3), models_ols_FE[outcome].bse[1], 
-                  round(models_ols_FE[outcome].params[2], 3), models_ols_FE[outcome].bse[2],
-                  round(models_ols_FE[outcome].params[3], 3), models_ols_FE[outcome].bse[3],
-                  round(models_ols_FE[outcome].params[4], 3), models_ols_FE[outcome].bse[4],
-                  round(models_ols_FE[outcome].params[5], 3), models_ols_FE[outcome].bse[5],
-                  round(models_ols_FE[outcome].params[6], 3), models_ols_FE[outcome].bse[6],
-                  round(models_ols_FE[outcome].params[7], 3), models_ols_FE[outcome].bse[7],
-                  round(models_ols_FE[outcome].params[8], 3), models_ols_FE[outcome].bse[8],
-                  round(models_ols_FE[outcome].params[9], 3), models_ols_FE[outcome].bse[9],
-                  models_ols_FE[outcome].fvalue, models_ols_FE[outcome].nobs, 
-                  beta_cash_TUP2014, beta_cash_TUP2015]
-    
-    for x in range(0,10):
-        # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-        if models_ols_FE[outcome].pvalues[x] <= 0.01: 
-            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '***'
-        elif models_ols_FE[outcome].pvalues[x] <= 0.05: 
-            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '**'
-        elif models_ols_FE[outcome].pvalues[x] <= 0.1:
-            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '*'
-    
-    """for table WITHOUT Fixed Effects"""
-    
-    # for computing the difference in TUP and Cash coefficients
-    beta_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2014 <= 0.01: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
-    elif pvalue_cash_TUP2014 <= 0.05: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
-    elif pvalue_cash_TUP2014 <= 0.1: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
-        
-    beta_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2015 <= 0.01: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
-    elif pvalue_cash_TUP2015 <= 0.05: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
-    elif pvalue_cash_TUP2015 <= 0.1: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
-    
-    d_no_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
-                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
-                  round(models_ols_no_FE[outcome].params[0], 3), models_ols_no_FE[outcome].bse[0],
-                  round(models_ols_no_FE[outcome].params[1], 3), models_ols_no_FE[outcome].bse[1], 
-                  round(models_ols_no_FE[outcome].params[2], 3), models_ols_no_FE[outcome].bse[2],
-                  round(models_ols_no_FE[outcome].params[3], 3), models_ols_no_FE[outcome].bse[3],
-                  round(models_ols_no_FE[outcome].params[4], 3), models_ols_no_FE[outcome].bse[4],
-                  round(models_ols_no_FE[outcome].params[5], 3), models_ols_no_FE[outcome].bse[5],
-                  round(models_ols_no_FE[outcome].params[6], 3), models_ols_no_FE[outcome].bse[6],
-                  round(models_ols_no_FE[outcome].params[7], 3), models_ols_no_FE[outcome].bse[7],
-                  models_ols_no_FE[outcome].fvalue, models_ols_no_FE[outcome].nobs,
-                  beta_cash_TUP2014, beta_cash_TUP2015]
-    
-    for x in range(0,8):
-        # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-        if models_ols_no_FE[outcome].pvalues[x] <= 0.01: 
-            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '***'
-        elif models_ols_no_FE[outcome].pvalues[x] <= 0.05: 
-            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '**'
-        elif models_ols_no_FE[outcome].pvalues[x] <= 0.1:
-            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '*'
 
-
-    del temp_df 
-
-final_FE = pd.DataFrame(data=d_FE)
-final_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
-                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
-                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "TUP", 15: "        ",
-                      16: "UCT", 17: "         ", 18: "Bsln NA", 19: "          ",
-                      20: "Bsln2013", 21: "           ", 22: "F-stat", 23: "N", 
-                      24: "Beta_TUP_2014-Beta_Cash_2015", 25: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
-
-final_no_FE = pd.DataFrame(data=d_no_FE)
-final_no_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
-                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
-                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)    
+    b_FE[outcome] = models_ols_FE[outcome].params
+    se_FE[outcome] = models_ols_FE[outcome].bse
     
-newdf_FE = df_to_orgtbl(final_FE, float_fmt = '%.3f')
-print("""#+caption:consumption results WITH Tgroup Fixed Effects""")
-print(newdf_FE)
+    b_FE[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].mean()
+    se_FE[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].std()      
 
-newdf_no_FE = df_to_orgtbl(final_no_FE, float_fmt = '%.3f')
-print("""#+caption:consumption results WITHOUT Tgroup Fixed Effects""")
-print(newdf_no_FE)
+    b_FE[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se_FE[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = b_FE[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$']/models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["t"][0]
+
+    b_FE[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se_FE[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = b_FE[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$']/models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["t"][0]
+    
+b_FE = pd.DataFrame(b_FE)
+se_FE = pd.DataFrame(se_FE)
+
+print("#+name: tab:consumption_w_fe")
+print("#+caption: Consumption Results with Treatment Group Fixed Effects")
+print(df_to_orgtbl(b_FE, sedf = se_FE, float_fmt = '%.2f'))
+
+print("""#+name: tab:consumption_wo_fe""")
+print("""#+caption: Consumption Results without Treatment Group Fixed Effects""")
+
 
 #+end_src
 
 #+RESULTS: consumption_tables
-#+caption:consumption results WITH Tgroup Fixed Effects
-|                              |       Total |   logTot |       Food |  FoodShr |    Monthly |      Yearly |
-|------------------------------+-------------+----------+------------+----------+------------+-------------|
-| CTL mean                     |    1455.907 |    6.754 |    115.547 |    0.153 |    288.598 |    1051.762 |
-|                              |    2073.394 |    1.005 |     79.634 |    0.137 |    311.211 |    1939.705 |
-| TUP*2014                     |   333.466** |  0.167** |   11.561** |   -0.003 |     27.903 |    293.11** |
-|                              |     137.919 |    0.066 |      4.708 |    0.008 |     22.680 |     128.066 |
-| TUP*2015                     |    -152.399 |   -0.060 |     -4.330 |    0.002 |      3.427 |    -150.793 |
-|                              |     133.641 |    0.064 |      4.562 |    0.008 |     21.977 |     124.094 |
-| UCT*2014                     |    -107.001 |   -0.055 |     -8.112 |    0.005 |     -1.299 |     -97.707 |
-|                              |     172.781 |    0.082 |      5.898 |    0.010 |     28.414 |     160.438 |
-| UCT*2015                     |      72.251 |    0.089 |   12.481** |   -0.007 |     35.555 |      24.732 |
-|                              |     170.760 |    0.081 |      5.829 |    0.010 |     28.083 |     158.563 |
-| 2014                         | 1125.402*** | 6.269*** |  77.477*** |  0.13*** | 259.412*** |  808.297*** |
-|                              |     136.529 |    0.156 |      5.327 |    0.008 |     23.506 |     125.900 |
-| 2015                         | 1405.175*** |  6.42*** | 106.761*** | 0.153*** | 294.587*** | 1022.193*** |
-|                              |     125.303 |    0.153 |      4.995 |    0.008 |     21.914 |     115.484 |
-| TUP                          |   181.067** |  0.106** |    7.231** |   -0.001 |    31.33** |    142.317* |
-|                              |      88.895 |    0.042 |      3.037 |    0.005 |     14.619 |      82.544 |
-| UCT                          |     -34.749 |    0.033 |      4.369 |   -0.001 |    34.257* |     -72.976 |
-|                              |     111.380 |    0.053 |      3.802 |    0.007 |     18.320 |     103.425 |
-| Bsln NA                      |      41.717 |    0.4** |  18.848*** |    0.008 |    -13.309 |      17.329 |
-|                              |     194.528 |    0.168 |      7.119 |    0.012 |     32.807 |     180.056 |
-| Bsln2013                     |      0.051* |   0.05** |     0.072* |   -0.016 |     -0.053 |       0.037 |
-|                              |       0.030 |    0.023 |      0.038 |    0.017 |      0.140 |       0.029 |
-| F-stat                       |       2.072 |    2.811 |      9.872 |    2.119 |      1.550 |       1.673 |
-| N                            |    1306.000 | 1305.000 |   1306.000 | 1305.000 |   1306.000 |    1306.000 |
-| Beta_TUP_2014-Beta_Cash_2015 |     261.215 |    0.078 |     -0.921 |    0.003 |     -7.652 |     268.378 |
-| Beta_TUP_2015-Beta_Cash_2015 |    -224.650 |  -0.149* | -16.811*** |    0.009 |    -32.129 |    -175.525 |
-
-#+caption:consumption results WITHOUT Tgroup Fixed Effects
-|                              |       Total |   logTot |       Food |  FoodShr |    Monthly |      Yearly |
-|------------------------------+-------------+----------+------------+----------+------------+-------------|
-| CTL mean                     |    1455.907 |    6.754 |    115.547 |    0.153 |    288.598 |    1051.762 |
-|                              |    2073.394 |    1.005 |     79.634 |    0.137 |    311.211 |    1939.705 |
-| TUP*2014                     |  514.533*** | 0.273*** |  18.791*** |   -0.005 |    59.232* |   435.427** |
-|                              |     189.706 |    0.090 |      6.479 |    0.011 |     31.196 |     176.152 |
-| TUP*2015                     |      28.668 |    0.046 |      2.900 |    0.001 |     34.756 |      -8.476 |
-|                              |     180.285 |    0.086 |      6.156 |    0.011 |     29.648 |     167.407 |
-| UCT*2014                     |    -141.750 |   -0.022 |     -3.744 |    0.004 |     32.958 |    -170.683 |
-|                              |     235.283 |    0.112 |      8.032 |    0.014 |     38.695 |     218.476 |
-| UCT*2015                     |      37.502 |    0.122 |    16.85** |   -0.008 |    69.812* |     -48.244 |
-|                              |     230.815 |    0.110 |      7.880 |    0.014 |     37.963 |     214.330 |
-| 2014                         | 1125.402*** | 6.269*** |  77.477*** |  0.13*** | 259.412*** |  808.297*** |
-|                              |     136.529 |    0.156 |      5.327 |    0.008 |     23.506 |     125.900 |
-| 2015                         | 1405.175*** |  6.42*** | 106.761*** | 0.153*** | 294.587*** | 1022.193*** |
-|                              |     125.303 |    0.153 |      4.995 |    0.008 |     21.914 |     115.484 |
-| Bsln NA                      |      41.717 |    0.4** |  18.848*** |    0.008 |    -13.309 |      17.329 |
-|                              |     194.528 |    0.168 |      7.119 |    0.012 |     32.807 |     180.056 |
-| Bsln2013                     |      0.051* |   0.05** |     0.072* |   -0.016 |     -0.053 |       0.037 |
-|                              |       0.030 |    0.023 |      0.038 |    0.017 |      0.140 |       0.029 |
-| F-stat                       |       2.072 |    2.811 |      9.872 |    2.119 |      1.550 |       1.673 |
-| N                            |    1306.000 | 1305.000 |   1306.000 | 1305.000 |   1306.000 |    1306.000 |
-| Beta_TUP_2014-Beta_Cash_2015 |     477.031 |    0.151 |      1.941 |    0.003 |    -10.580 |    483.671* |
-| Beta_TUP_2015-Beta_Cash_2015 |      -8.834 |   -0.076 |    -13.95* |    0.009 |    -35.056 |      39.768 |
-
+#+name: tab:consumption_w_fe
+#+caption: Consumption Results with Treatment Group Fixed Effects
+|                                         | Food         | Monthly      | Yearly        |
+|-----------------------------------------+--------------+--------------+---------------|
+| TUP*2014                                | 11.56^{**}   | 27.90        | 293.11^{**}   |
+|                                         | (4.71)       | (22.68)      | (128.07)      |
+| TUP*2015                                | -4.33        | 3.43         | -150.79       |
+|                                         | (4.56)       | (21.98)      | (124.09)      |
+| UCT*2014                                | -8.11        | -1.30        | -97.71        |
+|                                         | (5.90)       | (28.41)      | (160.44)      |
+| UCT*2015                                | 12.48^{**}   | 35.56        | 24.73         |
+|                                         | (5.83)       | (28.08)      | (158.56)      |
+| 2014                                    | 77.48^{***}  | 259.41^{***} | 808.30^{***}  |
+|                                         | (5.33)       | (23.51)      | (125.90)      |
+| 2015                                    | 106.76^{***} | 294.59^{***} | 1022.19^{***} |
+|                                         | (5.00)       | (21.91)      | (115.48)      |
+| TUP                                     | 7.23^{**}    | 31.33^{**}   | 142.32^{*}    |
+|                                         | (3.04)       | (14.62)      | (82.54)       |
+| UCT                                     | 4.37         | 34.26^{*}    | -72.98        |
+|                                         | (3.80)       | (18.32)      | (103.42)      |
+| Baseline missing                        | 18.85^{***}  | -13.31       | 17.33         |
+|                                         | (7.12)       | (32.81)      | (180.06)      |
+| Baseline Value                          | 0.07^{*}     | -0.05        | 0.04          |
+|                                         | (0.04)       | (0.14)       | (0.03)        |
+| Control mean                            | 115.55       | 288.60       | 1051.76       |
+|                                         | (79.63)      | (311.21)     | (1939.71)     |
+| $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$ | -0.92        | -7.65        | 268.38        |
+|                                         | (8.41)       | (40.50)      | (228.68)      |
+| $\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$ | -16.81^{***} | -32.13       | -175.52       |
+|                                         | (6.08)       | (29.28)      | (165.29)      |
 
 ** Food Insecurity
 
