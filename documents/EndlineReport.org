@@ -2281,40 +2281,22 @@ by "Total", which could have strange interpretations due to all the
 different length recall windows and lack of transforming the variables
 to all be "per day consumption" for example
 
-Differences with previous code: 
--This code does not do any censoring, truncating, or converting of
-values to US dollars
--This code added s20_6m_b and s20_7m_b in monthly for baseline as
-c_othermonth_b (missing in previous code)
--The previous code was missing durables from monthly for midline. This
-code adds it in
--The previous code constructed "total" by multiplying food consumption
-by 3 due to a mistake with filtering. This was changed in this new code
--This code does not replace 0s with np.nan as was done in previous
-code - for total, there seem to be 4 observations that have 0
--The new tables include "Monthly" for all the goods that were asked
-about with a 1-month recall window and "Yearly" for all the goods that
-were asked about with a 1-year recall window (the values were not
-transformed by dividing by 30 or 365 or anything)
 
 Next steps: 
--divide the standard deviation of CTL mean by the sqrt of the number of control
-observations to make it comparable with the other point estimates and
-standard errors in the table?
--Consider that it doesn't make sense to ask for clothing and footwear
-in total and then women's clothes, children's clothes, school
-uniforms, and shoes separately in midline and endline. Both the total
-and the individual components are used in the sums here - change this?
-Also the components do not always add up to the reported sum
--Consider what it means for the interpretation that different items
-were asked about in nbaseline, midline, and endline. For example,
-multiple items were asked about in midline and endline that were not
-asked about in baseline
--Consider whether transformations for recall windows would help the interpretation
+ - Consider that it doesn't make sense to ask for clothing and
+   footwear in total and then women's clothes, children's clothes,
+   school uniforms, and shoes separately in midline and endline. Both the total
+   and the individual components are used in the sums here - change this?
+   Also the components do not always add up to the reported sum
+ - Consider what it means for the interpretation that different items
+   were asked about in nbaseline, midline, and endline. For example,
+   multiple items were asked about in midline and endline that were not
+   asked about in baseline
+ - Consider whether transformations for recall windows would help the interpretation
 
 
 #+name: consumption_tables
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle consumption_tables.py
+#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle consumption_tables.py
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
@@ -2407,25 +2389,21 @@ df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
 
-models_ols_FE = {}
-models_ols_no_FE = {}
-b_FE = {}
-b_no_FE = {}
-se_FE = {}
-se_no_FE = {}
-baseline_na = True
+models_ols = {}
+b = {}
+se = {}
 
-controls_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
-controls_no_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
-# from above, outcomes = ["Total", "logTot", "Food", "FoodShr", "Monthly", "Yearly"]
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 
-# remove observations from 2013
+if FE:
+    controls += ['TUP', 'UCT']
+
+# remove observations from 2013, since conditioning on baseline
 df = df[df['Year'] != '2013']
 
 for outcome in outcomes: 
-    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls_FE]
-    temp_controls_FE = controls_FE
-    temp_controls_no_FE = controls_no_FE
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
+    temp_controls = controls
     temp_df.rename(columns={outcome + "2013":'Baseline Value'},inplace=True)
     
     if baseline_na==True:
@@ -2436,42 +2414,36 @@ for outcome in outcomes:
         # code missing values of the baseline variable as 0
         temp_df['Baseline Value'].fillna(0,inplace=True)
         
-        temp_controls_FE = temp_controls_FE + ['Baseline missing']
-        temp_controls_no_FE = temp_controls_no_FE + ['Baseline missing']
+        temp_controls = temp_controls + ['Baseline missing']
     
-    temp_controls_FE = temp_controls_FE + ['Baseline Value']
-    temp_controls_no_FE = temp_controls_no_FE + ['Baseline Value']
+    temp_controls = temp_controls + ['Baseline Value']
     temp_df = temp_df.dropna()
     
-    models_ols_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_FE]).fit()
-    models_ols_no_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_no_FE]).fit()
+    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
 
     # for computing the mean of the control group in 2015
     controlgroup = temp_df[temp_df['Control'] == 1]
     
     """for table with Fixed Effects"""
 
-    b_FE[outcome] = models_ols_FE[outcome].params
-    se_FE[outcome] = models_ols_FE[outcome].bse
+    b[outcome] = models_ols[outcome].params
+    se[outcome] = models_ols[outcome].bse
     
-    b_FE[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].mean()
-    se_FE[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].std()      
+    b[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].mean()
+    se[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].std()/np.sqrt(controlgroup[controlgroup['2015'] == 1][outcome].count())
 
-    b_FE[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se_FE[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = b_FE[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$']/models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["t"][0]
+    b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["t"][0]
 
-    b_FE[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se_FE[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = b_FE[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$']/models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["t"][0]
-    
-b_FE = pd.DataFrame(b_FE)
-se_FE = pd.DataFrame(se_FE)
+    b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["t"][0]
+
+b = pd.DataFrame(b)
+se = pd.DataFrame(se)
 
 print("#+name: tab:consumption_w_fe")
-print("#+caption: Consumption Results with Treatment Group Fixed Effects")
-print(df_to_orgtbl(b_FE, sedf = se_FE, float_fmt = '%.2f'))
-
-print("""#+name: tab:consumption_wo_fe""")
-print("""#+caption: Consumption Results without Treatment Group Fixed Effects""")
+print("#+caption: Consumption Results")
+print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
 
 
 #+end_src
