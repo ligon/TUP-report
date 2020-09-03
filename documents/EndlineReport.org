@@ -2239,61 +2239,32 @@ according to the period of recall.  There were large changes in prices
 during the course of our experiment, and small changes in the way the
 survey elicited item-level expenditures.  Both of these kinds of
 changes make comparisons across time difficult to interpret, and might
-make comparisons of total consumption misleading.  However,
+make comparisons of total consumption misleading.
 
+These data do permit us to answer the central question we're
+interested in: what are the effects on consumption, about a year
+later, of enrolling randomly selected households into the TUP program
+versus giving them a cash transfer of roughly equal value?  We
+measured the effect of cash on a three-day recall of food consumption
+12 months after the transfer, and find a statistically significant
+increase of 14.8 SSP per day.  We first measured the effect of the TUP
+program on average food consumption 6--9 months after the asset
+transfers, and found a slightly larger effect of 18.4 SSP. The
+differences between these two are not significant (see the \(t\)-test
+in the row labeled $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$), and both
+result in a 13--17% increase in the value of food expenditures
+relative to the control group mean in 2015.
 
-We measured the effect of cash on consumption 12 months after the fact, where we find
-a statistically significant increase of 18 SSP per day, representing a roughly 16%
-increase over the control-group average. We first measured the consumption effect of
-the TUP program 6-9 months after the asset transfers, where we found a similarly
-sized effect of 18SSP. However we find no evidence of a consumption effect 18-21
-months after the transfers (and reject equality with the 12-month cash results). This
-result leaves open the question of whether the cash treatment had a persistent effect
-on consumption, or whether the short-term effect found in 2015 is similarly
-temporary. It was this question that motivated the collection of an additional five
-rounds of data over a 6-month period in late 2015 and early 2016, in which we asked
-about ten items, five food and five non-food. In Table \Tab{tab:mobile_consumption},
-we consider the average treatment effect on households sampled for these phone
-interviews, both for \(\log\lambda_{it}\) and for total consumption of this basket of
-goods. We find that, consistent with the TUP program's results in 2015, all evidence
-of an effect seem to be gone by 18th months after the transfer date.
+Turning our attention to consumption expenditures involving a monthly
+recall period, both programs have positive effects of similar
+magnitude, significant at the 10% level.  Differences between the two
+are not significant. 
 
-These results are consistent with a story in which either sort of transfer has a
-short-term consumption effect, but with the result fading in the year after. In
-either group, the increase in total consumption appears to be driven mainly by
-increased food consumption, with smaller effects on non-food consumption goods and
-durables. As such, there is no evidence that the share of food consumed falls, as
-might be predicted by Engel's law.
-
-
-
-*** Recreating consumption tables                                    :ignore:
-CTL mean lists the mean and standard deviation of the control group 
-in 2015.  NaN values were considered as having a value of 0 for that good (this occurs
-automatically when using .sum(axis=1) to sum values in different
-columns for a given row). None of the monthly or yearly variables were
-divided by 30 or 365 respectively, and similarly none of the food
-variables were transformed. "Monthly" is the sum of all the
-goods which were asked about with a 1-month recall window, and
-"Yearly" is the sum of all the goods which were asked about with a
-1-year long recall window. "FoodShr" is the amount of "Food" divided
-by "Total", which could have strange interpretations due to all the
-different length recall windows and lack of transforming the variables
-to all be "per day consumption" for example
-
-
-Next steps: 
- - Consider that it doesn't make sense to ask for clothing and
-   footwear in total and then women's clothes, children's clothes,
-   school uniforms, and shoes separately in midline and endline. Both the total
-   and the individual components are used in the sums here - change this?
-   Also the components do not always add up to the reported sum
- - Consider what it means for the interpretation that different items
-   were asked about in nbaseline, midline, and endline. For example,
-   multiple items were asked about in midline and endline that were not
-   asked about in baseline
- - Consider whether transformations for recall windows would help the interpretation
-
+At annual frequencies we discover a significant difference: the effect
+of the TUP program on average annual durable expenditures is
+significantly greater (at the 10% level) than the effect of the UCT
+program, with the average difference equal to 484 SSP, a 46% increase
+relative to the average expenditures of the control group in 2015.
 
 #+name: consumption_tables
 #+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle consumption_tables.py
@@ -2335,21 +2306,10 @@ c2015['Year'] = '2015'
 # ^ and they don't always sum up - change this?
 # #some not asked for in baseline
 
-food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
+food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
 month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'durables', 'church', 'othermonth']    
 year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
 
-# make the sum variables
-
-# in previous they made aggregate variables wrong?:
-# Make aggregate variables
-#  C["Food"]   = C.filter(items=food).sum(axis=1).replace(0,np.nan)
-#  C["Month"]   = C.filter(items=food).sum(axis=1)
-#  C["Year"]   = C.filter(items=food).sum(axis=1)
-#  C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
-# should not all filter by items=food. makes sense why food share is 0.333 because it's 1 over (itself * 3)
-
-#outcomes = ["Total", "logTot", "Food", "FoodShr", "Monthly", "Yearly"]
 outcomes = ["Food", "Monthly", "Yearly"]
 
 # not replacing 0s with np.nan; seems to be 4 observations that have legitimate 0s
@@ -2358,10 +2318,6 @@ for var in (c2013, c2014, c2015):
     var["Food"] = var.filter(items=food).sum(axis=1)
     var["Monthly"] = var.filter(items=month).sum(axis=1)
     var["Yearly"] = var.filter(items=year).sum(axis=1)
-    #var["Total"] = var[ ["Food", "Monthly", "Yearly"] ].sum(axis=1)
-    # make sure not taking the log of 0 or dividing by 0
-    #var["logTot"] = var["Total"].replace(0, np.nan).transform(lambda x: np.log(x))
-    #var["FoodShr"] = var["Food"]/var["Total"].replace(0, np.nan)
     
     # set up to make year dummies
     var['2013'] = 0
@@ -2450,36 +2406,40 @@ print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
 
 #+RESULTS: consumption_tables
 #+name: tab:consumption_w_fe
-#+caption: Consumption Results with Treatment Group Fixed Effects
-|                                         | Food         | Monthly      | Yearly        |
+#+caption: Effect on consumption expenditures with different periods of recall.  Food expenditures are for the past three days, non-durable non-food for the past month, and durables the past year.
+|                                         | Food (3-day) | Monthly      | Yearly        |
 |-----------------------------------------+--------------+--------------+---------------|
-| TUP*2014                                | 11.56^{**}   | 27.90        | 293.11^{**}   |
-|                                         | (4.71)       | (22.68)      | (128.07)      |
-| TUP*2015                                | -4.33        | 3.43         | -150.79       |
-|                                         | (4.56)       | (21.98)      | (124.09)      |
-| UCT*2014                                | -8.11        | -1.30        | -97.71        |
-|                                         | (5.90)       | (28.41)      | (160.44)      |
-| UCT*2015                                | 12.48^{**}   | 35.56        | 24.73         |
-|                                         | (5.83)       | (28.08)      | (158.56)      |
-| 2014                                    | 77.48^{***}  | 259.41^{***} | 808.30^{***}  |
-|                                         | (5.33)       | (23.51)      | (125.90)      |
-| 2015                                    | 106.76^{***} | 294.59^{***} | 1022.19^{***} |
-|                                         | (5.00)       | (21.91)      | (115.48)      |
-| TUP                                     | 7.23^{**}    | 31.33^{**}   | 142.32^{*}    |
-|                                         | (3.04)       | (14.62)      | (82.54)       |
-| UCT                                     | 4.37         | 34.26^{*}    | -72.98        |
-|                                         | (3.80)       | (18.32)      | (103.42)      |
-| Baseline missing                        | 18.85^{***}  | -13.31       | 17.33         |
-|                                         | (7.12)       | (32.81)      | (180.06)      |
-| Baseline Value                          | 0.07^{*}     | -0.05        | 0.04          |
-|                                         | (0.04)       | (0.14)       | (0.03)        |
-| Control mean                            | 115.55       | 288.60       | 1051.76       |
-|                                         | (79.63)      | (311.21)     | (1939.71)     |
-| $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$ | -0.92        | -7.65        | 268.38        |
-|                                         | (8.41)       | (40.50)      | (228.68)      |
-| $\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$ | -16.81^{***} | -32.13       | -175.52       |
-|                                         | (6.08)       | (29.28)      | (165.29)      |
+| TUP*2014                                | 18.41^{***}  | 59.23^{*}    | 435.43^{**}   |
+|                                         | (5.92)       | (31.20)      | (176.15)      |
+| TUP*2015                                | 1.82         | 34.76        | -8.48         |
+|                                         | (5.62)       | (29.65)      | (167.41)      |
+| UCT*2014                                | -3.80        | 32.96        | -170.68       |
+|                                         | (7.34)       | (38.70)      | (218.48)      |
+| UCT*2015                                | 14.18^{**}   | 69.81^{*}    | -48.24        |
+|                                         | (7.20)       | (37.96)      | (214.33)      |
+| 2014                                    | 73.52^{***}  | 259.41^{***} | 808.30^{***}  |
+|                                         | (4.87)       | (23.51)      | (125.90)      |
+| 2015                                    | 103.00^{***} | 294.59^{***} | 1022.19^{***} |
+|                                         | (4.56)       | (21.91)      | (115.48)      |
+| Baseline missing                        | 15.72^{**}   | -13.31       | 17.33         |
+|                                         | (6.50)       | (32.81)      | (180.06)      |
+| Baseline value                          | 0.06^{*}     | -0.05        | 0.04          |
+|                                         | (0.03)       | (0.14)       | (0.03)        |
+|-----------------------------------------+--------------+--------------+---------------|
+| Control mean (2015)                     | 110.34^{***} | 288.60^{***} | 1051.76^{***} |
+|                                         | (3.89)       | (16.56)      | (103.24)      |
+| $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$ | 4.23         | -10.58       | 483.67^{*}    |
+|                                         | (9.17)       | (48.36)      | (273.11)      |
+| $\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$ | -12.36^{*}   | -35.06       | 39.77         |
+|                                         | (7.45)       | (39.29)      | (221.80)      |
 
+It is worth noting that the effects of the TUP program on consumption
+are not lasting---two years after the distribution of assets (in 2015)
+the average consumption expenditures in the TUP group are not
+significantly different from that of the control across all types of
+consumption.  The delayed roll-out of UCT intervention means that we
+can't measure the two-year effects of this program on these measures
+of consumption.
 ** Food Insecurity
 
 Observed changes in total consumption don't translate into an increase in reported
