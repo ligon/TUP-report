@@ -2284,6 +2284,7 @@ df_m = pd.read_stata(data_midline)
 df_e = pd.read_stata(data_endline)
 df_a = pd.read_csv(data_assignment)
 
+# set Respondent ID number as the index
 df_b.set_index('idno', inplace=True)
 df_m.set_index('idno', inplace=True)
 df_e.set_index('idno', inplace=True)
@@ -2440,6 +2441,7 @@ significantly different from that of the control across all types of
 consumption.  The delayed roll-out of UCT intervention means that we
 can't measure the two-year effects of this program on these measures
 of consumption.
+
 ** Food Insecurity
 
 Observed changes in total consumption don't translate into an increase in reported
@@ -2559,7 +2561,7 @@ standard errors in the table?
 -add another column with f statistic for joint hypothesis that all coefficients are equal to 0
 
 #+name: food_insecurity
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=1 :colnames no :tangle food_security.py
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
@@ -2568,31 +2570,37 @@ data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
+from scipy import stats
+from scipy.linalg import block_diag
 from cfe.df_utils import df_to_orgtbl
 
 df_b = pd.read_stata(data_baseline)
 df_m = pd.read_stata(data_midline)
 df_e = pd.read_stata(data_endline)
-df_a = pd.read_csv(data_assignment)
+df_a = pd.read_csv(data_assignment).rename(columns={'RespID':'idno'})
 
 # set Respondent ID number as the index
 df_b.set_index('idno', inplace=True)
 df_m.set_index('idno', inplace=True)
 df_e.set_index('idno', inplace=True)
-df_a.set_index('RespID', inplace=True)
+df_a.set_index('idno', inplace=True)
+
+df_b['Year'] = 2013
+df_m['Year'] = 2014
+df_e['Year'] = 2015
 
 # merge baseline and midline based on idno index
-df = pd.merge(df_b[ ['fs_worried_b', 'fs_portions_b', 
+df = pd.merge(df_b[ ['Year','fs_worried_b', 'fs_portions_b', 
                      'fs_fewmeals_b', 'fs_nofood_b', 
                      'fs_hungry_b', 'fs_wholeday_b'] ], 
-              df_m[ ['fs_worried_m', 'fs_portions_m', 
+              df_m[ ['Year','fs_worried_m', 'fs_portions_m', 
                       'fs_fewmeals_m', 'fs_nofood_m', 
                       'fs_hungry_m', 'fs_wholeday_m'] ], 
               how='outer', left_index=True, right_index=True)
 
 # merge baseline/midline and endline based on idno index
 df = pd.merge(df, 
-              df_e[ ['fs_worried_e', 'fs_portions_e', 
+              df_e[ ['Year','fs_worried_e', 'fs_portions_e', 
                      'fs_fewmeals_e', 'fs_nofood_e', 
                      'fs_hungry_e', 'fs_wholeday_e'] ], 
               how='outer', left_index=True, right_index=True)
@@ -2660,118 +2668,65 @@ baseline_na = True
 
 controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 outcomes = ['z-score', 'wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
+outcomes = ['wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
 
 # remove observations from 2013
 df = df[df['Year'] != '2013']
+df = df.reset_index().set_index(['idno','Year'])
 
+myX = {}
+myY = {}
 for outcome in outcomes: 
     temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
+    temp_df.rename(columns={outcome+"2013":'Baseline value'},inplace=True)
     temp_controls = controls
     
     if baseline_na==True:
         
         # indicator for whether outcome in 2013 is na, and cast it to be an integer
-        temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        temp_df["Baseline missing"] = temp_df["Baseline value"].isnull().apply(int)
         
         # code missing values of the baseline variable as 0
-        temp_df[outcome + "2013"].fillna(0,inplace=True)
+        temp_df["Baseline missing"].fillna(0,inplace=True)
         
-        temp_controls = temp_controls + ['Baseline_NAN']
+        temp_controls = temp_controls + ['Baseline missing']
     
-    temp_controls = temp_controls + [outcome+"2013"]
+    temp_controls = temp_controls + ["Baseline value"]
     temp_df = temp_df.dropna()
-    
-    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
-    
-    # for computing the mean of the control group in 2015
-    controlgroup = temp_df[temp_df['Control'] == 1]
 
-    # for computing the difference in TUP and Cash (UCT) coefficients
-    beta_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2014 <= 0.01: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
-    elif pvalue_cash_TUP2014 <= 0.05: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
-    elif pvalue_cash_TUP2014 <= 0.1: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
-        
-    beta_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2015 <= 0.01: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
-    elif pvalue_cash_TUP2015 <= 0.05: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
-    elif pvalue_cash_TUP2015 <= 0.1: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
-   
-    # make a dictionary including coefficients, standard errors, F-stat, N, and difference in TUP and UCT coefficients
-    d[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
-                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
-                  round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
-                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
-                  round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
-                  round(models_ols[outcome].params[3], 3), models_ols[outcome].bse[3],
-                  round(models_ols[outcome].params[4], 3), models_ols[outcome].bse[4],
-                  round(models_ols[outcome].params[5], 3), models_ols[outcome].bse[5],
-                  round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
-                  round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
-                  models_ols[outcome].fvalue, models_ols[outcome].nobs, 
-                  beta_cash_TUP2014, beta_cash_TUP2015]
-    
-    for x in range(0,8):
-        # indexes account for standard errors being in the final table and skipping the two rows for control mean
-        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-        if models_ols[outcome].pvalues[x] <= 0.01: 
-            d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '***'
-        elif models_ols[outcome].pvalues[x] <= 0.05: 
-            d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '**'
-        elif models_ols[outcome].pvalues[x] <= 0.1:
-            d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '*'
+    myX[outcome] = temp_df[temp_controls]
+    myY[outcome] = temp_df[outcome]
 
-    del temp_df   
+myY = pd.concat(myY)
+myX = pd.DataFrame(block_diag(*myX.values()),
+                   columns=pd.concat(myX,axis=1).columns,
+                   index=myY.index)
     
-final = pd.DataFrame(data=d)
-# name rows of the table
-final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
-                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
-                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N", 
-                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
+est = sm.OLS(myY,myX).fit()
+b = est.params
+se = est.bse
 
-newdf = df_to_orgtbl(final, float_fmt = '%.3f')
-print(newdf)
+b.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])
+se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])    
 
+print(df_to_orgtbl(b.filter(regex='\*').unstack(),sedf=se.filter(regex='\*').unstack()))
 #+end_src
 
 #+RESULTS: food_insecurity
-|                              |   z-score | wholeday |   hungry |   nofood | fewmeals | portions |  worried |
-|------------------------------+-----------+----------+----------+----------+----------+----------+----------|
-| CTL mean                     |    -0.008 |    0.447 |    0.460 |    0.595 |    0.751 |    0.814 |    0.903 |
-|                              |     0.968 |    0.498 |    0.499 |    0.492 |    0.433 |    0.390 |    0.297 |
-| TUP*2014                     |  0.266*** |   -0.026 |   -0.057 | -0.095** |   -0.027 |   0.069* |    0.047 |
-|                              |     0.082 |    0.045 |    0.045 |    0.045 |    0.040 |    0.039 |    0.034 |
-| TUP*2015                     |     0.013 |    0.016 |   0.076* |    0.007 |    0.039 |   -0.019 |   -0.036 |
-|                              |     0.082 |    0.043 |    0.043 |    0.043 |    0.038 |    0.037 |    0.032 |
-| UCT*2014                     |  0.279*** |   -0.033 |   -0.033 |   -0.008 |    0.001 |    0.040 |    0.032 |
-|                              |     0.103 |    0.056 |    0.056 |    0.056 |    0.050 |    0.048 |    0.042 |
-| UCT*2015                     |    -0.124 |   -0.006 |    0.037 |    0.037 |    0.001 |   -0.020 |   -0.029 |
-|                              |     0.103 |    0.055 |    0.055 |    0.055 |    0.049 |    0.047 |    0.042 |
-| 2014                         | -0.135*** | 0.376*** | 0.373*** | 0.484*** | 0.707*** | 0.651*** | 0.763*** |
-|                              |     0.051 |    0.036 |    0.037 |    0.042 |    0.043 |    0.032 |    0.040 |
-| 2015                         |     0.016 | 0.457*** | 0.433*** | 0.565*** | 0.755*** | 0.806*** | 0.928*** |
-|                              |     0.051 |    0.033 |    0.035 |    0.040 |    0.041 |    0.030 |    0.038 |
-| Bsln NA                      |     0.000 |   -0.051 |   -0.005 |    0.007 |   -0.046 |   -0.019 |   -0.024 |
-|                              |     0.000 |    0.044 |    0.048 |    0.051 |    0.050 |    0.041 |    0.045 |
-| Bsln2013                     |  0.103*** |    0.010 |   0.059* |    0.050 |    0.013 |    0.027 |   -0.030 |
-|                              |     0.026 |    0.030 |    0.031 |    0.036 |    0.037 |    0.026 |    0.036 |
-| F-stat                       |     6.056 |    2.243 |    4.069 |    4.103 |    1.774 |    3.897 |    5.758 |
-| N                            |  1500.000 | 1282.000 | 1297.000 | 1293.000 | 1297.000 | 1292.000 | 1291.000 |
-| Beta_TUP_2014-Beta_Cash_2015 |   0.39*** |   -0.020 |   -0.094 |  -0.131* |   -0.028 |    0.089 |    0.076 |
-| Beta_TUP_2015-Beta_Cash_2015 |     0.137 |    0.022 |    0.040 |   -0.030 |    0.038 |    0.001 |   -0.008 |
+|          | TUP*2014       | TUP*2015      | UCT*2014    | UCT*2015    |
+|----------+----------------+---------------+-------------+-------------|
+| fewmeals | \(-0.037\)     | \(0.063\)     | \(-0.012\)  | \(0.037\)   |
+|          | (\(0.044\))    | (\(0.041\))   | (\(0.053\)) | (\(0.052\)) |
+| hungry   | \(-0.058\)     | \(0.079\)^{*} | \(-0.017\)  | \(0.048\)   |
+|          | (\(0.043\))    | (\(0.041\))   | (\(0.053\)) | (\(0.052\)) |
+| nofood   | \(-0.085\)^{*} | \(0.025\)     | \(0.015\)   | \(0.051\)   |
+|          | (\(0.044\))    | (\(0.042\))   | (\(0.054\)) | (\(0.053\)) |
+| portions | \(0.065\)      | \(-0.014\)    | \(0.037\)   | \(-0.009\)  |
+|          | (\(0.044\))    | (\(0.042\))   | (\(0.054\)) | (\(0.053\)) |
+| wholeday | \(-0.020\)     | \(0.013\)     | \(-0.017\)  | \(-0.015\)  |
+|          | (\(0.044\))    | (\(0.042\))   | (\(0.054\)) | (\(0.053\)) |
+| worried  | \(0.055\)      | \(-0.019\)    | \(0.052\)   | \(-0.010\)  |
+|          | (\(0.044\))    | (\(0.042\))   | (\(0.053\)) | (\(0.052\)) |
 
 
 
