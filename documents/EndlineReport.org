@@ -280,36 +280,23 @@ were complicated by an onset of broad civil unrest in South Sudan, and
 disruption of BRAC's operations.
 
 In response to the outbreak of violence in late 2013 and subsequent
-closing of the offices in Yei, a midline survey was conducted in June
-2014 to try to separate pre- and post-conflict changes in
-outcomes. For lack of a valid comparison group, we will not speak with
-any authority about the effect of the conflict on economic conditions
-in Yei, though we will report estimates of treatment effects on the
-severity or likelihood of having been effected exposure to the
-conflict.  Some of the original asset transfers were done before the
-office closure, which may affect estimates of the difference between
-programs if rates of return changed in the few intervening
-months.  Finally, an endline survey was conducted in mid-2015 to
-estimate the effect of program participation on households' financial
-situation and overall welfare. The key here is that the survey
-conducted in mid-2014 provides us with /short-term/ treatment effects
-of the TUP program within 6 months of the asset transfers, while
-providing a second baseline for the Cash transfers. Likewise, the 2015
-survey allows us to estimate treatment effects one year after the cash
-transfers, and 15--18 months after the asset transfers.
-
-This unfortunately left us without data past one year for the cash
-transfer effects.  To get some point estimates on household welfare
-for this group in the slightly longer term, we conducted a series of
-five short surveys on a monthly basis from November of 2015 to March
-of 2016. These collected only a subset of the full consumption modules
-and a few questions tracking major transactions and shocks. The short
-length of the survey allowed them to be administered via the mobile
-network, reducing cost and improving response rate. These data provide
-a slightly longer estimate of treatment effects for both cash
-transfers and the TUP program, but will be especially valuable in
-assessing whether the cash transfers had a long-term impact on
-consumption.
+closing of the offices in Yei, we conducted a midline survey in June
+2014 to try to separate pre- and post-conflict changes in outcomes.
+We cannot test any claims about the effect of the conflict on outcomes
+for lack of a valid comparison group, though we do report estimates of
+treatment effects on the severity or likelihood of having been
+exposed to the conflict.  Some of the original asset
+transfers were done before the office closure, which may affect
+estimates of the difference between programs if rates of return
+changed in the few intervening months.  Finally, we conducted an endline survey
+in mid-2015 to estimate the effect of program participation
+on households' financial situation and overall welfare. The key here
+is that the survey conducted in mid-2014 provides us with /short-term/
+treatment effects of the TUP program within 6--8 months of the asset
+transfers, while providing a second baseline for the UCT treatment.
+Likewise, the 2015 survey allows us to estimate treatment
+effects one year after the cash transfers, and 15--18 months after the
+asset transfers.
 
 ** Balance on Obervables
 
@@ -2214,13 +2201,20 @@ UCT group offer a second baseline and a 12-month treatment effect, respectively.
 Since those transfers happened after the midline survey, its interaction with /2014/
 acts as a placebo; there is no /ex ante/ reason to expect that they were different
 from the rest of the control group at that point. Given the slight difference in
-timing, we report a t-test of the hypothesis \(\beta_{TUP,t}-\beta_{UCT,2015}=0\) for
-both \(t \in {2014,2015}\). Since the difference in timing is smaller, we consider
-\(\beta_{TUP,2015}-\beta_{UCT,2015}=0\) to be the preferred hypothesis, but examine
-and report \(\beta_{TUP,2014}-\beta_{UCT,2015}=0\) as well.
+timing, we report a t-test of the hypothesis \(\beta_{\mbox{TUP},t}-\beta_{\mbox{UCT},2015}=0\) for
+both \(t \in {2014,2015}\).  
+
+Since the comparison between (TUP,2014) and (UCT,2015) both allow for
+something less than a year of exposure to the respective treatments we
+regard \(\beta_{\mbox{TUP},2014}-\beta_{\mbox{UCT},2015}=0\) as the
+most interesting hypothesis, but since these points of comparison
+aren't contemporaneous we can't rule out the possibility that
+aggregate shocks might have interacted somehow with the two programs
+differently.  Accordingly, we also report
+\(\beta_{\mbox{TUP},2015}-\beta_{\mbox{UCT},2015}\), which has the
+interpretation as being the difference between the average effect of
+having been enrolled in either program from its inception until 2015.
  
-
-
 * Results
 
 ** Consumption
@@ -2242,7 +2236,7 @@ changes make comparisons across time difficult to interpret, and might
 make comparisons of total consumption misleading.
 
 These data do permit us to answer the central question we're
-interested in: what are the effects on consumption, about a year
+interested in: what are the effects on consumption, about eight months
 later, of enrolling randomly selected households into the TUP program
 versus giving them a cash transfer of roughly equal value?  We
 measured the effect of cash on a three-day recall of food consumption
