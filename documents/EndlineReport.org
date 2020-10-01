@@ -2217,530 +2217,13 @@ having been enrolled in either program from its inception until 2015.
  
 * Results
 
-** Consumption
-
-The first outcome of interest we consider is household consumption,
-defined as the market value of goods or services used by the
-household.  A sizable basket of goods were included in the survey
-module. These are separated into three categories: Food items (with a
-3-day recall window), non-durables (a 30-day recall window), and
-durables and large expenditures (a one-year recall window).  We think
-that data on consumption provides the most appropriate measure of household
-welfare in our survey.
-
-\Tab{consumption} reports on consumption expenditures aggregated
-according to the period of recall.  There were large changes in prices
-during the course of our experiment, and small changes in the way the
-survey elicited item-level expenditures.  Both of these kinds of
-changes make comparisons across time difficult to interpret, and might
-make comparisons of total consumption misleading.
-
-These data do permit us to answer the central question we're
-interested in: what are the effects on consumption, about eight months
-later, of enrolling randomly selected households into the TUP program
-versus giving them a cash transfer of roughly equal value?  We
-measured the effect of cash on a three-day recall of food consumption
-12 months after the transfer, and find a statistically significant
-increase of 14.8 SSP per day.  We first measured the effect of the TUP
-program on average food consumption 6--9 months after the asset
-transfers, and found a slightly larger effect of 18.4 SSP. The
-differences between these two are not significant (see the \(t\)-test
-in the row labeled $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$), and both
-result in a 13--17% increase in the value of food expenditures
-relative to the control group mean in 2015.
-
-Turning our attention to consumption expenditures involving a monthly
-recall period, both programs have positive effects of similar
-magnitude, significant at the 10% level.  Differences between the two
-are not significant. 
-
-At annual frequencies we discover a significant difference: the effect
-of the TUP program on average annual durable expenditures is
-significantly greater (at the 10% level) than the effect of the UCT
-program, with the average difference equal to 484 SSP, a 46% increase
-relative to the average expenditures of the control group in 2015.
-
-#+name: consumption_tables
-#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle consumption_tables.py
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-
-import statsmodels.api as sm
-import pandas as pd
-import numpy as np
-from scipy import stats
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-df_a = pd.read_csv(data_assignment)
-
-# set Respondent ID number as the index
-df_b.set_index('idno', inplace=True)
-df_m.set_index('idno', inplace=True)
-df_e.set_index('idno', inplace=True)
-df_a.set_index('RespID', inplace=True)
-
-# missing s20_6m_b and s20_7m_b in monthly for baseline - should be othermonth b
-df_b.insert(len(df_b.columns), 'c_othermonth_b', df_b[ ['s20_6m_b', 's20_7m_b'] ].sum(axis=1))
-
-# find variables that start with "c_" and remove "c_" and remove "_b", "_m", or "_e"
-c2013 = df_b.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
-c2014 = df_m.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
-c2015 = df_e.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
-
-c2013['Year'] = '2013'
-c2014['Year'] = '2014'
-c2015['Year'] = '2015'
-
-# missing durables from monthly for midline in previous code - added it in
-# doesn't make sense to ask for clothing and footwear in total and then women's clothes, children's clothes, school uniforms, shoes in midline and endline
-# ^ and they don't always sum up - change this?
-# #some not asked for in baseline
-
-food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
-month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'durables', 'church', 'othermonth']    
-year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
-
-outcomes = ["Food", "Monthly", "Yearly"]
-
-# not replacing 0s with np.nan; seems to be 4 observations that have legitimate 0s
-for var in (c2013, c2014, c2015):
-    
-    var["Food"] = var.filter(items=food).sum(axis=1)
-    var["Monthly"] = var.filter(items=month).sum(axis=1)
-    var["Yearly"] = var.filter(items=year).sum(axis=1)
-    
-    # set up to make year dummies
-    var['2013'] = 0
-    var['2014'] = 0
-    var['2015'] = 0
-    
-    # set up baseline2013 variables
-    for outcome in outcomes: 
-        var[outcome+'2013'] = c2013[outcome]
-
-# make year dummies
-c2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
-c2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
-c2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
-
-df2 = pd.concat((c2013, c2014, c2015))
-# add group dummies from master_assignment.csv
-df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
-
-# make interaction terms
-df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
-df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
-
-models_ols = {}
-b = {}
-se = {}
-
-controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
-
-if FE:
-    controls += ['TUP', 'UCT']
-
-# remove observations from 2013, since conditioning on baseline
-df = df[df['Year'] != '2013']
-
-for outcome in outcomes: 
-    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
-    temp_controls = controls
-    temp_df.rename(columns={outcome + "2013":'Baseline Value'},inplace=True)
-    
-    if baseline_na==True:
-        
-        # indicator for whether outcome in 2013 is na, and cast it to be an integer
-        temp_df["Baseline missing"] = temp_df['Baseline Value'].isnull().apply(int)
-        
-        # code missing values of the baseline variable as 0
-        temp_df['Baseline Value'].fillna(0,inplace=True)
-        
-        temp_controls = temp_controls + ['Baseline missing']
-    
-    temp_controls = temp_controls + ['Baseline Value']
-    temp_df = temp_df.dropna()
-    
-    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
-
-    # for computing the mean of the control group in 2015
-    controlgroup = temp_df[temp_df['Control'] == 1]
-    
-    """for table with Fixed Effects"""
-
-    b[outcome] = models_ols[outcome].params
-    se[outcome] = models_ols[outcome].bse
-    
-    b[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].mean()
-    se[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].std()/np.sqrt(controlgroup[controlgroup['2015'] == 1][outcome].count())
-
-    b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["t"][0]
-
-    b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["t"][0]
-
-b = pd.DataFrame(b)
-se = pd.DataFrame(se)
-
-print("#+name: tab:consumption_w_fe")
-print("#+caption: Consumption Results")
-print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
-
-
-#+end_src
-
-#+RESULTS: consumption_tables
-#+name: tab:consumption_w_fe
-#+caption: Effect on consumption expenditures with different periods of recall.  Food expenditures are for the past three days, non-durable non-food for the past month, and durables the past year.
-|                                         | Food (3-day) | Monthly      | Yearly        |
-|-----------------------------------------+--------------+--------------+---------------|
-| TUP*2014                                | 18.41^{***}  | 59.23^{*}    | 435.43^{**}   |
-|                                         | (5.92)       | (31.20)      | (176.15)      |
-| TUP*2015                                | 1.82         | 34.76        | -8.48         |
-|                                         | (5.62)       | (29.65)      | (167.41)      |
-| UCT*2014                                | -3.80        | 32.96        | -170.68       |
-|                                         | (7.34)       | (38.70)      | (218.48)      |
-| UCT*2015                                | 14.18^{**}   | 69.81^{*}    | -48.24        |
-|                                         | (7.20)       | (37.96)      | (214.33)      |
-| 2014                                    | 73.52^{***}  | 259.41^{***} | 808.30^{***}  |
-|                                         | (4.87)       | (23.51)      | (125.90)      |
-| 2015                                    | 103.00^{***} | 294.59^{***} | 1022.19^{***} |
-|                                         | (4.56)       | (21.91)      | (115.48)      |
-| Baseline missing                        | 15.72^{**}   | -13.31       | 17.33         |
-|                                         | (6.50)       | (32.81)      | (180.06)      |
-| Baseline value                          | 0.06^{*}     | -0.05        | 0.04          |
-|                                         | (0.03)       | (0.14)       | (0.03)        |
-|-----------------------------------------+--------------+--------------+---------------|
-| Control mean (2015)                     | 110.34^{***} | 288.60^{***} | 1051.76^{***} |
-|                                         | (3.89)       | (16.56)      | (103.24)      |
-| $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$ | 4.23         | -10.58       | 483.67^{*}    |
-|                                         | (9.17)       | (48.36)      | (273.11)      |
-| $\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$ | -12.36^{*}   | -35.06       | 39.77         |
-|                                         | (7.45)       | (39.29)      | (221.80)      |
-
-It is worth noting that the effects of the TUP program on consumption
-are not lasting---two years after the distribution of assets (in 2015)
-the average consumption expenditures in the TUP group are not
-significantly different from that of the control across all types of
-consumption.  The delayed roll-out of UCT intervention means that we
-can't measure the two-year effects of this program on these measures
-of consumption.
-
-** Food Insecurity
-
-Observed changes in total consumption don't translate into an increase in reported
-food security. In each year, we ask how often in a given week the respondent has had
-experiences indicative of food insecurity. Included are (from left to right) going a
-whole day without eating, going to sleep hungry, being without any food in the house,
-eating fewer meals than normal at mealtimes, and limiting portions. We report the
-percentage of people who report experiencing each in a typical week, as well as a
-standardized composite z-score using all of these questions. Coefficients and
-standard errors are both small relative to average levels and statistically
-insignificant. The first column also aggregates these values as a weighted average
-with inverse covariance weighting, yielding an index we call Food Insecurity. Again,
-we find no systematic difference in food security.
-
-#+name: foodsecure_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<foodsecure_analysis>>
-return tab
-#+end_src
-
-|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-|                                  | Food Insecurity | Whole Day       | Hungry          | No Food         | Few Meals       | Portions        |
-|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-| CTL mean                         | \(0.024\)       | \(0.790^{*}\)   | \(0.797^{**}\)  | \(0.716\)       | \(0.679\)       | \(0.638\)       |
-|                                  | \((0.713)\)     | \((0.408)\)     | \((0.403)\)     | \((0.452)\)     | \((0.467)\)     | \((0.481)\)     |
-|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-| CSH*2014                         | \(0.044\)       | \(0.004\)       | \(0.040\)       | \(0.011\)       | \(0.032\)       | \(0.004\)       |
-|                                  | \((0.076)\)     | \((0.041)\)     | \((0.039)\)     | \((0.043)\)     | \((0.050)\)     | \((0.051)\)     |
-| CSH*2015                         | \(-0.069\)      | \(-0.063\)      | \(-0.032\)      | \(0.014\)       | \(0.003\)       | \(0.034\)       |
-|                                  | \((0.074)\)     | \((0.040)\)     | \((0.039)\)     | \((0.042)\)     | \((0.049)\)     | \((0.050)\)     |
-| TUP*2014                         | \(0.058\)       | \(0.017\)       | \(0.052^{*}\)   | \(0.024\)       | \(-0.009\)      | \(-0.012\)      |
-|                                  | \((0.061)\)     | \((0.033)\)     | \((0.032)\)     | \((0.035)\)     | \((0.040)\)     | \((0.041)\)     |
-| TUP*2015                         | \(-0.005\)      | \(-0.030\)      | \(0.006\)       | \(0.030\)       | \(-0.054\)      | \(0.016\)       |
-|                                  | \((0.058)\)     | \((0.031)\)     | \((0.030)\)     | \((0.033)\)     | \((0.038)\)     | \((0.039)\)     |
-| 2014                             | \(-0.040\)      | \(0.914^{***}\) | \(0.904^{***}\) | \(0.915^{***}\) | \(0.834^{***}\) | \(0.779^{***}\) |
-|                                  | \((0.043)\)     | \((0.024)\)     | \((0.023)\)     | \((0.026)\)     | \((0.033)\)     | \((0.031)\)     |
-| 2015                             | \(-0.002\)      | \(0.784^{***}\) | \(0.793^{***}\) | \(0.736^{***}\) | \(0.703^{***}\) | \(0.609^{***}\) |
-|                                  | \((0.038)\)     | \((0.022)\)     | \((0.022)\)     | \((0.024)\)     | \((0.031)\)     | \((0.029)\)     |
-| Bsln2013                         | \(-0.081^{**}\) | \(0.002\)       | \(-0.017\)      | \(-0.032\)      | \(-0.056^{**}\) | \(0.023\)       |
-|                                  | \((0.034)\)     | \((0.023)\)     | \((0.021)\)     | \((0.023)\)     | \((0.027)\)     | \((0.027)\)     |
-| Bsln_NAN                         | \(0.109^{**}\)  | \(0.022\)       | \(0.033\)       | \(-0.038\)      | \(0.019\)       | \(0.083^{**}\)  |
-|                                  | \((0.053)\)     | \((0.031)\)     | \((0.032)\)     | \((0.035)\)     | \((0.043)\)     | \((0.041)\)     |
-|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(0.128\)       | \(0.080\)       | \(0.085^{*}\)   | \(0.011\)       | \(-0.013\)      | \(-0.046\)      |
-|                                  | \((0.095)\)     | \((0.051)\)     | \((0.049)\)     | \((0.054)\)     | \((0.062)\)     | \((0.064)\)     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(0.064\)       | \(0.033\)       | \(0.038\)       | \(0.017\)       | \(-0.057\)      | \(-0.018\)      |
-|                                  | \((0.078)\)     | \((0.042)\)     | \((0.040)\)     | \((0.044)\)     | \((0.051)\)     | \((0.052)\)     |
-|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-| F-stat                           | \(1.742\)       | \(9.300\)       | \(8.328\)       | \(10.945\)      | \(6.700\)       | \(5.879\)       |
-| N                                | \(1255.000\)    | \(1276.000\)    | \(1291.000\)    | \(1287.000\)    | \(1291.000\)    | \(1286.000\)    |
-|----------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-
-
-
-#+name: tab:foodsecure
-#+caption: Percentage of respondents reporting a food security problem occurs at least once a week.
-#+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
-|                                  | Z-score     | Whole Day    | Hungry       | No Food      | Fewmeals     | Portions     |
-|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
-| CTL mean                         | $-0.01$     | $0.21$       | $0.21$       | $0.28$       | $0.32$       | $0.36$       |
-|                                  | $( 1.00)$   | $( 0.41)$    | $( 0.40)$    | $( 0.45)$    | $( 0.47)$    | $( 0.48)$    |
-|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
-| TUP*2014                         | $-0.10$     | $-0.02$      | $-0.05$      | $-0.03$      | $0.01$       | $0.01$       |
-|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
-| TUP*2015                         | $-0.02$     | $0.03$       | $-0.01$      | $-0.03$      | $0.05$       | $-0.02$      |
-|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
-| CSH*2014                         | $-0.05$     | $-0.00$      | $-0.04$      | $-0.01$      | $-0.03$      | $-0.00$      |
-|                                  | $( 0.11)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
-| CSH*2015                         | $0.03$      | $0.06$       | $0.03$       | $-0.01$      | $-0.00$      | $-0.04$      |
-|                                  | $( 0.11)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
-| Bsln2013                         | $0.07^{**}$ | $-0.00$      | $0.02$       | $0.03$       | $0.06^{**}$  | $-0.02$      |
-|                                  | $( 0.03)$   | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    |
-| 2014                             | $0.07$      | $0.09^{***}$ | $0.10^{***}$ | $0.09^{***}$ | $0.17^{***}$ | $0.22^{***}$ |
-|                                  | $( 0.06)$   | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
-| 2015                             | $0.03$      | $0.22^{***}$ | $0.21^{***}$ | $0.26^{***}$ | $0.30^{***}$ | $0.39^{***}$ |
-|                                  | $( 0.06)$   | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.03)$    |
-| Bsln NA                          | $-0.17^{*}$ | $-0.02$      | $-0.03$      | $0.03$       | $-0.02$      | $-0.08^{*}$  |
-|                                  | $( 0.09)$   | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    | $( 0.04)$    | $( 0.04)$    |
-|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
-| F-stat                           | $1.45$      | $9.34$       | $8.36$       | $10.84$      | $6.70$       | $5.91$       |
-| N                                | $1299.00$   | $1282.00$    | $1297.00$    | $1293.00$    | $1297.00$    | $1292.00$    |
-|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-0.13$     | $-0.08$      | $-0.08^{*}$  | $-0.01$      | $0.01$       | $0.05$       |
-|                                  | $( 0.14)$   | $( 0.05)$    | $( 0.05)$    | $( 0.05)$    | $( 0.06)$    | $( 0.06)$    |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-0.06$     | $-0.03$      | $-0.04$      | $-0.02$      | $0.06$       | $0.02$       |
-|                                  | $( 0.12)$   | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    | $( 0.05)$    | $( 0.05)$    |
-|----------------------------------+-------------+--------------+--------------+--------------+--------------+--------------|
-
-*** Notes on Recreating food insecurity table                      :noexport:
-
-The table looks at whether respondents experienced going a whole
-day without eating, limiting portions, etc. in a typical week.  
-The z-score is calculated by taking the sum of binary variables 'worried', 
-'portions', 'fewmeals', 'nofood', 'hungry', 'wholeday' for each
-individual, separately at baseline, midline, and endline. Call that
-'fs_sum_m' for an individual's sum at midline. Then their z-score at
-midline  would be (fs_sum_m - fs_sum_m.mean())/fs_sum_m.std(). CTL
-mean lists the mean and standard deviation of the control group in 2015.
-
-Differences with previous code: 
--correction for what should be considered "weekly" (this code
-includes "Everyday", "3-6 times a week", and "1-2 times a week" as
-being considered weekly, whereas the previous code left out "1-2 times a week")
--This code adds 'worried' to the table. It uses 'worried' to
-calculate the z-score, which  was also used to calculate
-the z-score in the previous table.
-
-Next steps: 
--change how the z-score is being calculated because .sum(axis=1)
-equates NaN to 0, so some respondents who had NaN for every measure
-will still have a z-score, hence the higher N for 'z-score' than for
-the other variables
--divide the standard deviation of CTL mean by the sqrt of the number of control
-observations to make it comparable with the other point estimates and
-standard errors in the table?
--add another column with f statistic for joint hypothesis that all coefficients are equal to 0
-
-#+name: food_insecurity
-#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=1 :colnames no :tangle food_security.py
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-
-import statsmodels.api as sm
-import pandas as pd
-import numpy as np
-from scipy import stats
-from scipy.linalg import block_diag
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-df_a = pd.read_csv(data_assignment).rename(columns={'RespID':'idno'})
-
-# set Respondent ID number as the index
-df_b.set_index('idno', inplace=True)
-df_m.set_index('idno', inplace=True)
-df_e.set_index('idno', inplace=True)
-df_a.set_index('idno', inplace=True)
-
-df_b['Year'] = 2013
-df_m['Year'] = 2014
-df_e['Year'] = 2015
-
-# merge baseline and midline based on idno index
-df = pd.merge(df_b[ ['Year','fs_worried_b', 'fs_portions_b', 
-                     'fs_fewmeals_b', 'fs_nofood_b', 
-                     'fs_hungry_b', 'fs_wholeday_b'] ], 
-              df_m[ ['Year','fs_worried_m', 'fs_portions_m', 
-                      'fs_fewmeals_m', 'fs_nofood_m', 
-                      'fs_hungry_m', 'fs_wholeday_m'] ], 
-              how='outer', left_index=True, right_index=True)
-
-# merge baseline/midline and endline based on idno index
-df = pd.merge(df, 
-              df_e[ ['Year','fs_worried_e', 'fs_portions_e', 
-                     'fs_fewmeals_e', 'fs_nofood_e', 
-                     'fs_hungry_e', 'fs_wholeday_e'] ], 
-              how='outer', left_index=True, right_index=True)
-
-# replace words with their corresponding code number from the survey
-df.replace({"Everyday": 1,
-            "everyday": 1,
-            "3-6 times a week": 2,
-            "1-2 times a week": 3,
-            "Less than once a week": 4,
-            "less than once a week": 4,
-            "Never": 5,
-            "never": 5}, inplace=True)
-
-# for weekly, replace 4 and 5 with 0, and 1, 2, and 3 with 1
-df.replace({1: 1, 2: 1, 3: 1, 4: 0, 5: 0}, inplace=True)
-
-# find columns that start with "fs_" and end with "_b", "_m", or "_e"
-# cut off the first 3 characters "fs_" and the last 2 "_b", "_m", or "_e"
-fs2013 = df.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2])
-fs2014 = df.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2])
-fs2015 = df.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2])
-
-fs2013['Year'] = '2013'
-fs2014['Year'] = '2014'
-fs2015['Year'] = '2015'
-
-# used to calculate the z-score
-index_vars = ['worried', 'portions', 'fewmeals', 'nofood', 'hungry', 'wholeday']
-outcomes = ['z-score'] + index_vars 
-
-for FS in (fs2013, fs2014, fs2015): 
-    fs_sum = FS[index_vars].sum(axis=1)
-    FS['z-score'] = (fs_sum - fs_sum.mean())/fs_sum.std()
-    
-    # set up to make year dummies
-    FS.insert(len(FS.columns), '2013', 0)
-    FS.insert(len(FS.columns), '2014', 0)
-    FS.insert(len(FS.columns), '2015', 0)
-    
-    # baseline values as 'var'2013
-    for var in outcomes: 
-        FS[var+'2013'] = fs2013[var]
-    
-# make year dummmies
-fs2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
-fs2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
-fs2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
-
-df2 = pd.concat((fs2013, fs2014, fs2015))
-# make group dummies using 'Group' from master_assignment.csv
-df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
-
-# make interaction variables
-df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
-df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
-
-models_ols = {}
-d = {}
-baseline_na = True
-
-controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
-outcomes = ['z-score', 'wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
-outcomes = ['wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
-
-# remove observations from 2013
-df = df[df['Year'] != '2013']
-df = df.reset_index().set_index(['idno','Year'])
-
-myX = {}
-myY = {}
-for outcome in outcomes: 
-    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
-    temp_df.rename(columns={outcome+"2013":'Baseline value'},inplace=True)
-    temp_controls = controls
-    
-    if baseline_na==True:
-        
-        # indicator for whether outcome in 2013 is na, and cast it to be an integer
-        temp_df["Baseline missing"] = temp_df["Baseline value"].isnull().apply(int)
-        
-        # code missing values of the baseline variable as 0
-        temp_df["Baseline missing"].fillna(0,inplace=True)
-        
-        temp_controls = temp_controls + ['Baseline missing']
-    
-    temp_controls = temp_controls + ["Baseline value"]
-    temp_df = temp_df.dropna()
-
-    myX[outcome] = temp_df[temp_controls]
-    myY[outcome] = temp_df[outcome]
-
-myY = pd.concat(myY)
-myX = pd.DataFrame(block_diag(*myX.values()),
-                   columns=pd.concat(myX,axis=1).columns,
-                   index=myY.index)
-    
-est = sm.OLS(myY,myX).fit()
-b = est.params
-se = est.bse
-
-b.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])
-se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])    
-
-b = b.unstack().T
-b.rename(columns={'worried':'Worried', 'portions':'Limited portions', 'fewmeals':'Fewer Meals', 'nofood':'No food in house', 'hungry':'Went hungry', 'wholeday':'Whole day without eating'},inplace=True)
-
-se = se.unstack().T
-se.rename(columns={'worried':'Worried', 'portions':'Limited portions', 'fewmeals':'Fewer Meals', 'nofood':'No food in house', 'hungry':'Went hungry', 'wholeday':'Whole day without eating'},inplace=True)
-
-print(df_to_orgtbl(b,sedf=se))
-#+end_src
-
-*** food insecurity table                                            :ignore:
-
-#+RESULTS: food_insecurity
-| Fewer Meals      | Went hungry     | No food in house | Limited portions | Whole day without eating | Worried         |                 |
-|------------------+-----------------+------------------+------------------+--------------------------+-----------------+-----------------|
-| 2014             | \(0.716\)^{***} | \(0.370\)^{***}  | \(0.470\)^{***}  | \(0.660\)^{***}          | \(0.369\)^{***} | \(0.758\)^{***} |
-|                  | (\(0.046\))     | (\(0.036\))      | (\(0.040\))      | (\(0.036\))              | (\(0.035\))     | (\(0.050\))     |
-| 2015             | \(0.735\)^{***} | \(0.430\)^{***}  | \(0.561\)^{***}  | \(0.795\)^{***}          | \(0.461\)^{***} | \(0.917\)^{***} |
-|                  | (\(0.044\))     | (\(0.034\))      | (\(0.038\))      | (\(0.034\))              | (\(0.033\))     | (\(0.048\))     |
-| Baseline missing | \(0.000\)       | \(0.000\)        | \(0.000\)        | \(0.000\)                | \(0.000\)       | \(0.000\)       |
-|                  | (\(0.000\))     | (\(0.000\))      | (\(0.000\))      | (\(0.000\))              | (\(0.000\))     | (\(0.000\))     |
-| Baseline value   | \(0.014\)       | \(0.058\)^{**}   | \(0.050\)        | \(0.027\)                | \(0.010\)       | \(-0.030\)      |
-|                  | (\(0.038\))     | (\(0.028\))      | (\(0.033\))      | (\(0.028\))              | (\(0.028\))     | (\(0.043\))     |
-| TUP*2014         | \(-0.037\)      | \(-0.058\)       | \(-0.085\)^{*}   | \(0.065\)                | \(-0.020\)      | \(0.055\)       |
-|                  | (\(0.044\))     | (\(0.043\))      | (\(0.044\))      | (\(0.044\))              | (\(0.044\))     | (\(0.044\))     |
-| TUP*2015         | \(0.063\)       | \(0.079\)^{*}    | \(0.025\)        | \(-0.014\)               | \(0.013\)       | \(-0.019\)      |
-|                  | (\(0.041\))     | (\(0.041\))      | (\(0.042\))      | (\(0.042\))              | (\(0.042\))     | (\(0.042\))     |
-| UCT*2014         | \(-0.012\)      | \(-0.017\)       | \(0.015\)        | \(0.037\)                | \(-0.017\)      | \(0.052\)       |
-|                  | (\(0.053\))     | (\(0.053\))      | (\(0.054\))      | (\(0.054\))              | (\(0.054\))     | (\(0.053\))     |
-| UCT*2015         | \(0.037\)       | \(0.048\)        | \(0.051\)        | \(-0.009\)               | \(-0.015\)      | \(-0.010\)      |
-|                  | (\(0.052\))     | (\(0.052\))      | (\(0.053\))      | (\(0.053\))              | (\(0.053\))     | (\(0.052\))     |
-
-
-
 ** Assets
    
-Turning now to asset holdings for the households, we estimate treatment effects for
-total value of physical assets owned, total value of potentially productive assets,
-as well as land and cash savings.
+We first turn our attention to effects of the different programs on
+asset holdings.  Since TUP households were directly /given/ a variety
+of different assets, for this program this can be regarded as a rather
+direct test---eight months later, do TUP recipients still own these
+assets, or have they sold (or eaten) them? 
 
 *** Total Asset Holdings
 
@@ -2868,7 +2351,7 @@ observations to make it comparable with the other point estimates and
 standard errors in the table?
 
 #+name: asset_values
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle asset_values.py
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
@@ -2878,6 +2361,7 @@ import statsmodels.api as sm
 import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
+from scipy.linalg import block_diag
 
 df_b = pd.read_stata(data_baseline)
 df_m = pd.read_stata(data_midline)
@@ -2987,193 +2471,89 @@ d_FE = {}
 d_no_FE = {}
 baseline_na = True
 
-controls_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
-controls_no_FE = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 # from above, outcomes = ["Total", "Productive", "Livestock"]
 
 # remove observations from 2013
 df = df[df['Year'] != '2013']
+df.index.name = 'idno'
+df = df.reset_index().set_index(['idno','Year'])
 
+myX = {}
+myY = {}
 for outcome in outcomes: 
-    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls_FE]
-    temp_controls_FE = controls_FE
-    temp_controls_no_FE = controls_no_FE
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
+    temp_df.rename(columns={outcome+"2013":'Baseline value'},inplace=True)
+    temp_controls = controls
     
     if baseline_na==True:
         
         # indicator for whether outcome in 2013 is na, and cast it to be an integer
-        temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
+        temp_df["Baseline missing"] = temp_df["Baseline value"].isnull().apply(int)
         
         # code missing values of the baseline variable as 0
-        temp_df[outcome + "2013"].fillna(0,inplace=True)
+        temp_df["Baseline missing"].fillna(0,inplace=True)
         
-        temp_controls_FE = temp_controls_FE + ['Baseline_NAN']
-        temp_controls_no_FE = temp_controls_no_FE + ['Baseline_NAN']
+        temp_controls = temp_controls + ['Baseline missing']
     
-    temp_controls_FE = temp_controls_FE + [outcome+"2013"]
-    temp_controls_no_FE = temp_controls_no_FE + [outcome+"2013"]
+    temp_controls = temp_controls + ["Baseline value"]
     temp_df = temp_df.dropna()
-    
-    models_ols_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_FE]).fit()
-    models_ols_no_FE[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls_no_FE]).fit()
 
-    # for computing the mean of the control group in 2015
-    controlgroup = temp_df[temp_df['Control'] == 1]
-    
-    """for table with Fixed Effects"""
+    myX[outcome] = temp_df[temp_controls]
+    myY[outcome] = temp_df[outcome]
 
-    # for computing the difference in TUP and Cash coefficients
-    beta_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2014 = models_ols_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+myY = pd.concat(myY)
+myX = pd.DataFrame(block_diag(*myX.values()),
+                   columns=pd.concat(myX,axis=1).columns,
+                   index=myY.index)
     
-    if pvalue_cash_TUP2014 <= 0.01: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
-    elif pvalue_cash_TUP2014 <= 0.05: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
-    elif pvalue_cash_TUP2014 <= 0.1: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
-        
-    beta_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2015 = models_ols_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2015 <= 0.01: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
-    elif pvalue_cash_TUP2015 <= 0.05: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
-    elif pvalue_cash_TUP2015 <= 0.1: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+est = sm.OLS(myY,myX).fit()
+b = est.params
+se = est.bse
 
-    d_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
-                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
-                  round(models_ols_FE[outcome].params[0], 3), models_ols_FE[outcome].bse[0],
-                  round(models_ols_FE[outcome].params[1], 3), models_ols_FE[outcome].bse[1], 
-                  round(models_ols_FE[outcome].params[2], 3), models_ols_FE[outcome].bse[2],
-                  round(models_ols_FE[outcome].params[3], 3), models_ols_FE[outcome].bse[3],
-                  round(models_ols_FE[outcome].params[4], 3), models_ols_FE[outcome].bse[4],
-                  round(models_ols_FE[outcome].params[5], 3), models_ols_FE[outcome].bse[5],
-                  round(models_ols_FE[outcome].params[6], 3), models_ols_FE[outcome].bse[6],
-                  round(models_ols_FE[outcome].params[7], 3), models_ols_FE[outcome].bse[7],
-                  round(models_ols_FE[outcome].params[8], 3), models_ols_FE[outcome].bse[8],
-                  round(models_ols_FE[outcome].params[9], 3), models_ols_FE[outcome].bse[9],
-                  models_ols_FE[outcome].fvalue, models_ols_FE[outcome].nobs, 
-                  beta_cash_TUP2014, beta_cash_TUP2015]
-    
-    for x in range(0,10):
-        # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-        if models_ols_FE[outcome].pvalues[x] <= 0.01: 
-            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '***'
-        elif models_ols_FE[outcome].pvalues[x] <= 0.05: 
-            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '**'
-        elif models_ols_FE[outcome].pvalues[x] <= 0.1:
-            d_FE[outcome][x*2 + 2] = str(d_FE[outcome][x*2 + 2]) + '*'
-    
-    """for table WITHOUT Fixed Effects"""
+b.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])
+se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])    
 
-    # for computing the difference in TUP and Cash coefficients
-    beta_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2014 = models_ols_no_FE[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2014 <= 0.01: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
-    elif pvalue_cash_TUP2014 <= 0.05: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
-    elif pvalue_cash_TUP2014 <= 0.1: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
-        
-    beta_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2015 = models_ols_no_FE[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_TUP2015 <= 0.01: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
-    elif pvalue_cash_TUP2015 <= 0.05: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
-    elif pvalue_cash_TUP2015 <= 0.1: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
-    
-    d_no_FE[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
-                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
-                  round(models_ols_no_FE[outcome].params[0], 3), models_ols_no_FE[outcome].bse[0],
-                  round(models_ols_no_FE[outcome].params[1], 3), models_ols_no_FE[outcome].bse[1], 
-                  round(models_ols_no_FE[outcome].params[2], 3), models_ols_no_FE[outcome].bse[2],
-                  round(models_ols_no_FE[outcome].params[3], 3), models_ols_no_FE[outcome].bse[3],
-                  round(models_ols_no_FE[outcome].params[4], 3), models_ols_no_FE[outcome].bse[4],
-                  round(models_ols_no_FE[outcome].params[5], 3), models_ols_no_FE[outcome].bse[5],
-                  round(models_ols_no_FE[outcome].params[6], 3), models_ols_no_FE[outcome].bse[6],
-                  round(models_ols_no_FE[outcome].params[7], 3), models_ols_no_FE[outcome].bse[7],
-                  models_ols_no_FE[outcome].fvalue, models_ols_no_FE[outcome].nobs,
-                  beta_cash_TUP2014, beta_cash_TUP2015]
-    
-    for x in range(0,8):
-        # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-        if models_ols_no_FE[outcome].pvalues[x] <= 0.01: 
-            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '***'
-        elif models_ols_no_FE[outcome].pvalues[x] <= 0.05: 
-            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '**'
-        elif models_ols_no_FE[outcome].pvalues[x] <= 0.1:
-            d_no_FE[outcome][x*2 + 2] = str(d_no_FE[outcome][x*2 + 2]) + '*'
 
-    del temp_df   
-    
-final_FE = pd.DataFrame(data=d_FE)
-# name the rows of the table
-final_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
-                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
-                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "TUP", 15: "        ",
-                      16: "UCT", 17: "         ", 18: "Bsln NA", 19: "          ",
-                      20: "Bsln2013", 21: "           ", 22: "F-stat", 23: "N", 
-                      24: "Beta_TUP_2014-Beta_Cash_2015", 25: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
+b = b.unstack()
+b['TUP*2014 - UCT*2015'] = b['TUP*2014'] - b['UCT*2015']
+b['TUP*2015 - UCT*2015'] = b['TUP*2015'] - b['UCT*2015']
+b = b.T
 
-newdf_FE = df_to_orgtbl(final_FE, float_fmt = '%.3f')
-print("""#+caption: asset results WITH Tgroup Fixed Effects""")
-print(newdf_FE)
+se = se.unstack()
+se['TUP*2014 - UCT*2015'] = np.sqrt(se['TUP*2014']**2 + se['UCT*2015']**2)
+se['TUP*2015 - UCT*2015'] = np.sqrt(se['TUP*2015']**2 + se['UCT*2015']**2)
 
-final_no_FE = pd.DataFrame(data=d_no_FE)
-# name the rows of the table
-final_no_FE.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
-                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
-                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
-newdf_no_FE = df_to_orgtbl(final_no_FE, float_fmt = '%.3f')
-print("""#+caption: asset results WITHOUT Tgroup Fixed Effects""")
-print(newdf_no_FE)
+se = se.T
+
+print(df_to_orgtbl(b,sedf=se))
 
 #+end_src
 
 #+RESULTS: asset_values
-#+caption: asset results WITH Tgroup Fixed Effects
-|                              |       Total | Productive |  Livestock |
-|------------------------------+-------------+------------+------------|
-| CTL mean                     |    1634.104 |    301.364 |    189.439 |
-|                              |    2406.541 |    580.913 |    523.819 |
-| TUP*2014                     |  645.768*** | 186.369*** | 144.087*** |
-|                              |     172.158 |     45.467 |     39.318 |
-| TUP*2015                     |     326.43* |    77.655* |   89.264** |
-|                              |     172.158 |     45.467 |     39.318 |
-| UCT*2014                     |     207.519 |     53.612 |     10.924 |
-|                              |     217.984 |     57.569 |     49.782 |
-| UCT*2015                     |    -122.541 |    -16.568 |      3.421 |
-|                              |     217.984 |     57.569 |     49.782 |
-| 2014                         | 1291.392*** | 262.936*** |   134.5*** |
-|                              |     149.060 |     39.001 |     33.588 |
-| 2015                         | 1540.804*** | 293.132*** | 181.163*** |
-|                              |     149.060 |     39.001 |     33.588 |
-| TUP                          |  972.198*** | 264.023*** |  233.35*** |
-|                              |     108.895 |     28.759 |     24.879 |
-| UCT                          |      84.979 |     37.044 |     14.346 |
-|                              |     137.905 |     36.415 |     31.494 |
-| Bsln NA                      |       0.000 |      0.000 |      0.000 |
-|                              |       0.000 |      0.000 |      0.000 |
-| Bsln2013                     |    0.042*** |      0.015 |     0.021* |
-|                              |       0.014 |      0.012 |      0.012 |
-| F-stat                       |      15.911 |     15.203 |     16.350 |
-| N                            |    1510.000 |   1510.000 |   1510.000 |
-| Beta_TUP_2014-Beta_Cash_2015 |   768.308** |  202.937** |  140.665** |
-| Beta_TUP_2015-Beta_Cash_2015 |    448.971* |     94.223 |     85.842 |
+|                     | Livestock         | Productive        | Total              |
+|---------------------+-------------------+-------------------+--------------------|
+| 2014                | \(136.050\)       | \(266.011\)^{***} | \(1307.466\)^{***} |
+|                     | (\(90.613\))      | (\(90.987\))      | (\(91.851\))       |
+| 2015                | \(183.209\)^{**}  | \(296.528\)^{***} | \(1559.531\)^{***} |
+|                     | (\(90.613\))      | (\(90.987\))      | (\(91.851\))       |
+| Baseline missing    | \(0.000\)         | \(0.000\)         | \(0.000\)          |
+|                     | (\(0.000\))       | (\(0.000\))       | (\(0.000\))        |
+| Baseline value      | \(0.021\)         | \(0.015\)         | \(0.041\)^{***}    |
+|                     | (\(0.033\))       | (\(0.028\))       | (\(0.009\))        |
+| TUP*2014            | \(378.032\)^{***} | \(450.428\)^{***} | \(1616.088\)^{***} |
+|                     | (\(142.043\))     | (\(142.013\))     | (\(142.011\))      |
+| TUP*2015            | \(322.679\)^{**}  | \(341.078\)^{**}  | \(1293.816\)^{***} |
+|                     | (\(142.043\))     | (\(142.013\))     | (\(142.011\))      |
+| UCT*2014            | \(23.810\)        | \(87.815\)        | \(279.108\)        |
+|                     | (\(179.471\))     | (\(179.457\))     | (\(179.465\))      |
+| UCT*2015            | \(15.810\)        | \(17.314\)        | \(-53.606\)        |
+|                     | (\(179.471\))     | (\(179.457\))     | (\(179.465\))      |
+| TUP*2014 - UCT*2015 | \(362.222\)       | \(433.115\)^{*}   | \(1669.694\)^{***} |
+|                     | (\(228.880\))     | (\(228.851\))     | (\(228.855\))      |
+| TUP*2015 - UCT*2015 | \(306.869\)       | \(323.764\)       | \(1347.422\)^{***} |
+|                     | (\(228.880\))     | (\(228.851\))     | (\(228.855\))      |
 
 #+caption: asset results WITHOUT Tgroup Fixed Effects
 |                              |       Total | Productive |  Livestock |
@@ -4026,12 +3406,470 @@ print(newdf)
 
 
 
+** Consumption
+
+The first outcome of interest we consider is household consumption,
+defined as the market value of goods or services used by the
+household.  A sizable basket of goods were included in the survey
+module. These are separated into three categories: Food items (with a
+3-day recall window), non-durables (a 30-day recall window), and
+durables and large expenditures (a one-year recall window).  We think
+that data on consumption provides the most appropriate measure of household
+welfare in our survey.
+
+\Tab{consumption} reports on consumption expenditures aggregated
+according to the period of recall.  There were large changes in prices
+during the course of our experiment, and small changes in the way the
+survey elicited item-level expenditures.  Both of these kinds of
+changes make comparisons across time difficult to interpret, and might
+make comparisons of total consumption misleading.
+
+These data do permit us to answer the central question we're
+interested in: what are the effects on consumption, about eight months
+later, of enrolling randomly selected households into the TUP program
+versus giving them a cash transfer of roughly equal value?  We
+measured the effect of cash on a three-day recall of food consumption
+12 months after the transfer, and find a statistically significant
+increase of 14.8 SSP per day.  We first measured the effect of the TUP
+program on average food consumption 6--9 months after the asset
+transfers, and found a slightly larger effect of 18.4 SSP. The
+differences between these two are not significant (see the \(t\)-test
+in the row labeled $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$), and both
+result in a 13--17% increase in the value of food expenditures
+relative to the control group mean in 2015.
+
+Turning our attention to consumption expenditures involving a monthly
+recall period, both programs have positive effects of similar
+magnitude, significant at the 10% level.  Differences between the two
+are not significant. 
+
+At annual frequencies we discover a significant difference: the effect
+of the TUP program on average annual durable expenditures is
+significantly greater (at the 10% level) than the effect of the UCT
+program, with the average difference equal to 484 SSP, a 46% increase
+relative to the average expenditures of the control group in 2015.
+
+#+name: consumption_tables
+#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle consumption_tables.py
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from scipy import stats
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+# set Respondent ID number as the index
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+# missing s20_6m_b and s20_7m_b in monthly for baseline - should be othermonth b
+df_b.insert(len(df_b.columns), 'c_othermonth_b', df_b[ ['s20_6m_b', 's20_7m_b'] ].sum(axis=1))
+
+# find variables that start with "c_" and remove "c_" and remove "_b", "_m", or "_e"
+c2013 = df_b.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
+c2014 = df_m.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
+c2015 = df_e.filter(regex='^c_').rename(columns=lambda x: x[2:-2])
+
+c2013['Year'] = '2013'
+c2014['Year'] = '2014'
+c2015['Year'] = '2015'
+
+# missing durables from monthly for midline in previous code - added it in
+# doesn't make sense to ask for clothing and footwear in total and then women's clothes, children's clothes, school uniforms, shoes in midline and endline
+# ^ and they don't always sum up - change this?
+# #some not asked for in baseline
+
+food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
+month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'durables', 'church', 'othermonth']    
+year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
+
+outcomes = ["Food", "Monthly", "Yearly"]
+
+# not replacing 0s with np.nan; seems to be 4 observations that have legitimate 0s
+for var in (c2013, c2014, c2015):
+    
+    var["Food"] = var.filter(items=food).sum(axis=1)
+    var["Monthly"] = var.filter(items=month).sum(axis=1)
+    var["Yearly"] = var.filter(items=year).sum(axis=1)
+    
+    # set up to make year dummies
+    var['2013'] = 0
+    var['2014'] = 0
+    var['2015'] = 0
+    
+    # set up baseline2013 variables
+    for outcome in outcomes: 
+        var[outcome+'2013'] = c2013[outcome]
+
+# make year dummies
+c2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
+c2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
+c2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((c2013, c2014, c2015))
+# add group dummies from master_assignment.csv
+df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
+
+# make interaction terms
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+models_ols = {}
+b = {}
+se = {}
+
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+
+if FE:
+    controls += ['TUP', 'UCT']
+
+# remove observations from 2013, since conditioning on baseline
+df = df[df['Year'] != '2013']
+
+for outcome in outcomes: 
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
+    temp_controls = controls
+    temp_df.rename(columns={outcome + "2013":'Baseline Value'},inplace=True)
+    
+    if baseline_na==True:
+        
+        # indicator for whether outcome in 2013 is na, and cast it to be an integer
+        temp_df["Baseline missing"] = temp_df['Baseline Value'].isnull().apply(int)
+        
+        # code missing values of the baseline variable as 0
+        temp_df['Baseline Value'].fillna(0,inplace=True)
+        
+        temp_controls = temp_controls + ['Baseline missing']
+    
+    temp_controls = temp_controls + ['Baseline Value']
+    temp_df = temp_df.dropna()
+    
+    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
+
+    # for computing the mean of the control group in 2015
+    controlgroup = temp_df[temp_df['Control'] == 1]
+    
+    """for table with Fixed Effects"""
+
+    b[outcome] = models_ols[outcome].params
+    se[outcome] = models_ols[outcome].bse
+    
+    b[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].mean()
+    se[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].std()/np.sqrt(controlgroup[controlgroup['2015'] == 1][outcome].count())
+
+    b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["t"][0]
+
+    b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["t"][0]
+
+b = pd.DataFrame(b)
+se = pd.DataFrame(se)
+
+print("#+name: tab:consumption_w_fe")
+print("#+caption: Consumption Results")
+print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
+
+
+#+end_src
+
+#+RESULTS: consumption_tables
+#+name: tab:consumption_w_fe
+#+caption: Effect on consumption expenditures with different periods of recall.  Food expenditures are for the past three days, non-durable non-food for the past month, and durables the past year.
+|                                         | Food (3-day) | Monthly      | Yearly        |
+|-----------------------------------------+--------------+--------------+---------------|
+| TUP*2014                                | 18.41^{***}  | 59.23^{*}    | 435.43^{**}   |
+|                                         | (5.92)       | (31.20)      | (176.15)      |
+| TUP*2015                                | 1.82         | 34.76        | -8.48         |
+|                                         | (5.62)       | (29.65)      | (167.41)      |
+| UCT*2014                                | -3.80        | 32.96        | -170.68       |
+|                                         | (7.34)       | (38.70)      | (218.48)      |
+| UCT*2015                                | 14.18^{**}   | 69.81^{*}    | -48.24        |
+|                                         | (7.20)       | (37.96)      | (214.33)      |
+| 2014                                    | 73.52^{***}  | 259.41^{***} | 808.30^{***}  |
+|                                         | (4.87)       | (23.51)      | (125.90)      |
+| 2015                                    | 103.00^{***} | 294.59^{***} | 1022.19^{***} |
+|                                         | (4.56)       | (21.91)      | (115.48)      |
+| Baseline missing                        | 15.72^{**}   | -13.31       | 17.33         |
+|                                         | (6.50)       | (32.81)      | (180.06)      |
+| Baseline value                          | 0.06^{*}     | -0.05        | 0.04          |
+|                                         | (0.03)       | (0.14)       | (0.03)        |
+|-----------------------------------------+--------------+--------------+---------------|
+| Control mean (2015)                     | 110.34^{***} | 288.60^{***} | 1051.76^{***} |
+|                                         | (3.89)       | (16.56)      | (103.24)      |
+| $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$ | 4.23         | -10.58       | 483.67^{*}    |
+|                                         | (9.17)       | (48.36)      | (273.11)      |
+| $\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$ | -12.36^{*}   | -35.06       | 39.77         |
+|                                         | (7.45)       | (39.29)      | (221.80)      |
+
+It is worth noting that the effects of the TUP program on consumption
+are not lasting---two years after the distribution of assets (in 2015)
+the average consumption expenditures in the TUP group are not
+significantly different from that of the control across all types of
+consumption.  The delayed roll-out of UCT intervention means that we
+can't measure the two-year effects of this program on these measures
+of consumption.
+
+** Food Insecurity
+
+Observed changes in total consumption don't translate into significant
+decreases in reported food insecurity.  In each year, we ask how often
+in a given week the respondent has had experiences indicative of food
+insecurity. Included are (from left to right) eating "fewer meals"
+during the day than usual; going a whole day without eating, going to
+"sleep hungry"; having "no food in the house"; eating only "limited
+portions" at mealtimes; going the "whole day without eating"; and
+being "worried" about not having enough food.  The rows corresponding
+to 2014 and 2015 can be interpreted as the proportion of people who
+report experiencing each in a typical week.  While average levels of
+these variables indicate very high food insecurity, and a large
+increase in food insecurity between 2014 and 2015, the estimated
+effects of both the TUP and UCT programs are comparatively small and
+are generally statistically insignificant.
+
+*** Notes on Recreating food insecurity table                      :noexport:
+
+The table looks at whether respondents experienced going a whole
+day without eating, limiting portions, etc. in a typical week.  
+The z-score is calculated by taking the sum of binary variables 'worried', 
+'portions', 'fewmeals', 'nofood', 'hungry', 'wholeday' for each
+individual, separately at baseline, midline, and endline. Call that
+'fs_sum_m' for an individual's sum at midline. Then their z-score at
+midline  would be (fs_sum_m - fs_sum_m.mean())/fs_sum_m.std(). CTL
+mean lists the mean and standard deviation of the control group in 2015.
+
+Differences with previous code: 
+-correction for what should be considered "weekly" (this code
+includes "Everyday", "3-6 times a week", and "1-2 times a week" as
+being considered weekly, whereas the previous code left out "1-2 times a week")
+-This code adds 'worried' to the table. It uses 'worried' to
+calculate the z-score, which  was also used to calculate
+the z-score in the previous table.
+
+Next steps: 
+-change how the z-score is being calculated because .sum(axis=1)
+equates NaN to 0, so some respondents who had NaN for every measure
+will still have a z-score, hence the higher N for 'z-score' than for
+the other variables
+-divide the standard deviation of CTL mean by the sqrt of the number of control
+observations to make it comparable with the other point estimates and
+standard errors in the table?
+-add another column with f statistic for joint hypothesis that all coefficients are equal to 0
+
+#+name: food_insecurity
+#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=1 :colnames no :tangle food_security.py
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from scipy import stats
+from scipy.linalg import block_diag
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment).rename(columns={'RespID':'idno'})
+
+# set Respondent ID number as the index
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('idno', inplace=True)
+
+df_b['Year'] = 2013
+df_m['Year'] = 2014
+df_e['Year'] = 2015
+
+# merge baseline and midline based on idno index
+df = pd.merge(df_b[ ['Year','fs_worried_b', 'fs_portions_b', 
+                     'fs_fewmeals_b', 'fs_nofood_b', 
+                     'fs_hungry_b', 'fs_wholeday_b'] ], 
+              df_m[ ['Year','fs_worried_m', 'fs_portions_m', 
+                      'fs_fewmeals_m', 'fs_nofood_m', 
+                      'fs_hungry_m', 'fs_wholeday_m'] ], 
+              how='outer', left_index=True, right_index=True)
+
+# merge baseline/midline and endline based on idno index
+df = pd.merge(df, 
+              df_e[ ['Year','fs_worried_e', 'fs_portions_e', 
+                     'fs_fewmeals_e', 'fs_nofood_e', 
+                     'fs_hungry_e', 'fs_wholeday_e'] ], 
+              how='outer', left_index=True, right_index=True)
+
+# replace words with their corresponding code number from the survey
+df.replace({"Everyday": 1,
+            "everyday": 1,
+            "3-6 times a week": 2,
+            "1-2 times a week": 3,
+            "Less than once a week": 4,
+            "less than once a week": 4,
+            "Never": 5,
+            "never": 5}, inplace=True)
+
+# for weekly, replace 4 and 5 with 0, and 1, 2, and 3 with 1
+df.replace({1: 1, 2: 1, 3: 1, 4: 0, 5: 0}, inplace=True)
+
+# find columns that start with "fs_" and end with "_b", "_m", or "_e"
+# cut off the first 3 characters "fs_" and the last 2 "_b", "_m", or "_e"
+fs2013 = df.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2])
+fs2014 = df.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2])
+fs2015 = df.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2])
+
+fs2013['Year'] = '2013'
+fs2014['Year'] = '2014'
+fs2015['Year'] = '2015'
+
+# used to calculate the z-score
+index_vars = ['worried', 'portions', 'fewmeals', 'nofood', 'hungry', 'wholeday']
+outcomes = ['z-score'] + index_vars 
+
+for FS in (fs2013, fs2014, fs2015): 
+    fs_sum = FS[index_vars].sum(axis=1)
+    FS['z-score'] = (fs_sum - fs_sum.mean())/fs_sum.std()
+    
+    # set up to make year dummies
+    FS.insert(len(FS.columns), '2013', 0)
+    FS.insert(len(FS.columns), '2014', 0)
+    FS.insert(len(FS.columns), '2015', 0)
+    
+    # baseline values as 'var'2013
+    for var in outcomes: 
+        FS[var+'2013'] = fs2013[var]
+    
+# make year dummmies
+fs2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
+fs2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
+fs2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((fs2013, fs2014, fs2015))
+# make group dummies using 'Group' from master_assignment.csv
+df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
+
+# make interaction variables
+df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
+df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+baseline_na = True
+
+controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+outcomes = ['z-score', 'wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
+outcomes = ['wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
+
+# remove observations from 2013
+df = df[df['Year'] != '2013']
+df = df.reset_index().set_index(['idno','Year'])
+
+myX = {}
+myY = {}
+for outcome in outcomes: 
+    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
+    temp_df.rename(columns={outcome+"2013":'Baseline value'},inplace=True)
+    temp_controls = controls
+    
+    if baseline_na==True:
+        
+        # indicator for whether outcome in 2013 is na, and cast it to be an integer
+        temp_df["Baseline missing"] = temp_df["Baseline value"].isnull().apply(int)
+        
+        # code missing values of the baseline variable as 0
+        temp_df["Baseline missing"].fillna(0,inplace=True)
+        
+        temp_controls = temp_controls + ['Baseline missing']
+    
+    temp_controls = temp_controls + ["Baseline value"]
+    temp_df = temp_df.dropna()
+
+    myX[outcome] = temp_df[temp_controls]
+    myY[outcome] = temp_df[outcome]
+
+myY = pd.concat(myY)
+myX = pd.DataFrame(block_diag(*myX.values()),
+                   columns=pd.concat(myX,axis=1).columns,
+                   index=myY.index)
+    
+est = sm.OLS(myY,myX).fit()
+b = est.params
+se = est.bse
+
+b.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])
+se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])    
+
+
+b = b.unstack()
+b['TUP*2014 - UCT*2015'] = b['TUP*2014'] - b['UCT*2015']
+b['TUP*2015 - UCT*2015'] = b['TUP*2015'] - b['UCT*2015']
+b = b.T
+b.rename(columns={'worried':'Worried', 'portions':'Limited portions', 'fewmeals':'Fewer Meals', 'nofood':'No food in house', 'hungry':'Went hungry', 'wholeday':'Whole day without eating'},inplace=True)
+
+se = se.unstack()
+se['TUP*2014 - UCT*2015'] = np.sqrt(se['TUP*2014']**2 + se['UCT*2015']**2)
+se['TUP*2015 - UCT*2015'] = np.sqrt(se['TUP*2015']**2 + se['UCT*2015']**2)
+
+se = se.T
+se.rename(columns={'worried':'Worried', 'portions':'Limited portions', 'fewmeals':'Fewer Meals', 'nofood':'No food in house', 'hungry':'Went hungry', 'wholeday':'Whole day without eating'},inplace=True)
+
+print(df_to_orgtbl(b,sedf=se))
+#+end_src
+
+*** food insecurity table                                            :ignore:
+
+#+name: tab:food_insecurity
+#+RESULTS: food_insecurity
+|                     | Fewer Meals     | Went hungry     | No food in house | Limited portions | Whole day without eating | Worried         |
+|---------------------+-----------------+-----------------+------------------+------------------+--------------------------+-----------------|
+| 2014                | \(0.716\)^{***} | \(0.370\)^{***} | \(0.470\)^{***}  | \(0.660\)^{***}  | \(0.369\)^{***}          | \(0.758\)^{***} |
+|                     | (\(0.046\))     | (\(0.036\))     | (\(0.040\))      | (\(0.036\))      | (\(0.035\))              | (\(0.050\))     |
+| 2015                | \(0.735\)^{***} | \(0.430\)^{***} | \(0.561\)^{***}  | \(0.795\)^{***}  | \(0.461\)^{***}          | \(0.917\)^{***} |
+|                     | (\(0.044\))     | (\(0.034\))     | (\(0.038\))      | (\(0.034\))      | (\(0.033\))              | (\(0.048\))     |
+| Baseline missing    | \(0.000\)       | \(0.000\)       | \(0.000\)        | \(0.000\)        | \(0.000\)                | \(0.000\)       |
+|                     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))      | (\(0.000\))      | (\(0.000\))              | (\(0.000\))     |
+| Baseline value      | \(0.014\)       | \(0.058\)^{**}  | \(0.050\)        | \(0.027\)        | \(0.010\)                | \(-0.030\)      |
+|                     | (\(0.038\))     | (\(0.028\))     | (\(0.033\))      | (\(0.028\))      | (\(0.028\))              | (\(0.043\))     |
+| TUP*2014            | \(-0.037\)      | \(-0.058\)      | \(-0.085\)^{*}   | \(0.065\)        | \(-0.020\)               | \(0.055\)       |
+|                     | (\(0.044\))     | (\(0.043\))     | (\(0.044\))      | (\(0.044\))      | (\(0.044\))              | (\(0.044\))     |
+| TUP*2015            | \(0.063\)       | \(0.079\)^{*}   | \(0.025\)        | \(-0.014\)       | \(0.013\)                | \(-0.019\)      |
+|                     | (\(0.041\))     | (\(0.041\))     | (\(0.042\))      | (\(0.042\))      | (\(0.042\))              | (\(0.042\))     |
+| UCT*2014            | \(-0.012\)      | \(-0.017\)      | \(0.015\)        | \(0.037\)        | \(-0.017\)               | \(0.052\)       |
+|                     | (\(0.053\))     | (\(0.053\))     | (\(0.054\))      | (\(0.054\))      | (\(0.054\))              | (\(0.053\))     |
+| UCT*2015            | \(0.037\)       | \(0.048\)       | \(0.051\)        | \(-0.009\)       | \(-0.015\)               | \(-0.010\)      |
+|                     | (\(0.052\))     | (\(0.052\))     | (\(0.053\))      | (\(0.053\))      | (\(0.053\))              | (\(0.052\))     |
+| TUP*2014 - UCT*2015 | \(-0.073\)      | \(-0.105\)      | \(-0.136\)^{**}  | \(0.074\)        | \(-0.004\)               | \(0.065\)       |
+|                     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))      | (\(0.068\))      | (\(0.069\))              | (\(0.068\))     |
+| TUP*2015 - UCT*2015 | \(0.027\)       | \(0.032\)       | \(-0.026\)       | \(-0.005\)       | \(0.028\)                | \(-0.008\)      |
+|                     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))      | (\(0.067\))      | (\(0.068\))              | (\(0.067\))     |
+
+
+
 ** Exposure to Conflict
 
 In 2014, households were surveyed shortly after the NGO's offices had re-opened in
 the wake of the outbreak of widespread armed conflict. Respondents were asked a short
 set of questions about whether they were directly affected, and if so, in what way.
-There has only been a few incidents of violence near Yei town at that point, and the most
+There had only been a few incidents of violence near Yei town at that point, and the most
 directly involved ethnic groups made up a small portion of the local population. There
 is no clear comparison group to which we might compare our sample, and the economic
 climate changed over this same period in several ways that were probably not directly
