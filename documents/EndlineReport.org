@@ -144,7 +144,6 @@ to a control group, and another 96 eligible households who were /not/
 interviewed at baseline. 
 
 ** The TUP Program
->>>>>>> 1ced568e195a75af9b4d74c8f4f32dfee2a38ed6
    
 The TUP program itself is similar to the other TUP/Graduation
 programs completed by BRAC elsewhere.  BRAC designed several possible
@@ -263,7 +262,7 @@ delivered in cash distinguishes these from several other cash transfer
 programs.  For example, cite:haushofer-shapiro16 deposited funds in a
 bank or mobile money account, while cite:fafchamps-etal14 used money
 transfers.  In all of these experiments transfers were denominated in
-the local currency.  Howver, experimental studies of the behavioral
+the local currency.  However, experimental studies of the behavioral
 implications of savings accounts citep:dupas-robinson13 would lead one
 to expect that the method of disbursal might affect the propensity to
 save a cash transfer.
@@ -311,143 +310,16 @@ asset transfers.
 
 We start by checking whether either treatment arm appears significantly different
 from the control group in terms of average baseline observable characteristics.
-\Tab{balance_check} presents summary statistics by group on a range of factors
-related to consumption, asset holdings, and household characteristics.
-
-*** Output from Elliott's code (older version)              :ignore:noexport:
-#+name: balance_check
-#+BEGIN_SRC python :dir ../analysis :results value table :exports none
-import check_balance
-return check_balance.tables
-#+END_SRC
-
-
-#+name: tab:balance_check
-#+caption: Means of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively
-#+attr_latex: :environment longtable :align lrrrrr
-|-----------------+---------+--------------+--------------+-----|
-| Consumption     |     CTL | $\Delta$ TUP | $\Delta$ CSH | $N$ |
-|-----------------+---------+--------------+--------------+-----|
-| Meat            |    4.21 |       -0.568 |       -0.052 | 378 |
-| Fuel            |    0.76 |       -0.039 |       -0.072 | 456 |
-| Clothesfootwear |    0.67 |       -0.026 |        0.033 | 595 |
-| Soap            |    0.48 |       -0.008 |       -0.026 | 536 |
-| Fish            |    2.50 |       -0.154 |       -0.156 | 474 |
-| Charities       |    0.03 |       -0.006 |          0.0 | 134 |
-| Cereals         |    9.19 |       -0.947 |         0.27 | 605 |
-| Transport       |    0.18 |       -0.033 |        0.002 | 193 |
-| Cosmetics       |    0.68 |        0.027 |       -0.125 | 468 |
-| Sugar           |    1.71 |       -0.078 |       -0.189 | 604 |
-| Egg             |    1.10 |       -0.091 |        0.038 | 276 |
-| Oil             |    1.36 |        -0.13 |       -0.141 | 613 |
-| Ceremonies      |    0.13 |        0.006 |        0.026 | 152 |
-| Beans           |    0.70 |        0.232 |        0.226 | 192 |
-| Fruit           |    0.69 |       -0.089 |        0.001 | 272 |
-| Textiles        |    0.16 |       -0.004 |  $0.056^{*}$ | 376 |
-| Utensils        |    0.25 |       -0.009 |        0.008 | 442 |
-| Dowry           |    1.27 |       -0.041 |        0.028 | 126 |
-| Furniture       |    0.20 |       -0.014 |        0.045 | 368 |
-| Salt            |    0.45 |       -0.026 |        0.007 | 617 |
-| Vegetables      |    1.54 |       -0.165 |        -0.18 | 471 |
-|-----------------+---------+--------------+--------------+-----|
-| Assets          |     CTL | $\Delta$ TUP | $\Delta$ CSH | $N$ |
-|-----------------+---------+--------------+--------------+-----|
-| Smallanimals    |  236.60 |      -86.068 |     -123.133 | 123 |
-| Bicycle         |  109.08 |      -12.555 |      -11.414 | 171 |
-| Radio           |   58.45 |       -5.968 |      -16.529 | 260 |
-| Motorcycle      |  341.74 |      192.956 | 353.836^{**} |  93 |
-| Net             |   19.16 |        0.668 |        0.247 | 423 |
-| Poultry         |   42.40 |       -3.365 |       -8.894 | 161 |
-| Bed             |  241.27 |        7.992 |       32.762 | 521 |
-| Chairtables     |  206.79 |      -29.368 |        3.617 | 531 |
-| Mobile          |   97.54 |       12.627 |       -4.198 | 414 |
-| Netitn          |    7.82 |        1.215 |        1.178 | 181 |
-| Cosmetics       |    0.68 |        0.027 |       -0.125 | 468 |
-|-----------------+---------+--------------+--------------+-----|
-| Household       |     CTL | $\Delta$ TUP | $\Delta$ CSH | $N$ |
-|-----------------+---------+--------------+--------------+-----|
-| Daily Food      |   25.18 |       -2.215 |       -0.261 | 643 |
-| Daily Exp       |   29.90 |       -2.167 |       -0.288 | 646 |
-| No. Houses      |    2.83 |        0.031 |        0.118 | 543 |
-| In Business     |    0.40 |        0.038 |        0.017 | 265 |
-| Cereals         |    9.19 |       -0.947 |         0.27 | 605 |
-| # Child         |    3.26 |        0.118 |        0.108 | 594 |
-| Asset Tot.      | 1757.05 |      -44.791 |       98.654 | 603 |
-| Cash Savings    |  236.90 |        28.52 |      -66.812 | 431 |
-| HH size         |    7.23 |       -0.175 |          0.3 | 648 |
-|-----------------+---------+--------------+--------------+-----|
-
-This is simply suggestive evidence that the treatment and control groups were similar
-in observables at baseline, with the exception that the cash group has atypically
-more motorcycles and clothing. But it does suggests that our stratified randomization
-was not too far from creating comparable group
-*** Output from Ethan's code (newer version)                :ignore:noexport:
-#+name: balance_check_2
-#+BEGIN_SRC python :dir ../analysis :results output raw
-import check_balance
-#+END_SRC
-
-#+RESULTS: balance_check_2
-| Consumption               |   CTL |       TUP |        CSH |
-|---------------------------+-------+-----------+------------|
-| Cereals                   |   9.0 |       8.2 |        9.5 |
-| Beans                     |   0.7 |       0.9 |        0.9 |
-| Oil                       |   1.3 |       1.2 |        1.2 |
-| Salt                      |   0.4 |       0.4 |        0.5 |
-| Sugar                     |   1.7 |       1.6 |        1.5 |
-| Meat                      |   4.1 |       3.6 |        4.2 |
-| Fish                      |   2.4 |       2.4 |        2.3 |
-| Egg                       |   1.0 |       1.0 |        1.1 |
-| Milk                      |   1.0 |       1.0 |        1.1 |
-| Vegetables                |   1.5 |       1.4 |        1.4 |
-| Fruit                     |   0.6 |       0.6 |        0.7 |
-| Spices                    |   0.2 |       0.3 |        0.2 |
-| Alcohol                   |   0.0 |       0.0 |        0.0 |
-| Other foods               |   0.0 |       0.0 |        0.0 |
-| Fuel                      |   0.8 |       0.7 |        0.7 |
-| Cosmetics                 |   0.7 |       0.7 |        0.6 |
-| Soap                      |   0.5 |       0.5 |        0.5 |
-| Transport                 |   0.2 |       0.1 |        0.2 |
-| Entertainment             |   0.1 |       0.1 |        0.1 |
-| Clothes & footwear        |   0.7 |       0.6 |        0.7 |
-| Utensils                  |   0.2 |       0.2 |        0.3 |
-| Furniture                 |   0.2 |       0.2 |        0.2 |
-| Textiles                  |   0.1 |       0.1 |    0.2^{*} |
-| Ceremonies                |   0.1 |       0.1 |        0.2 |
-| Charities                 |   0.0 |       0.0 |        0.0 |
-| Dowry                     |   1.3 |       1.2 |        1.3 |
-| Other                     |   0.0 |       0.0 |        0.0 |
-|---------------------------+-------+-----------+------------|
-| Asset                     |   CTL |       TUP |        CSH |
-|---------------------------+-------+-----------+------------|
-| Cows                      | 261.8 |     112.7 |      153.6 |
-| Small animals             | 252.1 |     150.5 | 113.5^{**} |
-| Poultry                   |  43.8 |      39.0 |       33.5 |
-| Plough                    |   0.0 |       0.0 |        0.0 |
-| Shed                      |   1.8 |  0.0^{**} |        1.6 |
-| Shop                      |  95.5 |      79.4 |       69.8 |
-| Radio                     |  57.6 |      52.5 |       41.9 |
-| Tv                        |  29.0 |      45.9 |       36.1 |
-| Fan                       |   1.6 |       1.8 |    6.0^{*} |
-| Mobile                    |  92.1 | 110.2^{*} |       93.3 |
-| Chairs & Tables           | 205.6 |     177.4 |      210.4 |
-| Bed                       | 232.3 |     249.3 |      274.0 |
-| Bicycle                   | 112.4 |      96.5 |       97.7 |
-| Carts                     |   2.6 |       3.5 |        1.6 |
-| Sewing                    |  12.5 |       5.0 |   1.2^{**} |
-| Net                       |  19.3 |      19.8 |       19.4 |
-| Motorcycle                | 342.7 |     534.7 | 695.6^{**} |
-|---------------------------+-------+-----------+------------|
-| Household characteristics |   CTL |       TUP |        CSH |
-|---------------------------+-------+-----------+------------|
-| HH size                   |   7.3 |       7.1 |        7.5 |
-| # Children                |   3.3 |       3.4 |        3.4 |
-| # Houses                  |   2.8 |       2.9 |        2.9 |
-| In Business               |   0.4 |       0.4 |        0.4 |
-|---------------------------+-------+-----------+------------|
-| $N$                       |   125 |       262 |        249 |
-
-
+Table [[tab:balance_check]] presents summary statistics by group on a range of factors
+related to consumption, asset holdings, and household
+characteristics.  Of all of these baseline characteristics, the only
+cases in which we can reject the null of equality with the control
+group are for the value of motorcycles and textiles.  The mean value
+depends on both /whether/ a household possesses these assets, and
+conditional on possession, the value of the asset.  Particularly for
+the case of motorcycles one wonders whether a small difference in
+rates of ownership might account for the difference, rather than the
+value of the asset conditional on ownership.
 
 *** Creation of master random assignment file                        :ignore:
 # This code creates a file which contains all of the assignments to
@@ -635,72 +507,68 @@ plt.savefig("motorcycle_Elliott.png")
 
 #+end_src
 
-#+RESULTS: mean_balance
-|                        | Control | $\Delta$ TUP | $\Delta$ UCT |   N |
-|------------------------+---------+-----------+-----------+-----|
-| Meat                   |   4.205 |    -0.568 |    -0.052 | 378 |
-| Fish                   |   2.505 |    -0.154 |    -0.156 | 474 |
-| Cereals                |   9.187 |    -0.947 |      0.27 | 605 |
-| Sugar                  |   1.713 |    -0.078 |    -0.189 | 604 |
-| Egg                    |   1.096 |    -0.091 |     0.038 | 276 |
-| Oil                    |   1.364 |    -0.131 |    -0.141 | 613 |
-| Beans                  |   0.696 |     0.231 |     0.226 | 192 |
-| Fruit                  |    0.69 |    -0.089 |       0.0 | 272 |
-| Salt                   |   0.447 |    -0.026 |     0.007 | 617 |
-| Vegetables             |   1.543 |    -0.165 |     -0.18 | 471 |
-| Milk                   |   1.284 |    -0.237 |    -0.232 | 114 |
-| Spices                 |    0.23 |     0.024 |    -0.045 | 158 |
-| Alcohol                |   0.043 |     0.006 |    -0.029 |  18 |
-| Other food             |     0.0 |       0.0 |       0.0 |   0 |
-| Cooking fuel           |   0.762 |    -0.039 |    -0.072 | 456 |
-| Toiletries             |   0.483 |    -0.009 |    -0.026 | 536 |
-| Transportation         |   0.176 |    -0.033 |     0.002 | 193 |
-| Cosmetics              |   0.682 |     0.027 |    -0.125 | 468 |
-| Entertainment          |   0.087 |    -0.024 |     -0.02 | 145 |
-| Clothing, footwear     |   0.658 |    -0.026 |     0.033 | 595 |
-| Charities              |    0.03 |    -0.006 |      -0.0 | 134 |
-| Rituals/ceremonies     |   0.132 |     0.007 |     0.026 | 152 |
-| Textiles               |   0.154 |    -0.005 |    0.055* | 376 |
-| Utensils               |   0.246 |    -0.008 |     0.008 | 442 |
-| Dowry                  |   1.256 |     -0.04 |     0.028 | 126 |
-| Furniture              |   0.196 |    -0.014 |     0.044 | 368 |
-| Other non-food         |     0.0 |       0.0 |       0.0 |   0 |
-| Large livestock (cows) |  253.31 |  -140.605 |   -99.681 |  35 |
-| Small livestock        | 236.601 |   -86.069 |  -123.134 | 123 |
-| Bicycle                | 109.075 |   -12.554 |   -11.413 | 171 |
-| Radio                  |  58.448 |    -5.969 |   -16.529 | 260 |
-| Motorcycle             | 341.737 |   192.956 | 353.836** |  93 |
-| Mosquito net           |  19.164 |     0.668 |     0.248 | 423 |
-| Poultry                |  42.402 |    -3.365 |    -8.894 | 161 |
-| Bed                    |  241.27 |     7.992 |    32.762 | 521 |
-| Chair/table            | 206.786 |   -29.368 |     3.617 | 531 |
-| Mobile phone           |  97.537 |    12.627 |    -4.199 | 414 |
-| Mosquito net ITN       |   7.822 |     1.215 |     1.178 | 181 |
-| # Houses               |   2.829 |      0.03 |     0.118 | 543 |
-| In business            |   0.398 |     0.038 |     0.017 | 265 |
-| # Child                |   3.263 |     0.118 |     0.108 | 594 |
-| Household size         |   7.232 |    -0.175 |       0.3 | 648 |
 
-*** Box and whisker plots for Elliott's balance table              :noexport:
-
-#+Caption: Box and whisker plot of textiles means
-#+NAME: fig:box_whisker_textiles_Elliott
-[[../documents/textiles_Elliott.png]]
-
-#+Caption: Box and whisker plot of motorcycles means
-#+NAME: fig:box_whisker_motorcycles_Elliott
-[[../documents/motorcycle_Elliott.png]]
-
+#+name: tab:balance_check
+#+caption: Means of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively
+#+attr_latex: :environment longtable :align lrrrr
+| Variable               | Control | $\Delta$ TUP | $\Delta$ UCT |   N |
+|------------------------+---------+--------------+--------------+-----|
+| Meat                   |   4.205 |       -0.568 |       -0.052 | 378 |
+| Fish                   |   2.505 |       -0.154 |       -0.156 | 474 |
+| Cereals                |   9.187 |       -0.947 |         0.27 | 605 |
+| Sugar                  |   1.713 |       -0.078 |       -0.189 | 604 |
+| Egg                    |   1.096 |       -0.091 |        0.038 | 276 |
+| Oil                    |   1.364 |       -0.131 |       -0.141 | 613 |
+| Beans                  |   0.696 |        0.231 |        0.226 | 192 |
+| Fruit                  |    0.69 |       -0.089 |          0.0 | 272 |
+| Salt                   |   0.447 |       -0.026 |        0.007 | 617 |
+| Vegetables             |   1.543 |       -0.165 |        -0.18 | 471 |
+| Milk                   |   1.284 |       -0.237 |       -0.232 | 114 |
+| Spices                 |    0.23 |        0.024 |       -0.045 | 158 |
+| Alcohol                |   0.043 |        0.006 |       -0.029 |  18 |
+| Other food             |     0.0 |          0.0 |          0.0 |   0 |
+| Cooking fuel           |   0.762 |       -0.039 |       -0.072 | 456 |
+| Toiletries             |   0.483 |       -0.009 |       -0.026 | 536 |
+| Transportation         |   0.176 |       -0.033 |        0.002 | 193 |
+| Cosmetics              |   0.682 |        0.027 |       -0.125 | 468 |
+| Entertainment          |   0.087 |       -0.024 |        -0.02 | 145 |
+| Clothing, footwear     |   0.658 |       -0.026 |        0.033 | 595 |
+| Charities              |    0.03 |       -0.006 |         -0.0 | 134 |
+| Rituals/ceremonies     |   0.132 |        0.007 |        0.026 | 152 |
+| Textiles               |   0.154 |       -0.005 |       0.055* | 376 |
+| Utensils               |   0.246 |       -0.008 |        0.008 | 442 |
+| Dowry                  |   1.256 |        -0.04 |        0.028 | 126 |
+| Furniture              |   0.196 |       -0.014 |        0.044 | 368 |
+| Other non-food         |     0.0 |          0.0 |          0.0 |   0 |
+| Large livestock (cows) |  253.31 |     -140.605 |      -99.681 |  35 |
+| Small livestock        | 236.601 |      -86.069 |     -123.134 | 123 |
+| Bicycle                | 109.075 |      -12.554 |      -11.413 | 171 |
+| Radio                  |  58.448 |       -5.969 |      -16.529 | 260 |
+| Motorcycle             | 341.737 |      192.956 |    353.836** |  93 |
+| Mosquito net           |  19.164 |        0.668 |        0.248 | 423 |
+| Poultry                |  42.402 |       -3.365 |       -8.894 | 161 |
+| Bed                    |  241.27 |        7.992 |       32.762 | 521 |
+| Chair/table            | 206.786 |      -29.368 |        3.617 | 531 |
+| Mobile phone           |  97.537 |       12.627 |       -4.199 | 414 |
+| Mosquito net ITN       |   7.822 |        1.215 |        1.178 | 181 |
+| # Houses               |   2.829 |         0.03 |        0.118 | 543 |
+| In business            |   0.398 |        0.038 |        0.017 | 265 |
+| # Child                |   3.263 |        0.118 |        0.108 | 594 |
+| Household size         |   7.232 |       -0.175 |          0.3 | 648 |
 
 *** Creating a new balance table with only nonzero values counting toward the mean :ignore:
 
-The following table shows the means of log expenditures, with
-expenditures of zero treated as missing data.
+To explore this, Table [[tab:mean_log_balance]] reports the means of log expenditures, with
+expenditures of zero treated as missing data; thus these figures are
+conditional on ownership.  We see from this table that there  are no
+significant differences between the control and treatment groups;
+thus, rejections in the previous table can be attributed to
+differences in rates of ownership.
 
 # N represents the number of nonzero values, and only nonzero values
 # are considered in calculations of the means
 
-#+name: mean_balance_only_nonzero_values
+#+name: mean_log_balance
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
@@ -828,8 +696,10 @@ plt.savefig("mobile_nonzero.png")
 
 #+end_src
 
-#+RESULTS: mean_balance_only_nonzero_values
-|                                | Control | $\Delta$ TUP | $\Delta$ UCT | $N$ |
+#+name: tab:mean_log_balance
+#+caption: Means of logs of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively.  Zeros are treated as missing.
+#+attr_latex: :environment longtable :align lrrrr
+| Variable                       | Control | $\Delta$ TUP | $\Delta$ UCT | $N$ |
 |--------------------------------+---------+--------------+--------------+-----|
 | Meat (last three days)         |   2.845 |        0.018 |        0.033 | 378 |
 | Fish (last three days)         |   2.058 |        0.041 |       -0.022 | 474 |
@@ -844,7 +714,6 @@ plt.savefig("mobile_nonzero.png")
 | Milk (last three days)         |   2.514 |       -0.015 |       -0.217 | 114 |
 | Spices (last three days)       |   0.858 |       -0.069 |        -0.21 | 158 |
 | Alcohol (last three days)      |   1.304 |        0.104 |        0.305 |  18 |
-| Other food (last three days)   |     nan |          nan |          nan |   0 |
 | Cooking fuel (last month)      |   2.941 |        -0.01 |       -0.127 | 456 |
 | Toiletries (last month)        |   2.328 |       -0.051 |       -0.172 | 536 |
 | Transportation (last month)    |   2.395 |       -0.003 |        0.127 | 193 |
@@ -857,7 +726,6 @@ plt.savefig("mobile_nonzero.png")
 | Utensils (last year)           |   4.352 |        -0.01 |       -0.003 | 442 |
 | Dowry (last year)              |   5.934 |        0.433 |        0.178 | 126 |
 | Furniture (last year)          |   4.224 |        0.033 |        0.185 | 368 |
-| Other non-food (last year)     |     nan |          nan |          nan |   0 |
 | Large livestock (cows)         |   7.461 |       -0.072 |       -0.068 |  35 |
 | Small livestock                |   6.425 |       -0.195 |       -0.364 | 123 |
 | Bicycle                        |   5.601 |        0.051 |         0.14 | 171 |
@@ -874,7 +742,7 @@ plt.savefig("mobile_nonzero.png")
 | Household size                 |   1.917 |       -0.021 |         0.05 | 648 |
 | In business                    |   0.398 |        0.038 |        0.017 | 638 |
 
-*** Box and whisker plots for the new balance table                  :ignore:
+*** Box and whisker plots for the new balance table                  :ignore:noexport:
 
 #+Caption: Box and whisker plot of log(positive textiles) for nonzero values
 #+NAME: fig:box_whisker_textiles_nonzero
@@ -893,644 +761,16 @@ to which we succeeded is documented in \Tab{attrition_count}.
 In the baseline survey we successfully interviewed
 649 of these households; in the midline 606, and in the endline 694.
 
-*** Original attrition tables                                        :ignore:
-#+name: attrition_check
-#+BEGIN_SRC python :dir ../analysis :results value table :exports none
-import check_attrition
-return check_attrition.TAB
-#+END_SRC
-
-#+caption: Total number of households in sample by group and round.  Numbers in parentheses indicate the size of of the subset also interviewed at baseline.
-#+attr_latex: :environment longtable :align lrrrrr
-#+name: tab:attrition_count
-|-------------+------+-----------+-----------|
-| Full Sample | 2013 | 2014      | 2015      |
-|-------------+------+-----------+-----------|
-| Control     |  281 | 265 (219) | 347 (262) |
-| UCT         |  124 | 113 (112) | 111 (110) |
-| TUP         |  244 | 228 (223) | 236 (231) |
-|-------------+------+-----------+-----------|
-| All         |  649 | 606 (554) | 694 (603) |
-|-------------+------+-----------+-----------|
-
-Another possible issue has to do with whether crucial question is to what extent attrition in 2014 and 2015 will bias our
-results. \Tab{attrition_count} reports the total number of households identified in
-each treatment arm and year for the whole sample. \Tab{attrition_balanced_count}
-reports the same numbers restricting ourselves to households with baseline surveys.
-In the TUP group, we were unable to find 21 participants in 2014 (8% attrition), but
-found 5 not identified in the baseline survey. We found 8 additional TUP households
-with baseline surveys again in 2015 for a final attrition rate of 5%. Of those in the
-UCT group, 12 were lost (9.6%) in 2014, then two more in 2015 (11%). The control
-group saw very high attrition in 2014, missing 60 people (22%). Enumerators also found
-a large number of households not found at baseline, such that there were only 16
-fewer surveys collected in 2014 than in 2013. The high attrition was due largely to
-the fact that these households did not enjoy the same consistent contact that BRAC had
-with the TUP group, and the local area lacked infrastructure to easily locate people.
-This was exacerbated by the uncertain political situation and early harvest.
-Attrition in 2015 was 6.7%, with 19 baseline control households not responding, with
-85 households found who were originally identified as control households from the
-survey but not in the baseline survey. In order to take advantage of the households
-not included in the baseline, the main specification below follows
-\cite{banerjee-etal} by setting missing values to zero when controlling for baseline
-levels of the dependent variable, and including an indicator for
-whether the household was in the baseline.
-
-*** Surveyed households also in baseline                           :noexport:
-#+caption: Number of households in sample with baseline survey by group and round
-#+name: tab:attrition_balanced_count
-|-----------------+---------+---------+---------|
-| Balanced Sample |    2013 |    2014 |    2015 |
-|-----------------+---------+---------+---------|
-| UCT            | 124.000 | 112.000 | 110.000 |
-| Control         | 281.000 | 219.000 | 262.000 |
-| TUP             | 244.000 | 223.000 | 231.000 |
-|-----------------+---------+---------+---------|
-| All             | 649.000 | 554.000 | 603.000 |
-|-----------------+---------+---------+---------|
-
-*************** Further checks on assignment and samples
-#+begin_src python :results output raw table
-import pandas as pd
-from cfe.df_utils import df_to_orgtbl
-import sys
-sys.path.append('../analysis')
-from check_attrition import D
-
-R=pd.read_stata('../../TUP-data/random_assignment.dta')
-R=R.set_index('respid')      
-R.index.name = 'idno'
-
-A=pd.DataFrame({'D':D['group'],'R':R['group'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
-
-# Fix issue with variant capitalizations
-A.D=A.D.str.title()
-A.R=A.R.str.title()
-
-# Examine observations where assignments differ:
-print(df_to_orgtbl(A[A['D']!=A['R']]))
-#+end_src
-
-#+results:
-|        | D       | R          | B         | M         | E         |
-|--------+---------+------------+-----------+-----------+-----------|
-| 1042.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1106.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1154.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1157.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1186.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1190.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1207.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1217.0 | Control | Cash       | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1222.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1248.0 | ---     | High Asset | ---       | ---       | ---       |
-| 1252.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1264.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1285.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1293.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1295.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1300.0 | Control | Cash       | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1305.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1311.0 | Control | ---        | \(0.000\) | \(1.000\) | \(0.000\) |
-| 1314.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1315.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1316.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1320.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1338.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1348.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1350.0 | Control | ---        | \(0.000\) | \(1.000\) | \(0.000\) |
-| 1352.0 | Control | High Asset | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1368.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1403.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1421.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1436.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1453.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1476.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1480.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1486.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1496.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1502.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1505.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1507.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1548.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1561.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1591.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1619.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1642.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1667.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1679.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1690.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1702.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1703.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1730.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1731.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1744.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1747.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1748.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1749.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1750.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
-| 1755.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1773.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1780.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1792.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1797.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1802.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1813.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1814.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1818.0 | Control | Low Asset  | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1826.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1878.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1892.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1894.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1910.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1915.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1922.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1927.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1950.0 | Control | ---        | \(0.000\) | \(1.000\) | \(0.000\) |
-| 1956.0 | Control | Low Asset  | \(1.000\) | \(1.000\) | \(1.000\) |
-| 1967.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1988.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 1991.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 1994.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1995.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2002.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2012.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2024.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2030.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2032.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 2039.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2047.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2051.0 | Control | High Asset | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2061.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2066.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2071.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2077.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2079.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2082.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2094.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 2103.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2106.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2107.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2114.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2115.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2139.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2160.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2205.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
-| 2214.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2225.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2226.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 2232.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2234.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
-| 2238.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2239.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2250.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2260.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2261.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
-| 2267.0 | Control | Low Asset  | \(1.000\) | \(1.000\) | \(1.000\) |
-| 2268.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
-| 2269.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
-| 2270.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
-
-We see seven cases in which there's some discrepancy in the assignment, and 107 cases in which the 
-dataframe =D= has a household assigned to "Control" but where
-=random_assignment= has no assignment recorded. 
-
-# same as above but with locations.csv
-#+begin_src python :results output raw table
-import pandas as pd
-from cfe.df_utils import df_to_orgtbl
-import sys
-sys.path.append('../analysis')
-from check_attrition import D
-
-R=pd.read_csv('../../TUP-data/csv/locations.csv')
-R=R.set_index('RespID')      
-R.index.name = 'idno'
-R.replace(to_replace='Gift', value='Control', inplace=True)
-
-D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
-D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
-
-
-A=pd.DataFrame({'D':D['group'],'R':R['Group'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
-
-# Fix issue with variant capitalizations
-A.D=A.D.str.title()
-A.R=A.R.str.title()
-
-# Examine observations where assignments differ:
-print(df_to_orgtbl(A[A['D']!=A['R']]))
-#+end_src
-
-#+RESULTS:
-|      | D       | R       | B         | M         | E         |
-|------+---------+---------+-----------+-----------+-----------|
-| 1157 | Control | Tup     | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1248 | ---     | Tup     | ---       | ---       | ---       |
-| 1462 | ---     | Control | ---       | ---       | ---       |
-| 1647 | ---     | Control | ---       | ---       | ---       |
-| 1763 | ---     | Control | ---       | ---       | ---       |
-| 2131 | Tup     | Control | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2204 | ---     | Control | ---       | ---       | ---       |
-
-# same as above but with checklist_20150602.csv
-#+begin_src python :results output raw table
-import pandas as pd
-from cfe.df_utils import df_to_orgtbl
-import sys
-sys.path.append('../analysis')
-from check_attrition import D
-
-R=pd.read_csv( "../../ElliottTUP/endline/checklists/checklist_20150602.csv")
-R=R.set_index('RespID')      
-R.index.name = 'idno'
-R.replace(to_replace='Gift', value='Control', inplace=True)
-R.replace(to_replace='First', value='Cash', inplace=True)
-R.replace(to_replace='Second', value='Cash', inplace=True)
-
-D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
-D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
-
-
-A=pd.DataFrame({'D':D['group'],'R':R['Give'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
-
-# Fix issue with variant capitalizations
-A.D=A.D.str.title()
-A.R=A.R.str.title()
-
-# Examine observations where assignments differ:
-print(df_to_orgtbl(A[A['D']!=A['R']]))
-#+end_src
-
-#+RESULTS:
-|      | D       | R       | B         | M         | E         |
-|------+---------+---------+-----------+-----------+-----------|
-| 1157 | Control | Tup     | \(1.000\) | \(0.000\) | \(1.000\) |
-| 1248 | ---     | Tup     | ---       | ---       | ---       |
-| 1462 | ---     | Control | ---       | ---       | ---       |
-| 1647 | ---     | Control | ---       | ---       | ---       |
-| 1763 | ---     | Control | ---       | ---       | ---       |
-| 2131 | Tup     | Control | \(0.000\) | \(1.000\) | \(1.000\) |
-| 2204 | ---     | Control | ---       | ---       | ---       |
-
-# same as above but with locations.csv as R and asset_assign.csv as D
-#+begin_src python :results output raw table
-import pandas as pd
-from cfe.df_utils import df_to_orgtbl
-
-R=pd.read_csv('../../TUP-data/csv/locations.csv')
-R=R.set_index('RespID')      
-R.index.name = 'idno'
-R.replace(to_replace='Gift', value='Control', inplace=True)
-
-D = pd.read_csv('../../TUP-data/csv/asset_assign.csv')
-D=D.set_index('respid')      
-D.index.name = 'idno'
-D.replace(to_replace = 'TUP-high asset', value = 'Tup', inplace=True)
-
-
-A=pd.DataFrame({'D':D['group'],'R':R['Group']})
-
-# Fix issue with variant capitalizations
-A.D=A.D.str.title()
-A.R=A.R.str.title()
-
-# Examine observations where assignments differ:
-print(df_to_orgtbl(A[A['D']!=A['R']]))
-#+end_src
-
-#+RESULTS:
-| idno | D   | R       |
-|------+-----+---------|
-| 1042 | --- | Control |
-| 1106 | --- | Control |
-| 1154 | --- | Control |
-| 1157 | --- | Tup     |
-| 1186 | --- | Control |
-| 1190 | --- | Control |
-| 1207 | --- | Control |
-| 1222 | --- | Control |
-| 1252 | --- | Control |
-| 1264 | --- | Control |
-| 1285 | --- | Control |
-| 1293 | --- | Control |
-| 1295 | --- | Control |
-| 1305 | --- | Control |
-| 1311 | --- | Control |
-| 1314 | --- | Control |
-| 1315 | --- | Control |
-| 1316 | --- | Control |
-| 1320 | --- | Control |
-| 1338 | --- | Control |
-| 1348 | --- | Control |
-| 1350 | --- | Control |
-| 1368 | --- | Control |
-| 1403 | --- | Control |
-| 1421 | --- | Control |
-| 1436 | --- | Control |
-| 1453 | --- | Control |
-| 1462 | --- | Control |
-| 1476 | --- | Control |
-| 1480 | --- | Control |
-| 1486 | --- | Control |
-| 1496 | --- | Control |
-| 1502 | --- | Control |
-| 1505 | --- | Control |
-| 1507 | --- | Control |
-| 1548 | --- | Control |
-| 1561 | --- | Control |
-| 1591 | --- | Control |
-| 1619 | --- | Control |
-| 1642 | --- | Control |
-| 1647 | --- | Control |
-| 1667 | --- | Control |
-| 1679 | --- | Control |
-| 1690 | --- | Control |
-| 1702 | --- | Control |
-| 1703 | --- | Control |
-| 1730 | --- | Control |
-| 1731 | --- | Control |
-| 1744 | --- | Control |
-| 1747 | --- | Control |
-| 1748 | --- | Control |
-| 1749 | --- | Control |
-| 1750 | --- | Control |
-| 1755 | --- | Control |
-| 1763 | --- | Control |
-| 1773 | --- | Control |
-| 1780 | --- | Control |
-| 1792 | --- | Control |
-| 1797 | --- | Control |
-| 1802 | --- | Control |
-| 1813 | --- | Control |
-| 1814 | --- | Control |
-| 1826 | --- | Control |
-| 1878 | --- | Control |
-| 1892 | --- | Control |
-| 1894 | --- | Control |
-| 1910 | --- | Control |
-| 1915 | --- | Control |
-| 1922 | --- | Control |
-| 1927 | --- | Control |
-| 1950 | --- | Control |
-| 1967 | --- | Control |
-| 1988 | --- | Control |
-| 1991 | --- | Control |
-| 1994 | --- | Control |
-| 1995 | --- | Control |
-| 2002 | --- | Control |
-| 2012 | --- | Control |
-| 2024 | --- | Control |
-| 2030 | --- | Control |
-| 2032 | --- | Control |
-| 2039 | --- | Control |
-| 2047 | --- | Control |
-| 2061 | --- | Control |
-| 2066 | --- | Control |
-| 2071 | --- | Control |
-| 2077 | --- | Control |
-| 2079 | --- | Control |
-| 2082 | --- | Control |
-| 2094 | --- | Control |
-| 2103 | --- | Control |
-| 2106 | --- | Control |
-| 2107 | --- | Control |
-| 2114 | --- | Control |
-| 2115 | --- | Control |
-| 2131 | Tup | Control |
-| 2139 | --- | Control |
-| 2160 | --- | Control |
-| 2204 | --- | Control |
-| 2205 | --- | Control |
-| 2214 | --- | Control |
-| 2225 | --- | Control |
-| 2226 | --- | Control |
-| 2232 | --- | Control |
-| 2234 | --- | Control |
-| 2238 | --- | Control |
-| 2239 | --- | Control |
-| 2250 | --- | Control |
-| 2260 | --- | Control |
-| 2261 | --- | Control |
-| 2268 | --- | Control |
-| 2269 | --- | Control |
-| 2270 | --- | Control |
-
-# same as above but with master_assignment.csv as R and TUP_full.dta (group) as D
-#+begin_src python :results output raw table
-import pandas as pd
-from cfe.df_utils import df_to_orgtbl
-
-R=pd.read_csv('../../TUP-report/documents/master_assignment.csv')
-R=R.set_index('RespID')      
-R.index.name = 'idno'
-
-D = pd.read_stata('../../TUP-data/TUP_full.dta')
-D=D.set_index('idno')      
-D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
-D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
-
-
-A=pd.DataFrame({'D':D['group'],'R':R['Group']})
-
-# Fix issue with variant capitalizations
-A.D=A.D.str.title()
-A.R=A.R.str.title()
-
-# Examine observations where assignments differ:
-print(df_to_orgtbl(A[A['D']!=A['R']]))
-#+end_src
-
-#+RESULTS:
-|   idno | D       | R       |
-|--------+---------+---------|
-| 1248.0 | ---     | Tup     |
-| 1359.0 | Control | ---     |
-| 1462.0 | ---     | Control |
-| 1484.0 | Control | ---     |
-| 1553.0 | Control | ---     |
-| 1647.0 | ---     | Control |
-| 1763.0 | ---     | Control |
-| 1960.0 | Control | ---     |
-| 2142.0 | Control | ---     |
-| 2174.0 | Control | ---     |
-| 2204.0 | ---     | Control |
-
-# same as above but with master_assignment.csv as R and TUP_full.dta (group_b) as D
-#+begin_src python :results output raw table
-import pandas as pd
-from cfe.df_utils import df_to_orgtbl
-
-R=pd.read_csv('../../TUP-report/documents/master_assignment.csv')
-R=R.set_index('RespID')      
-R.index.name = 'idno'
-
-D = pd.read_stata('../../TUP-data/TUP_full.dta')
-D=D.set_index('idno')      
-D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
-D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
-
-
-A=pd.DataFrame({'D':D['group_b'],'R':R['Group']})
-
-# Fix issue with variant capitalizations
-A.D=A.D.str.title()
-A.R=A.R.str.title()
-
-# Examine observations where assignments differ:
-print(df_to_orgtbl(A[A['D']!=A['R']]))
-#+end_src
-
-#+RESULTS:
-|   idno | D   | R       |
-|--------+-----+---------|
-| 1042.0 |     | Control |
-| 1106.0 |     | Control |
-| 1151.0 |     | Control |
-| 1154.0 |     | Control |
-| 1157.0 |     | Control |
-| 1186.0 |     | Control |
-| 1187.0 |     | Tup     |
-| 1190.0 |     | Control |
-| 1207.0 |     | Control |
-| 1222.0 |     | Control |
-| 1248.0 | --- | Tup     |
-| 1252.0 |     | Control |
-| 1264.0 |     | Control |
-| 1285.0 |     | Control |
-| 1293.0 |     | Control |
-| 1295.0 |     | Control |
-| 1300.0 |     | Control |
-| 1305.0 |     | Control |
-| 1311.0 |     | Control |
-| 1314.0 |     | Control |
-| 1315.0 |     | Control |
-| 1316.0 |     | Control |
-| 1318.0 |     | Control |
-| 1320.0 |     | Control |
-| 1338.0 |     | Control |
-| 1344.0 |     | Control |
-| 1348.0 |     | Control |
-| 1350.0 |     | Control |
-| 1359.0 |     | ---     |
-| 1368.0 |     | Control |
-| 1403.0 |     | Control |
-| 1421.0 |     | Control |
-| 1436.0 |     | Control |
-| 1453.0 |     | Control |
-| 1462.0 | --- | Control |
-| 1472.0 |     | Control |
-| 1476.0 |     | Control |
-| 1480.0 |     | Control |
-| 1484.0 |     | ---     |
-| 1486.0 |     | Control |
-| 1496.0 |     | Control |
-| 1502.0 |     | Control |
-| 1505.0 |     | Control |
-| 1507.0 |     | Control |
-| 1548.0 |     | Control |
-| 1553.0 |     | ---     |
-| 1561.0 |     | Control |
-| 1591.0 |     | Control |
-| 1619.0 |     | Control |
-| 1642.0 |     | Control |
-| 1647.0 | --- | Control |
-| 1667.0 |     | Control |
-| 1679.0 |     | Control |
-| 1690.0 |     | Control |
-| 1702.0 |     | Control |
-| 1703.0 |     | Control |
-| 1730.0 |     | Control |
-| 1731.0 |     | Control |
-| 1744.0 |     | Control |
-| 1747.0 |     | Control |
-| 1748.0 |     | Control |
-| 1749.0 |     | Control |
-| 1750.0 |     | Control |
-| 1755.0 |     | Control |
-| 1758.0 |     | Tup     |
-| 1760.0 |     | Control |
-| 1763.0 | --- | Control |
-| 1773.0 |     | Control |
-| 1780.0 |     | Control |
-| 1792.0 |     | Control |
-| 1797.0 |     | Control |
-| 1802.0 |     | Control |
-| 1807.0 |     | Cash    |
-| 1813.0 |     | Control |
-| 1814.0 |     | Control |
-| 1825.0 |     | Control |
-| 1826.0 |     | Control |
-| 1878.0 |     | Control |
-| 1892.0 |     | Control |
-| 1894.0 |     | Control |
-| 1910.0 |     | Control |
-| 1915.0 |     | Control |
-| 1922.0 |     | Control |
-| 1927.0 |     | Control |
-| 1950.0 |     | Control |
-| 1960.0 |     | ---     |
-| 1966.0 |     | Control |
-| 1967.0 |     | Control |
-| 1985.0 |     | Control |
-| 1988.0 |     | Control |
-| 1991.0 |     | Control |
-| 1994.0 |     | Control |
-| 1995.0 |     | Control |
-| 2002.0 |     | Control |
-| 2012.0 |     | Control |
-| 2024.0 |     | Control |
-| 2030.0 |     | Control |
-| 2032.0 |     | Control |
-| 2039.0 |     | Control |
-| 2047.0 |     | Control |
-| 2061.0 |     | Control |
-| 2066.0 |     | Control |
-| 2071.0 |     | Control |
-| 2077.0 |     | Control |
-| 2079.0 |     | Control |
-| 2082.0 |     | Control |
-| 2094.0 |     | Control |
-| 2103.0 |     | Control |
-| 2106.0 |     | Control |
-| 2107.0 |     | Control |
-| 2114.0 |     | Control |
-| 2115.0 |     | Control |
-| 2119.0 |     | Tup     |
-| 2131.0 |     | Tup     |
-| 2134.0 |     | Control |
-| 2139.0 |     | Control |
-| 2142.0 |     | ---     |
-| 2160.0 |     | Control |
-| 2174.0 |     | ---     |
-| 2204.0 | --- | Control |
-| 2205.0 |     | Control |
-| 2212.0 |     | Control |
-| 2214.0 |     | Control |
-| 2225.0 |     | Control |
-| 2226.0 |     | Control |
-| 2232.0 |     | Control |
-| 2234.0 |     | Control |
-| 2238.0 |     | Control |
-| 2239.0 |     | Control |
-| 2250.0 |     | Control |
-| 2252.0 |     | Tup     |
-| 2260.0 |     | Control |
-| 2261.0 |     | Control |
-| 2268.0 |     | Control |
-| 2269.0 |     | Control |
-| 2270.0 |     | Control |
-
-
-*************** END
-
 *** Recreating the attrition tables                         :ignore:noexport:
-
+*************** NOTE
 The results are slightly different (in the 2015 column) than in the original attrition
 tables due to the creation of master_assignment.csv, which includes
 everyone who was assigned to any group no matter whether they were
 found at baseline, midline, or endline. It added 6 households which
 were found only at endline and not accounted for in the original
 attrition tables.
+*************** END
+
 
 # using master_assignment.csv
 #+name: master_assignment_attrition 
@@ -1638,6 +878,37 @@ print(newdf2)
 #+end_src
 
 #+RESULTS: master_assignment_attrition
+
+*** Discussion of attrition                                          :ignore:
+
+Another possible issue has to do with whether crucial question is to
+what extent attrition in 2014 and 2015 will bias our
+results. \Tab{attrition_count} reports the total number of households
+identified in each treatment arm and year for the whole
+sample. \Tab{attrition_balanced_count} reports the same numbers
+restricting ourselves to households with baseline surveys.  In the TUP
+group, we were unable to find 21 participants in 2014 (8% attrition),
+but found 5 not identified in the baseline survey. We found 8
+additional TUP households with baseline surveys again in 2015 for a
+final attrition rate of 5%. Of those in the UCT group, 12 were lost
+(9.6%) in 2014, then two more in 2015 (11%). The control group saw
+very high attrition in 2014, missing 60 people (22%). Enumerators also
+found a large number of households not found at baseline, such that
+there were only 16 fewer surveys collected in 2014 than in 2013. The
+high attrition was due largely to the fact that these households did
+not enjoy the same consistent contact that BRAC had with the TUP
+group, and the local area lacked infrastructure to easily locate
+people.  This was exacerbated by the uncertain political situation and
+early harvest.  Attrition in 2015 was 6.7%, with 19 baseline control
+households not responding, with 85 households found who were
+originally identified as control households from the survey but not in
+the baseline survey. In order to take advantage of the households not
+included in the baseline, the main specification below follows
+\cite{banerjee-etal} by setting missing values to zero when
+controlling for baseline levels of the dependent variable, and
+including an indicator for whether the household was in the baseline.
+
+#+name: tab:attrition_count
 #+caption: Total number of households in sample by group and round.
 |         | Assigned | 2013 | 2014 | 2015 |
 |---------+----------+------+------+------|
@@ -1646,6 +917,7 @@ print(newdf2)
 | TUP     |      250 |  244 |  228 |  236 |
 | UCT     |      125 |  124 |  113 |  111 |
 
+#+name: tab:attrition_balanced_count
 #+caption: Number of households in sample with baseline survey by group and round
 |         | Assigned | 2013 | 2014 | 2015 |
 |---------+----------+------+------+------|
@@ -1783,6 +1055,7 @@ print(df_to_orgtbl(b,sedf=se.T,float_fmt='%5.2f'))
  less consumption. This imbalance highlights the need for a
  difference-in-difference or ancova citep:mckenzie12 design.
 
+**** Elliott attrition balance table                               :ignore:
  #+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
  #+attr_latex: :environment longtable :align lrrrrr
  #+name: tab:attrition_balance
@@ -1963,51 +1236,55 @@ print(newdf)
 
  #+end_src
 
- #+RESULTS: attrition_balance
- |                        | mean_baseline | beta_mid | beta_end |
- |------------------------+---------------+----------+----------|
- | # Houses               |         2.863 |    0.305 |    0.367 |
- | Bed                    |       250.535 |   12.649 |  -51.133 |
- | Bicycle                |       102.174 |   11.179 |    4.212 |
- | Chair/table            |       196.436 |   -0.303 |  -37.177 |
- | Large livestock (cows) |       181.402 |   67.862 |  -89.273 |
- | Mobile phone           |       101.482 |    6.336 |  -13.028 |
- | Motorcycle             |       481.886 |  213.002 | -241.819 |
- | Mosquito net ITN       |         8.504 |   -1.777 |    0.449 |
- | Mosquito net           |        19.462 |    0.332 |    2.814 |
- | Poultry                |        39.438 |  23.634* |   -2.243 |
- | Radio                  |        53.046 |   -6.333 | -35.093* |
- | Small livestock        |       180.716 |   18.966 |  -79.014 |
- | Alcohol                |          0.04 |    0.005 |   -0.004 |
- | Beans                  |         0.826 |    0.269 |   -0.382 |
- | Cereals                |         8.883 |   -0.084 | -3.714** |
- | Rituals/ceremonies     |         0.139 |   -0.019 |   -0.038 |
- | Charities              |         0.027 |    0.007 |   -0.001 |
- | Clothing, footwear     |         0.655 |   0.177* |   -0.203 |
- | Cosmetics              |         0.668 |    0.005 |    0.229 |
- | Dowry                  |         1.247 |    0.745 |   -0.394 |
- | Egg                    |         1.069 |   -0.005 |    0.106 |
- | Entertainment          |         0.074 |    0.021 |   0.051* |
- | Fish                   |         2.418 |   -0.132 |    0.036 |
- | Fruit                  |         0.657 |    0.009 |   -0.151 |
- | Cooking fuel           |         0.733 |    0.105 |   -0.049 |
- | Furniture              |         0.199 |   -0.023 |     0.02 |
- | Meat                   |         3.982 |    0.254 |      0.3 |
- | Milk                   |          1.15 |    0.283 |    0.239 |
- | Oil                    |         1.288 |    0.037 |  -0.532* |
- | Other non-food         |           0.0 |      0.0 |      0.0 |
- | Other food             |           0.0 |      0.0 |      0.0 |
- | Salt                   |         0.439 | -0.14*** |   -0.043 |
- | Toiletries             |         0.475 |  -0.181* |    0.047 |
- | Spices                 |         0.231 |    0.024 |   -0.048 |
- | Sugar                  |         1.648 |   -0.285 |    -0.02 |
- | Textiles               |         0.163 |     0.01 |    0.011 |
- | Transportation         |         0.164 |    0.004 |    0.018 |
- | Utensils               |         0.245 |    0.061 |   -0.023 |
- | Vegetables             |         1.447 |    0.096 |   -0.151 |
- | # Child                |         3.328 | 0.656*** |    0.423 |
- | Household size         |         7.224 |  0.595** |    0.428 |
- | In business            |         0.415 |    0.038 |    0.007 |
+
+ #+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
+ #+attr_latex: :environment longtable :align lrrrrr
+ #+name: tab:attrition_balance
+ |------------------------+---------------+----------------+----------------|
+ | Baseline Values        | $Mean_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
+ |------------------------+---------------+----------------+----------------|
+ | # Houses               |         2.863 |          0.305 |          0.367 |
+ | Bed                    |       250.535 |         12.649 |        -51.133 |
+ | Bicycle                |       102.174 |         11.179 |          4.212 |
+ | Chair/table            |       196.436 |         -0.303 |        -37.177 |
+ | Large livestock (cows) |       181.402 |         67.862 |        -89.273 |
+ | Mobile phone           |       101.482 |          6.336 |        -13.028 |
+ | Motorcycle             |       481.886 |        213.002 |       -241.819 |
+ | Mosquito net ITN       |         8.504 |         -1.777 |          0.449 |
+ | Mosquito net           |        19.462 |          0.332 |          2.814 |
+ | Poultry                |        39.438 |        23.634* |         -2.243 |
+ | Radio                  |        53.046 |         -6.333 |       -35.093* |
+ | Small livestock        |       180.716 |         18.966 |        -79.014 |
+ | Alcohol                |          0.04 |          0.005 |         -0.004 |
+ | Beans                  |         0.826 |          0.269 |         -0.382 |
+ | Cereals                |         8.883 |         -0.084 |       -3.714** |
+ | Rituals/ceremonies     |         0.139 |         -0.019 |         -0.038 |
+ | Charities              |         0.027 |          0.007 |         -0.001 |
+ | Clothing, footwear     |         0.655 |         0.177* |         -0.203 |
+ | Cosmetics              |         0.668 |          0.005 |          0.229 |
+ | Dowry                  |         1.247 |          0.745 |         -0.394 |
+ | Egg                    |         1.069 |         -0.005 |          0.106 |
+ | Entertainment          |         0.074 |          0.021 |         0.051* |
+ | Fish                   |         2.418 |         -0.132 |          0.036 |
+ | Fruit                  |         0.657 |          0.009 |         -0.151 |
+ | Cooking fuel           |         0.733 |          0.105 |         -0.049 |
+ | Furniture              |         0.199 |         -0.023 |           0.02 |
+ | Meat                   |         3.982 |          0.254 |            0.3 |
+ | Milk                   |          1.15 |          0.283 |          0.239 |
+ | Oil                    |         1.288 |          0.037 |        -0.532* |
+ | Other non-food         |           0.0 |            0.0 |            0.0 |
+ | Other food             |           0.0 |            0.0 |            0.0 |
+ | Salt                   |         0.439 |       -0.14*** |         -0.043 |
+ | Toiletries             |         0.475 |        -0.181* |          0.047 |
+ | Spices                 |         0.231 |          0.024 |         -0.048 |
+ | Sugar                  |         1.648 |         -0.285 |          -0.02 |
+ | Textiles               |         0.163 |           0.01 |          0.011 |
+ | Transportation         |         0.164 |          0.004 |          0.018 |
+ | Utensils               |         0.245 |          0.061 |         -0.023 |
+ | Vegetables             |         1.447 |          0.096 |         -0.151 |
+ | # Child                |         3.328 |       0.656*** |          0.423 |
+ | Household size         |         7.224 |        0.595** |          0.428 |
+ | In business            |         0.415 |          0.038 |          0.007 |
 
 
 **** Creating a new attrition balance table with only nonzero values counting toward the mean :noexport:
@@ -2193,7 +1470,6 @@ print(newdf)
 
 
 
-
 * Empirical Strategy
 
 We estimate a single model using interactions between time effects and
@@ -2235,132 +1511,46 @@ direct test---eight months later, do TUP recipients still own these
 assets, or have they sold (or eaten) them? 
 
 *** Total Asset Holdings
+**** Discussion                                                      :ignore:
+The cash group does not appear to have seen a significant increase in
+the value of assets measured.  This contrasts sharply with the TUP
+group.  The TUP group gains significantly more asset wealth than the
+cash or control groups in both 2014 and 2015, 18 months after receipt
+of transfers. They have nearly double the total asset value of control
+group in 2014 (midline), and roughly three-quarters more at endline.
+These patterns reproduce themselves for both productive[fn:: So-called
+"Productive" assets include anything that could plausibly be used in
+productive activity.  Included in this list: small and large
+livestock, farm equipment, mobiles, carts, sewing equipment, sheds,
+and shop premises.] assets (341 SSP more than the control group at
+endline, and 450 SSP at midline). 
 
-The cash group does not appear to have seen an increase in the value of assets
-measured, with negative and imprecise point estimates. This contrasts sharply with
-the TUP group, which seems to get notably wealthier and stay wealthier over time. The
-TUP group has significantly more asset wealth than the cash or control groups in both
-2014 and 2015, 18 months after receipt of transfers. They have 536 SSP more on
-average in 2014 and 624 SSP more in 2015. So-called "Productive" assets include
-anything that could plausibly be used in productive activity.[fn:: For now, we
-include in this list: small and large livestock, farm equipment, mobiles, carts,
-sewing equipment, sheds, and shop premises.] Here we see the TUP group has 320 SSP
-(95%) more in this area over the control group, with a similar magnitude at midline.
+**** Recreating asset tables with and without treatment group fixed effects :ignore:
+ *************** NOTE
+ In these tables, "Productive" includes "Livestock." CTL mean lists 
+ the mean and standard deviation of the control group in 2015. Some
+ assets were not included ('house', 'homestead', and 'netITN') either 
+ because numbers turned out to be more or less meaningless,  or because 
+ they overlap (e.g. nets & ITN nets) (as commented in
+ TUP-data/TUP.py). All of the Ns are the same because NaN values were
+ considered as having a value of 0 for that asset (this occurs
+ automatically when using .sum(axis=1) to sum values in different
+ columns for a given row). 
 
-Note also that the effect on total assets is higher in absolute value than the effect
-on productive asset value, suggesting that the increased wealth cannot be explained
-purely by households holding onto asset transfers for the length of the program's
-monitoring phase. Indeed, we see in \Fig{fig:AssetTotal} that the TUP group is the
-only one for whom total measured asset holdings did not fall on average over these
-two years, which saw hyperinflation and a significant aggregate economic downturn.
-This asset effect (including the savings effect below) is the only feature of
-households' financial situation on which we we see a persistent effect.
+ Differences with previous code: 
+ -This code does not do any censoring, truncating, or converting of
+ values to US dollars or anything like that
 
-#+CAPTION: Measured asset wealth by group-year
-#+NAME: fig:AssetTotal
-[[../figures/AssetTotal_groupyear.png]] 
+ Next steps: 
+ -recreate bar graph figure
+ -divide the standard deviation of CTL mean by the sqrt of the number of control
+ observations to make it comparable with the other point estimates and
+ standard errors in the table?
+ *************** END
 
-#+name: asset_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<asset_analysis>>
-return tab
-#+end_src
 
-#+RESULTS: asset_results WITH Tgroup Fixed Effects
-|----------------------------------+--------------------+-------------------+-------------------|
-|                                  | Total              | Productive        | Livestock         |
-|----------------------------------+--------------------+-------------------+-------------------|
-| CTL mean                         | \(1149.392\)       | \(303.427\)       | \(191.478\)       |
-|                                  | \((1494.992)\)     | \((586.417)\)     | \((529.489)\)     |
-|----------------------------------+--------------------+-------------------+-------------------|
-| TUP*2014                         | \(301.119^{***}\)  | \(185.870^{***}\) | \(145.139^{***}\) |
-|                                  | \((100.921)\)      | \((45.928)\)      | \((39.745)\)      |
-| TUP*2015                         | \(152.392\)        | \(76.187^{*}\)    | \(87.150^{**}\)   |
-|                                  | \((100.921)\)      | \((45.928)\)      | \((39.745)\)      |
-| CSH*2014                         | \(124.143\)        | \(50.705\)        | \(10.077\)        |
-|                                  | \((127.384)\)      | \((57.967)\)      | \((50.161)\)      |
-| CSH*2015                         | \(-112.701\)       | \(-16.201\)       | \(2.840\)         |
-|                                  | \((127.384)\)      | \((57.967)\)      | \((50.161)\)      |
-| TUP                              | \(453.511^{***}\)  | \(262.057^{***}\) | \(232.289^{***}\) |
-|                                  | \((63.925)\)       | \((29.053)\)      | \((25.152)\)      |
-| CSH                              | \(11.442\)         | \(34.504\)        | \(12.917\)        |
-|                                  | \((80.739)\)       | \((36.668)\)      | \((31.734)\)      |
-| 2014                             | \(895.043^{***}\)  | \(268.534^{***}\) | \(136.818^{***}\) |
-|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
-| 2015                             | \(1056.150^{***}\) | \(295.315^{***}\) | \(183.214^{***}\) |
-|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
-| Bsln2013                         | \(0.072^{***}\)    | \(0.015\)         | \(0.021\)         |
-|                                  | \((0.017)\)        | \((0.012)\)       | \((0.013)\)       |
-| Bsln_NAN                         | \(0.000\)          | \(0.000\)         | \(0.000\)         |
-|                                  | \((0.000)\)        | \((0.000)\)       | \((0.000)\)       |
-|----------------------------------+--------------------+-------------------+-------------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(413.820^{**}\)   | \(202.071^{**}\)  | \(142.298^{**}\)  |
-|                                  | \((181.534)\)      | \((82.625)\)      | \((71.498)\)      |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(265.093^{**}\)   | \(92.388\)        | \(84.310\)        |
-|                                  | \((134.945)\)      | \((61.419)\)      | \((53.148)\)      |
-|----------------------------------+--------------------+-------------------+-------------------|
-| F-stat                           | \(12.984\)         | \(14.753\)        | \(15.917\)        |
-| N                                | \(1488.000\)       | \(1488.000\)      | \(1488.000\)      |
-|----------------------------------+--------------------+-------------------+-------------------|
-
-#+RESULTS: asset_results WITHOUT Tgroup Fixed Effects
-|----------------------------------+--------------------+-------------------+-------------------|
-|                                  | Total              | Productive        | Livestock         |
-|----------------------------------+--------------------+-------------------+-------------------|
-| CTL mean                         | \(1149.392\)       | \(303.427\)       | \(191.478\)       |
-|                                  | \((1494.992)\)     | \((586.417)\)     | \((529.489)\)     |
-|----------------------------------+--------------------+-------------------+-------------------|
-| TUP*2014                         | \(754.630^{***}\)  | \(447.927^{***}\) | \(377.428^{***}\) |
-|                                  | \((135.492)\)      | \((61.624)\)      | \((53.338)\)      |
-| TUP*2015                         | \(605.902^{***}\)  | \(338.244^{***}\) | \(319.439^{***}\) |
-|                                  | \((135.492)\)      | \((61.624)\)      | \((53.338)\)      |
-| CSH*2014                         | \(135.584\)        | \(85.208\)        | \(22.994\)        |
-|                                  | \((171.069)\)      | \((77.777)\)      | \((67.307)\)      |
-| CSH*2015                         | \(-101.259\)       | \(18.303\)        | \(15.757\)        |
-|                                  | \((171.069)\)      | \((77.777)\)      | \((67.307)\)      |
-| 2014                             | \(895.043^{***}\)  | \(268.534^{***}\) | \(136.818^{***}\) |
-|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
-| 2015                             | \(1056.150^{***}\) | \(295.315^{***}\) | \(183.214^{***}\) |
-|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
-| Bsln2013                         | \(0.072^{***}\)    | \(0.015\)         | \(0.021\)         |
-|                                  | \((0.017)\)        | \((0.012)\)       | \((0.013)\)       |
-| Bsln_NAN                         | \(0.000\)          | \(0.000\)         | \(0.000\)         |
-|                                  | \((0.000)\)        | \((0.000)\)       | \((0.000)\)       |
-|----------------------------------+--------------------+-------------------+-------------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(855.889^{***}\)  | \(429.624^{***}\) | \(361.670^{***}\) |
-|                                  | \((218.012)\)      | \((99.221)\)      | \((85.859)\)      |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(707.162^{***}\)  | \(319.941^{***}\) | \(303.682^{***}\) |
-|                                  | \((181.065)\)      | \((82.403)\)      | \((71.306)\)      |
-|----------------------------------+--------------------+-------------------+-------------------|
-| F-stat                           | \(12.984\)         | \(14.753\)        | \(15.917\)        |
-| N                                | \(1488.000\)       | \(1488.000\)      | \(1488.000\)      |
-|----------------------------------+--------------------+-------------------+-------------------|
-#+end_example
-
-*** Recreating asset tables with and without treatment group fixed effects
-
-In these tables, "Productive" includes "Livestock." CTL mean lists 
-the mean and standard deviation of the control group in 2015. Some
-assets were not included ('house', 'homestead', and 'netITN') either 
-because numbers turned out to be more or less meaningless,  or because 
-they overlap (e.g. nets & ITN nets) (as commented in
-TUP-data/TUP.py). All of the Ns are the same because NaN values were
-considered as having a value of 0 for that asset (this occurs
-automatically when using .sum(axis=1) to sum values in different
-columns for a given row). 
-
-Differences with previous code: 
--This code does not do any censoring, truncating, or converting of
-values to US dollars or anything like that
-
-Next steps: 
--recreate bar graph figure
--divide the standard deviation of CTL mean by the sqrt of the number of control
-observations to make it comparable with the other point estimates and
-standard errors in the table?
-
-#+name: asset_values
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle asset_values.py
+ #+name: asset_values
+ #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle asset_values.py
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
@@ -2538,115 +1728,74 @@ se = se.T
 
 print(df_to_orgtbl(b,sedf=se))
 
-#+end_src
-
-#+RESULTS: asset_values
-|                     | Livestock         | Productive        | Total              |
-|---------------------+-------------------+-------------------+--------------------|
-| 2014                | \(136.050\)       | \(266.011\)^{***} | \(1307.466\)^{***} |
-|                     | (\(90.613\))      | (\(90.987\))      | (\(91.851\))       |
-| 2015                | \(183.209\)^{**}  | \(296.528\)^{***} | \(1559.531\)^{***} |
-|                     | (\(90.613\))      | (\(90.987\))      | (\(91.851\))       |
-| Baseline missing    | \(0.000\)         | \(0.000\)         | \(0.000\)          |
-|                     | (\(0.000\))       | (\(0.000\))       | (\(0.000\))        |
-| Baseline value      | \(0.021\)         | \(0.015\)         | \(0.041\)^{***}    |
-|                     | (\(0.033\))       | (\(0.028\))       | (\(0.009\))        |
-| TUP*2014            | \(378.032\)^{***} | \(450.428\)^{***} | \(1616.088\)^{***} |
-|                     | (\(142.043\))     | (\(142.013\))     | (\(142.011\))      |
-| TUP*2015            | \(322.679\)^{**}  | \(341.078\)^{**}  | \(1293.816\)^{***} |
-|                     | (\(142.043\))     | (\(142.013\))     | (\(142.011\))      |
-| UCT*2014            | \(23.810\)        | \(87.815\)        | \(279.108\)        |
-|                     | (\(179.471\))     | (\(179.457\))     | (\(179.465\))      |
-| UCT*2015            | \(15.810\)        | \(17.314\)        | \(-53.606\)        |
-|                     | (\(179.471\))     | (\(179.457\))     | (\(179.465\))      |
-| TUP*2014 - UCT*2015 | \(362.222\)       | \(433.115\)^{*}   | \(1669.694\)^{***} |
-|                     | (\(228.880\))     | (\(228.851\))     | (\(228.855\))      |
-| TUP*2015 - UCT*2015 | \(306.869\)       | \(323.764\)       | \(1347.422\)^{***} |
-|                     | (\(228.880\))     | (\(228.851\))     | (\(228.855\))      |
-
-#+caption: asset results WITHOUT Tgroup Fixed Effects
-|                              |       Total | Productive |  Livestock |
-|------------------------------+-------------+------------+------------|
-| CTL mean                     |    1634.104 |    301.364 |    189.439 |
-|                              |    2406.541 |    580.913 |    523.819 |
-| TUP*2014                     | 1617.966*** | 450.392*** | 377.437*** |
-|                              |     230.986 |     61.004 |     52.762 |
-| TUP*2015                     | 1298.628*** | 341.678*** | 322.614*** |
-|                              |     230.986 |     61.004 |     52.762 |
-| UCT*2014                     |     292.498 |     90.656 |     25.270 |
-|                              |     292.493 |     77.242 |     66.798 |
-| UCT*2015                     |     -37.562 |     20.476 |     17.767 |
-|                              |     292.493 |     77.242 |     66.798 |
-| 2014                         | 1291.392*** | 262.936*** |   134.5*** |
-|                              |     149.060 |     39.001 |     33.588 |
-| 2015                         | 1540.804*** | 293.132*** | 181.163*** |
-|                              |     149.060 |     39.001 |     33.588 |
-| Bsln NA                      |       0.000 |      0.000 |      0.000 |
-|                              |       0.000 |      0.000 |      0.000 |
-| Bsln2013                     |    0.042*** |      0.015 |     0.021* |
-|                              |       0.014 |      0.012 |      0.012 |
-| F-stat                       |      15.911 |     15.203 |     16.350 |
-| N                            |    1510.000 |   1510.000 |   1510.000 |
-| Beta_TUP_2014-Beta_Cash_2015 | 1655.528*** | 429.916*** |  359.67*** |
-| Beta_TUP_2015-Beta_Cash_2015 |  1336.19*** | 321.202*** | 304.847*** |
+ #+end_src
 
 
+ #+name: tab:asset_values
+ #+caption: Average treatment effects by group-year on total value (in SSP) of all assets measured and of productive assets measured.
+ #+attr_latex: :environment longtable :align lrrr
+ | Variables                         | Total       | Productive | Livestock  |
+ |-----------------------------------+-------------+------------+------------|
+ | CTL mean                          | 1634.104    | 301.364    | 189.439    |
+ |                                   | (2406.541)  | (580.913)  | (523.819)  |
+ |-----------------------------------+-------------+------------+------------|
+ | TUP*2014                          | 1617.966*** | 450.392*** | 377.437*** |
+ |                                   | (230.986)   | (61.004)   | (52.762)   |
+ | TUP*2015                          | 1298.628*** | 341.678*** | 322.614*** |
+ |                                   | (230.986)   | (61.004)   | (52.762)   |
+ | UCT*2014                          | 292.498     | 90.656     | 25.270     |
+ |                                   | (292.493)   | (77.242)   | (66.798)   |
+ | UCT*2015                          | -37.562     | 20.476     | 17.767     |
+ |                                   | (292.493)   | (77.242)   | (66.798)   |
+ | 2014                              | 1291.392*** | 262.936*** | 134.5***   |
+ |                                   | (149.060)   | (39.001)   | (33.588)   |
+ | 2015                              | 1540.804*** | 293.132*** | 181.163*** |
+ |                                   | (149.060)   | (39.001)   | (33.588)   |
+ | Bsln Missing                      | 0.000       | 0.000      | 0.000      |
+ |                                   | (0.000)     | (0.000)    | (0.000)    |
+ | Bsln 2013                         | 0.042***    | 0.015      | 0.021*     |
+ |                                   | (0.014)     | (0.012)    | (0.012)    |
+ |-----------------------------------+-------------+------------+------------|
+ | \(F\)-stat                        | 15.911      | 15.203     | 16.350     |
+ | $N$                               | 1510        | 1510       | 1510       |
+ |-----------------------------------+-------------+------------+------------|
+ | $\beta_{TUP2014}-\beta_{UCT2015}$ | 1655.528*** | 429.916*** | 359.67***  |
+ | $\beta_{TUP2015}-\beta_{UCT2015}$ | 1336.19***  | 321.202*** | 304.847*** |
+
+ The final two rows of Table [[tab:asset_values]] considers the difference
+ in the average treatment effect between the UCT and TUP treatments.
+ Here one needs to be thoughtful about the period of comparison, since
+ the UCT treatment was rolled out later than the TUP.  Thus, the first
+ row compares the difference in average asset holdings between the TUP
+ and UCT groups roughly one year after the program began; here we see
+ significantly higher mean TUP asset holdings, in the amount of 1655
+ SSP.  The second row instead compares contemporaneous endline asset
+ holdings; here we again see significantly higher holdings for the TUP
+ group.
 
 
-#+name: tab:assets
-#+caption: Average treatment effects by group-year on total value (in SSP) of all assets measured and of productive assets measured
-#+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+-----------------+----------------|
-|                                  | Total           | Productive     |
-|----------------------------------+-----------------+----------------|
-| CTL mean                         | $1225.61$       | $337.60$       |
-|                                  | $(1502.46)$     | $(605.57)$     |
-|----------------------------------+-----------------+----------------|
-| TUP*2014                         | $535.79^{***}$  | $361.80^{***}$ |
-|                                  | $(154.02)$      | $(74.19)$      |
-| TUP*2015                         | $624.79^{***}$  | $320.74^{***}$ |
-|                                  | $(146.01)$      | $(68.68)$      |
-| CSH*2014                         | $-125.86$       | $18.50$        |
-|                                  | $(191.31)$      | $(95.80)$      |
-| CSH*2015                         | $-49.99$        | $-5.00$        |
-|                                  | $(187.32)$      | $(88.40)$      |
-| Bsln2013                         | $0.08^{***}$    | $0.00$         |
-|                                  | $( 0.02)$       | $( 0.01)$      |
-| 2014                             | $1259.75^{***}$ | $465.53^{***}$ |
-|                                  | $(112.68)$      | $(55.96)$      |
-| 2015                             | $1124.61^{***}$ | $392.97^{***}$ |
-|                                  | $(103.46)$      | $(50.21)$      |
-| Bsln NA                          | $21.30$         | $-131.14^{**}$ |
-|                                  | $(146.51)$      | $(51.35)$      |
-|----------------------------------+-----------------+----------------|
-| N                                | $1305.00$       | $1247.00$      |
-| F-stat                           | $8.53$          | $10.19$        |
-|----------------------------------+-----------------+----------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $585.78^{**}$   | $366.79^{***}$ |
-|                                  | $(239.76)$      | $(114.58)$     |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $674.78^{***}$  | $325.74^{***}$ |
-|                                  | $(194.72)$      | $(92.26)$      |
-|----------------------------------+-----------------+----------------|
+*** Savings & Land
+**** Discussion                                                      :ignore:
+The TUP households were strongly encouraged to pay into a savings
+account maintained by BRAC at each of their weekly
+meetings. Anecdotally, this discouraged some women from attending the
+meetings, but Table [[tab:nonzero_savings]] nevertheless indicates that on
+average TUP households seem to significantly change behavior. TUP
+participants appear to be 48% (18 pp.) more likely to report having
+any savings at all at endline compared to control households.  Note
+however that since the TUP households also may regard their savings
+behavior as much more transparent to BRAC (and have received pressure
+to save from them) than the other groups, these households may simply
+be more likely to report that they are saving when asked.  Among the
+group that received cash, households were no more likely than the
+control group to report having positive cash savings. This suggests to
+us that receiving cash is not in itself sufficient to induce
+households to start holding cash on hand or in an account.
+Conversely, increases in reported savings among TUP households may
+have been due not only to their increased resources, but also to
+additional pressure to hold cash in a savings account.
 
-
-*** Savings
-
-The TUP households were strongly encouraged to pay into a savings account maintained
-by BRAC at each of their weekly meetings. Anecdotally, this discouraged some women
-from attending the meetings, but we can see in Table \Tab{tab:Nonzero} that did
-manage to change behavior. TUP participants appear to be 48% (19 pp.) more likely to
-report having any savings at all at endline compared to control households. It's
-worth noting though that since the TUP households also regard their savings behavior
-as much more transparent to BRAC (and have received pressure to save from them) than
-the other groups, these households may simply be more likely to reveal that they are
-saving when asked. Nonetheless, it seems notable that among the group that
-received cash, households were no more likely than the control group to report having
-positive cash savings. This suggests to us that receiving cash is not in itself
-sufficient to induce households to start holding cash on hand or in an account.
-Conversely, increases in savings among TUP households were due not only to their
-increased wealth, but also to additional pressure to hold cash in a savings account.
-
-In Table \Tab{tab:Savings}, we consider the amount of cash saved in each year among
+In Table [[tab:value_savings]], we consider the amount of cash saved in each year among
 those who reported savings. Here we see that cash and TUP groups increase the amount
 saved by a similar amount, with cash transfer recipients holding 47% (91.4 SSP) more
 and TUP households saving 42% (81.3 SSP) more. This is significantly less than was
@@ -2669,103 +1818,50 @@ giving or receiving interhousehold transfers, either in cash or in kind. These
 results are omitted since only 35 and 60 households reported giving and receiving
 transfers respectively, with no difference in group means.
 
-#+name: savings_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<savings_analysis>>
-return Table
-#+end_src
+We also examine land ownership and cultivation in each year. We find no evidence that
+either group is more or less likely to report owning or cultivating at least some
+land, though this may be in part because land ownership and cultivation is already
+very common. Anecdotaly, divesting from land ownership entirely could be seen as a
+relatively drastic decision. However, members of the cash group who are involved in
+agriculture report cultivating 65% less and owning 70% less land than the control
+group. This raises the interesting question of whether the cash group was likely to
+switch occupations from farming to non-farm self-employment.
 
-#+name: tab:Nonzero
-#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access 
-#+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+--------------+--------------+--------------+--------------|
-| % > 0                            | Savings      | Food Sav     | LandCult     | LandOwn      |
-|----------------------------------+--------------+--------------+--------------+--------------|
-| CTL mean                         | $0.45$       | $0.82$       | $0.82$       | $0.90$       |
-|----------------------------------+--------------+--------------+--------------+--------------|
-| CSH*2014                         | $-0.06$      | $0.00$       | $-0.04$      | $-0.01$      |
-|                                  | $( 0.06)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
-| CSH*2015                         | $0.03$       | $0.02$       | $0.05$       | $0.02$       |
-|                                  | $( 0.05)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
-| TUP*2014                         | $0.22^{***}$ | $-0.02$      | $-0.03$      | $-0.00$      |
-|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
-| TUP*2015                         | $0.21^{***}$ | $-0.03$      | $0.01$       | $-0.01$      |
-|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
-| 2014                             | $0.43^{***}$ | $1.00^{***}$ | $0.83^{***}$ | $0.82^{***}$ |
-|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.06)$    | $( 0.05)$    |
-| 2015                             | $0.39^{***}$ | $0.82^{***}$ | $0.77^{***}$ | $0.84^{***}$ |
-|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.05)$    | $( 0.05)$    |
-| Bsln2013                         | $0.05$       |              | $0.05$       | $0.07$       |
-|                                  | $( 0.04)$    |              | $( 0.05)$    | $( 0.04)$    |
-| Bsln NA                          | $0.08^{*}$   |              | $0.05$       | $0.05$       |
-|                                  | $( 0.04)$    |              | $( 0.06)$    | $( 0.05)$    |
-|----------------------------------+--------------+--------------+--------------+--------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.19$       | $-0.04$      | $-0.07$      | $-0.02$      |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $0.18$       | $-0.05$      | $-0.03$      | $-0.03$      |
-|----------------------------------+--------------+--------------+--------------+--------------|
-| F-stat                           | $8.83$       | $15.60$      | $0.79$       | $0.76$       |
-| N                                | $1259.00$    | $870.00$     | $1231.00$    | $1251.00$    |
-|----------------------------------+--------------+--------------+--------------+--------------|
+It could also raise questions around the underlying logic of the agrarian focus
+transfer in the TUP program, if unconstrained transfers prompt households to divest
+from these opportunities. This concern may be validated somewhat by the fact that TUP
+participants primarily stated a preference for small retail training and transfers
+over small animal husbandry or vegetable gardening.
 
-#+name: tab:Savings
-#+caption: Average treatment effects by group-year on total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
-#+attr_latex: :environment longtable :align lrrrrrrr
-|----------------------------------+----------------+----------------+----------------+----------------|
-| Amt.                             | Savings        | Food Sav       | LandCult       | LandOwn        |
-|----------------------------------+----------------+----------------+----------------+----------------|
-| CTL mean                         | $191.19$       | $114.78$       | $61.88$        | $46.00$        |
-|----------------------------------+----------------+----------------+----------------+----------------|
-| CSH*2014                         | $28.74$        | $0.22$         | $10.18$        | $10.50$        |
-|                                  | $(42.93)$      | $(15.38)$      | $(15.07)$      | $(12.57)$      |
-| CSH*2015                         | $91.40^{**}$   | $-14.34$       | $-39.18^{***}$ | $-32.37^{***}$ |
-|                                  | $(40.89)$      | $(14.98)$      | $(14.90)$      | $(11.95)$      |
-| TUP*2014                         | $-27.09$       | $17.16$        | $-4.76$        | $-3.02$        |
-|                                  | $(29.76)$      | $(12.33)$      | $(11.94)$      | $(10.04)$      |
-| TUP*2015                         | $81.33^{***}$  | $1.13$         | $-17.38$       | $-12.56$       |
-|                                  | $(29.32)$      | $(12.26)$      | $(11.65)$      | $( 9.41)$      |
-| 2014                             | $106.72^{***}$ | $62.03^{***}$  | $11.37$        | $17.31^{**}$   |
-|                                  | $(24.85)$      | $( 8.36)$      | $( 9.94)$      | $( 8.56)$      |
-| 2015                             | $163.04^{***}$ | $114.78^{***}$ | $61.52^{***}$  | $51.89^{***}$  |
-|                                  | $(24.13)$      | $( 7.60)$      | $( 9.54)$      | $( 7.88)$      |
-| Bsln2013                         | $0.05^{**}$    |                | $0.94$         | $-2.43$        |
-|                                  | $( 0.02)$      |                | $( 3.07)$      | $( 1.95)$      |
-| Bsln NA                          | $40.07^{*}$    |                | $-1.60$        | $-6.02$        |
-|                                  | $(21.24)$      |                | $( 9.92)$      | $( 8.29)$      |
-|----------------------------------+----------------+----------------+----------------+----------------|
-| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-118.49$      | $31.50$        | $34.42$        | $29.35$        |
-| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-10.07$       | $15.47$        | $21.79$        | $19.80$        |
-|----------------------------------+----------------+----------------+----------------+----------------|
-| F-stat                           | $7.41$         | $7.14$         | $4.91$         | $3.72$         |
-| N                                | $671.00$       | $777.00$       | $1042.00$      | $1114.00$      |
-|----------------------------------+----------------+----------------+----------------+----------------|
+**** Recreating savings tables                                       :ignore:
+**************** NOTE
+ CTL mean lists the mean and standard deviation of the control group 
+ in 2015. All of the Ns are the same because NaN values were
+ considered as having a value of 0 for that asset (this occurs
+ automatically when using .sum(axis=1) to sum values in different
+ columns for a given row). The baseline survey did not ask for food
+ savings, which is why Baseline2013 and BaselineNA controls are omitted.
 
-*** Recreating savings tables
+ Differences with previous code: 
+ -This code does not do any censoring, truncating, or converting of
+ values to US dollars
+ -s8b_2c_m and  s8b_2d_m for other food savings values are included in
+ this code but not the previous
+ -in previous code, there was an issue at endline  with how the sum was
+ being calculated for 'savings_otherfood_val_e' e.g. 40+NaN=NaN, so
+ this new code uses s4b_oth_1b_e and s4b_oth_2b_e instead
+ -this code includes columns for 'get transfer' and 'give transfer'
+ that were not included in the previous table
 
-CTL mean lists the mean and standard deviation of the control group 
-in 2015. All of the Ns are the same because NaN values were
-considered as having a value of 0 for that asset (this occurs
-automatically when using .sum(axis=1) to sum values in different
-columns for a given row). The baseline survey did not ask for food
-savings, which is why Baseline2013 and BaselineNA controls are omitted.
+ Next steps: 
+ -divide the standard deviation of CTL mean by the sqrt of the number of control
+ observations to make it comparable with the other point estimates and
+ standard errors in the table?
+*************** END
 
-Differences with previous code: 
--This code does not do any censoring, truncating, or converting of
-values to US dollars
--s8b_2c_m and  s8b_2d_m for other food savings values are included in
-this code but not the previous
--in previous code, there was an issue at endline  with how the sum was
-being calculated for 'savings_otherfood_val_e' e.g. 40+NaN=NaN, so
-this new code uses s4b_oth_1b_e and s4b_oth_2b_e instead
--this code includes columns for 'get transfer' and 'give transfer'
-that were not included in the previous table
 
-Next steps: 
--divide the standard deviation of CTL mean by the sqrt of the number of control
-observations to make it comparable with the other point estimates and
-standard errors in the table?
-
-#+name: savings_tables
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+ #+name: savings_tables
+ #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle /tmp/foo.py
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
 data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
@@ -2877,6 +1973,14 @@ df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
 outcomes = ['Savings', 'Food Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer']
 nonzero_df = df.copy()
 
+# Drop zero values, take logs.
+df[outcomes] = np.log(df[outcomes].replace(0,np.nan))
+for outcome in outcomes:
+    try:
+        df[outcome + '2013'] = np.log(df[outcome+'2013'].replace(0,np.nan))
+    except KeyError: # No food savings baseline
+        pass
+
 # make positive values = 1, 0 values = NaN, and NaN stay NaN
 for i in range(len(nonzero_df)):
     for outcome in outcomes:
@@ -2977,6 +2081,7 @@ for DF in (df, nonzero_df):
                 d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '**'
             elif models_ols[outcome].pvalues[x] <= 0.1:
                 d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '*'
+            d[outcome][x*2+1] = "(%4.2f)" %  d[outcome][x*2+1] 
 
         del temp_df   
 
@@ -3043,6 +2148,7 @@ for DF in (df, nonzero_df):
             d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '**'
         elif models_ols["Food Savings"].pvalues[x] <= 0.1:
             d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '*'
+        d["Food Savings"][x*2+1] = "(%4.2f)" %  d["Food Savings"][x*2+1] 
 
 final = pd.DataFrame(data=regular_d)
 nonzero_final = pd.DataFrame(data=nonzero_d)
@@ -3052,94 +2158,119 @@ final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
                       16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
+                      20: r"$\beta_{TUP2014}-\beta_{UCT2015}$", 21: r"$\beta_{TUP2015}-\beta_{UCT2015}$"}, inplace=True)
 nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
                       4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
                       16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: "Beta_TUP_2014-Beta_Cash_2015", 21: "Beta_TUP_2015-Beta_Cash_2015"}, inplace=True)
+                      20: r"$\beta_{TUP2014}-\beta_{UCT2015}$", 21: r"$\beta_{TUP2015}-\beta_{UCT2015}$"}, inplace=True)
 
 newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.3f')
 print("""#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access""")
 print(newdf_nonzero)
 
-newdf = df_to_orgtbl(final, float_fmt = '%.3f')
+newdf = df_to_orgtbl(final, float_fmt = '%.2f')
 print("""#+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.""")
 print(newdf)
 
-#+end_src
+ #+end_src
 
-#+RESULTS: savings_tables
-#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access
-|                              |  Savings | LandCult |  LandOwn | Get Transfer | Give Transfer | Food Savings |
-|------------------------------+----------+----------+----------+--------------+---------------+--------------|
-| CTL mean                     |    0.394 |    0.718 |    0.806 |        0.170 |         0.080 |        0.726 |
-|                              |    0.489 |    0.451 |    0.396 |        0.376 |         0.271 |        0.447 |
-| TUP*2014                     | 0.287*** | 0.159*** | 0.181*** |     0.081*** |      0.069*** |     0.127*** |
-|                              |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
-| TUP*2015                     | 0.183*** |    0.013 |   -0.004 |       -0.006 |         0.029 |        0.001 |
-|                              |    0.040 |    0.037 |    0.035 |        0.031 |         0.025 |        0.037 |
-| UCT*2014                     |    0.030 |  0.112** | 0.142*** |       0.08** |         0.034 |     0.196*** |
-|                              |    0.050 |    0.047 |    0.044 |        0.039 |         0.032 |        0.046 |
-| UCT*2015                     |    0.006 |   -0.026 |   -0.031 |       -0.026 |        -0.006 |       -0.038 |
-|                              |    0.050 |    0.047 |    0.044 |        0.039 |         0.032 |        0.046 |
-| 2014                         | 0.333*** | 0.579*** |  0.58*** |     0.136*** |      0.091*** |     0.636*** |
-|                              |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
-| 2015                         | 0.389*** | 0.701*** | 0.784*** |      0.17*** |      0.075*** |     0.726*** |
-|                              |    0.025 |    0.025 |    0.024 |        0.019 |         0.016 |        0.023 |
-| Bsln NA                      |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
-|                              |    0.000 |    0.000 |    0.000 |        0.000 |         0.000 |              |
-| Bsln2013                     |    0.000 |  0.017** |  0.015** |        0.000 |         0.0** |              |
-|                              |    0.000 |    0.008 |    0.006 |        0.000 |         0.000 |              |
-| F-stat                       |   13.720 |    5.086 |   10.529 |        1.594 |         3.460 |        4.797 |
-| N                            | 1500.000 | 1500.000 | 1500.000 |     1500.000 |      1500.000 |     1500.000 |
-| Beta_TUP_2014-Beta_Cash_2015 |  0.28*** | 0.185*** | 0.212*** |      0.107** |        0.075* |     0.165*** |
-| Beta_TUP_2015-Beta_Cash_2015 | 0.176*** |    0.039 |    0.027 |        0.021 |         0.035 |        0.039 |
+ #+results: savings_tables
 
-#+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
-|                              |   Savings |  LandCult |   LandOwn | Get Transfer | Give Transfer | Food Savings |
-|------------------------------+-----------+-----------+-----------+--------------+---------------+--------------|
-| CTL mean                     |    78.702 |    59.899 |    53.511 |       45.838 |        11.822 |       85.128 |
-|                              |   222.508 |   298.416 |   292.389 |      198.828 |        64.225 |      162.769 |
-| TUP*2014                     |    16.639 |    -2.350 |     2.604 |      42.001* |         2.752 |    42.527*** |
-|                              |    23.963 |    15.784 |    14.803 |       22.346 |        12.237 |       14.372 |
-| TUP*2015                     | 99.279*** |   -14.166 |   -16.181 |        0.829 |        -1.176 |       -1.425 |
-|                              |    23.963 |    15.784 |    14.803 |       22.346 |        12.237 |       14.372 |
-| UCT*2014                     |    32.459 |    16.471 |    18.034 |       18.582 |       -13.868 |       12.330 |
-|                              |    30.261 |    19.937 |    18.705 |       28.235 |        15.467 |       18.161 |
-| UCT*2015                     |    32.307 | -43.956** | -42.239** |        7.616 |         3.535 |       -4.720 |
-|                              |    30.261 |    19.937 |    18.705 |       28.235 |        15.467 |       18.161 |
-| 2014                         | 46.366*** |     8.877 |    12.887 |       22.631 |      18.106** |    44.774*** |
-|                              |    15.232 |    10.465 |    10.030 |       14.157 |         7.776 |        9.072 |
-| 2015                         | 74.558*** | 58.872*** | 57.342*** |    45.278*** |        11.311 |    85.128*** |
-|                              |    15.232 |    10.465 |    10.030 |       14.157 |         7.776 |        9.072 |
-| Bsln NA                      |     0.000 |     0.000 |     0.000 |        0.000 |         0.000 |              |
-|                              |     0.000 |     0.000 |     0.000 |        0.000 |         0.000 |              |
-| Bsln2013                     |   0.027** |     1.013 |    -2.596 |        0.011 |         0.015 |              |
-|                              |     0.012 |     3.196 |     2.473 |        0.026 |         0.027 |              |
-| F-stat                       |     6.275 |     3.148 |     2.738 |        0.687 |         0.327 |        3.052 |
-| N                            |  1500.000 |  1500.000 |  1500.000 |     1500.000 |      1500.000 |     1500.000 |
-| Beta_TUP_2014-Beta_Cash_2015 |   -15.668 |    41.605 |   44.843* |       34.386 |        -0.783 |     47.247** |
-| Beta_TUP_2015-Beta_Cash_2015 |  66.972** |    29.790 |    26.058 |       -6.786 |        -4.711 |        3.295 |
+ #+name: tab:nonzero_savings
+ #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access 
+ #+attr_latex: :environment longtable :align lrrrrrrr
+ |                                   | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | CTL mean                          | 0.394    | 0.718    | 0.806    | 0.170        | 0.080         | 0.726        |
+ |                                   | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | TUP*2014                          | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
+ |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | TUP*2015                          | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
+ |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | UCT*2014                          | 0.030    | 0.112**  | 0.142*** | 0.08**       | 0.034         | 0.196***     |
+ |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | UCT*2015                          | 0.006    | -0.026   | -0.031   | -0.026       | -0.006        | -0.038       |
+ |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | 2014                              | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
+ |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
+ | 2015                              | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
+ |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.023        |
+ | Bsln NA                           | 0.000    | 0.000    | 0.000    | 0.000        | 0.000         |              |
+ |                                   | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
+ | Bsln2013                          | 0.000    | 0.017**  | 0.015**  | 0.000        | 0.0**         |              |
+ |                                   | 0.000    | 0.008    | 0.006    | 0.000        | 0.000         |              |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | F-stat                            | 13.720   | 5.086    | 10.529   | 1.594        | 3.460         | 4.797        |
+ | N                                 | 1500.000 | 1500.000 | 1500.000 | 1500.000     | 1500.000      | 1500.000     |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | $\beta_{TUP2014}-\beta_{UCT2015}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
+ | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
+
+ #+name: tab:log_savings
+  #+attr_latex: :environment longtable :align lrrrrrrr
+ #+caption: Average log value (in SSP) of all cash and food savings and area of land.
+ |                                   | Savings   | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
+ |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | CTL mean                          | 4.61      | 0.95     | 0.85     |         5.08 | 4.56          | 4.22         |
+ |                                   | (1.23)    | (2.05)   | (1.82)   |       (0.93) | (0.96)        | (0.96)       |
+ |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | TUP*2014                          | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
+ |                                   | (0.15)    | (0.16)   | (0.15)   |       (0.22) | (0.27)        | (0.09)       |
+ | TUP*2015                          | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
+ |                                   | (0.14)    | (0.16)   | (0.14)   |       (0.22) | (0.31)        | (0.09)       |
+ | UCT*2014                          | 0.19      | 0.23     | 0.30     |         0.27 | -0.57         | -0.05        |
+ |                                   | (0.21)    | (0.21)   | (0.19)   |       (0.26) | (0.36)        | (0.11)       |
+ | UCT*2015                          | 0.513**   | -0.447** | -0.348*  |         0.46 | -0.01         | 0.202*       |
+ |                                   | (0.20)    | (0.20)   | (0.18)   |       (0.30) | (0.45)        | (0.12)       |
+ | 2014                              | 3.434***  | 0.246**  | 0.332*** |     3.856*** | 3.526***      | 3.626***     |
+ |                                   | (0.24)    | (0.12)   | (0.11)   |       (0.46) | (0.56)        | (0.06)       |
+ | 2015                              | 4.003***  | 0.96***  | 0.887*** |     4.475*** | 4.525***      | 4.216***     |
+ |                                   | (0.24)    | (0.11)   | (0.10)   |       (0.46) | (0.56)        | 0.06         |
+ | Bsln NA                           | 0.598***  | -0.03    | -0.06    |         0.61 | 0.01          |              |
+ |                                   | (0.23)    | (0.12)   | (0.11)   |       (0.46) | (0.55)        |              |
+ | Bsln2013                          | 0.123***  | 0.01     | -0.03    |         0.13 | 0.02          |              |
+ |                                   | 0.04      | 0.08     | 0.06     |         0.09 | 0.12          |              |
+ |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | F-stat                            | 20.87     | 4.50     | 2.88     |         3.93 | 3.92          | 20.33        |
+ | N                                 | 671.00    | 1042.00  | 1114.00  |       255.00 | 159.00        | 1073.00      |
+ |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | $\beta_{TUP2014}-\beta_{UCT2015}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
+ | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
 
 
-*** Land Holdings
+ | Proportion positive               | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | CTL mean                          | 0.394    | 0.718    | 0.806    | 0.170        | 0.080         | 0.726        |
+ |                                   | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | TUP*2014                          | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
+ |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | TUP*2015                          | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
+ |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | UCT*2014                          | 0.030    | 0.112**  | 0.142*** | 0.08**       | 0.034         | 0.196***     |
+ |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | UCT*2015                          | 0.006    | -0.026   | -0.031   | -0.026       | -0.006        | -0.038       |
+ |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | 2014                              | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
+ |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
+ | 2015                              | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
+ |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.023        |
+ | Bsln NA                           | 0.000    | 0.000    | 0.000    | 0.000        | 0.000         |              |
+ |                                   | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
+ | Bsln2013                          | 0.000    | 0.017**  | 0.015**  | 0.000        | 0.0**         |              |
+ |                                   | (0.000)  | (0.008)  | (0.006)  | (0.000)      | (0.000)       |              |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | F-stat                            | 13.720   | 5.086    | 10.529   | 1.594        | 3.460         | 4.797        |
+ | N                                 | 1500.000 | 1500.000 | 1500.000 | 1500.000     | 1500.000      | 1500.000     |
+ |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | $\beta_{TUP2014}-\beta_{UCT2015}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
+ | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
 
-We also examine land ownership and cultivation in each year. We find no evidence that
-either group is more or less likely to report owning or cultivating at least some
-land, though this may be in part because land ownership and cultivation is already
-very common. Anecdotaly, divesting from land ownership entirely could be seen as a
-relatively drastic decision. However, members of the cash group who are involved in
-agriculture report cultivating 65% less and owning 70% less land than the control
-group. This raises the interesting question of whether the cash group was likely to
-switch occupations from farming to non-farm self-employment.
 
-It could also raise questions around the underlying logic of the agrarian focus
-transfer in the TUP program, if unconstrained transfers prompt households to divest
-from these opportunities. This concern may be validated somewhat by the fact that TUP
-participants primarily stated a preference for small retail training and transfers
-over small animal husbandry or vegetable gardening.
+
 
 ** Income
 
