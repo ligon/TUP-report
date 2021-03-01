@@ -9,9 +9,10 @@
 #+LATEX_CLASS_OPTIONS: [12pt,letterpaper,titlepage]
 #+LATEX_HEADER: \usepackage{amsaddr}
 #+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
+#+LaTeX_HEADER:       \usepackage[T1]{fontenc}
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
 #+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
-#+LaTeX_HEADER:       \usepackage[T1]{fontenc}
+#+LATEX_HEADER_EXTRA: \usepackage{lscape}
 #+PROPERTY: header-args:python :results output raw table :noweb no-export :exports none :prologue "# -*- coding: utf-8 -*-"
 :END:
 
@@ -1526,7 +1527,7 @@ and shop premises.] assets (341 SSP more than the control group at
 endline, and 450 SSP at midline). 
 
 **** Recreating asset tables with and without treatment group fixed effects :ignore:
- *************** NOTE
+*************** NOTE
  In these tables, "Productive" includes "Livestock." CTL mean lists 
  the mean and standard deviation of the control group in 2015. Some
  assets were not included ('house', 'homestead', and 'netITN') either 
@@ -1546,7 +1547,7 @@ endline, and 450 SSP at midline).
  -divide the standard deviation of CTL mean by the sqrt of the number of control
  observations to make it comparable with the other point estimates and
  standard errors in the table?
- *************** END
+*************** END
 
 
  #+name: asset_values
@@ -1775,63 +1776,75 @@ print(df_to_orgtbl(b,sedf=se))
 
 
 *** Savings & Land
-**** Discussion                                                      :ignore:
+**** Discussion of savings accounts                                  :ignore:
 The TUP households were strongly encouraged to pay into a savings
-account maintained by BRAC at each of their weekly
-meetings. Anecdotally, this discouraged some women from attending the
-meetings, but Table [[tab:nonzero_savings]] nevertheless indicates that on
-average TUP households seem to significantly change behavior. TUP
-participants appear to be 48% (18 pp.) more likely to report having
-any savings at all at endline compared to control households.  Note
-however that since the TUP households also may regard their savings
-behavior as much more transparent to BRAC (and have received pressure
-to save from them) than the other groups, these households may simply
-be more likely to report that they are saving when asked.  Among the
-group that received cash, households were no more likely than the
-control group to report having positive cash savings. This suggests to
-us that receiving cash is not in itself sufficient to induce
-households to start holding cash on hand or in an account.
-Conversely, increases in reported savings among TUP households may
-have been due not only to their increased resources, but also to
-additional pressure to hold cash in a savings account.
+account maintained by BRAC at each of their weekly meetings.
+Regardless of their motivation, TUP households held savings accounts
+at significantly higher rates than both the control and UCT groups
+(Table [[tab:nonzero_savings]]); roughly 28% more in 2014, and 18% more
+in 2015.  The same is /not/ true of amounts of savings; conditional on
+having positive savings, TUP groups held roughly 30% /less/ than the
+control group in 2014 (Table [[tab:log_savings]]).  This pattern then
+changes dramatically in 2015, when both the TUP and UCT groups
+dramatically increase their cash savings relative to the control, with
+both groups holding over 50% more than the control (again, conditional
+on holding any savings at all).  It is, perhaps, not surprising that
+the UCT group held large savings in 2015---after all, giving these
+households cash was the point of the treatment, implemented not long
+before.  Understanding the increase in cash savings for the TUP group
+is more challenging; are their business investments yielding returns
+which allow them to save?  There may be some of this, but interpreting
+the increase for the TUP groups must also take into account that the
+number of TUP households holding positive savings fell from 2014 to
+2015 relative to other groups, for which the prevalence of positive
+savings increased from one third in 2014 to 39% in 2015.
 
-In Table [[tab:value_savings]], we consider the amount of cash saved in each year among
-those who reported savings. Here we see that cash and TUP groups increase the amount
-saved by a similar amount, with cash transfer recipients holding 47% (91.4 SSP) more
-and TUP households saving 42% (81.3 SSP) more. This is significantly less than was
-given to these households, but combined with the short-term consumption results, goes
-some distance in explaining the lack of effect on physical asset wealth. The cash
-seems to have gone primarily to consumption and savings. The asset transfer program
-on the other hand seems to have achieved a similar result among a greater proportion
-of households in addition to a notable increase in asset wealth.
+**** Discussion of food saved                                        :ignore:
 
 It is common in this community (and most in the region) to store non-perishable food
-like maize, cassava, or millet as a form of savings. This would seem particularly
-reasonable in a high-inflation context, where the price of grain had doubled in the
-previous year. At least as many households report saving in food (53%) as in cash
-(46%), with an average market value of 106 SSP. However, we find no evidence that
-either treatment group increased food savings.[fn:: Note that food savings was not
-measured at baseline, so these controls are omitted.]
+like maize, cassava, or millet as a form of savings.  This makes
+particular sense in a high-inflation context, where the price of grain had doubled in the
+previous year.  Most households report saving in food (73%) as in cash
+(40%).  The prevalence of food savings increased in significantly in 2014 for both TUP
+and UCT groups relative to the control.[fn:: Note that food savings was not
+measured at baseline, so these controls are omitted.]  However (Table
+[[tab:log_savings]]) the /amount/ of food savings conditional on it being
+positive was only significant for the TUP group, for whom it increased
+by roughly 30% in 2014, one round after treatment; similarly, after
+treatment the UCT group saved roughly 20% more in food than either the
+control or TUP groups in 2015. 
 
-Neither do we find evidence that either treatment increased the size or likelihood of
-giving or receiving interhousehold transfers, either in cash or in kind. These
-results are omitted since only 35 and 60 households reported giving and receiving
-transfers respectively, with no difference in group means.
+**** Discussion of transfers                                         :ignore:
 
-We also examine land ownership and cultivation in each year. We find no evidence that
-either group is more or less likely to report owning or cultivating at least some
-land, though this may be in part because land ownership and cultivation is already
-very common. Anecdotaly, divesting from land ownership entirely could be seen as a
-relatively drastic decision. However, members of the cash group who are involved in
-agriculture report cultivating 65% less and owning 70% less land than the control
-group. This raises the interesting question of whether the cash group was likely to
-switch occupations from farming to non-farm self-employment.
+Households in the TUP group were roughly 7--8% more likely to both
+give and receive transfers from other households in 2014.  The UCT
+group showed a similar propensity to /receive/ transfers in 2014, but
+did not give significantly more than the control group.  On the other
+hand, one cannot reject the hypothesis that the propensity to both
+give and receive was equal across both the TUP & UCT groups in 2014.
+And for both groups the propensity to make transfers was no different
+from that of the control group in 2015.  It's worth noting, however,
+that transfers and indeed /all/ the forms of financial activity we
+record in Table [[tab:nonzero_savings]] showed marked increases across all
+groups in both 2014 and 2015, relative to 2013.
 
-It could also raise questions around the underlying logic of the agrarian focus
-transfer in the TUP program, if unconstrained transfers prompt households to divest
-from these opportunities. This concern may be validated somewhat by the fact that TUP
-participants primarily stated a preference for small retail training and transfers
-over small animal husbandry or vegetable gardening.
+**** Discussion of land ownership & cultivation                      :ignore:
+
+We also examine land ownership and cultivation in each year.  In 2014 both the
+TUP and UCT groups are significantly  more likely cultivate land, and
+also to own it.  These difference from the control group disappear
+by 2015.  But interestingly, the amount of land owned or cultivated
+/conditional/ on having some land is not significantly different from
+the control for either group in 2014, and land cultivated is
+significantly /less/ than the control both groups in 2015 (the same
+goes for land ownership, but not at the same level of significance.
+
+As with the savings accounts, one is reminded that eligibility for the
+program depended on having access to cultivatable land---one wonders
+if the the high initial prevalence followed by a drop in area is a
+reallocation of resources for these households in response to the
+program, or a reversion to the mean.
+
 
 **** Recreating savings tables                                       :ignore:
 **************** NOTE
@@ -2178,6 +2191,7 @@ print(newdf)
 
  #+results: savings_tables
 
+#+LATEX: \begin{landscape}
  #+name: tab:nonzero_savings
  #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access 
  #+attr_latex: :environment longtable :align lrrrrrrr
@@ -2208,7 +2222,9 @@ print(newdf)
  |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
  | $\beta_{TUP2014}-\beta_{UCT2015}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
  | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
+#+LATEX: \end{landscape}
 
+#+LATEX: \begin{landscape}
  #+name: tab:log_savings
   #+attr_latex: :environment longtable :align lrrrrrrr
  #+caption: Average log value (in SSP) of all cash and food savings and area of land.
@@ -2239,85 +2255,21 @@ print(newdf)
  |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
  | $\beta_{TUP2014}-\beta_{UCT2015}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
  | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
-
-
- | Proportion positive               | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | CTL mean                          | 0.394    | 0.718    | 0.806    | 0.170        | 0.080         | 0.726        |
- |                                   | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | TUP*2014                          | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
- |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | TUP*2015                          | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
- |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | UCT*2014                          | 0.030    | 0.112**  | 0.142*** | 0.08**       | 0.034         | 0.196***     |
- |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | UCT*2015                          | 0.006    | -0.026   | -0.031   | -0.026       | -0.006        | -0.038       |
- |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | 2014                              | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
- |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
- | 2015                              | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
- |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.023        |
- | Bsln NA                           | 0.000    | 0.000    | 0.000    | 0.000        | 0.000         |              |
- |                                   | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
- | Bsln2013                          | 0.000    | 0.017**  | 0.015**  | 0.000        | 0.0**         |              |
- |                                   | (0.000)  | (0.008)  | (0.006)  | (0.000)      | (0.000)       |              |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | F-stat                            | 13.720   | 5.086    | 10.529   | 1.594        | 3.460         | 4.797        |
- | N                                 | 1500.000 | 1500.000 | 1500.000 | 1500.000     | 1500.000      | 1500.000     |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | $\beta_{TUP2014}-\beta_{UCT2015}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
- | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
+#+LATEX: \end{landscape}
 
 
 
 
 ** Income
-
+*** Discussion                                                       :ignore:
 Income was reliably measured only in 2015, and so our estimates do not control for
-baseline values. The control group in 2015 has a measured income of roughly 4325 SSP
-per year, or roughly $540 US (assuming an exchange rate of around 8). The TUP group
-sees a 327 SSP ($41 US, 7%) increase in annual average income, but with a highly
-skewed distribution and large standard errors. The related figure shows that total
-income is not particularly different among groups. Perhaps the main lesson is that
-the TUP group has measurably more reported livestock-related income, and less farm
-income, indicating a shift away from farming. The cash group may exhibit some
-substitution away from farm and livestock, but as is evident graphically, we do not
-observe sizable changes in total income for either treatment group. 
+baseline values. The control group in 2015 has a measured income of roughly 4300 SSP
+per year, or roughly $540 US (assuming an exchange rate of around 8).
+We estimate positive impacts on total income for both the TUP and UCT
+groups, but none of these are statistically significant (Table [[tab:income]]).  
 
-\newpage
-#+name: income_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<income_analysis>>
-return tab
-#+end_src
-
-#+Caption: Distribution of total observed income by group
-#+NAME: fig:Income_group
-[[../figures/Income_group.png]] 
-
-#+name: tab:Income
-#+caption: Average treatment effects by group-year on total value (in SSP) of income reported in 2015 by sector.
-#+attr_latex: :environment longtable :align lrrrrrrr
-|---------------------------+---------------+---------------+------------+------------|
-|                           | Farm          | Livestock     | Non-Farm   | Total      |
-|---------------------------+---------------+---------------+------------+------------|
-| CTL mean                  | $773.05$      | $640.33$      | $3774.49$  | $4325.54$  |
-|---------------------------+---------------+---------------+------------+------------|
-| TUP                       | $-142.20^{*}$ | $281.12^{**}$ | $86.24$    | $327.83$   |
-|                           | $(77.21)$     | $(126.30)$    | $(469.48)$ | $(455.95)$ |
-| CSH                       | $-26.15$      | $-83.81$      | $61.80$    | $7.92$     |
-|                           | $(100.82)$    | $(177.25)$    | $(620.53)$ | $(600.43)$ |
-|---------------------------+---------------+---------------+------------+------------|
-| N                         | $531.00$      | $380.00$      | $606.00$   | $671.00$   |
-| F-stat                    | $1.75$        | $3.48$        | $0.02$     | $0.28$     |
-|---------------------------+---------------+---------------+------------+------------|
-| $\beta^{TUP}-\beta^{CSH}$ | $-116.05$     | $364.94^{**}$ | $24.44$    | $319.91$   |
-|                           | $(105.79)$    | $(174.74)$    | $(651.27)$ | $(629.93)$ |
-|---------------------------+---------------+---------------+------------+------------|
-
-*** Recreating income table
-
+*** Recreating income table                                          :ignore:
+*************** NOTE
 This table uses income data from the endline survey. CTL mean comes from the constant
 and its standard error in the regression.
 
@@ -2339,6 +2291,8 @@ income) (what is currently being used) is better than using reported
 annual income
 -run the regressions without the constant? The original table does not
 have standard errors under CTL mean
+*************** END
+
 
 #+name: income_table
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
@@ -2531,7 +2485,8 @@ print(newdf)
 
 #+end_src
 
-#+RESULTS: income_table
+#+name: tab:income
+#+caption: Average treatment effects by group-year on total value (in SSP) of income reported in 2015 by sector.
 |                    |       Farm |  Livestock |    Non-Farm |       Total |
 |--------------------+------------+------------+-------------+-------------|
 | CTL mean           | 917.315*** | 924.611*** | 3326.162*** | 4317.337*** |
@@ -2540,15 +2495,16 @@ print(newdf)
 |                    |    100.918 |    215.596 |     829.082 |     844.725 |
 | UCT                |     48.833 |   -282.164 |     507.132 |     510.939 |
 |                    |    133.947 |    298.534 |    1077.298 |    1097.625 |
+|--------------------+------------+------------+-------------+-------------|
 | F-stat             |      1.309 |      0.983 |       0.683 |       1.101 |
 | N                  |    532.000 |    305.000 |     690.000 |     690.000 |
+|--------------------+------------+------------+-------------+-------------|
 | beta_TUP-beta_CASH |   -188.613 |    399.260 |     457.192 |     742.540 |
-
 
 
 ** Consumption
 
-The first outcome of interest we consider is household consumption,
+The next outcome of interest we consider is household consumption,
 defined as the market value of goods or services used by the
 household.  A sizable basket of goods were included in the survey
 module. These are separated into three categories: Food items (with a
@@ -2570,9 +2526,9 @@ later, of enrolling randomly selected households into the TUP program
 versus giving them a cash transfer of roughly equal value?  We
 measured the effect of cash on a three-day recall of food consumption
 12 months after the transfer, and find a statistically significant
-increase of 14.8 SSP per day.  We first measured the effect of the TUP
+increase of 14 SSP per day.  We first measured the effect of the TUP
 program on average food consumption 6--9 months after the asset
-transfers, and found a slightly larger effect of 18.4 SSP. The
+transfers, and found a slightly larger effect of 18 SSP. The
 differences between these two are not significant (see the \(t\)-test
 in the row labeled $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$), and both
 result in a 13--17% increase in the value of food expenditures
@@ -2777,7 +2733,7 @@ portions" at mealtimes; going the "whole day without eating"; and
 being "worried" about not having enough food.  The rows corresponding
 to 2014 and 2015 can be interpreted as the proportion of people who
 report experiencing each in a typical week.  While average levels of
-these variables indicate very high food insecurity, and a large
+these variables indicate very high food insecurity, and an
 increase in food insecurity between 2014 and 2015, the estimated
 effects of both the TUP and UCT programs are comparatively small and
 are generally statistically insignificant.
@@ -3005,7 +2961,7 @@ print(df_to_orgtbl(b,sedf=se))
 
 
 ** Exposure to Conflict
-
+*** Discussion                                                       :ignore:
 In 2014, households were surveyed shortly after the NGO's offices had re-opened in
 the wake of the outbreak of widespread armed conflict. Respondents were asked a short
 set of questions about whether they were directly affected, and if so, in what way.
@@ -3013,75 +2969,64 @@ There had only been a few incidents of violence near Yei town at that point, and
 directly involved ethnic groups made up a small portion of the local population. There
 is no clear comparison group to which we might compare our sample, and the economic
 climate changed over this same period in several ways that were probably not directly
-caused by the violence. As such, we have no clear means of identifying the effect of
+caused by the violence.  We have no clear means of identifying the effect of
 the conflict itself on household welfare. Nonetheless, it is interesting to consider
 correlates with self-reported exposure to the conflict, and to see if program
-assignment had any effect on households' exposure or response.
+assignment had any effect on households' reported exposure or response.
 
-Our main outcomes of interest are whether individuals say they were "worried" or
-"directly affected" by the violence, unable to invest in a farm or business as a
-result, migrated as a cautionary measure, or did something else to protect the lives
-of family members. A final question among those who took no cautionary measures was
-whether this because they did not have the means (i.e. "NoMeans"). TUP participants
-are 24% (13 pp.) less likely to report having been "affected" by the conflict, and
-38% (6 pp.) less likely to report that they were affected specifically by being
-unable to plant crops or invest in their business. This was the second most common
-way in which households reported being affected behind "needed to relocate or
-migrate", where respondents are not clearly different. Nonetheless, this raises the
-possibility that having received a significant asset transfer and the expectation of
-NGO support around the outbreak of
-conflict may have helped mitigate the conflict's negative effect on investment and
-protect households from being affected overall.
-
-#+name: conflict_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<conflict_analysis>>
-return Table
-#+end_src
-
-\newpage
-
-#+name: tab:conflict_exposure
-#+caption: Average treatment effects by group-year on the probability of having been affected in a significant way by the outbreak of violence in late 2013
-#+attr_latex: :environment longtable :align lrrrrrrr
-|----------+---------------+--------------+--------------+--------------+--------------+--------------|
-|          | Affected      | Migrated     | NoInvest     | NoMeans      | ProtectLives | Worried      |
-|----------+---------------+--------------+--------------+--------------+--------------+--------------|
-| CTL mean | $0.53^{***}$  | $0.33^{***}$ | $0.16^{***}$ | $0.33^{***}$ | $0.38^{***}$ | $0.93^{***}$ |
-|          | $( 0.03)$     | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.01)$    |
-| TUP      | $-0.13^{***}$ | $0.04$       | $-0.06^{**}$ | $-0.06$      | $0.02$       | $-0.02$      |
-|          | $( 0.04)$     | $( 0.04)$    | $( 0.03)$    | $( 0.04)$    | $( 0.05)$    | $( 0.02)$    |
-|----------+---------------+--------------+--------------+--------------+--------------+--------------|
-| F-stat   | $9.20$        | $0.96$       | $3.95$       | $2.55$       | $0.19$       | $0.49$       |
-| N        | $601.00$      | $655.00$     | $655.00$     | $655.00$     | $585.00$     | $603.00$     |
-|----------+---------------+--------------+--------------+--------------+--------------+--------------|
-
-#+Caption: % of Sample reporting exposure to conflict by group.
-#+NAME: fig:conflict_exposure
-[[../figures/conflict_exposure.png]] 
-
-*** Recreating the exposure to conflict table
-
-In this table, the 'Cash' group is included within the 'Control' group
+In Table [[tab:conflict]], the UCT group is included with controls
 because the cash transfers weren't given out until immediately after
 the midline survey, and this table uses data from the midline
 survey. All variables are binary variables. CTL mean comes from the constant
 and its standard error in the regression.
 
-Affected and Worried are whether or not respondents answered that they were "directly affected
-by any of the violence" or "worried that the conflict would affect you
-since December," respectively. NoInvest is whether they said that one
-way they were directly affected is that they could not invest in
-business. NoMeans is whether they said they did not do anything to
-protect the lives of family members or to protect their assets, and
-listed the reason as "didn't have the means." ProtectLives is whether
-the respondent did anything (including migration) besides "nothing" to
-protect the lives of their family members - this could be migrating to
-stay with friend or family, migrating and finding own accommodation,
-looking for protection with NGO, or looking for protection with
-government or military. Migrated is if the respondent listed migration as one of
-the ways they were directly affected, and/or if they said they migrated to
-protect the lives of their family. 
+Our main outcomes of interest are whether individuals say they were
+"/Worried/" or "directly /Affected/" by the violence, unable to invest
+(/NoInvest/) in
+a farm or business as a result, /Migrated/ as a cautionary measure, or
+did something else to /ProtectLives/ of family members. A final
+question among those who took no cautionary measures was whether this
+because they did not have the means (/NoMeans/). TUP participants
+are 24% (13 pp.) less likely to report having been "Affected" by the
+conflict, and 38% (7.6 pp.) less likely to report that they were
+affected specifically by being unable to plant crops or invest in
+their business. This was the second most common way in which
+households reported being affected behind "needed to relocate or
+migrate", where TUP respondents are not clearly different. Finally,
+TUP respondents were significantly less likely (10.9 pp) to report
+that they took no action to help others because they lacked the means
+(/NoMeans/) to do so.
+
+Overall, nearly all households were worried (93%), and nearly 40%
+migrated to avoid violence; 31% also did something else to protect the
+lives of their family members.  In these reactions TUP households were
+not detectably different from the control group.  However, TUP
+households were significantly (13 pp.) less likely to report that they were
+directly affected by violence; also 8 pp. less likely to report that
+their ability to invest in land or business was affected by the
+conflict; and 11 pp. less likely to report that any /lack/ of action
+was due to a lack of means.  All these significant differences
+seem to indicate that the TUP program had some mitigating effect on
+the effects of conflict on the household.
+
+*** Recreating the exposure to conflict table                        :ignore:
+
+*************** NOTE
+Affected and Worried are whether or not respondents answered that they
+were "directly affected by any of the violence" or "worried that the
+conflict would affect you since December," respectively. NoInvest is
+whether they said that one way they were directly affected is that
+they could not invest in business. NoMeans is whether they said they
+did not do anything to protect the lives of family members or to
+protect their assets, and listed the reason as "didn't have the
+means." ProtectLives is whether the respondent did anything (including
+migration) besides "nothing" to protect the lives of their family
+members - this could be migrating to stay with friend or family,
+migrating and finding own accommodation, looking for protection with
+NGO, or looking for protection with government or military. Migrated
+is if the respondent listed migration as one of the ways they were
+directly affected, and/or if they said they migrated to protect the
+lives of their family.
 
 Differences with previous code: 
 -this code adds relevant variables ('s22_4d_m' and 's22_4e_m': other
@@ -3101,8 +3046,10 @@ members or to protect their assets
 
 Next steps: 
 -recreate bar graph figure
+*************** END
 
-#+name: exposure_to_conflict
+
+#+name: conflict
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
 data_assignment  = "../../TUP-report/documents/master_assignment.csv"
@@ -3237,6 +3184,10 @@ print("|-\n" + newdf1 + "|-\n" + newdf2 + "|-\n")
 #+end_src
 
 #+RESULTS: exposure_to_conflict
+
+#+name: tab:conflict
+#+caption: Average treatment effects by group-year on the probability of having been affected in a significant way by the outbreak of violence in late 2013
+#+attr_latex: :environment longtable :align lrrrrrr
 |----------+-----------+----------+----------+----------+--------------+----------|
 |          |  Affected | Migrated | NoInvest |  NoMeans | ProtectLives |  Worried |
 |----------+-----------+----------+----------+----------+--------------+----------|
@@ -3251,28 +3202,31 @@ print("|-\n" + newdf1 + "|-\n" + newdf2 + "|-\n")
 | N        |   601.000 |  606.000 |  606.000 |  402.000 |      585.000 |  603.000 |
 |----------+-----------+----------+----------+----------+--------------+----------|
 
-* Concluding Remarks
+* Concluding Remarks                                               :noexport:
   
 BRAC's South Sudan pilot of the TUP program represents the only such test of the
 ultra-poor graduation framework conducted in an area of significant political and
 economic instability. It also represents one of the only direct comparisons of this
-model to a similarly expensive unconditional cash transfer, arguably its most
-sensible benchmark for success. As such, while our study may not generalize to
-contexts with high-functioning cash economies and relative political stability, it
-provides suggestive evidence as to the best way of transfering wealth in order to
-help poor and vulnerable households.
+model to a similarly expensive unconditional cash transfer, arguably the most
+sensible benchmark for success.  Though our study does not generalize to
+contexts with high-functioning cash economies and relative political
+stability, within its context it provides some clues about the
+benefits of both TUP and UCT programs.
 
-Cash transfers appear to increase consumption and possibly shift investment from
-agriculture to non-farm activities, without a related increase in wealth or income.
-Conversely, the TUP program increased wealth and directly shifted work from
-agriculture to livestock, with increased consumption in the short run. We also find
-that having received asset transfers dampened the negative investment effects
-following the outbreak of violence.[fn:: Whether a cash transfer would have had a
-similar mitigating effect is hard to say.] We tentatively conclude that targeted
-asset transfers can play a constructive role in helping poor, self-employed
-households when they face economic uncertainty. And while cash increases household
-consumption, the goal of improving income or wealth is well served by the additional
-services that the ultra-poor graduation framework offer.
+Cash transfers appear to increase consumption and possibly shift
+investment from agriculture to non-farm activities, without a related
+increase in wealth or income.  Conversely, the TUP program increased
+wealth and directly shifted work from agriculture to livestock, with
+increased consumption in the short run. We also find that having
+received asset transfers dampened the negative investment effects
+following the outbreak of violence.  It is impossible to say whether a
+cash transfer would have had a similar mitigating effect.  We
+tentatively conclude that targeted asset transfers can play a
+constructive role in helping poor, self-employed households when they
+face economic uncertainty. And while cash increases household
+consumption, the goal of improving income or wealth is well served by
+the additional services that the ultra-poor graduation framework
+offer.
   
 * References
    \renewcommand{\refname}{}
