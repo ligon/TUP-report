@@ -2684,8 +2684,7 @@ print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
 
 #+end_src
 
-#+latex: \begin{landscape}
-#+name: tab:consumption_w_fe
+#+name: tab:consumption
 #+caption: Effect on consumption expenditures with different periods of recall.  Food expenditures are for the past three days, non-durable non-food for the past month, and durables the past year.
 |                                         | Food (3-day) | Monthly      | Yearly        |
 |-----------------------------------------+--------------+--------------+---------------|
@@ -2712,7 +2711,7 @@ print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
 |                                         | (9.17)       | (48.36)      | (273.11)      |
 | $\beta_{TUP2015}-\beta_{UCT2015}$       | -12.36^{*}   | -35.06       | 39.77         |
 |                                         | (7.45)       | (39.29)      | (221.80)      |
-#+latex: \end{landscape}
+
 
 It is worth noting that the effects of the TUP program on consumption
 are not lasting---two years after the distribution of assets (in 2015)
@@ -2934,6 +2933,7 @@ print(df_to_orgtbl(b,sedf=se))
 
 *** food insecurity table                                            :ignore:
 
+#+latex: \begin{landscape}
 #+name: tab:food_insecurity
 #+caption: Effects of programs on different measures of food insecurity.
 |                                     | Fewer Meals     | Went hungry     | No food in house | Limited portions | Whole day without eating | Worried         |
@@ -2959,7 +2959,7 @@ print(df_to_orgtbl(b,sedf=se))
 |                                     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))      | (\(0.068\))      | (\(0.069\))              | (\(0.068\))     |
 | $\beta_{TUP2015} - \beta_{UCT2015}$ | \(0.027\)       | \(0.032\)       | \(-0.026\)       | \(-0.005\)       | \(0.028\)                | \(-0.008\)      |
 |                                     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))      | (\(0.067\))      | (\(0.068\))              | (\(0.067\))     |
-
+#+latex: \end{landscape}
 
 
 ** Exposure to Conflict
