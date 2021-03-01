@@ -1,0 +1,1027 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/ligon/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+
+
+* Output from Elliott's code (older version)                :ignore:noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-02-23 Tue 10:46
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Data Collection & Timeline/Balance on Obervables
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+name: balance_check
+#+BEGIN_SRC python :dir ../analysis :results value table :exports none
+import check_balance
+return check_balance.tables
+#+END_SRC
+
+
+#+name: tab:balance_check
+#+caption: Means of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively
+#+attr_latex: :environment longtable :align lrrrrr
+|-----------------+---------+--------------+--------------+-----|
+| Consumption     |     CTL | $\Delta$ TUP | $\Delta$ CSH | $N$ |
+|-----------------+---------+--------------+--------------+-----|
+| Meat            |    4.21 |       -0.568 |       -0.052 | 378 |
+| Fuel            |    0.76 |       -0.039 |       -0.072 | 456 |
+| Clothesfootwear |    0.67 |       -0.026 |        0.033 | 595 |
+| Soap            |    0.48 |       -0.008 |       -0.026 | 536 |
+| Fish            |    2.50 |       -0.154 |       -0.156 | 474 |
+| Charities       |    0.03 |       -0.006 |          0.0 | 134 |
+| Cereals         |    9.19 |       -0.947 |         0.27 | 605 |
+| Transport       |    0.18 |       -0.033 |        0.002 | 193 |
+| Cosmetics       |    0.68 |        0.027 |       -0.125 | 468 |
+| Sugar           |    1.71 |       -0.078 |       -0.189 | 604 |
+| Egg             |    1.10 |       -0.091 |        0.038 | 276 |
+| Oil             |    1.36 |        -0.13 |       -0.141 | 613 |
+| Ceremonies      |    0.13 |        0.006 |        0.026 | 152 |
+| Beans           |    0.70 |        0.232 |        0.226 | 192 |
+| Fruit           |    0.69 |       -0.089 |        0.001 | 272 |
+| Textiles        |    0.16 |       -0.004 |  $0.056^{*}$ | 376 |
+| Utensils        |    0.25 |       -0.009 |        0.008 | 442 |
+| Dowry           |    1.27 |       -0.041 |        0.028 | 126 |
+| Furniture       |    0.20 |       -0.014 |        0.045 | 368 |
+| Salt            |    0.45 |       -0.026 |        0.007 | 617 |
+| Vegetables      |    1.54 |       -0.165 |        -0.18 | 471 |
+|-----------------+---------+--------------+--------------+-----|
+| Assets          |     CTL | $\Delta$ TUP | $\Delta$ CSH | $N$ |
+|-----------------+---------+--------------+--------------+-----|
+| Smallanimals    |  236.60 |      -86.068 |     -123.133 | 123 |
+| Bicycle         |  109.08 |      -12.555 |      -11.414 | 171 |
+| Radio           |   58.45 |       -5.968 |      -16.529 | 260 |
+| Motorcycle      |  341.74 |      192.956 | 353.836^{**} |  93 |
+| Net             |   19.16 |        0.668 |        0.247 | 423 |
+| Poultry         |   42.40 |       -3.365 |       -8.894 | 161 |
+| Bed             |  241.27 |        7.992 |       32.762 | 521 |
+| Chairtables     |  206.79 |      -29.368 |        3.617 | 531 |
+| Mobile          |   97.54 |       12.627 |       -4.198 | 414 |
+| Netitn          |    7.82 |        1.215 |        1.178 | 181 |
+| Cosmetics       |    0.68 |        0.027 |       -0.125 | 468 |
+|-----------------+---------+--------------+--------------+-----|
+| Household       |     CTL | $\Delta$ TUP | $\Delta$ CSH | $N$ |
+|-----------------+---------+--------------+--------------+-----|
+| Daily Food      |   25.18 |       -2.215 |       -0.261 | 643 |
+| Daily Exp       |   29.90 |       -2.167 |       -0.288 | 646 |
+| No. Houses      |    2.83 |        0.031 |        0.118 | 543 |
+| In Business     |    0.40 |        0.038 |        0.017 | 265 |
+| Cereals         |    9.19 |       -0.947 |         0.27 | 605 |
+| # Child         |    3.26 |        0.118 |        0.108 | 594 |
+| Asset Tot.      | 1757.05 |      -44.791 |       98.654 | 603 |
+| Cash Savings    |  236.90 |        28.52 |      -66.812 | 431 |
+| HH size         |    7.23 |       -0.175 |          0.3 | 648 |
+|-----------------+---------+--------------+--------------+-----|
+
+This is simply suggestive evidence that the treatment and control groups were similar
+in observables at baseline, with the exception that the cash group has atypically
+more motorcycles and clothing. But it does suggests that our stratified randomization
+was not too far from creating comparable group
+
+* Output from Ethan's code (newer version)                  :ignore:noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-02-23 Tue 10:56
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Data Collection & Timeline/Balance on Obervables
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+name: balance_check_2
+#+BEGIN_SRC python :dir ../analysis :results output raw
+import check_balance
+#+END_SRC
+
+#+RESULTS: balance_check_2
+| Consumption               |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| Cereals                   |   9.0 |       8.2 |        9.5 |
+| Beans                     |   0.7 |       0.9 |        0.9 |
+| Oil                       |   1.3 |       1.2 |        1.2 |
+| Salt                      |   0.4 |       0.4 |        0.5 |
+| Sugar                     |   1.7 |       1.6 |        1.5 |
+| Meat                      |   4.1 |       3.6 |        4.2 |
+| Fish                      |   2.4 |       2.4 |        2.3 |
+| Egg                       |   1.0 |       1.0 |        1.1 |
+| Milk                      |   1.0 |       1.0 |        1.1 |
+| Vegetables                |   1.5 |       1.4 |        1.4 |
+| Fruit                     |   0.6 |       0.6 |        0.7 |
+| Spices                    |   0.2 |       0.3 |        0.2 |
+| Alcohol                   |   0.0 |       0.0 |        0.0 |
+| Other foods               |   0.0 |       0.0 |        0.0 |
+| Fuel                      |   0.8 |       0.7 |        0.7 |
+| Cosmetics                 |   0.7 |       0.7 |        0.6 |
+| Soap                      |   0.5 |       0.5 |        0.5 |
+| Transport                 |   0.2 |       0.1 |        0.2 |
+| Entertainment             |   0.1 |       0.1 |        0.1 |
+| Clothes & footwear        |   0.7 |       0.6 |        0.7 |
+| Utensils                  |   0.2 |       0.2 |        0.3 |
+| Furniture                 |   0.2 |       0.2 |        0.2 |
+| Textiles                  |   0.1 |       0.1 |    0.2^{*} |
+| Ceremonies                |   0.1 |       0.1 |        0.2 |
+| Charities                 |   0.0 |       0.0 |        0.0 |
+| Dowry                     |   1.3 |       1.2 |        1.3 |
+| Other                     |   0.0 |       0.0 |        0.0 |
+|---------------------------+-------+-----------+------------|
+| Asset                     |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| Cows                      | 261.8 |     112.7 |      153.6 |
+| Small animals             | 252.1 |     150.5 | 113.5^{**} |
+| Poultry                   |  43.8 |      39.0 |       33.5 |
+| Plough                    |   0.0 |       0.0 |        0.0 |
+| Shed                      |   1.8 |  0.0^{**} |        1.6 |
+| Shop                      |  95.5 |      79.4 |       69.8 |
+| Radio                     |  57.6 |      52.5 |       41.9 |
+| Tv                        |  29.0 |      45.9 |       36.1 |
+| Fan                       |   1.6 |       1.8 |    6.0^{*} |
+| Mobile                    |  92.1 | 110.2^{*} |       93.3 |
+| Chairs & Tables           | 205.6 |     177.4 |      210.4 |
+| Bed                       | 232.3 |     249.3 |      274.0 |
+| Bicycle                   | 112.4 |      96.5 |       97.7 |
+| Carts                     |   2.6 |       3.5 |        1.6 |
+| Sewing                    |  12.5 |       5.0 |   1.2^{**} |
+| Net                       |  19.3 |      19.8 |       19.4 |
+| Motorcycle                | 342.7 |     534.7 | 695.6^{**} |
+|---------------------------+-------+-----------+------------|
+| Household characteristics |   CTL |       TUP |        CSH |
+|---------------------------+-------+-----------+------------|
+| HH size                   |   7.3 |       7.1 |        7.5 |
+| # Children                |   3.3 |       3.4 |        3.4 |
+| # Houses                  |   2.8 |       2.9 |        2.9 |
+| In Business               |   0.4 |       0.4 |        0.4 |
+|---------------------------+-------+-----------+------------|
+| $N$                       |   125 |       262 |        249 |
+
+
+
+
+* Box and whisker plots for Elliott's balance table                :noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-02-23 Tue 10:57
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Data Collection & Timeline/Balance on Obervables
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+
+#+Caption: Box and whisker plot of textiles means
+#+NAME: fig:box_whisker_textiles_Elliott
+[[../documents/textiles_Elliott.png]]
+
+#+Caption: Box and whisker plot of motorcycles means
+#+NAME: fig:box_whisker_motorcycles_Elliott
+[[../documents/motorcycle_Elliott.png]]
+
+
+
+* Original attrition tables                                 :ignore:noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-02-23 Tue 11:16
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Data Collection & Timeline/Sample Selection
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+name: attrition_check
+#+BEGIN_SRC python :dir ../analysis :results value table :exports none
+import check_attrition
+return check_attrition.TAB
+#+END_SRC
+
+#+caption: Total number of households in sample by group and round.  Numbers in parentheses indicate the size of of the subset also interviewed at baseline.
+#+attr_latex: :environment longtable :align lrrrrr
+#+name: tab:attrition_count
+|-------------+------+-----------+-----------|
+| Full Sample | 2013 | 2014      | 2015      |
+|-------------+------+-----------+-----------|
+| Control     |  281 | 265 (219) | 347 (262) |
+| UCT         |  124 | 113 (112) | 111 (110) |
+| TUP         |  244 | 228 (223) | 236 (231) |
+|-------------+------+-----------+-----------|
+| All         |  649 | 606 (554) | 694 (603) |
+|-------------+------+-----------+-----------|
+
+
+
+* Surveyed households also in baseline                      :ignore:noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-02-23 Tue 11:16
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Data Collection & Timeline/Sample Selection
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+caption: Number of households in sample with baseline survey by group and round
+|-----------------+---------+---------+---------|
+| Balanced Sample |    2013 |    2014 |    2015 |
+|-----------------+---------+---------+---------|
+| UCT            | 124.000 | 112.000 | 110.000 |
+| Control         | 281.000 | 219.000 | 262.000 |
+| TUP             | 244.000 | 223.000 | 231.000 |
+|-----------------+---------+---------+---------|
+| All             | 649.000 | 554.000 | 603.000 |
+|-----------------+---------+---------+---------|
+
+*************** Further checks on assignment and samples
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+import sys
+sys.path.append('../analysis')
+from check_attrition import D
+
+R=pd.read_stata('../../TUP-data/random_assignment.dta')
+R=R.set_index('respid')      
+R.index.name = 'idno'
+
+A=pd.DataFrame({'D':D['group'],'R':R['group'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+results:
+|        | D       | R          | B         | M         | E         |
+|--------+---------+------------+-----------+-----------+-----------|
+| 1042.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1106.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1154.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1157.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1186.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1190.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1207.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1217.0 | Control | Cash       | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1222.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1248.0 | ---     | High Asset | ---       | ---       | ---       |
+| 1252.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1264.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1285.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1293.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1295.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1300.0 | Control | Cash       | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1305.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1311.0 | Control | ---        | \(0.000\) | \(1.000\) | \(0.000\) |
+| 1314.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1315.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1316.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1320.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1338.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1348.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1350.0 | Control | ---        | \(0.000\) | \(1.000\) | \(0.000\) |
+| 1352.0 | Control | High Asset | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1368.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1403.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1421.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1436.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1453.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1476.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1480.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1486.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1496.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1502.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1505.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1507.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1548.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1561.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1591.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1619.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1642.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1667.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1679.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1690.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1702.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1703.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1730.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1731.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1744.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1747.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1748.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1749.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1750.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
+| 1755.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1773.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1780.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1792.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1797.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1802.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1813.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1814.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1818.0 | Control | Low Asset  | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1826.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1878.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1892.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1894.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1910.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1915.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1922.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1927.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1950.0 | Control | ---        | \(0.000\) | \(1.000\) | \(0.000\) |
+| 1956.0 | Control | Low Asset  | \(1.000\) | \(1.000\) | \(1.000\) |
+| 1967.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1988.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 1991.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 1994.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1995.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2002.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2012.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2024.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2030.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2032.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 2039.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2047.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2051.0 | Control | High Asset | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2061.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2066.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2071.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2077.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2079.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2082.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2094.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 2103.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2106.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2107.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2114.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2115.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2139.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2160.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2205.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
+| 2214.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2225.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2226.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 2232.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2234.0 | Control | ---        | \(0.000\) | \(0.000\) | \(1.000\) |
+| 2238.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2239.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2250.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2260.0 | Control | ---        | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2261.0 | Control | ---        | \(1.000\) | \(0.000\) | \(1.000\) |
+| 2267.0 | Control | Low Asset  | \(1.000\) | \(1.000\) | \(1.000\) |
+| 2268.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
+| 2269.0 | Control | ---        | \(1.000\) | \(0.000\) | \(0.000\) |
+| 2270.0 | Control | ---        | \(1.000\) | \(1.000\) | \(1.000\) |
+
+We see seven cases in which there's some discrepancy in the assignment, and 107 cases in which the 
+dataframe =D= has a household assigned to "Control" but where
+=random_assignment= has no assignment recorded. 
+
+# same as above but with locations.csv
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+import sys
+sys.path.append('../analysis')
+from check_attrition import D
+
+R=pd.read_csv('../../TUP-data/csv/locations.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+R.replace(to_replace='Gift', value='Control', inplace=True)
+
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Group'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|      | D       | R       | B         | M         | E         |
+|------+---------+---------+-----------+-----------+-----------|
+| 1157 | Control | Tup     | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1248 | ---     | Tup     | ---       | ---       | ---       |
+| 1462 | ---     | Control | ---       | ---       | ---       |
+| 1647 | ---     | Control | ---       | ---       | ---       |
+| 1763 | ---     | Control | ---       | ---       | ---       |
+| 2131 | Tup     | Control | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2204 | ---     | Control | ---       | ---       | ---       |
+
+# same as above but with checklist_20150602.csv
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+import sys
+sys.path.append('../analysis')
+from check_attrition import D
+
+R=pd.read_csv( "../../ElliottTUP/endline/checklists/checklist_20150602.csv")
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+R.replace(to_replace='Gift', value='Control', inplace=True)
+R.replace(to_replace='First', value='Cash', inplace=True)
+R.replace(to_replace='Second', value='Cash', inplace=True)
+
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Give'],'B':D['Base'],'M':D['Mid'],'E':D['End']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|      | D       | R       | B         | M         | E         |
+|------+---------+---------+-----------+-----------+-----------|
+| 1157 | Control | Tup     | \(1.000\) | \(0.000\) | \(1.000\) |
+| 1248 | ---     | Tup     | ---       | ---       | ---       |
+| 1462 | ---     | Control | ---       | ---       | ---       |
+| 1647 | ---     | Control | ---       | ---       | ---       |
+| 1763 | ---     | Control | ---       | ---       | ---       |
+| 2131 | Tup     | Control | \(0.000\) | \(1.000\) | \(1.000\) |
+| 2204 | ---     | Control | ---       | ---       | ---       |
+
+# same as above but with locations.csv as R and asset_assign.csv as D
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+
+R=pd.read_csv('../../TUP-data/csv/locations.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+R.replace(to_replace='Gift', value='Control', inplace=True)
+
+D = pd.read_csv('../../TUP-data/csv/asset_assign.csv')
+D=D.set_index('respid')      
+D.index.name = 'idno'
+D.replace(to_replace = 'TUP-high asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Group']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+| idno | D   | R       |
+|------+-----+---------|
+| 1042 | --- | Control |
+| 1106 | --- | Control |
+| 1154 | --- | Control |
+| 1157 | --- | Tup     |
+| 1186 | --- | Control |
+| 1190 | --- | Control |
+| 1207 | --- | Control |
+| 1222 | --- | Control |
+| 1252 | --- | Control |
+| 1264 | --- | Control |
+| 1285 | --- | Control |
+| 1293 | --- | Control |
+| 1295 | --- | Control |
+| 1305 | --- | Control |
+| 1311 | --- | Control |
+| 1314 | --- | Control |
+| 1315 | --- | Control |
+| 1316 | --- | Control |
+| 1320 | --- | Control |
+| 1338 | --- | Control |
+| 1348 | --- | Control |
+| 1350 | --- | Control |
+| 1368 | --- | Control |
+| 1403 | --- | Control |
+| 1421 | --- | Control |
+| 1436 | --- | Control |
+| 1453 | --- | Control |
+| 1462 | --- | Control |
+| 1476 | --- | Control |
+| 1480 | --- | Control |
+| 1486 | --- | Control |
+| 1496 | --- | Control |
+| 1502 | --- | Control |
+| 1505 | --- | Control |
+| 1507 | --- | Control |
+| 1548 | --- | Control |
+| 1561 | --- | Control |
+| 1591 | --- | Control |
+| 1619 | --- | Control |
+| 1642 | --- | Control |
+| 1647 | --- | Control |
+| 1667 | --- | Control |
+| 1679 | --- | Control |
+| 1690 | --- | Control |
+| 1702 | --- | Control |
+| 1703 | --- | Control |
+| 1730 | --- | Control |
+| 1731 | --- | Control |
+| 1744 | --- | Control |
+| 1747 | --- | Control |
+| 1748 | --- | Control |
+| 1749 | --- | Control |
+| 1750 | --- | Control |
+| 1755 | --- | Control |
+| 1763 | --- | Control |
+| 1773 | --- | Control |
+| 1780 | --- | Control |
+| 1792 | --- | Control |
+| 1797 | --- | Control |
+| 1802 | --- | Control |
+| 1813 | --- | Control |
+| 1814 | --- | Control |
+| 1826 | --- | Control |
+| 1878 | --- | Control |
+| 1892 | --- | Control |
+| 1894 | --- | Control |
+| 1910 | --- | Control |
+| 1915 | --- | Control |
+| 1922 | --- | Control |
+| 1927 | --- | Control |
+| 1950 | --- | Control |
+| 1967 | --- | Control |
+| 1988 | --- | Control |
+| 1991 | --- | Control |
+| 1994 | --- | Control |
+| 1995 | --- | Control |
+| 2002 | --- | Control |
+| 2012 | --- | Control |
+| 2024 | --- | Control |
+| 2030 | --- | Control |
+| 2032 | --- | Control |
+| 2039 | --- | Control |
+| 2047 | --- | Control |
+| 2061 | --- | Control |
+| 2066 | --- | Control |
+| 2071 | --- | Control |
+| 2077 | --- | Control |
+| 2079 | --- | Control |
+| 2082 | --- | Control |
+| 2094 | --- | Control |
+| 2103 | --- | Control |
+| 2106 | --- | Control |
+| 2107 | --- | Control |
+| 2114 | --- | Control |
+| 2115 | --- | Control |
+| 2131 | Tup | Control |
+| 2139 | --- | Control |
+| 2160 | --- | Control |
+| 2204 | --- | Control |
+| 2205 | --- | Control |
+| 2214 | --- | Control |
+| 2225 | --- | Control |
+| 2226 | --- | Control |
+| 2232 | --- | Control |
+| 2234 | --- | Control |
+| 2238 | --- | Control |
+| 2239 | --- | Control |
+| 2250 | --- | Control |
+| 2260 | --- | Control |
+| 2261 | --- | Control |
+| 2268 | --- | Control |
+| 2269 | --- | Control |
+| 2270 | --- | Control |
+
+# same as above but with master_assignment.csv as R and TUP_full.dta (group) as D
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+
+R=pd.read_csv('../../TUP-report/documents/master_assignment.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+
+D = pd.read_stata('../../TUP-data/TUP_full.dta')
+D=D.set_index('idno')      
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group'],'R':R['Group']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|   idno | D       | R       |
+|--------+---------+---------|
+| 1248.0 | ---     | Tup     |
+| 1359.0 | Control | ---     |
+| 1462.0 | ---     | Control |
+| 1484.0 | Control | ---     |
+| 1553.0 | Control | ---     |
+| 1647.0 | ---     | Control |
+| 1763.0 | ---     | Control |
+| 1960.0 | Control | ---     |
+| 2142.0 | Control | ---     |
+| 2174.0 | Control | ---     |
+| 2204.0 | ---     | Control |
+
+# same as above but with master_assignment.csv as R and TUP_full.dta (group_b) as D
+#+begin_src python :results output raw table
+import pandas as pd
+from cfe.df_utils import df_to_orgtbl
+
+R=pd.read_csv('../../TUP-report/documents/master_assignment.csv')
+R=R.set_index('RespID')      
+R.index.name = 'idno'
+
+D = pd.read_stata('../../TUP-data/TUP_full.dta')
+D=D.set_index('idno')      
+D.replace(to_replace = 'Low Asset', value = 'Tup', inplace=True)
+D.replace(to_replace = 'High Asset', value = 'Tup', inplace=True)
+
+
+A=pd.DataFrame({'D':D['group_b'],'R':R['Group']})
+
+# Fix issue with variant capitalizations
+A.D=A.D.str.title()
+A.R=A.R.str.title()
+
+# Examine observations where assignments differ:
+print(df_to_orgtbl(A[A['D']!=A['R']]))
+#+end_src
+
+#+RESULTS:
+|   idno | D   | R       |
+|--------+-----+---------|
+| 1042.0 |     | Control |
+| 1106.0 |     | Control |
+| 1151.0 |     | Control |
+| 1154.0 |     | Control |
+| 1157.0 |     | Control |
+| 1186.0 |     | Control |
+| 1187.0 |     | Tup     |
+| 1190.0 |     | Control |
+| 1207.0 |     | Control |
+| 1222.0 |     | Control |
+| 1248.0 | --- | Tup     |
+| 1252.0 |     | Control |
+| 1264.0 |     | Control |
+| 1285.0 |     | Control |
+| 1293.0 |     | Control |
+| 1295.0 |     | Control |
+| 1300.0 |     | Control |
+| 1305.0 |     | Control |
+| 1311.0 |     | Control |
+| 1314.0 |     | Control |
+| 1315.0 |     | Control |
+| 1316.0 |     | Control |
+| 1318.0 |     | Control |
+| 1320.0 |     | Control |
+| 1338.0 |     | Control |
+| 1344.0 |     | Control |
+| 1348.0 |     | Control |
+| 1350.0 |     | Control |
+| 1359.0 |     | ---     |
+| 1368.0 |     | Control |
+| 1403.0 |     | Control |
+| 1421.0 |     | Control |
+| 1436.0 |     | Control |
+| 1453.0 |     | Control |
+| 1462.0 | --- | Control |
+| 1472.0 |     | Control |
+| 1476.0 |     | Control |
+| 1480.0 |     | Control |
+| 1484.0 |     | ---     |
+| 1486.0 |     | Control |
+| 1496.0 |     | Control |
+| 1502.0 |     | Control |
+| 1505.0 |     | Control |
+| 1507.0 |     | Control |
+| 1548.0 |     | Control |
+| 1553.0 |     | ---     |
+| 1561.0 |     | Control |
+| 1591.0 |     | Control |
+| 1619.0 |     | Control |
+| 1642.0 |     | Control |
+| 1647.0 | --- | Control |
+| 1667.0 |     | Control |
+| 1679.0 |     | Control |
+| 1690.0 |     | Control |
+| 1702.0 |     | Control |
+| 1703.0 |     | Control |
+| 1730.0 |     | Control |
+| 1731.0 |     | Control |
+| 1744.0 |     | Control |
+| 1747.0 |     | Control |
+| 1748.0 |     | Control |
+| 1749.0 |     | Control |
+| 1750.0 |     | Control |
+| 1755.0 |     | Control |
+| 1758.0 |     | Tup     |
+| 1760.0 |     | Control |
+| 1763.0 | --- | Control |
+| 1773.0 |     | Control |
+| 1780.0 |     | Control |
+| 1792.0 |     | Control |
+| 1797.0 |     | Control |
+| 1802.0 |     | Control |
+| 1807.0 |     | Cash    |
+| 1813.0 |     | Control |
+| 1814.0 |     | Control |
+| 1825.0 |     | Control |
+| 1826.0 |     | Control |
+| 1878.0 |     | Control |
+| 1892.0 |     | Control |
+| 1894.0 |     | Control |
+| 1910.0 |     | Control |
+| 1915.0 |     | Control |
+| 1922.0 |     | Control |
+| 1927.0 |     | Control |
+| 1950.0 |     | Control |
+| 1960.0 |     | ---     |
+| 1966.0 |     | Control |
+| 1967.0 |     | Control |
+| 1985.0 |     | Control |
+| 1988.0 |     | Control |
+| 1991.0 |     | Control |
+| 1994.0 |     | Control |
+| 1995.0 |     | Control |
+| 2002.0 |     | Control |
+| 2012.0 |     | Control |
+| 2024.0 |     | Control |
+| 2030.0 |     | Control |
+| 2032.0 |     | Control |
+| 2039.0 |     | Control |
+| 2047.0 |     | Control |
+| 2061.0 |     | Control |
+| 2066.0 |     | Control |
+| 2071.0 |     | Control |
+| 2077.0 |     | Control |
+| 2079.0 |     | Control |
+| 2082.0 |     | Control |
+| 2094.0 |     | Control |
+| 2103.0 |     | Control |
+| 2106.0 |     | Control |
+| 2107.0 |     | Control |
+| 2114.0 |     | Control |
+| 2115.0 |     | Control |
+| 2119.0 |     | Tup     |
+| 2131.0 |     | Tup     |
+| 2134.0 |     | Control |
+| 2139.0 |     | Control |
+| 2142.0 |     | ---     |
+| 2160.0 |     | Control |
+| 2174.0 |     | ---     |
+| 2204.0 | --- | Control |
+| 2205.0 |     | Control |
+| 2212.0 |     | Control |
+| 2214.0 |     | Control |
+| 2225.0 |     | Control |
+| 2226.0 |     | Control |
+| 2232.0 |     | Control |
+| 2234.0 |     | Control |
+| 2238.0 |     | Control |
+| 2239.0 |     | Control |
+| 2250.0 |     | Control |
+| 2252.0 |     | Tup     |
+| 2260.0 |     | Control |
+| 2261.0 |     | Control |
+| 2268.0 |     | Control |
+| 2269.0 |     | Control |
+| 2270.0 |     | Control |
+
+
+*************** END
+
+
+
+* Old Elliott Results                                              :noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-02-23 Tue 11:41
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Results/Assets
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+name: asset_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<asset_analysis>>
+return tab
+#+end_src
+
+#+RESULTS: asset_results WITH Tgroup Fixed Effects
+|----------------------------------+--------------------+-------------------+-------------------|
+|                                  | Total              | Productive        | Livestock         |
+|----------------------------------+--------------------+-------------------+-------------------|
+| CTL mean                         | \(1149.392\)       | \(303.427\)       | \(191.478\)       |
+|                                  | \((1494.992)\)     | \((586.417)\)     | \((529.489)\)     |
+|----------------------------------+--------------------+-------------------+-------------------|
+| TUP*2014                         | \(301.119^{***}\)  | \(185.870^{***}\) | \(145.139^{***}\) |
+|                                  | \((100.921)\)      | \((45.928)\)      | \((39.745)\)      |
+| TUP*2015                         | \(152.392\)        | \(76.187^{*}\)    | \(87.150^{**}\)   |
+|                                  | \((100.921)\)      | \((45.928)\)      | \((39.745)\)      |
+| CSH*2014                         | \(124.143\)        | \(50.705\)        | \(10.077\)        |
+|                                  | \((127.384)\)      | \((57.967)\)      | \((50.161)\)      |
+| CSH*2015                         | \(-112.701\)       | \(-16.201\)       | \(2.840\)         |
+|                                  | \((127.384)\)      | \((57.967)\)      | \((50.161)\)      |
+| TUP                              | \(453.511^{***}\)  | \(262.057^{***}\) | \(232.289^{***}\) |
+|                                  | \((63.925)\)       | \((29.053)\)      | \((25.152)\)      |
+| CSH                              | \(11.442\)         | \(34.504\)        | \(12.917\)        |
+|                                  | \((80.739)\)       | \((36.668)\)      | \((31.734)\)      |
+| 2014                             | \(895.043^{***}\)  | \(268.534^{***}\) | \(136.818^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| 2015                             | \(1056.150^{***}\) | \(295.315^{***}\) | \(183.214^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| Bsln2013                         | \(0.072^{***}\)    | \(0.015\)         | \(0.021\)         |
+|                                  | \((0.017)\)        | \((0.012)\)       | \((0.013)\)       |
+| Bsln_NAN                         | \(0.000\)          | \(0.000\)         | \(0.000\)         |
+|                                  | \((0.000)\)        | \((0.000)\)       | \((0.000)\)       |
+|----------------------------------+--------------------+-------------------+-------------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(413.820^{**}\)   | \(202.071^{**}\)  | \(142.298^{**}\)  |
+|                                  | \((181.534)\)      | \((82.625)\)      | \((71.498)\)      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(265.093^{**}\)   | \(92.388\)        | \(84.310\)        |
+|                                  | \((134.945)\)      | \((61.419)\)      | \((53.148)\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+| F-stat                           | \(12.984\)         | \(14.753\)        | \(15.917\)        |
+| N                                | \(1488.000\)       | \(1488.000\)      | \(1488.000\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+
+#+RESULTS: asset_results WITHOUT Tgroup Fixed Effects
+|----------------------------------+--------------------+-------------------+-------------------|
+|                                  | Total              | Productive        | Livestock         |
+|----------------------------------+--------------------+-------------------+-------------------|
+| CTL mean                         | \(1149.392\)       | \(303.427\)       | \(191.478\)       |
+|                                  | \((1494.992)\)     | \((586.417)\)     | \((529.489)\)     |
+|----------------------------------+--------------------+-------------------+-------------------|
+| TUP*2014                         | \(754.630^{***}\)  | \(447.927^{***}\) | \(377.428^{***}\) |
+|                                  | \((135.492)\)      | \((61.624)\)      | \((53.338)\)      |
+| TUP*2015                         | \(605.902^{***}\)  | \(338.244^{***}\) | \(319.439^{***}\) |
+|                                  | \((135.492)\)      | \((61.624)\)      | \((53.338)\)      |
+| CSH*2014                         | \(135.584\)        | \(85.208\)        | \(22.994\)        |
+|                                  | \((171.069)\)      | \((77.777)\)      | \((67.307)\)      |
+| CSH*2015                         | \(-101.259\)       | \(18.303\)        | \(15.757\)        |
+|                                  | \((171.069)\)      | \((77.777)\)      | \((67.307)\)      |
+| 2014                             | \(895.043^{***}\)  | \(268.534^{***}\) | \(136.818^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| 2015                             | \(1056.150^{***}\) | \(295.315^{***}\) | \(183.214^{***}\) |
+|                                  | \((88.645)\)       | \((39.674)\)      | \((34.189)\)      |
+| Bsln2013                         | \(0.072^{***}\)    | \(0.015\)         | \(0.021\)         |
+|                                  | \((0.017)\)        | \((0.012)\)       | \((0.013)\)       |
+| Bsln_NAN                         | \(0.000\)          | \(0.000\)         | \(0.000\)         |
+|                                  | \((0.000)\)        | \((0.000)\)       | \((0.000)\)       |
+|----------------------------------+--------------------+-------------------+-------------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | \(855.889^{***}\)  | \(429.624^{***}\) | \(361.670^{***}\) |
+|                                  | \((218.012)\)      | \((99.221)\)      | \((85.859)\)      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | \(707.162^{***}\)  | \(319.941^{***}\) | \(303.682^{***}\) |
+|                                  | \((181.065)\)      | \((82.403)\)      | \((71.306)\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+| F-stat                           | \(12.984\)         | \(14.753\)        | \(15.917\)        |
+| N                                | \(1488.000\)       | \(1488.000\)      | \(1488.000\)      |
+|----------------------------------+--------------------+-------------------+-------------------|
+#+end_example
+
+
+* Elliott savings results
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-02-23 Tue 12:08
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Results/Assets
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+name: savings_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<savings_analysis>>
+return Table
+#+end_src
+
+|----------------------------------+--------------+--------------+--------------+--------------|
+| % > 0                            | Savings      | Food Sav     | LandCult     | LandOwn      |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| CTL mean                         | $0.45$       | $0.82$       | $0.82$       | $0.90$       |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| CSH*2014                         | $-0.06$      | $0.00$       | $-0.04$      | $-0.01$      |
+|                                  | $( 0.06)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
+| CSH*2015                         | $0.03$       | $0.02$       | $0.05$       | $0.02$       |
+|                                  | $( 0.05)$    | $( 0.04)$    | $( 0.04)$    | $( 0.04)$    |
+| TUP*2014                         | $0.22^{***}$ | $-0.02$      | $-0.03$      | $-0.00$      |
+|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
+| TUP*2015                         | $0.21^{***}$ | $-0.03$      | $0.01$       | $-0.01$      |
+|                                  | $( 0.04)$    | $( 0.03)$    | $( 0.03)$    | $( 0.03)$    |
+| 2014                             | $0.43^{***}$ | $1.00^{***}$ | $0.83^{***}$ | $0.82^{***}$ |
+|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.06)$    | $( 0.05)$    |
+| 2015                             | $0.39^{***}$ | $0.82^{***}$ | $0.77^{***}$ | $0.84^{***}$ |
+|                                  | $( 0.04)$    | $( 0.02)$    | $( 0.05)$    | $( 0.05)$    |
+| Bsln2013                         | $0.05$       |              | $0.05$       | $0.07$       |
+|                                  | $( 0.04)$    |              | $( 0.05)$    | $( 0.04)$    |
+| Bsln NA                          | $0.08^{*}$   |              | $0.05$       | $0.05$       |
+|                                  | $( 0.04)$    |              | $( 0.06)$    | $( 0.05)$    |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $0.19$       | $-0.04$      | $-0.07$      | $-0.02$      |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $0.18$       | $-0.05$      | $-0.03$      | $-0.03$      |
+|----------------------------------+--------------+--------------+--------------+--------------|
+| F-stat                           | $8.83$       | $15.60$      | $0.79$       | $0.76$       |
+| N                                | $1259.00$    | $870.00$     | $1231.00$    | $1251.00$    |
+|----------------------------------+--------------+--------------+--------------+--------------|
+
+#+name: tab:Savings
+#+caption: Average treatment effects by group-year on total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
+#+attr_latex: :environment longtable :align lrrrrrrr
+|----------------------------------+----------------+----------------+----------------+----------------|
+| Amt.                             | Savings        | Food Sav       | LandCult       | LandOwn        |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| CTL mean                         | $191.19$       | $114.78$       | $61.88$        | $46.00$        |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| CSH*2014                         | $28.74$        | $0.22$         | $10.18$        | $10.50$        |
+|                                  | $(42.93)$      | $(15.38)$      | $(15.07)$      | $(12.57)$      |
+| CSH*2015                         | $91.40^{**}$   | $-14.34$       | $-39.18^{***}$ | $-32.37^{***}$ |
+|                                  | $(40.89)$      | $(14.98)$      | $(14.90)$      | $(11.95)$      |
+| TUP*2014                         | $-27.09$       | $17.16$        | $-4.76$        | $-3.02$        |
+|                                  | $(29.76)$      | $(12.33)$      | $(11.94)$      | $(10.04)$      |
+| TUP*2015                         | $81.33^{***}$  | $1.13$         | $-17.38$       | $-12.56$       |
+|                                  | $(29.32)$      | $(12.26)$      | $(11.65)$      | $( 9.41)$      |
+| 2014                             | $106.72^{***}$ | $62.03^{***}$  | $11.37$        | $17.31^{**}$   |
+|                                  | $(24.85)$      | $( 8.36)$      | $( 9.94)$      | $( 8.56)$      |
+| 2015                             | $163.04^{***}$ | $114.78^{***}$ | $61.52^{***}$  | $51.89^{***}$  |
+|                                  | $(24.13)$      | $( 7.60)$      | $( 9.54)$      | $( 7.88)$      |
+| Bsln2013                         | $0.05^{**}$    |                | $0.94$         | $-2.43$        |
+|                                  | $( 0.02)$      |                | $( 3.07)$      | $( 1.95)$      |
+| Bsln NA                          | $40.07^{*}$    |                | $-1.60$        | $-6.02$        |
+|                                  | $(21.24)$      |                | $( 9.92)$      | $( 8.29)$      |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| $\beta^{TUP}_{2014}-\beta^{CSH}$ | $-118.49$      | $31.50$        | $34.42$        | $29.35$        |
+| $\beta^{TUP}_{2015}-\beta^{CSH}$ | $-10.07$       | $15.47$        | $21.79$        | $19.80$        |
+|----------------------------------+----------------+----------------+----------------+----------------|
+| F-stat                           | $7.41$         | $7.14$         | $4.91$         | $3.72$         |
+| N                                | $671.00$       | $777.00$       | $1042.00$      | $1114.00$      |
+|----------------------------------+----------------+----------------+----------------+----------------|
+
+
+* Old income results
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-03-01 Mon 08:14
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Results/Income
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+name: income_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<income_analysis>>
+return tab
+#+end_src
+
+#+Caption: Distribution of total observed income by group
+#+NAME: fig:Income_group
+[[../figures/Income_group.png]] 
+
+#+name: tab:Income
+#+caption: Average treatment effects by group-year on total value (in SSP) of income reported in 2015 by sector.
+#+attr_latex: :environment longtable :align lrrrrrrr
+|---------------------------+---------------+---------------+------------+------------|
+|                           | Farm          | Livestock     | Non-Farm   | Total      |
+|---------------------------+---------------+---------------+------------+------------|
+| CTL mean                  | $773.05$      | $640.33$      | $3774.49$  | $4325.54$  |
+|---------------------------+---------------+---------------+------------+------------|
+| TUP                       | $-142.20^{*}$ | $281.12^{**}$ | $86.24$    | $327.83$   |
+|                           | $(77.21)$     | $(126.30)$    | $(469.48)$ | $(455.95)$ |
+| CSH                       | $-26.15$      | $-83.81$      | $61.80$    | $7.92$     |
+|                           | $(100.82)$    | $(177.25)$    | $(620.53)$ | $(600.43)$ |
+|---------------------------+---------------+---------------+------------+------------|
+| N                         | $531.00$      | $380.00$      | $606.00$   | $671.00$   |
+| F-stat                    | $1.75$        | $3.48$        | $0.02$     | $0.28$     |
+|---------------------------+---------------+---------------+------------+------------|
+| $\beta^{TUP}-\beta^{CSH}$ | $-116.05$     | $364.94^{**}$ | $24.44$    | $319.91$   |
+|                           | $(105.79)$    | $(174.74)$    | $(651.27)$ | $(629.93)$ |
+|---------------------------+---------------+---------------+------------+------------|
+
+
+* Old Conflict Tables                                       :noexport:ignore:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-03-01 Mon 08:32
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Results/Exposure to Conflict
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+
+#+name: conflict_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<conflict_analysis>>
+return Table
+#+end_src
+
+#+name: tab:conflict_exposure
+#+caption: Average treatment effects by group-year on the probability of having been affected in a significant way by the outbreak of violence in late 2013
+#+attr_latex: :environment longtable :align lrrrrrrr
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+|          | Affected      | Migrated     | NoInvest     | NoMeans      | ProtectLives | Worried      |
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+| CTL mean | $0.53^{***}$  | $0.33^{***}$ | $0.16^{***}$ | $0.33^{***}$ | $0.38^{***}$ | $0.93^{***}$ |
+|          | $( 0.03)$     | $( 0.02)$    | $( 0.02)$    | $( 0.02)$    | $( 0.03)$    | $( 0.01)$    |
+| TUP      | $-0.13^{***}$ | $0.04$       | $-0.06^{**}$ | $-0.06$      | $0.02$       | $-0.02$      |
+|          | $( 0.04)$     | $( 0.04)$    | $( 0.03)$    | $( 0.04)$    | $( 0.05)$    | $( 0.02)$    |
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+| F-stat   | $9.20$        | $0.96$       | $3.95$       | $2.55$       | $0.19$       | $0.49$       |
+| N        | $601.00$      | $655.00$     | $655.00$     | $655.00$     | $585.00$     | $603.00$     |
+|----------+---------------+--------------+--------------+--------------+--------------+--------------|
+
+#+Caption: % of Sample reporting exposure to conflict by group.
+#+NAME: fig:conflict_exposure
+[[../figures/conflict_exposure.png]] 
+
