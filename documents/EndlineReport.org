@@ -331,7 +331,7 @@ significantly less likely to be interviewed at baseline (Appendix
 Table [[tab:interview_probabilities]]).  In order to take advantage of the
 households not included in the baseline, as well as to deal with any
 issues with imperfect balance on observables, our specification below
-follows cite:banerjee-etal02 by setting missing values to zero when
+follows cite:banerjee-etal15 by setting missing values to zero when
 controlling for baseline levels of the dependent variable, and
 including an indicator for whether the household was in the baseline,
 in a sort of adjusted ANCOVA specification of the sort discussed by
@@ -344,30 +344,33 @@ We estimate a single model using interactions between time effects and
 group assignment, as well as baseline values of the outcome variable
 where available; this is 
 \begin{equation*}
-Y_{it} =\sum_{t=2014}^{2015}\alpha_{t}+\beta_{t,UCT}I_{t}*UCT_{it}+\beta_{t,TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}(1-M_{i,2013}) + \delta M_{i,2013} +\epsilon_{i},
+Y_{it} =\alpha_{t}+\beta_{t,UCT}I_{t}*UCT_{i}+\beta_{t,TUP}I_{t}*TUP_{i}+\gamma Y_{i,2013}(1-M_{i,2013}) + \delta M_{i,2013} +\epsilon_{it},
 \end{equation*}
-where $\alpha_{t}$ are time fixed effects and $I_{t}$ is an indicator
-if the year /t/, and $Y_{it}$ is an outcome of interest for household
-/i/ in year /t/.  If baseline values of the dependent variable are
-missing for household $i$ then this is indicated by the dummy variable
-$M_{i,2013}$.  Thus, baseline values of the dependent variable appear as
-$Y_{i,2013}$ where these are non-missing; but the coefficient $\delta$
-estimates the average baseline value conditional on it being missing.
+for $t\in\{2014,2015\}$, with $i$ indexing households.  The
+$\alpha_{t}$ are time fixed effects; $I_{t}$ is an indicator if the
+year is $t$; and $Y_{it}$ is an outcome of interest for household $i$ in
+year $t$.  If baseline values of the dependent variable are missing
+for household $i$ then this is indicated by the dummy variable
+$M_{i,2013}$.  Thus, baseline values of the dependent variable appear
+as $Y_{i,2013}$ where these are non-missing; but the coefficient
+$\delta$ estimates the average baseline value conditional on it being
+missing.
 
-We take the interactions of TUP assignment with 2014
-and 2015 indicators as the treatment effects at 6--8 and 15--17 months
-respectively. The analagous interactions with the UCT group offer a
+We take the interactions of TUP assignment with 2014 and 2015
+indicators as the treatment effects at 6--8 and 15--17 months
+respectively. The analogous interactions with the UCT group offer a
 second baseline and a 12-month treatment effect, respectively.  Since
 those transfers happened after the midline survey, its interaction
-with /2014/ acts as a placebo; there is no /ex ante/ reason to expect
-that they were different from the rest of the control group at that
-point.  Given the slight difference in timing, we report a \(t\)-test
-of the hypothesis \(\beta_{\mbox{TUP},t}-\beta_{\mbox{UCT},2015}=0\)
-for both \(t \in {2014,2015}\).
+with $I_{2014}$ acts as a placebo; there is no /ex ante/ reason to
+expect that households in the UCT group were different from the rest
+of the control group at that point.  Given the slight difference in
+timing, we report a \(t\)-test of the hypothesis
+\(\beta_{\mbox{TUP},t}=\beta_{\mbox{UCT},2015}\) for both of \(t \in
+{2014,2015}\).
 
-Since the comparison between (TUP,2014) and (UCT,2015) both allow for
+Since the comparison between (TUP,2014) and (UCT,2015) allows for
 something less than a year of exposure to the respective treatments we
-regard \(\beta_{\mbox{TUP},2014}-\beta_{\mbox{UCT},2015}=0\) as the
+regard \(\beta_{\mbox{TUP},2014}=\beta_{\mbox{UCT},2015}\) as the
 most interesting hypothesis, but since these points of comparison
 aren't contemporaneous we can't rule out the possibility that
 aggregate shocks might have interacted somehow with the two programs
