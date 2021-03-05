@@ -1025,3 +1025,64 @@ return Table
 #+NAME: fig:conflict_exposure
 [[../figures/conflict_exposure.png]] 
 
+
+* Elliott attrition balance table                                    :ignore:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-03-04 Thu 17:39
+  :ARCHIVE_FILE: ~/Research/SS-TUP/TUP-report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Data Collection & Timeline/Sample Selection/Attrition balance table
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
+#+attr_latex: :environment longtable :align lrrrrr
+#+name: tab:attrition_balance
+|-----------------+---------------+----------------+----------------|
+| HH Features     | $\mbox{Mean}_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
+|-----------------+---------------+----------------+----------------|
+| HH size         |         7.223 |        0.595** |          0.428 |
+| # Child         |         3.328 |       0.656*** |          0.423 |
+| Asset Prod.     |       512.822 |        126.360 |       -369.190 |
+| Asset Tot.      |      1494.324 |        361.889 |      -689.174* |
+| Daily Exp       |        25.212 |          1.257 |         -4.150 |
+| Daily Food      |        24.300 |          0.299 |        -4.790* |
+| In Business     |         0.415 |          0.038 |          0.007 |
+| Land Access     |         2.324 |          0.014 |          0.305 |
+| No. Houses      |         2.863 |          0.305 |          0.367 |
+| Cash Savings    |       178.662 |         46.322 |         54.295 |
+|-----------------+---------------+----------------+----------------|
+| Assets          |               |                |                |
+|-----------------+---------------+----------------+----------------|
+| Bed             |       250.534 |         12.649 |        -51.133 |
+| Bicycle         |       102.174 |         11.179 |          4.212 |
+| Mobile          |       101.482 |          6.336 |        -13.028 |
+| Motorcycle      |       481.885 |        213.002 |       -241.819 |
+| Carts           |         2.751 |          1.929 |          2.962 |
+| Cows            |       181.402 |         67.862 |        -89.273 |
+| Smallanimals    |       180.716 |         18.966 |        -79.014 |
+|-----------------+---------------+----------------+----------------|
+| Consumption     |               |                |                |
+|-----------------+---------------+----------------+----------------|
+| Cereals         |         8.882 |         -0.084 |       -3.714** |
+| Beans           |         0.826 |          0.269 |         -0.382 |
+| Ceremonies      |         0.141 |         -0.020 |         -0.038 |
+| Charities       |         0.027 |          0.007 |         -0.001 |
+| Clothesfootwear |         0.663 |         0.180* |         -0.206 |
+| Cosmetics       |         0.668 |          0.005 |          0.229 |
+| Dowry           |         1.263 |          0.755 |         -0.399 |
+| Egg             |         1.069 |         -0.005 |          0.106 |
+| Fish            |         2.417 |         -0.132 |          0.036 |
+| Fruit           |         0.656 |          0.009 |         -0.151 |
+| Fuel            |         0.733 |          0.105 |         -0.049 |
+| Meat            |         3.981 |          0.254 |          0.300 |
+| Other           |           0.0 |          0.000 |          0.000 |
+| Poultry         |        39.437 |        23.634* |         -2.243 |
+| Salt            |         0.438 |      -0.140*** |         -0.043 |
+| Soap            |         0.475 |        -0.181* |          0.047 |
+| Sugar           |         1.647 |         -0.285 |         -0.020 |
+| Textiles        |         0.165 |          0.010 |          0.011 |
+| Transport       |         0.163 |          0.004 |          0.018 |
+| Tv              |        39.915 |        -16.377 |          0.845 |
+| Utensils        |         0.247 |          0.062 |         -0.023 |
+| Vegetables      |         1.446 |          0.096 |         -0.151 |
+|-----------------+---------------+----------------+----------------|
+

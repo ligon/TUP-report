@@ -81,18 +81,18 @@
       \field{pages}{811\bibrangedash 870}
       \range{pages}{60}
     \endentry
-    \entry{banerjee-etal}{unpublished}{}
+    \entry{banerjee-etal02}{article}{}
       \name{author}{3}{}{%
         {{uniquename=0,uniquepart=base,hash=75cb9b0a536a90048d1b19d0ef0318bb}{%
            family={Banerjee},
            familyi={B\bibinitperiod},
-           given={Abhijit\bibnamedelima V.},
+           given={Abhijit\bibnamedelima V},
            giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod},
            givenun=0}}%
         {{uniquename=0,uniquepart=base,hash=fbef8be40ff7f888d6c277568f68db9b}{%
            family={Gertler},
            familyi={G\bibinitperiod},
-           given={Paul\bibnamedelima J.},
+           given={Paul\bibnamedelima J},
            giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod},
            givenun=0}}%
         {{uniquename=0,uniquepart=base,hash=565cb121373a427ea1e6059a7d56564e}{%
@@ -102,6 +102,9 @@
            giveni={M\bibinitperiod},
            givenun=0}}%
       }
+      \list{publisher}{1}{%
+        {The University of Chicago Press}%
+      }
       \strng{namehash}{1a0f6ba4704b31d43e2633a07d76f60d}
       \strng{fullhash}{1a0f6ba4704b31d43e2633a07d76f60d}
       \strng{bibnamehash}{1a0f6ba4704b31d43e2633a07d76f60d}
@@ -110,11 +113,17 @@
       \strng{authorfullhash}{1a0f6ba4704b31d43e2633a07d76f60d}
       \field{sortinit}{B}
       \field{sortinithash}{276475738cc058478c1677046f857703}
-      \field{labeldatesource}{nodate}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{note}{Manuscript}
-      \field{title}{Empowerment and Efficiency: The Economics of Agrarian Reform}
+      \field{journaltitle}{Journal of Political Economy}
+      \field{number}{2}
+      \field{title}{Empowerment and efficiency: Tenancy reform in {W}est {B}engal}
+      \field{volume}{110}
+      \field{year}{2002}
+      \field{pages}{239\bibrangedash 280}
+      \range{pages}{42}
     \endentry
     \entry{banerjee-etal15}{article}{}
       \name{author}{9}{}{%

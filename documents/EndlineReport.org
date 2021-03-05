@@ -306,1162 +306,36 @@ Likewise, the 2015 survey allows us to estimate treatment
 effects one year after the cash transfers, and 15--18 months after the
 asset transfers.
 
-** Balance on Obervables
-
-We start by checking whether either treatment arm appears significantly different
-from the control group in terms of average baseline observable characteristics.
-Table [[tab:balance_check]] presents summary statistics by group on a range of factors
-related to consumption, asset holdings, and household
-characteristics.  Of all of these baseline characteristics, the only
-cases in which we can reject the null of equality with the control
-group are for the value of motorcycles and textiles.  The mean value
-depends on both /whether/ a household possesses these assets, and
-conditional on possession, the value of the asset.  Particularly for
-the case of motorcycles one wonders whether a small difference in
-rates of ownership might account for the difference, rather than the
-value of the asset conditional on ownership.
-
-*** Creation of master random assignment file                        :ignore:
-
-#+name: master_random_assignment
-#+begin_src python
-"""For making the master treatment groups .csv file
-
- This code creates a file which contains all of the assignments to
- treatment groups, regardless of whether a respondent was found at
- one or all of baseline, midline, and endline. The file reconciles
- differences between asset_assign.csv and locations.csv. We consider
- asset_assign.csv to be the assignment at baseline, and locations.csv
- to be the assignment that was created at endline when some
- respondents who were not found at baseline were still surveyed at
- endline.
-
- There are 6 households that were interviewed only at endline and
- were not included in asset_assign.csv or locations.csv. These
- households are manually added as Control households in 
- master_assignment.csv, like the other households for which a 
- group was not assigned at baseline and therefore are labeled as 
- Control at endline.
-"""
-
-data_locations = "../../TUP-data/csv/locations.csv"
-data_asset_assign = "../../TUP-data/csv/asset_assign.csv"
-import pandas as pd
-
-df_l = pd.read_csv(data_locations) # assignments at endline
-df_a = pd.read_csv(data_asset_assign) # assignments at baseline
-
-# take the union of locations.csv and asset_assign.csv, rename groups accordingly
-df = pd.merge(df_l, df_a[ ['respid', 'group' ] ], how='outer', left_on='RespID', right_on='respid')
-df.replace(to_replace='Gift', value='Control', inplace=True)
-df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
-df.replace(to_replace='Cash', value='UCT', inplace=True)
-
-# asset_assign.csv assignments are listed under 'group'
-# locations.csv assignments are listed under 'Group'
-
-for i in range(len(df)): 
-
-    # if a group is not assigned at baseline (in asset_assign 'group'), it should be 'Control' at endline (in locations 'Group') (takes care of observation idno 1157)
-    if pd.isnull(df.iloc[i, df.columns.get_loc('group')]):
-        df.iloc[i, df.columns.get_loc('Group')]='Control'
-    
-    # if a group is assigned at baseline (in asset_assign 'group'), it should be the same at endline (in locations 'Group') (takes care of observation idno 2131)
-    if pd.notna(df.iloc[i, df.columns.get_loc('group')]) and (df.iloc[i, df.columns.get_loc('group')] != df.iloc[i, df.columns.get_loc('Group')]):
-        df.iloc[i, df.columns.get_loc('Group')] = df.iloc[i, df.columns.get_loc('group')]
-
-# now all the assignments in 'Group' should be consistent with 'group' so 'group' is a subset of 'Group' and we can drop it
-df = df.drop(columns=['group', 'respid'])
-
-# manually add the 6 households which were only interviewed at endline as 'Control'
-df = df.append({'RespID': 1359,  'Group': 'Control'}, ignore_index=True)
-df = df.append({'RespID': 1484,  'Group': 'Control'}, ignore_index=True)
-df = df.append({'RespID': 1553,  'Group': 'Control'}, ignore_index=True)
-df = df.append({'RespID': 1960,  'Group': 'Control'}, ignore_index=True)
-df = df.append({'RespID': 2142,  'Group': 'Control'}, ignore_index=True)
-df = df.append({'RespID': 2174,  'Group': 'Control'}, ignore_index=True)
-
-df.to_csv('master_assignment.csv')
-#+end_src
-
-#+RESULTS: master_random_assignment
-
-
-*** Recreating Elliott's balance table (without some variables which are sums of other variables) :ignore:
-
-#  N represents the number of nonzero values
-
-#+name: mean_balance
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-# <<load_data>> can use this!!
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-import pandas as pd
-from scipy import stats
-from cfe.df_utils import df_to_orgtbl
-import matplotlib. pyplot as plt
-
-df_b = pd.read_stata(data_baseline)
-df_a = pd.read_csv(data_assignment)
-
-df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-
-df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ].transform(lambda x: x/3)
-
-df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ].transform(lambda x: x/30)
-
-df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ].transform(lambda x: x/365)
-
-df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
-             'asset_val_netITN_b',
-             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b',
-             'Group'])
-
-df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
-
-means = df_1.groupby(['Group']).mean()
-means = means.T
-
-means.insert(len(means.columns), '$\Delta$ TUP', means['TUP'] - means['Control'])
-means.insert(len(means.columns), '$\Delta$ UCT', means['UCT'] - means['Control'])
-
-d = {'Control': means['Control'], '$\Delta$ TUP': means['TUP'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
-means = pd.DataFrame(data=d)
-
-# so we can add * later
-means = means.round(decimals = 3)
-means = means.astype(str)
-means.insert(len(means.columns), 'N', 0)
-
-column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
-              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
-               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
-               'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
-             'asset_val_netITN_b', \
-             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
-
-# some are off by 0.001
-for column in column_list:
-    
-    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'TUP'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
-    
-    if pvalue_tup <= 0.01: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '***'
-    elif pvalue_tup <= 0.05: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '**'
-    elif pvalue_tup <= 0.1: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '*'
-        
-    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
-    
-    if pvalue_cash <= 0.01: 
-        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '***'
-    elif pvalue_cash <= 0.05: 
-        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '**'
-    elif pvalue_cash <= 0.1: 
-        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '*'
-    
-    # as it is in the table, N is number of nonzero entries
-    means.at[column, 'N'] = df_1[df_1[column] > 0][column].count()
-
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
-# but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
-means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
-            'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
-            'c_egg_b': 'Egg', 'c_oil_b': 'Oil', 
-            'c_beans_b': 'Beans', 'c_fruit_b': 'Fruit', 
-            'c_salt_b': 'Salt', 'c_vegetables_b': 'Vegetables', 
-            'c_milk_b': 'Milk', 'c_spices_b': 'Spices', 
-            'c_alcohol_b': 'Alcohol', 'c_otherfood_b': 'Other food', 
-            'c_fuel_b': 'Cooking fuel', 'c_soap_b': 'Toiletries', 
-            'c_transport_b': 'Transportation', 'c_cosmetics_b': 'Cosmetics', 
-            'c_entertainment_b': 'Entertainment', 'c_clothesfootwear_b': 'Clothing, footwear', 
-            'c_charities_b': 'Charities', 'c_ceremonies_b': 'Rituals/ceremonies', 
-            'c_textiles_b': 'Textiles', 'c_utensils_b': 'Utensils',
-            'c_dowry_b': 'Dowry', 'c_furniture_b': 'Furniture', 
-            'c_other_b': 'Other non-food', 'asset_val_cows_b': 'Large livestock (cows)', 
-            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
-            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
-            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
-            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
-            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
-            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
-            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
-
-newdf = df_to_orgtbl(means, float_fmt = '%.3f')
-print(newdf)
-
-df_1.boxplot(column = 'c_textiles_b', by = 'Group')
-plt.savefig("textiles_Elliott.png")
-
-df_1.boxplot(column = 'asset_val_motorcycle_b', by = 'Group')
-plt.savefig("motorcycle_Elliott.png")
-
-#+end_src
-
-
-#+name: tab:balance_check
-#+caption: Means of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively
-#+attr_latex: :environment longtable :align lrrrr
-| Variable               | Control | $\Delta$ TUP | $\Delta$ UCT |   N |
-|------------------------+---------+--------------+--------------+-----|
-| Meat                   |   4.205 |       -0.568 |       -0.052 | 378 |
-| Fish                   |   2.505 |       -0.154 |       -0.156 | 474 |
-| Cereals                |   9.187 |       -0.947 |         0.27 | 605 |
-| Sugar                  |   1.713 |       -0.078 |       -0.189 | 604 |
-| Egg                    |   1.096 |       -0.091 |        0.038 | 276 |
-| Oil                    |   1.364 |       -0.131 |       -0.141 | 613 |
-| Beans                  |   0.696 |        0.231 |        0.226 | 192 |
-| Fruit                  |    0.69 |       -0.089 |          0.0 | 272 |
-| Salt                   |   0.447 |       -0.026 |        0.007 | 617 |
-| Vegetables             |   1.543 |       -0.165 |        -0.18 | 471 |
-| Milk                   |   1.284 |       -0.237 |       -0.232 | 114 |
-| Spices                 |    0.23 |        0.024 |       -0.045 | 158 |
-| Alcohol                |   0.043 |        0.006 |       -0.029 |  18 |
-| Other food             |     0.0 |          0.0 |          0.0 |   0 |
-| Cooking fuel           |   0.762 |       -0.039 |       -0.072 | 456 |
-| Toiletries             |   0.483 |       -0.009 |       -0.026 | 536 |
-| Transportation         |   0.176 |       -0.033 |        0.002 | 193 |
-| Cosmetics              |   0.682 |        0.027 |       -0.125 | 468 |
-| Entertainment          |   0.087 |       -0.024 |        -0.02 | 145 |
-| Clothing, footwear     |   0.658 |       -0.026 |        0.033 | 595 |
-| Charities              |    0.03 |       -0.006 |         -0.0 | 134 |
-| Rituals/ceremonies     |   0.132 |        0.007 |        0.026 | 152 |
-| Textiles               |   0.154 |       -0.005 |       0.055* | 376 |
-| Utensils               |   0.246 |       -0.008 |        0.008 | 442 |
-| Dowry                  |   1.256 |        -0.04 |        0.028 | 126 |
-| Furniture              |   0.196 |       -0.014 |        0.044 | 368 |
-| Other non-food         |     0.0 |          0.0 |          0.0 |   0 |
-| Large livestock (cows) |  253.31 |     -140.605 |      -99.681 |  35 |
-| Small livestock        | 236.601 |      -86.069 |     -123.134 | 123 |
-| Bicycle                | 109.075 |      -12.554 |      -11.413 | 171 |
-| Radio                  |  58.448 |       -5.969 |      -16.529 | 260 |
-| Motorcycle             | 341.737 |      192.956 |    353.836** |  93 |
-| Mosquito net           |  19.164 |        0.668 |        0.248 | 423 |
-| Poultry                |  42.402 |       -3.365 |       -8.894 | 161 |
-| Bed                    |  241.27 |        7.992 |       32.762 | 521 |
-| Chair/table            | 206.786 |      -29.368 |        3.617 | 531 |
-| Mobile phone           |  97.537 |       12.627 |       -4.199 | 414 |
-| Mosquito net ITN       |   7.822 |        1.215 |        1.178 | 181 |
-| # Houses               |   2.829 |         0.03 |        0.118 | 543 |
-| In business            |   0.398 |        0.038 |        0.017 | 265 |
-| # Child                |   3.263 |        0.118 |        0.108 | 594 |
-| Household size         |   7.232 |       -0.175 |          0.3 | 648 |
-
-*** Creating a new balance table with only nonzero values counting toward the mean :ignore:
-
-To explore this, Table [[tab:mean_log_balance]] reports the means of log expenditures, with
-expenditures of zero treated as missing data; thus these figures are
-conditional on ownership.  We see from this table that there  are no
-significant differences between the control and treatment groups;
-thus, rejections in the previous table can be attributed to
-differences in rates of ownership.
-
-# N represents the number of nonzero values, and only nonzero values
-# are considered in calculations of the means
-
-#+name: mean_log_balance
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-import pandas as pd
-from scipy import stats
-from cfe.df_utils import df_to_orgtbl
-import matplotlib. pyplot as plt
-import numpy as np
-
-df_b = pd.read_stata(data_baseline)
-df_a = pd.read_csv(data_assignment)
-
-df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-
-df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ]
-
-df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ]
-
-df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ]
-
-df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
-             'asset_val_netITN_b',
-             'asset_n_house_b', 'child_total_b', 'hh_size_b'])
-
-df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
-
-df_1.replace(to_replace = 0, value = float("NaN") , inplace = True)
-
-# take the logs of expenditure for all variables except dummy variables
-df_1 = df_1.transform(lambda x: np.log(x))
-
-# add in group assignment and the dummy variables that need 0 as one of their values
-df_1 = df_1.join(df[ [ 'in_business_b', 'Group'] ])
-
-means = df_1.groupby(['Group']).mean()
-means = means.T
-
-means.insert(len(means.columns), '$\Delta$ TUP', means['TUP'] - means['Control'])
-means.insert(len(means.columns), '$\Delta$ UCT', means['UCT'] - means['Control'])
-
-d = {'Control': means['Control'], '$\Delta$ TUP': means['TUP'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
-means = pd.DataFrame(data=d)
-
-# so we can add * later
-means = means.round(decimals = 3)
-means = means.astype(str)
-means.insert(len(means.columns), 'N', 0)
-
-column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
-              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
-               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
-               'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
-             'asset_val_netITN_b', \
-             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
-
-# some are off by 0.001
-for column in column_list:
-    
-    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'TUP'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
-    
-    if pvalue_tup <= 0.01: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '***'
-    elif pvalue_tup <= 0.05: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '**'
-    elif pvalue_tup <= 0.1: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '*'
-        
-    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
-    
-    if pvalue_cash <= 0.01: 
-        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '***'
-    elif pvalue_cash <= 0.05: 
-        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '**'
-    elif pvalue_cash <= 0.1: 
-        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '*'
-    
-   # N is number of nonzero entries
-    means.at[column, 'N'] = df_1[column].count()
-
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org
-means.rename({'c_meat_b': ' Meat (last three days)', 'c_fish_b': 'Fish (last three days)', 
-            'c_cereals_b': 'Cereals (last three days)', 'c_sugar_b': 'Sugar (last three days)', 
-            'c_egg_b': 'Egg (last three days)', 'c_oil_b': 'Oil (last three days)', 
-            'c_beans_b': 'Beans (last three days)', 'c_fruit_b': 'Fruit (last three days)', 
-            'c_salt_b': 'Salt (last three days)', 'c_vegetables_b': 'Vegetables (last three days)', 
-            'c_milk_b': 'Milk (last three days)', 'c_spices_b': 'Spices (last three days)', 
-            'c_alcohol_b': 'Alcohol (last three days)', 'c_otherfood_b': 'Other food (last three days)', 
-            'c_fuel_b': 'Cooking fuel (last month)', 'c_soap_b': 'Toiletries (last month)', 
-            'c_transport_b': 'Transportation (last month)', 'c_cosmetics_b': 'Cosmetics (last month)', 
-            'c_entertainment_b': 'Entertainment (last month)', 'c_clothesfootwear_b': 'Clothing, footwear (last year)', 
-            'c_charities_b': 'Charities (last year)', 'c_ceremonies_b': 'Rituals/ceremonies (last year)', 
-            'c_textiles_b': 'Textiles (last year)', 'c_utensils_b': 'Utensils (last year)',
-            'c_dowry_b': 'Dowry (last year)', 'c_furniture_b': 'Furniture (last year)', 
-            'c_other_b': 'Other non-food (last year)', 'asset_val_cows_b': 'Large livestock (cows)', 
-            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
-            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
-            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
-            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
-            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
-            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
-            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
-
-newdf = df_to_orgtbl(means, float_fmt = '%.3f')
-print(newdf)
-
-# box and whisker plots of log positive observations
-df_1['c_textiles_b'] = df_1['c_textiles_b']
-df_1.boxplot(column = 'c_textiles_b', by = 'Group')
-plt.savefig("textiles_nonzero.png")
-
-df_1['asset_val_mobile_b'] = df_1['asset_val_mobile_b']
-df_1.boxplot(column = 'asset_val_mobile_b', by = 'Group')
-plt.savefig("mobile_nonzero.png")
-
-#+end_src
-
-#+name: tab:mean_log_balance
-#+caption: Means of logs of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively.  Zeros are treated as missing.
-#+attr_latex: :environment longtable :align lrrrr
-| Variable                       | Control | $\Delta$ TUP | $\Delta$ UCT | $N$ |
-|--------------------------------+---------+--------------+--------------+-----|
-| Meat (last three days)         |   2.845 |        0.018 |        0.033 | 378 |
-| Fish (last three days)         |   2.058 |        0.041 |       -0.022 | 474 |
-| Cereals (last three days)      |   3.033 |       -0.071 |       -0.019 | 605 |
-| Sugar (last three days)        |   1.346 |        -0.06 |       -0.031 | 604 |
-| Egg (last three days)          |   1.811 |        0.011 |       -0.077 | 276 |
-| Oil (last three days)          |   0.897 |        0.014 |       -0.035 | 613 |
-| Beans (last three days)        |   1.669 |        0.135 |        0.127 | 192 |
-| Fruit (last three days)        |   1.329 |        0.007 |        0.027 | 272 |
-| Salt (last three days)         |   0.201 |       -0.054 |        0.001 | 617 |
-| Vegetables (last three days)   |   1.532 |       -0.026 |       -0.047 | 471 |
-| Milk (last three days)         |   2.514 |       -0.015 |       -0.217 | 114 |
-| Spices (last three days)       |   0.858 |       -0.069 |        -0.21 | 158 |
-| Alcohol (last three days)      |   1.304 |        0.104 |        0.305 |  18 |
-| Cooking fuel (last month)      |   2.941 |        -0.01 |       -0.127 | 456 |
-| Toiletries (last month)        |   2.328 |       -0.051 |       -0.172 | 536 |
-| Transportation (last month)    |   2.395 |       -0.003 |        0.127 | 193 |
-| Cosmetics (last month)         |   2.659 |        0.084 |       -0.054 | 468 |
-| Entertainment (last month)     |   2.088 |        -0.13 |       -0.064 | 145 |
-| Clothing, footwear (last year) |   4.989 |       -0.005 |       -0.074 | 595 |
-| Charities (last year)          |   3.348 |       -0.229 |       -0.121 | 134 |
-| Rituals/ceremonies (last year) |   4.422 |        0.261 |        0.162 | 152 |
-| Textiles (last year)           |   4.096 |        0.052 |        0.112 | 376 |
-| Utensils (last year)           |   4.352 |        -0.01 |       -0.003 | 442 |
-| Dowry (last year)              |   5.934 |        0.433 |        0.178 | 126 |
-| Furniture (last year)          |   4.224 |        0.033 |        0.185 | 368 |
-| Large livestock (cows)         |   7.461 |       -0.072 |       -0.068 |  35 |
-| Small livestock                |   6.425 |       -0.195 |       -0.364 | 123 |
-| Bicycle                        |   5.601 |        0.051 |         0.14 | 171 |
-| Radio                          |     4.3 |        0.067 |       -0.071 | 260 |
-| Motorcycle                     |   6.762 |        0.676 |        0.778 |  93 |
-| Mosquito net                   |   3.089 |        0.024 |       -0.008 | 423 |
-| Poultry                        |   4.616 |        0.002 |       -0.177 | 161 |
-| Bed                            |   5.306 |       -0.001 |        0.116 | 521 |
-| Chair/table                    |   4.889 |        0.021 |        0.025 | 531 |
-| Mobile phone                   |   4.811 |        0.119 |        0.031 | 414 |
-| Mosquito net ITN               |   3.147 |       -0.047 |         0.13 | 181 |
-| # Houses                       |   1.064 |       -0.027 |         -0.0 | 543 |
-| # Child                        |   1.118 |        0.043 |        0.039 | 594 |
-| Household size                 |   1.917 |       -0.021 |         0.05 | 648 |
-| In business                    |   0.398 |        0.038 |        0.017 | 638 |
-
-*** Box and whisker plots for the new balance table                  :ignore:noexport:
-
-#+Caption: Box and whisker plot of log(positive textiles) for nonzero values
-#+NAME: fig:box_whisker_textiles_nonzero
-[[../documents/textiles_nonzero.png]]
-
-#+Caption: Box and whisker plot of log(positive mobile) for nonzero values
-#+NAME: fig:box_whisker_mobile_nonzero
-[[../documents/mobile_nonzero.png]]
-
-
-** Sample Selection
-
-Our census found 755 eligible households, and made efforts to
-interview a respondent from every one of these households.  The degree
-to which we succeeded is documented in \Tab{attrition_count}.
-In the baseline survey we successfully interviewed
-649 of these households; in the midline 606, and in the endline 694.
-
-*** Recreating the attrition tables                         :ignore:noexport:
-*************** NOTE
-The results are slightly different (in the 2015 column) than in the original attrition
-tables due to the creation of master_assignment.csv, which includes
-everyone who was assigned to any group no matter whether they were
-found at baseline, midline, or endline. It added 6 households which
-were found only at endline and not accounted for in the original
-attrition tables.
-*************** END
-
-
-# using master_assignment.csv
-#+name: master_assignment_attrition 
-#+begin_src python :exports none  :results output table raw labels=[] :colnames no :tangle master_assignment_attrition.py
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_midline = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline) 
-df_a = pd.read_csv(data_assignment)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-
-
-print("""#+caption: Total number of households in sample by group and round.""")
-# Initial assignment (from Census)
-dassign = df_a.Group.value_counts(ascending=True)
-# change "Cash" to "UCT"
-dassign.rename(index={'Cash':'UCT'}, inplace=True)
-dassign['All'] = dassign.sum()
-
-# baseline (2013)
-# merge baseline data id number and group column from master assignment csv based on respondent id/id number
-df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-# change "Cash" to "UCT"
-df.replace(to_replace='Cash', value='UCT', inplace=True)
-
-# count the number in each treatment group
-bygroupdf = df.groupby(['Group']).count()
-d2013 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
-
-df_b = df
-
-# midline (2014)
-# merge midline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-# change "Cash" to "UCT"
-df.replace(to_replace='Cash', value='UCT', inplace=True)
-
-# count the number in each treatment group
-bygroupdf = df.groupby(['Group']).count()
-d2014 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
-
-df_m = df
-
-# endline (2015)
-# merge endline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-# change "Cash" to "UCT"
-df.replace(to_replace='Cash', value='UCT', inplace=True)
-
-# count the number in each treatment group
-bygroupdf = df.groupby(['Group']).count()
-d2015 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
-
-df_e = df
-
-# make the table for total number of households in sample by group and round
-d = {'Assigned': dassign, '2013': d2013, '2014': d2014, '2015': d2015}
-table = pd.DataFrame(data = d) 
-
-newdf = df_to_orgtbl(table, float_fmt = '%d')
-print(newdf)
-
-
-print("""#+caption: Number of households in sample with baseline survey by group and round""")
-
-
-# find the intersection of people who had surveys at both baseline and midline
-df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
-bygroupdf_b_m = df_b_m.groupby(['Group']).count()
-
-# find the intersection of people who had surveys at both baseline and endline
-df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
-bygroupdf_b_e = df_b_e.groupby(['Group']).count()
-
-# count the number in each treatment group
-dd2013 = d2013
-dd2014 = {'UCT': bygroupdf_b_m.at['UCT','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
-dd2015 = {'UCT': bygroupdf_b_e.at['UCT','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
-
-# make the table for number of households in sample with baseline survey by group and round
-dd = {'Assigned': dassign, '2013': dd2013, '2014': dd2014, '2015': dd2015}
-table2 = pd.DataFrame(data = dd) 
-
-newdf2 = df_to_orgtbl(table2, float_fmt = '%d')
-print(newdf2)
-
-#+end_src
-
-#+RESULTS: master_assignment_attrition
-
-*** Discussion of attrition                                          :ignore:
-
-Another possible issue has to do with whether crucial question is to
-what extent attrition in 2014 and 2015 will bias our
-results. \Tab{attrition_count} reports the total number of households
-identified in each treatment arm and year for the whole sample, and in
-parentheses reports the same numbers restricting ourselves to
-households surveyed at baseline.  In the TUP group, we were unable to
-find 21 participants in 2014 (8% attrition), but found 5 not
-identified in the baseline survey. We found 8 additional TUP
-households with baseline surveys again in 2015 for a final attrition
-rate of 5%. Of those in the UCT group, 12 were lost (9.6%) in 2014,
-then two more in 2015 (11%). The control group saw very high attrition
-in 2014, missing 60 people (22%). Enumerators also found a large
-number of households not found at baseline, such that there were only
-16 fewer surveys collected in 2014 than in 2013. The high attrition
-was due largely to the fact that these households did not enjoy the
-same consistent contact that BRAC had with the TUP group, and the
-local area lacked infrastructure to easily locate people.  This was
-exacerbated by the uncertain political situation and early harvest.
-Attrition in 2015 was 6.7%, with 19 baseline control households not
-responding, with 85 households found who were originally identified as
-control households from the survey but not in the baseline survey. In
-order to take advantage of the households not included in the
-baseline, the main specification below follows \cite{banerjee-etal} by
-setting missing values to zero when controlling for baseline levels of
-the dependent variable, and including an indicator for whether the
-household was in the baseline.
-
-#+name: tab:attrition_count
-#+caption: Numbers of surveyed households, by group and round.  Parenthetical numbers are households surveyed conditional on also being surveyed at baseline.
-|         | Assigned | 2013 | 2014      | 2015      |
-|---------+----------+------+-----------+-----------|
-| All     |      755 |  649 | 606 (554) | 700 (603) |
-| Control |      380 |  281 | 265 (219) | 353 (262) |
-| TUP     |      250 |  244 | 228 (223) | 236 (231) |
-| UCT     |      125 |  124 | 113 (112) | 111 (110) |
-
-
-
-*** Selection Regression                                             :ignore:
-
-One reasonable question is whether there's /differential/ selection
-by treatment group.  To this end we regress a dummy variable for a
-successful interview for each household in each round on a set of
-round and treatment group fixed effects.  \Tab{selection_regression}
-reports the results.  The probability of an eligible household being
-interviewed in 2013 was 79%, falling to 74% in 2014, and rising to 86%
-in 2015.  The coefficients associated with TUP and UCT in the table
-can be interpreted as the difference in the probability of a household
-in one of these treatment groups being interviewed relative to the
-control group.  These are not significantly different from each other,
-but a household in either of the TUP and UCT groups
-has a probability of being interviewed is roughly 0.14 greater than a
-household in control group.  This difference seems large enough to
-merit further investigation.
-
-#+name: selection_regression
-#+begin_src python :exports none  :results output table raw :dir ../ :colnames no :tangle selection_regression.py
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
-from cfe.estimation import ols
-
-data_baseline  = "../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../TUP-report/documents/master_assignment.csv"
-data_midline = "../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../TUP-data/Endline/TUP_endline.dta"
-
-df_b = pd.read_stata(data_baseline) 
-df_a = pd.read_csv(data_assignment)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-
-DF = {}
-# baseline (2013)
-# merge baseline data id number and group column from master assignment csv based on respondent id/id number
-df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-# change "Cash" to "UCT"
-df.replace(to_replace='Cash', value='UCT', inplace=True)
-
-df.set_index('idno', inplace=True)
-
-DF[2013] = df['Group']
-
-# midline (2014)
-# merge midline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-# change "Cash" to "UCT"
-df.replace(to_replace='Cash', value='UCT', inplace=True)
-
-df.set_index('idno', inplace=True)
-
-DF[2014] = df['Group']
-
-# endline (2015)
-# merge endline data id number and group column from random assignment data based on respondent id/id number
-df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
-
-# change "Gift" to "Control"
-df.replace(to_replace='Gift', value='Control', inplace=True)
-
-# change "Cash" to "UCT"
-df.replace(to_replace='Cash', value='UCT', inplace=True)
-
-df.set_index('idno', inplace=True)
-
-DF[2015] = df['Group']
-
-df = (~pd.DataFrame(DF).isnull() + 0)
-df.columns.name = 'Round'
-
-df = df.stack()
-df.name = 'Interviewed'
-
-group = df_a.set_index('RespID')['Group']
-group.index.name = 'idno'
-
-df = pd.DataFrame(df).join(group,how='outer')
-
-GroupD = pd.get_dummies(df['Group'])
-
-RoundD = pd.get_dummies(df.reset_index(drop=False)['Round'])
-RoundD.index = GroupD.index
-
-X = pd.concat([RoundD,GroupD[['TUP','UCT']]],axis=1)
-y = df['Interviewed']
-
-b,se = ols(X,y,return_se=True)
-
-print(df_to_orgtbl(b,sedf=se.T,float_fmt='%5.2f'))
-#+end_src
-
-#+name: tab:selection_regression
-#+caption: Probability of completed interview, by round and treatment group (Control is the excluded group).
-|                 | 2013       | 2014       | 2015       | TUP        | UCT        |
-|-----------------+------------+------------+------------+------------+------------|
-| Pr(Interviewed) | 0.79^{***} | 0.74^{***} | 0.86^{***} | 0.15^{***} | 0.13^{***} |
-|                 | ( 0.00)    | ( 0.00)    | ( 0.00)    | ( 0.01)    | ( 0.01)    |
-
-*** Attrition balance table                                          :ignore:
-
- One possibility is that a random lack of balance in observable
- household characteristics is what drives differences in the
- probability of being interviewed.  To explore this we next
- ask how those who did not turn up in subsequent rounds differed by a range of
- baseline characteristics.  \Tab{attrition_balance} reports the average level of
- various characteristics in 2013. Then we report the difference in means between
- households that were in and out of the midline or endline surveys.
- Note that the sample here consists not of all eligible households,
- but all households interviewed at baseline.
- 
- There are some signficant differences.  We see that on average,
- households interviewed in the midline survey were larger with more
- children and reported larger asset stocks. Households found in 2015
- seemed to have, at baseline, had significantly smaller asset stocks and
- less consumption. This imbalance highlights the need for a
- difference-in-difference or ancova citep:mckenzie12 design.
-
-**** Elliott attrition balance table                               :ignore:
- #+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
- #+attr_latex: :environment longtable :align lrrrrr
- #+name: tab:attrition_balance
- |-----------------+---------------+----------------+----------------|
- | HH Features     | $\mbox{Mean}_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
- |-----------------+---------------+----------------+----------------|
- | HH size         |         7.223 |        0.595** |          0.428 |
- | # Child         |         3.328 |       0.656*** |          0.423 |
- | Asset Prod.     |       512.822 |        126.360 |       -369.190 |
- | Asset Tot.      |      1494.324 |        361.889 |      -689.174* |
- | Daily Exp       |        25.212 |          1.257 |         -4.150 |
- | Daily Food      |        24.300 |          0.299 |        -4.790* |
- | In Business     |         0.415 |          0.038 |          0.007 |
- | Land Access     |         2.324 |          0.014 |          0.305 |
- | No. Houses      |         2.863 |          0.305 |          0.367 |
- | Cash Savings    |       178.662 |         46.322 |         54.295 |
- |-----------------+---------------+----------------+----------------|
- | Assets          |               |                |                |
- |-----------------+---------------+----------------+----------------|
- | Bed             |       250.534 |         12.649 |        -51.133 |
- | Bicycle         |       102.174 |         11.179 |          4.212 |
- | Mobile          |       101.482 |          6.336 |        -13.028 |
- | Motorcycle      |       481.885 |        213.002 |       -241.819 |
- | Carts           |         2.751 |          1.929 |          2.962 |
- | Cows            |       181.402 |         67.862 |        -89.273 |
- | Smallanimals    |       180.716 |         18.966 |        -79.014 |
- |-----------------+---------------+----------------+----------------|
- | Consumption     |               |                |                |
- |-----------------+---------------+----------------+----------------|
- | Cereals         |         8.882 |         -0.084 |       -3.714** |
- | Beans           |         0.826 |          0.269 |         -0.382 |
- | Ceremonies      |         0.141 |         -0.020 |         -0.038 |
- | Charities       |         0.027 |          0.007 |         -0.001 |
- | Clothesfootwear |         0.663 |         0.180* |         -0.206 |
- | Cosmetics       |         0.668 |          0.005 |          0.229 |
- | Dowry           |         1.263 |          0.755 |         -0.399 |
- | Egg             |         1.069 |         -0.005 |          0.106 |
- | Fish            |         2.417 |         -0.132 |          0.036 |
- | Fruit           |         0.656 |          0.009 |         -0.151 |
- | Fuel            |         0.733 |          0.105 |         -0.049 |
- | Meat            |         3.981 |          0.254 |          0.300 |
- | Other           |           0.0 |          0.000 |          0.000 |
- | Poultry         |        39.437 |        23.634* |         -2.243 |
- | Salt            |         0.438 |      -0.140*** |         -0.043 |
- | Soap            |         0.475 |        -0.181* |          0.047 |
- | Sugar           |         1.647 |         -0.285 |         -0.020 |
- | Textiles        |         0.165 |          0.010 |          0.011 |
- | Transport       |         0.163 |          0.004 |          0.018 |
- | Tv              |        39.915 |        -16.377 |          0.845 |
- | Utensils        |         0.247 |          0.062 |         -0.023 |
- | Vegetables      |         1.446 |          0.096 |         -0.151 |
- |-----------------+---------------+----------------+----------------|
-
-**** Recreating attrition balance table                            :noexport:
-
- #+name: attrition_balance
- #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/TUP_midline.dta"
-data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/TUP_endline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-import pandas as pd
-from scipy import stats
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-df_a = pd.read_csv(data_assignment)
-
-df_m.insert(len(df_m.columns), 'in_midline', 1)
-df_e.insert(len(df_e.columns), 'in_endline', 1)
-
-df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='outer', left_on="idno", right_on="RespID")
-
-# merge in midline and endline
-df = pd.merge(df, df_m[ ['idno', 'in_midline'] ], how='outer', left_on="idno", right_on="idno")
-df = pd.merge(df, df_e[ ['idno', 'in_endline'] ], how='outer', left_on='idno', right_on='idno')
-
-df['in_midline'].fillna(value=0, inplace=True)
-df['in_endline'].fillna(value=0, inplace=True)
-
-df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ].transform(lambda x: x/3)
-
-df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ].transform(lambda x: x/30)
-
-df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ].transform(lambda x: x/365)
-
-df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
-             'asset_val_netITN_b',
-             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b',
-             'Group', 'in_midline', 'in_endline'])
-
-df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
-
-means_b = df_1.mean()
-means_m = df_1.groupby(['in_midline']).mean()
-means_e = df_1.groupby(['in_endline']).mean()
-means_b = means_b.T
-means_m = means_m.T
-means_e = means_e.T
-
-# some are off by 0.001, clothesfootwear numbers differ
-d = {'mean_baseline': means_b, 'beta_mid': means_m[1.0] - means_m[0.0], 'beta_end': means_e[1.0] - means_e[0.0]}
-means = pd.DataFrame(data=d)
-
-#default axis=0 for dropping rows
-means.drop(['in_midline', 'in_endline'], inplace=True)
-
-# so we can add * later
-means = means.round(decimals = 3)
-means = means.astype(str)
-
-column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
-              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
-               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
-              'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
-             'asset_val_netITN_b', \
-             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
-
-for column in column_list:
-    
-    pvalue_mid = stats.ttest_ind(df_1[df_1['in_midline'] == 1][column], df_1[df_1['in_midline'] == 0][column], nan_policy='omit').pvalue
-    
-    if pvalue_mid <= 0.01: 
-        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '***'
-    elif pvalue_mid <= 0.05: 
-        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '**'
-    elif pvalue_mid <= 0.1: 
-        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '*'
-        
-    pvalue_end = stats.ttest_ind(df_1[df_1['in_endline'] == 1][column], df_1[df_1['in_endline'] == 0][column], nan_policy='omit').pvalue
-    
-    if pvalue_end <= 0.01: 
-        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '***'
-    elif pvalue_end <= 0.05: 
-        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '**'
-    elif pvalue_end <= 0.1: 
-        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '*'
-
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
-# but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
-means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
-            'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
-            'c_egg_b': 'Egg', 'c_oil_b': 'Oil', 
-            'c_beans_b': 'Beans', 'c_fruit_b': 'Fruit', 
-            'c_salt_b': 'Salt', 'c_vegetables_b': 'Vegetables', 
-            'c_milk_b': 'Milk', 'c_spices_b': 'Spices', 
-            'c_alcohol_b': 'Alcohol', 'c_otherfood_b': 'Other food', 
-            'c_fuel_b': 'Cooking fuel', 'c_soap_b': 'Toiletries', 
-            'c_transport_b': 'Transportation', 'c_cosmetics_b': 'Cosmetics', 
-            'c_entertainment_b': 'Entertainment', 'c_clothesfootwear_b': 'Clothing, footwear', 
-            'c_charities_b': 'Charities', 'c_ceremonies_b': 'Rituals/ceremonies', 
-            'c_textiles_b': 'Textiles', 'c_utensils_b': 'Utensils',
-            'c_dowry_b': 'Dowry', 'c_furniture_b': 'Furniture', 
-            'c_other_b': 'Other non-food', 'asset_val_cows_b': 'Large livestock (cows)', 
-            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
-            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
-            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
-            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
-            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
-            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
-            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
-
-newdf = df_to_orgtbl(means, float_fmt = '%.3f')
-print(newdf)
-
-
- #+end_src
-
-
- #+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
- #+attr_latex: :environment longtable :align lrrrrr
- #+name: tab:attrition_balance
- |------------------------+----------------------+----------------+----------------|
- | Baseline Values        | $\mbox{Mean}_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
- |------------------------+----------------------+----------------+----------------|
- | # Houses               |                2.863 |          0.305 |          0.367 |
- | Bed                    |              250.535 |         12.649 |        -51.133 |
- | Bicycle                |              102.174 |         11.179 |          4.212 |
- | Chair/table            |              196.436 |         -0.303 |        -37.177 |
- | Large livestock (cows) |              181.402 |         67.862 |        -89.273 |
- | Mobile phone           |              101.482 |          6.336 |        -13.028 |
- | Motorcycle             |              481.886 |        213.002 |       -241.819 |
- | Mosquito net ITN       |                8.504 |         -1.777 |          0.449 |
- | Mosquito net           |               19.462 |          0.332 |          2.814 |
- | Poultry                |               39.438 |        23.634* |         -2.243 |
- | Radio                  |               53.046 |         -6.333 |       -35.093* |
- | Small livestock        |              180.716 |         18.966 |        -79.014 |
- | Alcohol                |                 0.04 |          0.005 |         -0.004 |
- | Beans                  |                0.826 |          0.269 |         -0.382 |
- | Cereals                |                8.883 |         -0.084 |       -3.714** |
- | Rituals/ceremonies     |                0.139 |         -0.019 |         -0.038 |
- | Charities              |                0.027 |          0.007 |         -0.001 |
- | Clothing, footwear     |                0.655 |         0.177* |         -0.203 |
- | Cosmetics              |                0.668 |          0.005 |          0.229 |
- | Dowry                  |                1.247 |          0.745 |         -0.394 |
- | Egg                    |                1.069 |         -0.005 |          0.106 |
- | Entertainment          |                0.074 |          0.021 |         0.051* |
- | Fish                   |                2.418 |         -0.132 |          0.036 |
- | Fruit                  |                0.657 |          0.009 |         -0.151 |
- | Cooking fuel           |                0.733 |          0.105 |         -0.049 |
- | Furniture              |                0.199 |         -0.023 |           0.02 |
- | Meat                   |                3.982 |          0.254 |            0.3 |
- | Milk                   |                 1.15 |          0.283 |          0.239 |
- | Oil                    |                1.288 |          0.037 |        -0.532* |
- | Other non-food         |                  0.0 |            0.0 |            0.0 |
- | Other food             |                  0.0 |            0.0 |            0.0 |
- | Salt                   |                0.439 |       -0.14*** |         -0.043 |
- | Toiletries             |                0.475 |        -0.181* |          0.047 |
- | Spices                 |                0.231 |          0.024 |         -0.048 |
- | Sugar                  |                1.648 |         -0.285 |          -0.02 |
- | Textiles               |                0.163 |           0.01 |          0.011 |
- | Transportation         |                0.164 |          0.004 |          0.018 |
- | Utensils               |                0.245 |          0.061 |         -0.023 |
- | Vegetables             |                1.447 |          0.096 |         -0.151 |
- | # Child                |                3.328 |       0.656*** |          0.423 |
- | Household size         |                7.224 |        0.595** |          0.428 |
- | In business            |                0.415 |          0.038 |          0.007 |
-
-
-**** Creating a new attrition balance table with only nonzero values counting toward the mean :noexport:
-
- The following table shows the means of log expenditures. 
-
- #+name: attrition_balance_nonzero
- #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/TUP_midline.dta"
-data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/TUP_endline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-import pandas as pd
-import numpy as np
-from scipy import stats
-from cfe.df_utils import df_to_orgtbl
-
-df_b = pd.read_stata(data_baseline)
-df_m = pd.read_stata(data_midline)
-df_e = pd.read_stata(data_endline)
-df_a = pd.read_csv(data_assignment)
-
-df_m.insert(len(df_m.columns), 'in_midline', 1)
-df_e.insert(len(df_e.columns), 'in_endline', 1)
-
-df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='outer', left_on="idno", right_on="RespID")
-
-# merge in midline and endline
-df = pd.merge(df, df_m[ ['idno', 'in_midline'] ], how='outer', left_on="idno", right_on="idno")
-df = pd.merge(df, df_e[ ['idno', 'in_endline'] ], how='outer', left_on='idno', right_on='idno')
-
-df['in_midline'].fillna(value=0, inplace=True)
-df['in_endline'].fillna(value=0, inplace=True)
-
-df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ]
-
-df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ]
-
-df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ]
-
-df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
-             'asset_val_netITN_b',
-             'asset_n_house_b', 'child_total_b', 'hh_size_b'])
-
-df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
-df_1.replace(to_replace = 0, value = float("NaN") , inplace = True)
-
-# take the logs of expenditure for all variables except dummy variables
-df_1 = df_1.transform(lambda x: np.log(x))
-
-# add in group assignment and the dummy variables that need 0 as one of their values
-df_1 = df_1.join(df[ ['in_midline', 'in_endline', 'in_business_b', 'Group'] ])
-
-means_b = df_1.mean()
-means_m = df_1.groupby(['in_midline']).mean()
-means_e = df_1.groupby(['in_endline']).mean()
-means_b = means_b.T
-means_m = means_m.T
-means_e = means_e.T
-
-d = {'mean_baseline': means_b, 'beta_mid': means_m[1.0] - means_m[0.0], 'beta_end': means_e[1.0] - means_e[0.0]}
-means = pd.DataFrame(data=d)
-
-#default axis=0 for dropping rows
-means.drop(['in_midline', 'in_endline'], inplace=True)
-
-# so we can add * later
-means = means.round(decimals = 3)
-means = means.astype(str)
-
-column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
-                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
-                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
-              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
-               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
-                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
-              'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
-             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
-             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
-             'asset_val_netITN_b', \
-             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
-
-for column in column_list:
-    
-    pvalue_mid = stats.ttest_ind(df_1[df_1['in_midline'] == 1][column], df_1[df_1['in_midline'] == 0][column], nan_policy='omit').pvalue
-    
-    if pvalue_mid <= 0.01: 
-        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '***'
-    elif pvalue_mid <= 0.05: 
-        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '**'
-    elif pvalue_mid <= 0.1: 
-        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '*'
-        
-    pvalue_end = stats.ttest_ind(df_1[df_1['in_endline'] == 1][column], df_1[df_1['in_endline'] == 0][column], nan_policy='omit').pvalue
-    
-    if pvalue_end <= 0.01: 
-        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '***'
-    elif pvalue_end <= 0.05: 
-        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '**'
-    elif pvalue_end <= 0.1: 
-        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '*'
-
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org
-means.rename({'c_meat_b': ' Meat (last three days)', 'c_fish_b': 'Fish (last three days)', 
-            'c_cereals_b': 'Cereals (last three days)', 'c_sugar_b': 'Sugar (last three days)', 
-            'c_egg_b': 'Egg (last three days)', 'c_oil_b': 'Oil (last three days)', 
-            'c_beans_b': 'Beans (last three days)', 'c_fruit_b': 'Fruit (last three days)', 
-            'c_salt_b': 'Salt (last three days)', 'c_vegetables_b': 'Vegetables (last three days)', 
-            'c_milk_b': 'Milk (last three days)', 'c_spices_b': 'Spices (last three days)', 
-            'c_alcohol_b': 'Alcohol (last three days)', 'c_otherfood_b': 'Other food (last three days)', 
-            'c_fuel_b': 'Cooking fuel (last month)', 'c_soap_b': 'Toiletries (last month)', 
-            'c_transport_b': 'Transportation (last month)', 'c_cosmetics_b': 'Cosmetics (last month)', 
-            'c_entertainment_b': 'Entertainment (last month)', 'c_clothesfootwear_b': 'Clothing, footwear (last year)', 
-            'c_charities_b': 'Charities (last year)', 'c_ceremonies_b': 'Rituals/ceremonies (last year)', 
-            'c_textiles_b': 'Textiles (last year)', 'c_utensils_b': 'Utensils (last year)',
-            'c_dowry_b': 'Dowry (last year)', 'c_furniture_b': 'Furniture (last year)', 
-            'c_other_b': 'Other non-food (last year)', 'asset_val_cows_b': 'Large livestock (cows)', 
-            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
-            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
-            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
-            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
-            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
-            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
-            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
-
-newdf = df_to_orgtbl(means, float_fmt = '%.3f')
-
-print(newdf)
-
-
- #+end_src
-
- #+RESULTS: attrition_balance_nonzero
- |                                | mean_baseline |  beta_mid | beta_end |
- |--------------------------------+---------------+-----------+----------|
- | # Houses                       |         1.054 |     0.083 |    0.071 |
- | Bed                            |         5.328 |     0.028 | -0.408** |
- | Bicycle                        |         5.642 |     0.106 |    0.015 |
- | Chair/table                    |         4.902 |     0.179 |   -0.224 |
- | Large livestock (cows)         |         7.428 |     0.686 |    0.133 |
- | Mobile phone                   |         4.862 |     0.075 |   -0.174 |
- | Motorcycle                     |         7.223 |     0.918 |    0.787 |
- | Mosquito net ITN               |         3.151 |     0.034 |   -0.324 |
- | Mosquito net                   |         3.096 |     0.009 |    0.056 |
- | Poultry                        |         4.582 |     0.259 |    0.111 |
- | Radio                          |         4.314 |    -0.036 |   -0.354 |
- | Small livestock                |          6.29 |     0.351 |    0.081 |
- | Alcohol (last three days)      |         1.367 |    -0.272 |   0.633* |
- | Beans (last three days)        |         1.746 |      0.3* |   -0.272 |
- | Cereals (last three days)      |         3.003 |    -0.052 |  -0.255* |
- | Rituals/ceremonies (last year) |          4.54 |    -0.139 |   -0.085 |
- | Charities (last year)          |         3.237 |    -0.241 |    0.076 |
- | Clothing, footwear (last year) |         4.973 |    0.234* |   -0.169 |
- | Cosmetics (last month)         |          2.68 |     -0.03 |    0.062 |
- | Dowry (last year)              |         6.103 |     0.596 |    0.122 |
- | Egg (last three days)          |         1.797 |    -0.081 |    0.076 |
- | Entertainment (last month)     |         2.033 |    -0.116 |    0.418 |
- | Fish (last three days)         |         2.069 |       0.0 |    0.028 |
- | Fruit (last three days)        |         1.337 |     0.094 |   -0.114 |
- | Cooking fuel (last month)      |         2.912 |     0.033 |   -0.257 |
- | Furniture (last year)          |         4.273 |     0.041 |   -0.338 |
- | Meat (last three days)         |         2.859 |     0.133 |    0.105 |
- | Milk (last three days)         |         2.461 |     0.193 |    0.175 |
- | Oil (last three days)          |         0.896 |    -0.054 |   -0.216 |
- | Other non-food (last year)     |           nan |       nan |      nan |
- | Other food (last three days)   |           nan |       nan |      nan |
- | Salt (last three days)         |          0.18 | -0.154*** |   -0.053 |
- | Toiletries (last month)        |         2.276 |     -0.17 |   -0.086 |
- | Spices (last three days)       |         0.792 |     -0.19 |   -0.156 |
- | Sugar (last three days)        |         1.317 |    -0.092 |   -0.116 |
- | Textiles (last year)           |         4.137 |     0.099 |   -0.109 |
- | Transportation (last month)    |         2.417 |    -0.132 |    0.022 |
- | Utensils (last year)           |         4.347 |      0.21 |    -0.24 |
- | Vegetables (last three days)   |         1.514 |     0.095 |   -0.047 |
- | # Child                        |         1.142 |  0.219*** |   0.173* |
- | Household size                 |         1.919 |   0.081** |    0.062 |
- | In business                    |         0.415 |     0.038 |    0.007 |
-
+** Balance, Attrition, Selection
+
+In Appendix [[Balance & Selection]] we examine in detail whether the
+randomly assigned treatment groups are balanced on observables; the
+attrition of households from the sample; and whether this attrition is
+selective, varying systematically either with assignment or baseline
+characteristics of the household.
+
+The means of a long list of household characteristics are balanced
+across groups, with minor exceptions attributable to chance (a larger
+share of households in the UCT group owned motorcycles at baseline,
+and the same group had made larger average purchases of textiles
+during the past year; see Appendix Tables [[tab:balance_check]] and
+[[tab:mean_log_balance]]).
+
+Given the environment, attrition was quite low (see Appendix Table
+[[tab:attrition_count]]).  We attempted to survey 755 eligible households
+in total.  Of these, 649 were surveyed at baseline, 606 at midline,
+and 700 at endline.  Thus, the probability of an eligible household
+being interviewed in 2013 was 87%, falling to 81% in 2014, and rising
+to 93% in 2015.  However, households in the control group were
+significantly less likely to be interviewed at baseline (Appendix
+Table [[tab:interview_probabilities]]).  In order to take advantage of the
+households not included in the baseline, as well as to deal with any
+issues with imperfect balance on observables, our specification below
+follows cite:banerjee-etal02 by setting missing values to zero when
+controlling for baseline levels of the dependent variable, and
+including an indicator for whether the household was in the baseline,
+in a sort of adjusted ANCOVA specification of the sort discussed by
+cite:mckenzie12.
 
 
 * Empirical Strategy
@@ -1470,18 +344,26 @@ We estimate a single model using interactions between time effects and
 group assignment, as well as baseline values of the outcome variable
 where available; this is 
 \begin{equation*}
-Y_{it} =\sum_{t=2014}^{2015}\delta_{t}+\beta_{t}^{UCT}I_{t}*UCT_{it}+\beta_{t}^{TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}+\epsilon_{i}
+Y_{it} =\sum_{t=2014}^{2015}\alpha_{t}+\beta_{t,UCT}I_{t}*UCT_{it}+\beta_{t,TUP}I_{t}*TUP_{it}+\gamma Y_{i,2013}(1-M_{i,2013}) + \delta M_{i,2013} +\epsilon_{i},
 \end{equation*}
-where $\delta_{t}$ are time fixed effects and $I_{t}$ is an indicator if the year
-/t/, and $Y_{it}$ is an outcome of interest for household /i/ in year /t/. We take
-the interactions of TUP assignment with 2014 and 2015 indicators as the treatment
-effects at 6--8 and 15--17 months respectively. The analagous interactions with the
-UCT group offer a second baseline and a 12-month treatment effect, respectively.
-Since those transfers happened after the midline survey, its interaction with /2014/
-acts as a placebo; there is no /ex ante/ reason to expect that they were different
-from the rest of the control group at that point. Given the slight difference in
-timing, we report a t-test of the hypothesis \(\beta_{\mbox{TUP},t}-\beta_{\mbox{UCT},2015}=0\) for
-both \(t \in {2014,2015}\).  
+where $\alpha_{t}$ are time fixed effects and $I_{t}$ is an indicator
+if the year /t/, and $Y_{it}$ is an outcome of interest for household
+/i/ in year /t/.  If baseline values of the dependent variable are
+missing for household $i$ then this is indicated by the dummy variable
+$M_{i,2013}$.  Thus, baseline values of the dependent variable appear as
+$Y_{i,2013}$ where these are non-missing; but the coefficient $\delta$
+estimates the average baseline value conditional on it being missing.
+
+We take the interactions of TUP assignment with 2014
+and 2015 indicators as the treatment effects at 6--8 and 15--17 months
+respectively. The analagous interactions with the UCT group offer a
+second baseline and a 12-month treatment effect, respectively.  Since
+those transfers happened after the midline survey, its interaction
+with /2014/ acts as a placebo; there is no /ex ante/ reason to expect
+that they were different from the rest of the control group at that
+point.  Given the slight difference in timing, we report a \(t\)-test
+of the hypothesis \(\beta_{\mbox{TUP},t}-\beta_{\mbox{UCT},2015}=0\)
+for both \(t \in {2014,2015}\).
 
 Since the comparison between (TUP,2014) and (UCT,2015) both allow for
 something less than a year of exposure to the respective treatments we
@@ -3228,6 +2110,1081 @@ offer.
    \printbibliography
 
 
+#+latex: \appendix
+
+* Balance & Selection
+** Balance on Observables
+*** Discussion                                                       :ignore:
+We start by checking whether either treatment arm appears significantly different
+from the control group in terms of average baseline observable characteristics.
+Table [[tab:balance_check]] presents summary statistics by group on a range of factors
+related to consumption, asset holdings, and household
+characteristics.  Of all of these baseline characteristics, the only
+cases in which we can reject the null of equality with the control
+group are for the value of motorcycles and textiles.  The mean value
+depends on both /whether/ a household possesses these assets, and
+conditional on possession, the value of the asset.  Particularly for
+the case of motorcycles one wonders whether a small difference in
+rates of ownership might account for the difference, rather than the
+value of the asset conditional on ownership.
+
+*** Creation of master random assignment file                        :ignore:
+
+#+name: master_random_assignment
+#+begin_src python
+"""For making the master treatment groups .csv file
+
+ This code creates a file which contains all of the assignments to
+ treatment groups, regardless of whether a respondent was found at
+ one or all of baseline, midline, and endline. The file reconciles
+ differences between asset_assign.csv and locations.csv. We consider
+ asset_assign.csv to be the assignment at baseline, and locations.csv
+ to be the assignment that was created at endline when some
+ respondents who were not found at baseline were still surveyed at
+ endline.
+
+ There are 6 households that were interviewed only at endline and
+ were not included in asset_assign.csv or locations.csv. These
+ households are manually added as Control households in 
+ master_assignment.csv, like the other households for which a 
+ group was not assigned at baseline and therefore are labeled as 
+ Control at endline.
+"""
+
+data_locations = "../../TUP-data/csv/locations.csv"
+data_asset_assign = "../../TUP-data/csv/asset_assign.csv"
+import pandas as pd
+
+df_l = pd.read_csv(data_locations) # assignments at endline
+df_a = pd.read_csv(data_asset_assign) # assignments at baseline
+
+# take the union of locations.csv and asset_assign.csv, rename groups accordingly
+df = pd.merge(df_l, df_a[ ['respid', 'group' ] ], how='outer', left_on='RespID', right_on='respid')
+df.replace(to_replace='Gift', value='Control', inplace=True)
+df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
+# asset_assign.csv assignments are listed under 'group'
+# locations.csv assignments are listed under 'Group'
+
+for i in range(len(df)): 
+
+    # if a group is not assigned at baseline (in asset_assign 'group'), it should be 'Control' at endline (in locations 'Group') (takes care of observation idno 1157)
+    if pd.isnull(df.iloc[i, df.columns.get_loc('group')]):
+        df.iloc[i, df.columns.get_loc('Group')]='Control'
+    
+    # if a group is assigned at baseline (in asset_assign 'group'), it should be the same at endline (in locations 'Group') (takes care of observation idno 2131)
+    if pd.notna(df.iloc[i, df.columns.get_loc('group')]) and (df.iloc[i, df.columns.get_loc('group')] != df.iloc[i, df.columns.get_loc('Group')]):
+        df.iloc[i, df.columns.get_loc('Group')] = df.iloc[i, df.columns.get_loc('group')]
+
+# now all the assignments in 'Group' should be consistent with 'group' so 'group' is a subset of 'Group' and we can drop it
+df = df.drop(columns=['group', 'respid'])
+
+# manually add the 6 households which were only interviewed at endline as 'Control'
+df = df.append({'RespID': 1359,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 1484,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 1553,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 1960,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 2142,  'Group': 'Control'}, ignore_index=True)
+df = df.append({'RespID': 2174,  'Group': 'Control'}, ignore_index=True)
+
+df.to_csv('master_assignment.csv')
+#+end_src
+
+#+RESULTS: master_random_assignment
+
+
+*** Recreating Elliott's balance table (without some variables which are sums of other variables) :ignore:
+
+# N represents the number of nonzero values
+
+#+name: mean_balance
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+# <<load_data>> can use this!!
+data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+import pandas as pd
+from scipy import stats
+from cfe.df_utils import df_to_orgtbl
+import matplotlib. pyplot as plt
+
+df_b = pd.read_stata(data_baseline)
+df_a = pd.read_csv(data_assignment)
+
+df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ].transform(lambda x: x/3)
+
+df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ].transform(lambda x: x/30)
+
+df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ].transform(lambda x: x/365)
+
+df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
+             'asset_val_netITN_b',
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b',
+             'Group'])
+
+df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
+
+means = df_1.groupby(['Group']).mean()
+means = means.T
+
+means.insert(len(means.columns), '$\Delta$ TUP', means['TUP'] - means['Control'])
+means.insert(len(means.columns), '$\Delta$ UCT', means['UCT'] - means['Control'])
+
+d = {'Control': means['Control'], '$\Delta$ TUP': means['TUP'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
+means = pd.DataFrame(data=d)
+
+# so we can add * later
+means = means.round(decimals = 3)
+means = means.astype(str)
+means.insert(len(means.columns), 'N', 0)
+
+column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
+              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
+               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
+               'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
+             'asset_val_netITN_b', \
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
+
+# some are off by 0.001
+for column in column_list:
+    
+    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'TUP'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    
+    if pvalue_tup <= 0.01: 
+        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '***'
+    elif pvalue_tup <= 0.05: 
+        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '**'
+    elif pvalue_tup <= 0.1: 
+        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '*'
+        
+    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    
+    if pvalue_cash <= 0.01: 
+        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '***'
+    elif pvalue_cash <= 0.05: 
+        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '**'
+    elif pvalue_cash <= 0.1: 
+        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '*'
+    
+    # as it is in the table, N is number of nonzero entries
+    means.at[column, 'N'] = df_1[df_1[column] > 0][column].count()
+
+# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
+# but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
+means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
+            'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
+            'c_egg_b': 'Egg', 'c_oil_b': 'Oil', 
+            'c_beans_b': 'Beans', 'c_fruit_b': 'Fruit', 
+            'c_salt_b': 'Salt', 'c_vegetables_b': 'Vegetables', 
+            'c_milk_b': 'Milk', 'c_spices_b': 'Spices', 
+            'c_alcohol_b': 'Alcohol', 'c_otherfood_b': 'Other food', 
+            'c_fuel_b': 'Cooking fuel', 'c_soap_b': 'Toiletries', 
+            'c_transport_b': 'Transportation', 'c_cosmetics_b': 'Cosmetics', 
+            'c_entertainment_b': 'Entertainment', 'c_clothesfootwear_b': 'Clothing, footwear', 
+            'c_charities_b': 'Charities', 'c_ceremonies_b': 'Rituals/ceremonies', 
+            'c_textiles_b': 'Textiles', 'c_utensils_b': 'Utensils',
+            'c_dowry_b': 'Dowry', 'c_furniture_b': 'Furniture', 
+            'c_other_b': 'Other non-food', 'asset_val_cows_b': 'Large livestock (cows)', 
+            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
+            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
+            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
+            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
+            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
+            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
+            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
+
+newdf = df_to_orgtbl(means, float_fmt = '%.3f')
+print(newdf)
+
+df_1.boxplot(column = 'c_textiles_b', by = 'Group')
+plt.savefig("textiles_Elliott.png")
+
+df_1.boxplot(column = 'asset_val_motorcycle_b', by = 'Group')
+plt.savefig("motorcycle_Elliott.png")
+
+#+end_src
+
+
+#+name: tab:balance_check
+#+caption: Means of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively
+#+attr_latex: :environment longtable :align lrrrr
+| Baseline Characteristics | Control | $\Delta$ TUP | $\Delta$ UCT | $N$ |
+|--------------------------+---------+--------------+--------------+-----|
+| Household size           |   7.232 |       -0.175 |          0.3 | 648 |
+| # Child                  |   3.263 |        0.118 |        0.108 | 594 |
+| In business              |   0.398 |        0.038 |        0.017 | 265 |
+|--------------------------+---------+--------------+--------------+-----|
+| Baseline Assets          |         |              |              |     |
+|--------------------------+---------+--------------+--------------+-----|
+| Furniture                |   0.196 |       -0.014 |        0.044 | 368 |
+| Large livestock (cows)   |  253.31 |     -140.605 |      -99.681 |  35 |
+| Small livestock          | 236.601 |      -86.069 |     -123.134 | 123 |
+| Bicycle                  | 109.075 |      -12.554 |      -11.413 | 171 |
+| Radio                    |  58.448 |       -5.969 |      -16.529 | 260 |
+| Motorcycle               | 341.737 |      192.956 |    353.836** |  93 |
+| Mosquito net             |  19.164 |        0.668 |        0.248 | 423 |
+| Poultry                  |  42.402 |       -3.365 |       -8.894 | 161 |
+| Bed                      |  241.27 |        7.992 |       32.762 | 521 |
+| Chair/table              | 206.786 |      -29.368 |        3.617 | 531 |
+| Mobile phone             |  97.537 |       12.627 |       -4.199 | 414 |
+| Mosquito net ITN         |   7.822 |        1.215 |        1.178 | 181 |
+| # Houses                 |   2.829 |         0.03 |        0.118 | 543 |
+|--------------------------+---------+--------------+--------------+-----|
+| Baseline Consumption     |         |              |              |     |
+|--------------------------+---------+--------------+--------------+-----|
+| Alcohol                  |   0.043 |        0.006 |       -0.029 |  18 |
+| Beans                    |   0.696 |        0.231 |        0.226 | 192 |
+| Rituals/ceremonies       |   0.132 |        0.007 |        0.026 | 152 |
+| Charities                |    0.03 |       -0.006 |         -0.0 | 134 |
+| Clothing, footwear       |   0.658 |       -0.026 |        0.033 | 595 |
+| Cosmetics                |   0.682 |        0.027 |       -0.125 | 468 |
+| Dowry                    |   1.256 |        -0.04 |        0.028 | 126 |
+| Egg                      |   1.096 |       -0.091 |        0.038 | 276 |
+| Entertainment            |   0.087 |       -0.024 |        -0.02 | 145 |
+| Fish                     |   2.505 |       -0.154 |       -0.156 | 474 |
+| Fruit                    |    0.69 |       -0.089 |          0.0 | 272 |
+| Cooking fuel             |   0.762 |       -0.039 |       -0.072 | 456 |
+| Meat                     |   4.205 |       -0.568 |       -0.052 | 378 |
+| Milk                     |   1.284 |       -0.237 |       -0.232 | 114 |
+| Oil                      |   1.364 |       -0.131 |       -0.141 | 613 |
+| Salt                     |   0.447 |       -0.026 |        0.007 | 617 |
+| Toiletries               |   0.483 |       -0.009 |       -0.026 | 536 |
+| Spices                   |    0.23 |        0.024 |       -0.045 | 158 |
+| Sugar                    |   1.713 |       -0.078 |       -0.189 | 604 |
+| Textiles                 |   0.154 |       -0.005 |       0.055* | 376 |
+| Transportation           |   0.176 |       -0.033 |        0.002 | 193 |
+| Utensils                 |   0.246 |       -0.008 |        0.008 | 442 |
+| Vegetables               |   1.543 |       -0.165 |        -0.18 | 471 |
+| Cereals                  |   9.187 |       -0.947 |         0.27 | 605 |
+
+*** Creating a new balance table with only nonzero values counting toward the mean :ignore:
+
+To explore this, Table [[tab:mean_log_balance]] reports the means of log
+expenditures, with expenditures of zero treated as missing data; thus
+these figures are conditional on ownership.  We see from this table
+that there are no significant differences between the control and
+treatment groups; thus, rejections in the previous table can be
+attributed to differences in rates of ownership.
+
+# N represents the number of nonzero values, and only nonzero values
+# are considered in calculations of the means
+
+#+name: mean_log_balance
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+import pandas as pd
+from scipy import stats
+from cfe.df_utils import df_to_orgtbl
+import matplotlib. pyplot as plt
+import numpy as np
+
+df_b = pd.read_stata(data_baseline)
+df_a = pd.read_csv(data_assignment)
+
+df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+
+df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ]
+
+df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ]
+
+df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ]
+
+df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
+             'asset_val_netITN_b',
+             'asset_n_house_b', 'child_total_b', 'hh_size_b'])
+
+df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
+
+df_1.replace(to_replace = 0, value = float("NaN") , inplace = True)
+
+# take the logs of expenditure for all variables except dummy variables
+df_1 = df_1.transform(lambda x: np.log(x))
+
+# add in group assignment and the dummy variables that need 0 as one of their values
+df_1 = df_1.join(df[ [ 'in_business_b', 'Group'] ])
+
+means = df_1.groupby(['Group']).mean()
+means = means.T
+
+means.insert(len(means.columns), '$\Delta$ TUP', means['TUP'] - means['Control'])
+means.insert(len(means.columns), '$\Delta$ UCT', means['UCT'] - means['Control'])
+
+d = {'Control': means['Control'], '$\Delta$ TUP': means['TUP'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
+means = pd.DataFrame(data=d)
+
+# so we can add * later
+means = means.round(decimals = 3)
+means = means.astype(str)
+means.insert(len(means.columns), 'N', 0)
+
+column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
+              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
+               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
+               'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
+             'asset_val_netITN_b', \
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
+
+# some are off by 0.001
+for column in column_list:
+    
+    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'TUP'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    
+    if pvalue_tup <= 0.01: 
+        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '***'
+    elif pvalue_tup <= 0.05: 
+        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '**'
+    elif pvalue_tup <= 0.1: 
+        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '*'
+        
+    pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    
+    if pvalue_cash <= 0.01: 
+        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '***'
+    elif pvalue_cash <= 0.05: 
+        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '**'
+    elif pvalue_cash <= 0.1: 
+        means.at[column,'$\Delta$ UCT'] = means.at[column,'$\Delta$ UCT'] + '*'
+    
+   # N is number of nonzero entries
+    means.at[column, 'N'] = df_1[column].count()
+
+# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org
+means.rename({'c_meat_b': ' Meat (last three days)', 'c_fish_b': 'Fish (last three days)', 
+            'c_cereals_b': 'Cereals (last three days)', 'c_sugar_b': 'Sugar (last three days)', 
+            'c_egg_b': 'Egg (last three days)', 'c_oil_b': 'Oil (last three days)', 
+            'c_beans_b': 'Beans (last three days)', 'c_fruit_b': 'Fruit (last three days)', 
+            'c_salt_b': 'Salt (last three days)', 'c_vegetables_b': 'Vegetables (last three days)', 
+            'c_milk_b': 'Milk (last three days)', 'c_spices_b': 'Spices (last three days)', 
+            'c_alcohol_b': 'Alcohol (last three days)', 'c_otherfood_b': 'Other food (last three days)', 
+            'c_fuel_b': 'Cooking fuel (last month)', 'c_soap_b': 'Toiletries (last month)', 
+            'c_transport_b': 'Transportation (last month)', 'c_cosmetics_b': 'Cosmetics (last month)', 
+            'c_entertainment_b': 'Entertainment (last month)', 'c_clothesfootwear_b': 'Clothing, footwear (last year)', 
+            'c_charities_b': 'Charities (last year)', 'c_ceremonies_b': 'Rituals/ceremonies (last year)', 
+            'c_textiles_b': 'Textiles (last year)', 'c_utensils_b': 'Utensils (last year)',
+            'c_dowry_b': 'Dowry (last year)', 'c_furniture_b': 'Furniture (last year)', 
+            'c_other_b': 'Other non-food (last year)', 'asset_val_cows_b': 'Large livestock (cows)', 
+            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
+            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
+            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
+            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
+            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
+            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
+            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
+
+newdf = df_to_orgtbl(means, float_fmt = '%.3f')
+print(newdf)
+
+# box and whisker plots of log positive observations
+df_1['c_textiles_b'] = df_1['c_textiles_b']
+df_1.boxplot(column = 'c_textiles_b', by = 'Group')
+plt.savefig("textiles_nonzero.png")
+
+df_1['asset_val_mobile_b'] = df_1['asset_val_mobile_b']
+df_1.boxplot(column = 'asset_val_mobile_b', by = 'Group')
+plt.savefig("mobile_nonzero.png")
+
+#+end_src
+
+#+name: tab:mean_log_balance
+#+caption: Means of logs of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively.  Zeros are treated as missing.
+#+attr_latex: :environment longtable :align lrrrr
+| Variable                       | Control | $\Delta$ TUP | $\Delta$ UCT | $N$ |
+|--------------------------------+---------+--------------+--------------+-----|
+| Meat (last three days)         |   2.845 |        0.018 |        0.033 | 378 |
+| Fish (last three days)         |   2.058 |        0.041 |       -0.022 | 474 |
+| Cereals (last three days)      |   3.033 |       -0.071 |       -0.019 | 605 |
+| Sugar (last three days)        |   1.346 |        -0.06 |       -0.031 | 604 |
+| Egg (last three days)          |   1.811 |        0.011 |       -0.077 | 276 |
+| Oil (last three days)          |   0.897 |        0.014 |       -0.035 | 613 |
+| Beans (last three days)        |   1.669 |        0.135 |        0.127 | 192 |
+| Fruit (last three days)        |   1.329 |        0.007 |        0.027 | 272 |
+| Salt (last three days)         |   0.201 |       -0.054 |        0.001 | 617 |
+| Vegetables (last three days)   |   1.532 |       -0.026 |       -0.047 | 471 |
+| Milk (last three days)         |   2.514 |       -0.015 |       -0.217 | 114 |
+| Spices (last three days)       |   0.858 |       -0.069 |        -0.21 | 158 |
+| Alcohol (last three days)      |   1.304 |        0.104 |        0.305 |  18 |
+| Cooking fuel (last month)      |   2.941 |        -0.01 |       -0.127 | 456 |
+| Toiletries (last month)        |   2.328 |       -0.051 |       -0.172 | 536 |
+| Transportation (last month)    |   2.395 |       -0.003 |        0.127 | 193 |
+| Cosmetics (last month)         |   2.659 |        0.084 |       -0.054 | 468 |
+| Entertainment (last month)     |   2.088 |        -0.13 |       -0.064 | 145 |
+| Clothing, footwear (last year) |   4.989 |       -0.005 |       -0.074 | 595 |
+| Charities (last year)          |   3.348 |       -0.229 |       -0.121 | 134 |
+| Rituals/ceremonies (last year) |   4.422 |        0.261 |        0.162 | 152 |
+| Textiles (last year)           |   4.096 |        0.052 |        0.112 | 376 |
+| Utensils (last year)           |   4.352 |        -0.01 |       -0.003 | 442 |
+| Dowry (last year)              |   5.934 |        0.433 |        0.178 | 126 |
+| Furniture (last year)          |   4.224 |        0.033 |        0.185 | 368 |
+| Large livestock (cows)         |   7.461 |       -0.072 |       -0.068 |  35 |
+| Small livestock                |   6.425 |       -0.195 |       -0.364 | 123 |
+| Bicycle                        |   5.601 |        0.051 |         0.14 | 171 |
+| Radio                          |     4.3 |        0.067 |       -0.071 | 260 |
+| Motorcycle                     |   6.762 |        0.676 |        0.778 |  93 |
+| Mosquito net                   |   3.089 |        0.024 |       -0.008 | 423 |
+| Poultry                        |   4.616 |        0.002 |       -0.177 | 161 |
+| Bed                            |   5.306 |       -0.001 |        0.116 | 521 |
+| Chair/table                    |   4.889 |        0.021 |        0.025 | 531 |
+| Mobile phone                   |   4.811 |        0.119 |        0.031 | 414 |
+| Mosquito net ITN               |   3.147 |       -0.047 |         0.13 | 181 |
+| # Houses                       |   1.064 |       -0.027 |         -0.0 | 543 |
+| # Child                        |   1.118 |        0.043 |        0.039 | 594 |
+| Household size                 |   1.917 |       -0.021 |         0.05 | 648 |
+| In business                    |   0.398 |        0.038 |        0.017 | 638 |
+
+*** Box and whisker plots for the new balance table                  :ignore:noexport:
+
+#+Caption: Box and whisker plot of log(positive textiles) for nonzero values
+#+NAME: fig:box_whisker_textiles_nonzero
+[[../documents/textiles_nonzero.png]]
+
+#+Caption: Box and whisker plot of log(positive mobile) for nonzero values
+#+NAME: fig:box_whisker_mobile_nonzero
+[[../documents/mobile_nonzero.png]]
+
+
+** Attrition & Selection
+*** Discussion of attrition                                          :ignore:
+Our census found 755 eligible households, and made efforts to
+interview a respondent from every one of these households.  The degree
+to which we succeeded is documented in \Tab{attrition_count}.
+In the baseline survey we successfully interviewed
+649 of these households; in the midline 606, and in the endline 700.
+
+*** Recreating the attrition tables                         :ignore:
+*************** NOTE
+The results are slightly different (in the 2015 column) than in the original attrition
+tables due to the creation of master_assignment.csv, which includes
+everyone who was assigned to any group no matter whether they were
+found at baseline, midline, or endline. It added 6 households which
+were found only at endline and not accounted for in the original
+attrition tables.
+*************** END
+
+
+# using master_assignment.csv
+#+name: master_assignment_attrition 
+#+begin_src python :exports none  :results output table raw labels=[] :colnames no :tangle master_assignment_attrition.py
+data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline) 
+df_a = pd.read_csv(data_assignment)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+
+
+print("""#+caption: Total number of households in sample by group and round.""")
+# Initial assignment (from Census)
+dassign = df_a.Group.value_counts(ascending=True)
+# change "Cash" to "UCT"
+dassign.rename(index={'Cash':'UCT'}, inplace=True)
+dassign['All'] = dassign.sum()
+
+# baseline (2013)
+# merge baseline data id number and group column from master assignment csv based on respondent id/id number
+df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
+# count the number in each treatment group
+bygroupdf = df.groupby(['Group']).count()
+d2013 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_b = df
+
+# midline (2014)
+# merge midline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
+# count the number in each treatment group
+bygroupdf = df.groupby(['Group']).count()
+d2014 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_m = df
+
+# endline (2015)
+# merge endline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
+# count the number in each treatment group
+bygroupdf = df.groupby(['Group']).count()
+d2015 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+
+df_e = df
+
+# make the table for total number of households in sample by group and round
+d = {'Assigned': dassign, '2013': d2013, '2014': d2014, '2015': d2015}
+table = pd.DataFrame(data = d) 
+
+newdf = df_to_orgtbl(table, float_fmt = '%d')
+print(newdf)
+
+
+print("""#+caption: Number of households in sample with baseline survey by group and round""")
+
+
+# find the intersection of people who had surveys at both baseline and midline
+df_b_m = pd.merge(df_b[ ['idno'] ], df_m[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_m = df_b_m.groupby(['Group']).count()
+
+# find the intersection of people who had surveys at both baseline and endline
+df_b_e = pd.merge(df_b[ ['idno'] ], df_e[ ['idno', 'Group'] ], how='inner', left_on="idno", right_on="idno")
+bygroupdf_b_e = df_b_e.groupby(['Group']).count()
+
+# count the number in each treatment group
+dd2013 = d2013
+dd2014 = {'UCT': bygroupdf_b_m.at['UCT','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
+dd2015 = {'UCT': bygroupdf_b_e.at['UCT','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
+
+# make the table for number of households in sample with baseline survey by group and round
+dd = {'Assigned': dassign, '2013': dd2013, '2014': dd2014, '2015': dd2015}
+table2 = pd.DataFrame(data = dd) 
+
+newdf2 = df_to_orgtbl(table2, float_fmt = '%d')
+print(newdf2)
+
+#+end_src
+
+
+#+name: tab:attrition_count
+#+caption: Numbers of surveyed households, by group and round.  Parenthetical numbers are households surveyed conditional on also being surveyed at baseline.
+|         | Assigned | 2013 | 2014      | 2015      |
+|---------+----------+------+-----------+-----------|
+| All     |      755 |  649 | 606 (554) | 700 (603) |
+| Control |      380 |  281 | 265 (219) | 353 (262) |
+| TUP     |      250 |  244 | 228 (223) | 236 (231) |
+| UCT     |      125 |  124 | 113 (112) | 111 (110) |
+
+*** Interview Probability Table                                      :ignore:
+#+name: interview_probabilities
+#+begin_src python :exports none  :results output table raw :dir ../ :colnames no :tangle selection_regression.py
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+from cfe.estimation import ols
+
+data_baseline  = "../TUP-data/data/Baseline/TUP_baseline.dta"
+data_assignment  = "../TUP-report/documents/master_assignment.csv"
+data_midline = "../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../TUP-data/Endline/TUP_endline.dta"
+
+df_b = pd.read_stata(data_baseline) 
+df_a = pd.read_csv(data_assignment)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+
+DF = {}
+# baseline (2013)
+# merge baseline data id number and group column from master assignment csv based on respondent id/id number
+df = pd.merge(df_b[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
+df.set_index('idno', inplace=True)
+
+DF[2013] = df['Group']
+
+# midline (2014)
+# merge midline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_m[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
+df.set_index('idno', inplace=True)
+
+DF[2014] = df['Group']
+
+# endline (2015)
+# merge endline data id number and group column from random assignment data based on respondent id/id number
+df = pd.merge(df_e[ ['idno'] ], df_a[ ['RespID', 'Group'] ], how='inner', left_on="idno", right_on="RespID")
+
+# change "Gift" to "Control"
+df.replace(to_replace='Gift', value='Control', inplace=True)
+
+# change "Cash" to "UCT"
+df.replace(to_replace='Cash', value='UCT', inplace=True)
+
+df.set_index('idno', inplace=True)
+
+DF[2015] = df['Group']
+
+df = (~pd.DataFrame(DF).isnull() + 0)
+df.columns.name = 'Round'
+
+df = df.stack()
+df.name = 'Interviewed'
+
+group = df_a.set_index('RespID')['Group']
+group.index.name = 'idno'
+
+df = pd.DataFrame(df).join(group,how='outer')
+
+p = df.groupby(['Round','Group']).mean().unstack('Round')
+p.columns = p.columns.droplevel(0)
+
+print(df_to_orgtbl(p,float_fmt='\(%4.2f\)'))
+#+end_src
+
+
+#+name: tab:interview_probabilities
+#+caption: Probability of completed interview, by round and treatment group.
+| Group   | 2013     | 2014     | 2015     |
+|---------+----------+----------+----------|
+| Control | \(0.75\) | \(0.70\) | \(0.94\) |
+| TUP     | \(0.98\) | \(0.92\) | \(0.95\) |
+| UCT     | \(0.99\) | \(0.90\) | \(0.89\) |
+
+*** Interview Probability Discussion                                 :ignore:
+
+ One important question is whether there's /differential/ selection by
+ treatment group.  Table [[tab:interview_probabilities]] shows the
+ proportion of /assigned/ households actually interviewed by both round
+ and group.  There are three things to note about this table.  The first
+ is that at baseline and midline the proportion of households
+ interviewed from the control group was significantly lower than for
+ the TUP and UCT groups.  The second is that challenges in the field
+ led to a lower probability of a successful interview at midline.  The
+ third is that members of the UCT were slightly (but not
+ significantly) less likely to be interviewed at endline. 
+
+ The relatively low proportion of control households being interviewed
+ in the first two rounds can be attributed to the fact that these
+ households did not have the same consistent contact with BRAC that
+ the TUP & UCT groups had, and this consistent contact was important
+ for locating people in a rural area lacking certain infrastructure (phones,
+ addresses) which might otherwise have made finding households
+ easier, while the lower proportion of households interviewed at midline
+ may be attributable to an early harvest that year.
+
+ We explore this further, examining whether a random lack of balance in observable
+ household characteristics at baseline is related to subsequent
+ successful interviews.  \Tab{attrition_balance} reports the average level of
+ various characteristics in 2013. Then we report the difference in means between
+ households that were in and out of the midline or endline surveys.
+ Note that the sample here consists not of all eligible households,
+ but all households interviewed at baseline.  There is one important
+ relationship that emerges: larger households & households with more
+ children were more likely to be interviewed at midline. 
+
+**** Recreating attrition balance table                            :ignore:
+*************** NOTES
+        - Elicitation for "Cereals" disaggregated after baseline, so not comparable.
+*************** END
+
+ #+name: attrition_balance
+ #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/TUP_midline.dta"
+data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/TUP_endline.dta"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+import pandas as pd
+from scipy import stats
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_m.insert(len(df_m.columns), 'in_midline', 1)
+df_e.insert(len(df_e.columns), 'in_endline', 1)
+
+df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='outer', left_on="idno", right_on="RespID")
+
+# merge in midline and endline
+df = pd.merge(df, df_m[ ['idno', 'in_midline'] ], how='outer', left_on="idno", right_on="idno")
+df = pd.merge(df, df_e[ ['idno', 'in_endline'] ], how='outer', left_on='idno', right_on='idno')
+
+df['in_midline'].fillna(value=0, inplace=True)
+df['in_endline'].fillna(value=0, inplace=True)
+
+df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ].transform(lambda x: x/3)
+
+df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ].transform(lambda x: x/30)
+
+df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ].transform(lambda x: x/365)
+
+df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
+             'asset_val_netITN_b',
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b',
+             'Group', 'in_midline', 'in_endline'])
+
+df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
+
+means_b = df_1.mean()
+means_m = df_1.groupby(['in_midline']).mean()
+means_e = df_1.groupby(['in_endline']).mean()
+means_b = means_b.T
+means_m = means_m.T
+means_e = means_e.T
+
+# some are off by 0.001, clothesfootwear numbers differ
+d = {'mean_baseline': means_b, 'beta_mid': means_m[1.0] - means_m[0.0], 'beta_end': means_e[1.0] - means_e[0.0]}
+means = pd.DataFrame(data=d)
+
+#default axis=0 for dropping rows
+means.drop(['in_midline', 'in_endline'], inplace=True)
+
+# so we can add * later
+means = means.round(decimals = 3)
+means = means.astype(str)
+
+column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
+              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
+               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
+              'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
+             'asset_val_netITN_b', \
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
+
+for column in column_list:
+    
+    pvalue_mid = stats.ttest_ind(df_1[df_1['in_midline'] == 1][column], df_1[df_1['in_midline'] == 0][column], nan_policy='omit').pvalue
+    
+    if pvalue_mid <= 0.01: 
+        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '***'
+    elif pvalue_mid <= 0.05: 
+        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '**'
+    elif pvalue_mid <= 0.1: 
+        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '*'
+        
+    pvalue_end = stats.ttest_ind(df_1[df_1['in_endline'] == 1][column], df_1[df_1['in_endline'] == 0][column], nan_policy='omit').pvalue
+    
+    if pvalue_end <= 0.01: 
+        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '***'
+    elif pvalue_end <= 0.05: 
+        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '**'
+    elif pvalue_end <= 0.1: 
+        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '*'
+
+# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
+# but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
+means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
+            'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
+            'c_egg_b': 'Egg', 'c_oil_b': 'Oil', 
+            'c_beans_b': 'Beans', 'c_fruit_b': 'Fruit', 
+            'c_salt_b': 'Salt', 'c_vegetables_b': 'Vegetables', 
+            'c_milk_b': 'Milk', 'c_spices_b': 'Spices', 
+            'c_alcohol_b': 'Alcohol', 'c_otherfood_b': 'Other food', 
+            'c_fuel_b': 'Cooking fuel', 'c_soap_b': 'Toiletries', 
+            'c_transport_b': 'Transportation', 'c_cosmetics_b': 'Cosmetics', 
+            'c_entertainment_b': 'Entertainment', 'c_clothesfootwear_b': 'Clothing, footwear', 
+            'c_charities_b': 'Charities', 'c_ceremonies_b': 'Rituals/ceremonies', 
+            'c_textiles_b': 'Textiles', 'c_utensils_b': 'Utensils',
+            'c_dowry_b': 'Dowry', 'c_furniture_b': 'Furniture', 
+            'c_other_b': 'Other non-food', 'asset_val_cows_b': 'Large livestock (cows)', 
+            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
+            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
+            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
+            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
+            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
+            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
+            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
+
+newdf = df_to_orgtbl(means, float_fmt = '%.3f')
+print(newdf)
+
+
+ #+end_src
+
+
+ #+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
+ #+attr_latex: :environment longtable :align lrrrrr
+ #+name: tab:attrition_balance
+ |--------------------------+----------------------+----------------+----------------|
+ | Baseline Characteristics | $\mbox{Mean}_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
+ |--------------------------+----------------------+----------------+----------------|
+ | Household size           |                7.224 |        0.595** |          0.428 |
+ | # Children               |                3.328 |       0.656*** |          0.423 |
+ | In business              |                0.415 |          0.038 |          0.007 |
+ |--------------------------+----------------------+----------------+----------------|
+ | Baseline Assets          |                      |                |                |
+ |--------------------------+----------------------+----------------+----------------|
+ | # Houses                 |                2.863 |          0.305 |          0.367 |
+ | Bed                      |              250.535 |         12.649 |        -51.133 |
+ | Bicycle                  |              102.174 |         11.179 |          4.212 |
+ | Chair/table              |              196.436 |         -0.303 |        -37.177 |
+ | Furniture                |                0.199 |         -0.023 |           0.02 |
+ | Large livestock (cows)   |              181.402 |         67.862 |        -89.273 |
+ | Mobile phone             |              101.482 |          6.336 |        -13.028 |
+ | Motorcycle               |              481.886 |        213.002 |       -241.819 |
+ | Mosquito net ITN         |                8.504 |         -1.777 |          0.449 |
+ | Mosquito net             |               19.462 |          0.332 |          2.814 |
+ | Poultry                  |               39.438 |        23.634* |         -2.243 |
+ | Radio                    |               53.046 |         -6.333 |       -35.093* |
+ | Small livestock          |              180.716 |         18.966 |        -79.014 |
+ |--------------------------+----------------------+----------------+----------------|
+ | Baseline Consumption     |                      |                |                |
+ |--------------------------+----------------------+----------------+----------------|
+ | Alcohol                  |                 0.04 |          0.005 |         -0.004 |
+ | Beans                    |                0.826 |          0.269 |         -0.382 |
+ | Rituals/ceremonies       |                0.139 |         -0.019 |         -0.038 |
+ | Charities                |                0.027 |          0.007 |         -0.001 |
+ | Clothing, footwear       |                0.655 |         0.177* |         -0.203 |
+ | Cosmetics                |                0.668 |          0.005 |          0.229 |
+ | Dowry                    |                1.247 |          0.745 |         -0.394 |
+ | Egg                      |                1.069 |         -0.005 |          0.106 |
+ | Entertainment            |                0.074 |          0.021 |         0.051* |
+ | Fish                     |                2.418 |         -0.132 |          0.036 |
+ | Fruit                    |                0.657 |          0.009 |         -0.151 |
+ | Cooking fuel             |                0.733 |          0.105 |         -0.049 |
+ | Meat                     |                3.982 |          0.254 |            0.3 |
+ | Milk                     |                 1.15 |          0.283 |          0.239 |
+ | Oil                      |                1.288 |          0.037 |        -0.532* |
+ | Salt                     |                0.439 |       -0.14*** |         -0.043 |
+ | Toiletries               |                0.475 |        -0.181* |          0.047 |
+ | Spices                   |                0.231 |          0.024 |         -0.048 |
+ | Sugar                    |                1.648 |         -0.285 |          -0.02 |
+ | Textiles                 |                0.163 |           0.01 |          0.011 |
+ | Transportation           |                0.164 |          0.004 |          0.018 |
+ | Utensils                 |                0.245 |          0.061 |         -0.023 |
+ | Vegetables               |                1.447 |          0.096 |         -0.151 |
+
+
+**** Creating a new attrition balance table with only nonzero values counting toward the mean :noexport:
+
+ The following table shows the means of log expenditures. 
+
+ #+name: attrition_balance_nonzero
+ #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
+data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/TUP_midline.dta"
+data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/TUP_endline.dta"
+data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+import pandas as pd
+import numpy as np
+from scipy import stats
+from cfe.df_utils import df_to_orgtbl
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_m.insert(len(df_m.columns), 'in_midline', 1)
+df_e.insert(len(df_e.columns), 'in_endline', 1)
+
+df = pd.merge(df_b, df_a[ ['RespID', 'Group'] ], how='outer', left_on="idno", right_on="RespID")
+
+# merge in midline and endline
+df = pd.merge(df, df_m[ ['idno', 'in_midline'] ], how='outer', left_on="idno", right_on="idno")
+df = pd.merge(df, df_e[ ['idno', 'in_endline'] ], how='outer', left_on='idno', right_on='idno')
+
+df['in_midline'].fillna(value=0, inplace=True)
+df['in_endline'].fillna(value=0, inplace=True)
+
+df_3_days = df[ ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b'] ]
+
+df_month = df[ ['c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b'] ]
+
+df_year = df[ ['c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b'] ]
+
+df_assets = df.get(['asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b',
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b',
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b',
+             'asset_val_netITN_b',
+             'asset_n_house_b', 'child_total_b', 'hh_size_b'])
+
+df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
+df_1.replace(to_replace = 0, value = float("NaN") , inplace = True)
+
+# take the logs of expenditure for all variables except dummy variables
+df_1 = df_1.transform(lambda x: np.log(x))
+
+# add in group assignment and the dummy variables that need 0 as one of their values
+df_1 = df_1.join(df[ ['in_midline', 'in_endline', 'in_business_b', 'Group'] ])
+
+means_b = df_1.mean()
+means_m = df_1.groupby(['in_midline']).mean()
+means_e = df_1.groupby(['in_endline']).mean()
+means_b = means_b.T
+means_m = means_m.T
+means_e = means_e.T
+
+d = {'mean_baseline': means_b, 'beta_mid': means_m[1.0] - means_m[0.0], 'beta_end': means_e[1.0] - means_e[0.0]}
+means = pd.DataFrame(data=d)
+
+#default axis=0 for dropping rows
+means.drop(['in_midline', 'in_endline'], inplace=True)
+
+# so we can add * later
+means = means.round(decimals = 3)
+means = means.astype(str)
+
+column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c_oil_b', 'c_beans_b', \
+                    'c_fruit_b', 'c_salt_b', 'c_vegetables_b', \
+                    'c_milk_b', 'c_spices_b', 'c_alcohol_b', 'c_otherfood_b', \
+              'c_fuel_b', 'c_soap_b', 'c_transport_b', 'c_cosmetics_b', 'c_entertainment_b', \
+               'c_clothesfootwear_b', 'c_charities_b', 'c_ceremonies_b', 'c_textiles_b', 'c_utensils_b',
+                  'c_dowry_b', 'c_furniture_b', 'c_other_b', \
+              'asset_val_cows_b', 'asset_val_smallanimals_b', 'asset_val_bicycle_b', 'asset_val_radio_b', \
+             'asset_val_motorcycle_b', 'asset_val_net_b', 'asset_val_poultry_b', \
+             'asset_val_bed_b', 'asset_val_chairtables_b', 'asset_val_mobile_b', \
+             'asset_val_netITN_b', \
+             'asset_n_house_b', 'in_business_b', 'child_total_b', 'hh_size_b']
+
+for column in column_list:
+    
+    pvalue_mid = stats.ttest_ind(df_1[df_1['in_midline'] == 1][column], df_1[df_1['in_midline'] == 0][column], nan_policy='omit').pvalue
+    
+    if pvalue_mid <= 0.01: 
+        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '***'
+    elif pvalue_mid <= 0.05: 
+        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '**'
+    elif pvalue_mid <= 0.1: 
+        means.at[column,'beta_mid'] = means.at[column,'beta_mid'] + '*'
+        
+    pvalue_end = stats.ttest_ind(df_1[df_1['in_endline'] == 1][column], df_1[df_1['in_endline'] == 0][column], nan_policy='omit').pvalue
+    
+    if pvalue_end <= 0.01: 
+        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '***'
+    elif pvalue_end <= 0.05: 
+        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '**'
+    elif pvalue_end <= 0.1: 
+        means.at[column,'beta_end'] = means.at[column,'beta_end'] + '*'
+
+# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org
+means.rename({'c_meat_b': ' Meat (last three days)', 'c_fish_b': 'Fish (last three days)', 
+            'c_cereals_b': 'Cereals (last three days)', 'c_sugar_b': 'Sugar (last three days)', 
+            'c_egg_b': 'Egg (last three days)', 'c_oil_b': 'Oil (last three days)', 
+            'c_beans_b': 'Beans (last three days)', 'c_fruit_b': 'Fruit (last three days)', 
+            'c_salt_b': 'Salt (last three days)', 'c_vegetables_b': 'Vegetables (last three days)', 
+            'c_milk_b': 'Milk (last three days)', 'c_spices_b': 'Spices (last three days)', 
+            'c_alcohol_b': 'Alcohol (last three days)', 'c_otherfood_b': 'Other food (last three days)', 
+            'c_fuel_b': 'Cooking fuel (last month)', 'c_soap_b': 'Toiletries (last month)', 
+            'c_transport_b': 'Transportation (last month)', 'c_cosmetics_b': 'Cosmetics (last month)', 
+            'c_entertainment_b': 'Entertainment (last month)', 'c_clothesfootwear_b': 'Clothing, footwear (last year)', 
+            'c_charities_b': 'Charities (last year)', 'c_ceremonies_b': 'Rituals/ceremonies (last year)', 
+            'c_textiles_b': 'Textiles (last year)', 'c_utensils_b': 'Utensils (last year)',
+            'c_dowry_b': 'Dowry (last year)', 'c_furniture_b': 'Furniture (last year)', 
+            'c_other_b': 'Other non-food (last year)', 'asset_val_cows_b': 'Large livestock (cows)', 
+            'asset_val_smallanimals_b': 'Small livestock', 'asset_val_bicycle_b': 'Bicycle', 
+            'asset_val_radio_b': 'Radio', 'asset_val_motorcycle_b': 'Motorcycle', 
+            'asset_val_net_b': 'Mosquito net', 'asset_val_poultry_b': 'Poultry', 
+            'asset_val_bed_b': 'Bed', 'asset_val_chairtables_b': 'Chair/table', 
+            'asset_val_mobile_b': 'Mobile phone', 'asset_val_netITN_b': 'Mosquito net ITN', 
+            'asset_n_house_b': '# Houses', 'in_business_b': 'In business', 
+            'child_total_b': '# Child', 'hh_size_b':'Household size'}, inplace=True)
+
+newdf = df_to_orgtbl(means, float_fmt = '%.3f')
+
+print(newdf)
+
+
+ #+end_src
+
+ #+RESULTS: attrition_balance_nonzero
+ |                                | mean_baseline |  beta_mid | beta_end |
+ |--------------------------------+---------------+-----------+----------|
+ | # Houses                       |         1.054 |     0.083 |    0.071 |
+ | Bed                            |         5.328 |     0.028 | -0.408** |
+ | Bicycle                        |         5.642 |     0.106 |    0.015 |
+ | Chair/table                    |         4.902 |     0.179 |   -0.224 |
+ | Large livestock (cows)         |         7.428 |     0.686 |    0.133 |
+ | Mobile phone                   |         4.862 |     0.075 |   -0.174 |
+ | Motorcycle                     |         7.223 |     0.918 |    0.787 |
+ | Mosquito net ITN               |         3.151 |     0.034 |   -0.324 |
+ | Mosquito net                   |         3.096 |     0.009 |    0.056 |
+ | Poultry                        |         4.582 |     0.259 |    0.111 |
+ | Radio                          |         4.314 |    -0.036 |   -0.354 |
+ | Small livestock                |          6.29 |     0.351 |    0.081 |
+ | Alcohol (last three days)      |         1.367 |    -0.272 |   0.633* |
+ | Beans (last three days)        |         1.746 |      0.3* |   -0.272 |
+ | Cereals (last three days)      |         3.003 |    -0.052 |  -0.255* |
+ | Rituals/ceremonies (last year) |          4.54 |    -0.139 |   -0.085 |
+ | Charities (last year)          |         3.237 |    -0.241 |    0.076 |
+ | Clothing, footwear (last year) |         4.973 |    0.234* |   -0.169 |
+ | Cosmetics (last month)         |          2.68 |     -0.03 |    0.062 |
+ | Dowry (last year)              |         6.103 |     0.596 |    0.122 |
+ | Egg (last three days)          |         1.797 |    -0.081 |    0.076 |
+ | Entertainment (last month)     |         2.033 |    -0.116 |    0.418 |
+ | Fish (last three days)         |         2.069 |       0.0 |    0.028 |
+ | Fruit (last three days)        |         1.337 |     0.094 |   -0.114 |
+ | Cooking fuel (last month)      |         2.912 |     0.033 |   -0.257 |
+ | Furniture (last year)          |         4.273 |     0.041 |   -0.338 |
+ | Meat (last three days)         |         2.859 |     0.133 |    0.105 |
+ | Milk (last three days)         |         2.461 |     0.193 |    0.175 |
+ | Oil (last three days)          |         0.896 |    -0.054 |   -0.216 |
+ | Other non-food (last year)     |           nan |       nan |      nan |
+ | Other food (last three days)   |           nan |       nan |      nan |
+ | Salt (last three days)         |          0.18 | -0.154*** |   -0.053 |
+ | Toiletries (last month)        |         2.276 |     -0.17 |   -0.086 |
+ | Spices (last three days)       |         0.792 |     -0.19 |   -0.156 |
+ | Sugar (last three days)        |         1.317 |    -0.092 |   -0.116 |
+ | Textiles (last year)           |         4.137 |     0.099 |   -0.109 |
+ | Transportation (last month)    |         2.417 |    -0.132 |    0.022 |
+ | Utensils (last year)           |         4.347 |      0.21 |    -0.24 |
+ | Vegetables (last three days)   |         1.514 |     0.095 |   -0.047 |
+ | # Child                        |         1.142 |  0.219*** |   0.173* |
+ | Household size                 |         1.919 |   0.081** |    0.062 |
+ | In business                    |         0.415 |     0.038 |    0.007 |
+
+
 * COMMENT Extra Analysis
 
 ** Good-level analysis
@@ -4569,3 +4526,5 @@ def residuals_by_group(models, groups, outcomes=[], kind="kde", figure_dir="../f
 
 
  
+
+
