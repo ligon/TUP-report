@@ -2,7 +2,6 @@
 #+TITLE: Comparing Cash and Asset Transfers to Low-Income Households in South Sudan
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
 #+DATE: \today
-
 #+BIBLIOGRAPHY: main chicago
 #+OPTIONS: texht:t toc:nil num:nil ':t inline:nil todo:nil
 #+OPTIONS: title:nil  author:nil
@@ -323,24 +322,27 @@ rates of ownership might account for the difference, rather than the
 value of the asset conditional on ownership.
 
 *** Creation of master random assignment file                        :ignore:
-# This code creates a file which contains all of the assignments to
-# treatment groups, regardless of whether a respondent was found at
-# one or all of baseline, midline, and endline. The file reconciles
-# differences between asset_assign.csv and locations.csv. We consider
-# asset_assign.csv to be the assignment at baseline, and locations.csv
-# to be the assignment that was created at endline when some
-# respondents who were not found at baseline were still surveyed at
-# endline.
-# There are 6 households that were interviewed only at endline and
-# were not included in asset_assign.csv or locations.csv. These
-# households are manually added as Control households in 
-# master_assignment.csv, like the other households for which a 
-# group was not assigned at baseline and therefore are labeled as 
-# Control at endline.
 
 #+name: master_random_assignment
 #+begin_src python
-"""For making the master treatment groups .csv file"""
+"""For making the master treatment groups .csv file
+
+ This code creates a file which contains all of the assignments to
+ treatment groups, regardless of whether a respondent was found at
+ one or all of baseline, midline, and endline. The file reconciles
+ differences between asset_assign.csv and locations.csv. We consider
+ asset_assign.csv to be the assignment at baseline, and locations.csv
+ to be the assignment that was created at endline when some
+ respondents who were not found at baseline were still surveyed at
+ endline.
+
+ There are 6 households that were interviewed only at endline and
+ were not included in asset_assign.csv or locations.csv. These
+ households are manually added as Control households in 
+ master_assignment.csv, like the other households for which a 
+ group was not assigned at baseline and therefore are labeled as 
+ Control at endline.
+"""
 
 data_locations = "../../TUP-data/csv/locations.csv"
 data_asset_assign = "../../TUP-data/csv/asset_assign.csv"
@@ -885,47 +887,38 @@ print(newdf2)
 Another possible issue has to do with whether crucial question is to
 what extent attrition in 2014 and 2015 will bias our
 results. \Tab{attrition_count} reports the total number of households
-identified in each treatment arm and year for the whole
-sample. \Tab{attrition_balanced_count} reports the same numbers
-restricting ourselves to households with baseline surveys.  In the TUP
-group, we were unable to find 21 participants in 2014 (8% attrition),
-but found 5 not identified in the baseline survey. We found 8
-additional TUP households with baseline surveys again in 2015 for a
-final attrition rate of 5%. Of those in the UCT group, 12 were lost
-(9.6%) in 2014, then two more in 2015 (11%). The control group saw
-very high attrition in 2014, missing 60 people (22%). Enumerators also
-found a large number of households not found at baseline, such that
-there were only 16 fewer surveys collected in 2014 than in 2013. The
-high attrition was due largely to the fact that these households did
-not enjoy the same consistent contact that BRAC had with the TUP
-group, and the local area lacked infrastructure to easily locate
-people.  This was exacerbated by the uncertain political situation and
-early harvest.  Attrition in 2015 was 6.7%, with 19 baseline control
-households not responding, with 85 households found who were
-originally identified as control households from the survey but not in
-the baseline survey. In order to take advantage of the households not
-included in the baseline, the main specification below follows
-\cite{banerjee-etal} by setting missing values to zero when
-controlling for baseline levels of the dependent variable, and
-including an indicator for whether the household was in the baseline.
+identified in each treatment arm and year for the whole sample, and in
+parentheses reports the same numbers restricting ourselves to
+households surveyed at baseline.  In the TUP group, we were unable to
+find 21 participants in 2014 (8% attrition), but found 5 not
+identified in the baseline survey. We found 8 additional TUP
+households with baseline surveys again in 2015 for a final attrition
+rate of 5%. Of those in the UCT group, 12 were lost (9.6%) in 2014,
+then two more in 2015 (11%). The control group saw very high attrition
+in 2014, missing 60 people (22%). Enumerators also found a large
+number of households not found at baseline, such that there were only
+16 fewer surveys collected in 2014 than in 2013. The high attrition
+was due largely to the fact that these households did not enjoy the
+same consistent contact that BRAC had with the TUP group, and the
+local area lacked infrastructure to easily locate people.  This was
+exacerbated by the uncertain political situation and early harvest.
+Attrition in 2015 was 6.7%, with 19 baseline control households not
+responding, with 85 households found who were originally identified as
+control households from the survey but not in the baseline survey. In
+order to take advantage of the households not included in the
+baseline, the main specification below follows \cite{banerjee-etal} by
+setting missing values to zero when controlling for baseline levels of
+the dependent variable, and including an indicator for whether the
+household was in the baseline.
 
 #+name: tab:attrition_count
-#+caption: Total number of households in sample by group and round.
-|         | Assigned | 2013 | 2014 | 2015 |
-|---------+----------+------+------+------|
-| All     |      755 |  649 |  606 |  700 |
-| Control |      380 |  281 |  265 |  353 |
-| TUP     |      250 |  244 |  228 |  236 |
-| UCT     |      125 |  124 |  113 |  111 |
-
-#+name: tab:attrition_balanced_count
-#+caption: Number of households in sample with baseline survey by group and round
-|         | Assigned | 2013 | 2014 | 2015 |
-|---------+----------+------+------+------|
-| All     |      755 |  649 |  554 |  603 |
-| Control |      380 |  281 |  219 |  262 |
-| TUP     |      250 |  244 |  223 |  231 |
-| UCT     |      125 |  124 |  112 |  110 |
+#+caption: Numbers of surveyed households, by group and round.  Parenthetical numbers are households surveyed conditional on also being surveyed at baseline.
+|         | Assigned | 2013 | 2014      | 2015      |
+|---------+----------+------+-----------+-----------|
+| All     |      755 |  649 | 606 (554) | 700 (603) |
+| Control |      380 |  281 | 265 (219) | 353 (262) |
+| TUP     |      250 |  244 | 228 (223) | 236 (231) |
+| UCT     |      125 |  124 | 113 (112) | 111 (110) |
 
 
 
@@ -1061,7 +1054,7 @@ print(df_to_orgtbl(b,sedf=se.T,float_fmt='%5.2f'))
  #+attr_latex: :environment longtable :align lrrrrr
  #+name: tab:attrition_balance
  |-----------------+---------------+----------------+----------------|
- | HH Features     | $Mean_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
+ | HH Features     | $\mbox{Mean}_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
  |-----------------+---------------+----------------+----------------|
  | HH size         |         7.223 |        0.595** |          0.428 |
  | # Child         |         3.328 |       0.656*** |          0.423 |
@@ -1241,51 +1234,51 @@ print(newdf)
  #+caption: Means of household baseline characteristics and regression coefficients for whether they were ultimately found at baseline or endline. (Note that this does not consider households found only in 2014 or 2015).
  #+attr_latex: :environment longtable :align lrrrrr
  #+name: tab:attrition_balance
- |------------------------+---------------+----------------+----------------|
- | Baseline Values        | $Mean_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
- |------------------------+---------------+----------------+----------------|
- | # Houses               |         2.863 |          0.305 |          0.367 |
- | Bed                    |       250.535 |         12.649 |        -51.133 |
- | Bicycle                |       102.174 |         11.179 |          4.212 |
- | Chair/table            |       196.436 |         -0.303 |        -37.177 |
- | Large livestock (cows) |       181.402 |         67.862 |        -89.273 |
- | Mobile phone           |       101.482 |          6.336 |        -13.028 |
- | Motorcycle             |       481.886 |        213.002 |       -241.819 |
- | Mosquito net ITN       |         8.504 |         -1.777 |          0.449 |
- | Mosquito net           |        19.462 |          0.332 |          2.814 |
- | Poultry                |        39.438 |        23.634* |         -2.243 |
- | Radio                  |        53.046 |         -6.333 |       -35.093* |
- | Small livestock        |       180.716 |         18.966 |        -79.014 |
- | Alcohol                |          0.04 |          0.005 |         -0.004 |
- | Beans                  |         0.826 |          0.269 |         -0.382 |
- | Cereals                |         8.883 |         -0.084 |       -3.714** |
- | Rituals/ceremonies     |         0.139 |         -0.019 |         -0.038 |
- | Charities              |         0.027 |          0.007 |         -0.001 |
- | Clothing, footwear     |         0.655 |         0.177* |         -0.203 |
- | Cosmetics              |         0.668 |          0.005 |          0.229 |
- | Dowry                  |         1.247 |          0.745 |         -0.394 |
- | Egg                    |         1.069 |         -0.005 |          0.106 |
- | Entertainment          |         0.074 |          0.021 |         0.051* |
- | Fish                   |         2.418 |         -0.132 |          0.036 |
- | Fruit                  |         0.657 |          0.009 |         -0.151 |
- | Cooking fuel           |         0.733 |          0.105 |         -0.049 |
- | Furniture              |         0.199 |         -0.023 |           0.02 |
- | Meat                   |         3.982 |          0.254 |            0.3 |
- | Milk                   |          1.15 |          0.283 |          0.239 |
- | Oil                    |         1.288 |          0.037 |        -0.532* |
- | Other non-food         |           0.0 |            0.0 |            0.0 |
- | Other food             |           0.0 |            0.0 |            0.0 |
- | Salt                   |         0.439 |       -0.14*** |         -0.043 |
- | Toiletries             |         0.475 |        -0.181* |          0.047 |
- | Spices                 |         0.231 |          0.024 |         -0.048 |
- | Sugar                  |         1.648 |         -0.285 |          -0.02 |
- | Textiles               |         0.163 |           0.01 |          0.011 |
- | Transportation         |         0.164 |          0.004 |          0.018 |
- | Utensils               |         0.245 |          0.061 |         -0.023 |
- | Vegetables             |         1.447 |          0.096 |         -0.151 |
- | # Child                |         3.328 |       0.656*** |          0.423 |
- | Household size         |         7.224 |        0.595** |          0.428 |
- | In business            |         0.415 |          0.038 |          0.007 |
+ |------------------------+----------------------+----------------+----------------|
+ | Baseline Values        | $\mbox{Mean}_{2013}$ | $\beta_{2014}$ | $\beta_{2015}$ |
+ |------------------------+----------------------+----------------+----------------|
+ | # Houses               |                2.863 |          0.305 |          0.367 |
+ | Bed                    |              250.535 |         12.649 |        -51.133 |
+ | Bicycle                |              102.174 |         11.179 |          4.212 |
+ | Chair/table            |              196.436 |         -0.303 |        -37.177 |
+ | Large livestock (cows) |              181.402 |         67.862 |        -89.273 |
+ | Mobile phone           |              101.482 |          6.336 |        -13.028 |
+ | Motorcycle             |              481.886 |        213.002 |       -241.819 |
+ | Mosquito net ITN       |                8.504 |         -1.777 |          0.449 |
+ | Mosquito net           |               19.462 |          0.332 |          2.814 |
+ | Poultry                |               39.438 |        23.634* |         -2.243 |
+ | Radio                  |               53.046 |         -6.333 |       -35.093* |
+ | Small livestock        |              180.716 |         18.966 |        -79.014 |
+ | Alcohol                |                 0.04 |          0.005 |         -0.004 |
+ | Beans                  |                0.826 |          0.269 |         -0.382 |
+ | Cereals                |                8.883 |         -0.084 |       -3.714** |
+ | Rituals/ceremonies     |                0.139 |         -0.019 |         -0.038 |
+ | Charities              |                0.027 |          0.007 |         -0.001 |
+ | Clothing, footwear     |                0.655 |         0.177* |         -0.203 |
+ | Cosmetics              |                0.668 |          0.005 |          0.229 |
+ | Dowry                  |                1.247 |          0.745 |         -0.394 |
+ | Egg                    |                1.069 |         -0.005 |          0.106 |
+ | Entertainment          |                0.074 |          0.021 |         0.051* |
+ | Fish                   |                2.418 |         -0.132 |          0.036 |
+ | Fruit                  |                0.657 |          0.009 |         -0.151 |
+ | Cooking fuel           |                0.733 |          0.105 |         -0.049 |
+ | Furniture              |                0.199 |         -0.023 |           0.02 |
+ | Meat                   |                3.982 |          0.254 |            0.3 |
+ | Milk                   |                 1.15 |          0.283 |          0.239 |
+ | Oil                    |                1.288 |          0.037 |        -0.532* |
+ | Other non-food         |                  0.0 |            0.0 |            0.0 |
+ | Other food             |                  0.0 |            0.0 |            0.0 |
+ | Salt                   |                0.439 |       -0.14*** |         -0.043 |
+ | Toiletries             |                0.475 |        -0.181* |          0.047 |
+ | Spices                 |                0.231 |          0.024 |         -0.048 |
+ | Sugar                  |                1.648 |         -0.285 |          -0.02 |
+ | Textiles               |                0.163 |           0.01 |          0.011 |
+ | Transportation         |                0.164 |          0.004 |          0.018 |
+ | Utensils               |                0.245 |          0.061 |         -0.023 |
+ | Vegetables             |                1.447 |          0.096 |         -0.151 |
+ | # Child                |                3.328 |       0.656*** |          0.423 |
+ | Household size         |                7.224 |        0.595** |          0.428 |
+ | In business            |                0.415 |          0.038 |          0.007 |
 
 
 **** Creating a new attrition balance table with only nonzero values counting toward the mean :noexport:
