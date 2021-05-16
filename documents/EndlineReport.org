@@ -67,7 +67,6 @@ services that the ultra-poor graduation framework offer.
 \end{titlepage}
 #+END_export
 
-
 * Introduction
  
 Poor rural households often earn money from low-return activities such
@@ -132,7 +131,7 @@ of the following criteria:
   4. The household had fewer than three rooms; or
   5. A woman in the household had not completed secondary school.
 
-Of the 1279 households interviewed in the census, 745 were deemed to
+Of the 1279 households interviewed in the census, 755 were deemed to
 be eligible.  We then conducted a baseline survey of these eligible
 households, successfully interviewing 649 of eligible households.  Of
 the eligible households interviewed at baseline, 250 were randomly
@@ -337,7 +336,6 @@ including an indicator for whether the household was in the baseline,
 in a sort of adjusted ANCOVA specification of the sort discussed by
 cite:mckenzie12.
 
-
 * Empirical Strategy
 
 We estimate a single model using interactions between time effects and
@@ -380,7 +378,6 @@ interpretation as being the difference between the average effect of
 having been enrolled in either program from its inception until 2015.
  
 * Results
-
 ** Assets
    
 We first turn our attention to effects of the different programs on
@@ -1137,7 +1134,6 @@ print(newdf)
 
 
 
-
 ** Income
 *** Discussion                                                       :ignore:
 Income was reliably measured only in 2015, and so our estimates do not control for
@@ -1378,7 +1374,6 @@ print(newdf)
 | N                         |    532.000 |    305.000 |     690.000 |     690.000 |
 |---------------------------+------------+------------+-------------+-------------|
 | $\beta_{TUP}-\beta_{UCT}$ |   -188.613 |    399.260 |     457.192 |     742.540 |
-
 
 ** Consumption
 
@@ -1838,7 +1833,6 @@ print(df_to_orgtbl(b,sedf=se))
 | $\beta_{TUP2015} - \beta_{UCT2015}$ | \(0.027\)       | \(0.032\)       | \(-0.026\)       | \(-0.005\)       | \(0.028\)                | \(-0.008\)      |
 |                                     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))      | (\(0.067\))      | (\(0.068\))              | (\(0.067\))     |
 #+latex: \end{landscape}
-
 
 ** Exposure to Conflict
 *** Discussion                                                       :ignore:
