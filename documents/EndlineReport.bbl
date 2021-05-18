@@ -19,6 +19,63 @@
 
 \refsection{0}
   \datalist[entry]{cms/global//global/global}
+    \entry{balboni-etal20}{report}{}
+      \name{author}{5}{}{%
+        {{uniquename=0,uniquepart=base,hash=e2190cab1d5cec21b5b237b687051b07}{%
+           family={Balboni},
+           familyi={B\bibinitperiod},
+           given={Clare},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=c0b3369a69cfdd849f836d77957c1f9a}{%
+           family={Bandiera},
+           familyi={B\bibinitperiod},
+           given={Oriana},
+           giveni={O\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=db80c60d2e8ac9e800afb943771980ba}{%
+           family={Burgess},
+           familyi={B\bibinitperiod},
+           given={Robin},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=565cb121373a427ea1e6059a7d56564e}{%
+           family={Ghatak},
+           familyi={G\bibinitperiod},
+           given={Maitreesh},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=602d631efc8aaad839bca3d92d9c721c}{%
+           family={Heil},
+           familyi={H\bibinitperiod},
+           given={Anton},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{3}{%
+        {Suntory}%
+        {Toyota International Centres for Economics}%
+        {Related Disciplines, LSE}%
+      }
+      \strng{namehash}{e7a33ca533e26f0440ba487bf0d90556}
+      \strng{fullhash}{93ff078d397ec55d890e6d2f2a7f75c4}
+      \strng{bibnamehash}{93ff078d397ec55d890e6d2f2a7f75c4}
+      \strng{authorbibnamehash}{93ff078d397ec55d890e6d2f2a7f75c4}
+      \strng{authornamehash}{e7a33ca533e26f0440ba487bf0d90556}
+      \strng{authorfullhash}{93ff078d397ec55d890e6d2f2a7f75c4}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{067}
+      \field{series}{Economic Organisation and Public Policy Discussion Papers Series}
+      \field{title}{Why Do People Stay Poor?}
+      \field{type}{techreport}
+      \field{year}{2020}
+      \field{dateera}{ce}
+    \endentry
     \entry{bandiera-etal17}{article}{}
       \name{author}{6}{}{%
         {{uniquename=0,uniquepart=base,hash=c0b3369a69cfdd849f836d77957c1f9a}{%
@@ -81,49 +138,50 @@
       \field{pages}{811\bibrangedash 870}
       \range{pages}{60}
     \endentry
-    \entry{banerjee-etal02}{article}{}
-      \name{author}{3}{}{%
-        {{uniquename=0,uniquepart=base,hash=75cb9b0a536a90048d1b19d0ef0318bb}{%
+    \entry{banerjee-etal16}{unpublished}{}
+      \name{author}{4}{}{%
+        {{uniquename=0,uniquepart=base,hash=027abafc894615db04e1c3f3dc5931c4}{%
            family={Banerjee},
            familyi={B\bibinitperiod},
-           given={Abhijit\bibnamedelima V},
-           giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod},
+           given={Abhijit},
+           giveni={A\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=fbef8be40ff7f888d6c277568f68db9b}{%
-           family={Gertler},
-           familyi={G\bibinitperiod},
-           given={Paul\bibnamedelima J},
-           giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod},
+        {{uniquename=0,uniquepart=base,hash=7e6b0ea4eee38822cdb0a4361e98752c}{%
+           family={Duflo},
+           familyi={D\bibinitperiod},
+           given={Esther},
+           giveni={E\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=565cb121373a427ea1e6059a7d56564e}{%
-           family={Ghatak},
-           familyi={G\bibinitperiod},
-           given={Maitreesh},
-           giveni={M\bibinitperiod},
+        {{uniquename=0,uniquepart=base,hash=4d361524a1e4635c5d437853d34e1a16}{%
+           family={Chattopadhyay},
+           familyi={C\bibinitperiod},
+           given={Raghabendra},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=9adc6252a18618747de3ba2d08c11c3b}{%
+           family={Shapiro},
+           familyi={S\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod},
            givenun=0}}%
       }
-      \list{publisher}{1}{%
-        {The University of Chicago Press}%
-      }
-      \strng{namehash}{1a0f6ba4704b31d43e2633a07d76f60d}
-      \strng{fullhash}{1a0f6ba4704b31d43e2633a07d76f60d}
-      \strng{bibnamehash}{1a0f6ba4704b31d43e2633a07d76f60d}
-      \strng{authorbibnamehash}{1a0f6ba4704b31d43e2633a07d76f60d}
-      \strng{authornamehash}{1a0f6ba4704b31d43e2633a07d76f60d}
-      \strng{authorfullhash}{1a0f6ba4704b31d43e2633a07d76f60d}
+      \strng{namehash}{18edac96fea31ae12a7b321c919f67db}
+      \strng{fullhash}{0a506af5c50555dd0aead3b896c43e08}
+      \strng{bibnamehash}{0a506af5c50555dd0aead3b896c43e08}
+      \strng{authorbibnamehash}{0a506af5c50555dd0aead3b896c43e08}
+      \strng{authornamehash}{18edac96fea31ae12a7b321c919f67db}
+      \strng{authorfullhash}{0a506af5c50555dd0aead3b896c43e08}
+      \field{extraname}{1}
       \field{sortinit}{B}
       \field{sortinithash}{276475738cc058478c1677046f857703}
       \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{journaltitle}{Journal of Political Economy}
-      \field{number}{2}
-      \field{title}{Empowerment and efficiency: Tenancy reform in {W}est {B}engal}
-      \field{volume}{110}
-      \field{year}{2002}
-      \field{pages}{239\bibrangedash 280}
-      \range{pages}{42}
+      \field{note}{Unpublished manuscript}
+      \field{title}{The Long Term Impacts of a 'Graduation' Program: Evidence from {W}est {B}engal}
+      \field{year}{2016}
+      \field{dateera}{ce}
     \endentry
     \entry{banerjee-etal15}{article}{}
       \name{author}{9}{}{%
@@ -191,6 +249,7 @@
       \strng{authorbibnamehash}{dc5eb683ea8abfd9cc4040d109650ffe}
       \strng{authornamehash}{18edac96fea31ae12a7b321c919f67db}
       \strng{authorfullhash}{dc5eb683ea8abfd9cc4040d109650ffe}
+      \field{extraname}{2}
       \field{sortinit}{B}
       \field{sortinithash}{276475738cc058478c1677046f857703}
       \field{extradatescope}{labelyear}
@@ -202,6 +261,96 @@
       \field{title}{A multifaceted program causes lasting progress for the very poor: Evidence from six countries}
       \field{volume}{348}
       \field{year}{2015}
+    \endentry
+    \entry{banerjee-etal20}{report}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,uniquepart=base,hash=027abafc894615db04e1c3f3dc5931c4}{%
+           family={Banerjee},
+           familyi={B\bibinitperiod},
+           given={Abhijit},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=7e6b0ea4eee38822cdb0a4361e98752c}{%
+           family={Duflo},
+           familyi={D\bibinitperiod},
+           given={Esther},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=6f045902aecc3b347fcf8559725b942b}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={Garima},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{1}{%
+        {National Bureau of Economic Research}%
+      }
+      \strng{namehash}{af561ecb7184db27a39adaea3c0330da}
+      \strng{fullhash}{af561ecb7184db27a39adaea3c0330da}
+      \strng{bibnamehash}{af561ecb7184db27a39adaea3c0330da}
+      \strng{authorbibnamehash}{af561ecb7184db27a39adaea3c0330da}
+      \strng{authornamehash}{af561ecb7184db27a39adaea3c0330da}
+      \strng{authorfullhash}{af561ecb7184db27a39adaea3c0330da}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{w28074}
+      \field{series}{Working Paper Series}
+      \field{title}{Long-Term Effects of the Targeting the Ultra Poor Program}
+      \field{type}{techreport}
+      \field{year}{2020}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb http://www.nber.org/papers/w28074
+      \endverb
+      \verb{url}
+      \verb http://www.nber.org/papers/w28074
+      \endverb
+    \endentry
+    \entry{blattman-etal20}{article}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,uniquepart=base,hash=3161f9ccd6231fd52bfe5bb5c0f01499}{%
+           family={Blattman},
+           familyi={B\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=9b2932fd2b4e738c647083755cc49f4e}{%
+           family={Fiala},
+           familyi={F\bibinitperiod},
+           given={Nathan},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=88866e85d0063946103da19588883d74}{%
+           family={Martinez},
+           familyi={M\bibinitperiod},
+           given={Sebastian},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{fullhash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{bibnamehash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{authorbibnamehash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{authornamehash}{0c2152abca322020ff2e1afcb4d60cac}
+      \strng{authorfullhash}{0c2152abca322020ff2e1afcb4d60cac}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{American Economic Review: Insights}
+      \field{number}{3}
+      \field{title}{The Long-Term Impacts of Grants on Poverty: Nine-Year Evidence from {U}ganda's {Y}outh {O}pportunities {P}rogram}
+      \field{volume}{2}
+      \field{year}{2020}
+      \field{pages}{287\bibrangedash 304}
+      \range{pages}{18}
     \endentry
     \entry{blattman-etal16}{article}{}
       \name{author}{5}{}{%
@@ -364,6 +513,7 @@
       \strng{authorbibnamehash}{49b302332ea54fdb54d79964d7b6df58}
       \strng{authornamehash}{49b302332ea54fdb54d79964d7b6df58}
       \strng{authorfullhash}{49b302332ea54fdb54d79964d7b6df58}
+      \field{extraname}{1}
       \field{sortinit}{H}
       \field{sortinithash}{5f15a7bc777ad49ff15aa4d2831b1681}
       \field{extradatescope}{labelyear}
@@ -377,6 +527,45 @@
       \field{year}{2016}
       \field{pages}{1973\bibrangedash 2042}
       \range{pages}{70}
+    \endentry
+    \entry{haushofer-shapiro18}{unpublished}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,uniquepart=base,hash=e34924a13640a37a189137933c2148ab}{%
+           family={Haushofer},
+           familyi={H\bibinitperiod},
+           given={Johannes},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=9adc6252a18618747de3ba2d08c11c3b}{%
+           family={Shapiro},
+           familyi={S\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{fullhash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{bibnamehash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{authorbibnamehash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{authornamehash}{49b302332ea54fdb54d79964d7b6df58}
+      \strng{authorfullhash}{49b302332ea54fdb54d79964d7b6df58}
+      \field{extraname}{2}
+      \field{sortinit}{H}
+      \field{sortinithash}{5f15a7bc777ad49ff15aa4d2831b1681}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Working paper}
+      \field{title}{The Long-Term Impact of Unconditional Cash Transfers: Experimental Evidence from {K}enya}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://jeremypshapiro.appspot.com/papers/Haushofer_Shapiro_UCT2_2018-01-30_paper_only.pdf
+      \endverb
+      \verb{url}
+      \verb https://jeremypshapiro.appspot.com/papers/Haushofer_Shapiro_UCT2_2018-01-30_paper_only.pdf
+      \endverb
     \endentry
     \entry{mckenzie12}{article}{}
       \name{author}{1}{}{%
@@ -407,6 +596,105 @@
       \field{pages}{210\bibrangedash 221}
       \range{pages}{12}
       \keyw{Randomized experiments; Multiple measurements; Program evaluation}
+    \endentry
+    \entry{sedlmayr-etal20}{article}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,uniquepart=base,hash=fb13c0b1ea9c9e5382b616a57baf118a}{%
+           family={Sedlmayr},
+           familyi={S\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=e9bde815d29fb324ff3f322a613e6e53}{%
+           family={Shah},
+           familyi={S\bibinitperiod},
+           given={Anuj},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=816621da60c69f8e83912acdfb391af9}{%
+           family={Sulaiman},
+           familyi={S\bibinitperiod},
+           given={Munshi},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{8ea8424d7898443e06c1d760085f78db}
+      \strng{fullhash}{8ea8424d7898443e06c1d760085f78db}
+      \strng{bibnamehash}{8ea8424d7898443e06c1d760085f78db}
+      \strng{authorbibnamehash}{8ea8424d7898443e06c1d760085f78db}
+      \strng{authornamehash}{8ea8424d7898443e06c1d760085f78db}
+      \strng{authorfullhash}{8ea8424d7898443e06c1d760085f78db}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Development Economics}
+      \field{title}{Cash-plus: Poverty impacts of alternative transfer-based approaches}
+      \field{volume}{144}
+      \field{year}{2020}
+      \field{pages}{102418}
+      \range{pages}{1}
+    \endentry
+    \entry{sulaiman18}{incollection}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=816621da60c69f8e83912acdfb391af9}{%
+           family={Sulaiman},
+           familyi={S\bibinitperiod},
+           given={Munshi},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=459d65cf140a2a5e994ad7e668b2f240}{%
+           family={Wouterse},
+           familyi={W\bibinitperiod},
+           given={Fleur\bibnamedelima Stephanie},
+           giveni={F\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=61503e4b60f8726a6a335d77a1cb1067}{%
+           family={Taffesse},
+           familyi={T\bibinitperiod},
+           given={Alemayehu\bibnamedelima Seyoum},
+           giveni={A\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Washington, DC}%
+      }
+      \list{publisher}{1}{%
+        {International Food Policy Research Institute (IFPRI)}%
+      }
+      \strng{namehash}{816621da60c69f8e83912acdfb391af9}
+      \strng{fullhash}{816621da60c69f8e83912acdfb391af9}
+      \strng{bibnamehash}{816621da60c69f8e83912acdfb391af9}
+      \strng{authorbibnamehash}{816621da60c69f8e83912acdfb391af9}
+      \strng{authornamehash}{816621da60c69f8e83912acdfb391af9}
+      \strng{authorfullhash}{816621da60c69f8e83912acdfb391af9}
+      \strng{editorbibnamehash}{65a93249ad8260049dcae68451271dd7}
+      \strng{editornamehash}{65a93249ad8260049dcae68451271dd7}
+      \strng{editorfullhash}{65a93249ad8260049dcae68451271dd7}
+      \field{sortinit}{S}
+      \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Boosting growth to end hunger by 2025: The role of social protection}
+      \field{chapter}{8}
+      \field{title}{Livelihood, Cash Transfer, and Graduation Approaches: How Do They Compare in terms of Cost, Impact, and Targeting?}
+      \field{year}{2018}
+      \field{dateera}{ce}
+      \field{pages}{102\bibrangedash 120}
+      \range{pages}{19}
+      \verb{urlraw}
+      \verb https://doi.org/https://doi.org/10.2499/9780896295988_08
+      \endverb
+      \verb{url}
+      \verb https://doi.org/https://doi.org/10.2499/9780896295988_08
+      \endverb
     \endentry
   \enddatalist
 \endrefsection

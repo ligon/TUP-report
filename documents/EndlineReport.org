@@ -12,12 +12,16 @@
 #+LATEX_HEADER_EXTRA: \newcommand{\Fig}[1]{Figure \ref{fig:#1}} \newcommand{\Tab}[1]{Table \ref{tab:#1}}
 #+LATEX_HEADER_EXTRA: \usepackage{stringstrings} \renewcommand{\cite}[1]{\caselower[q]{#1}\citet{\thestring}}
 #+LATEX_HEADER_EXTRA: \usepackage{lscape}
+#+LATEX_HEADER_EXTRA: \usepackage{changepage}
+#+LATEX_HEADER_EXTRA: \usepackage{fullpage}
+#+LATEX_HEADER_EXTRA: \addbibresource{~/bibtex/main.bib}
 #+PROPERTY: header-args:python :results output raw table :noweb no-export :exports none :prologue "# -*- coding: utf-8 -*-"
 :END:
 
 * Title Page                                                         :ignore:
 #+BEGIN_export latex
 \begin{titlepage}
+\thispagestyle{empty}
 \title[Cash vs. Asset Transfers]{Comparing Cash and Asset Transfers to Low-Income Households in South Sudan}
 
 \date{\today}
@@ -33,255 +37,247 @@
 
 \author{Munshi Sulaiman}
 \address{BRAC International}
+
+
 \begin{abstract}
-Several previous studies have found that the ``graduation'' or
-``Transfers to the Ultra-Poor'' (TUP) framework is an effective
-approach to alleviating the constraints that prevent extremely poor
-households from increasing their productivity.  The framework consists
-of a sizable transfer of productive physical capital, coupled with
-training and continuous support over the course of one or two years.
-A second and related literature has found some evidence that
+Studies have found that the ``graduation'' model
+can be effective in alleviating the constraints that prevent extremely poor
+households from increasing their productivity and income.  This consists
+of a sizable transfer of productive physical capital coupled with
+training and coaching over the course of one or two years.
+Related, there is evidence that a simpler program of
 unconditional cash transfers (UCT's) may also improve household
-productivity and welfare with fewer fixed costs.  Our field experiment
-provides a comparison of these two approaches to transferring wealth to
-low-income households during the first two years of BRAC's TUP pilot
-in South Sudan.  We consider the effect of each on consumption,
-income, asset holdings, and a number of intangible outcomes. We also
-consider the TUP program's effect on households' responses to the
-outbreak of violence in 2014. We find evidence that both types of
+productivity and welfare.  Our field experiment provides a comparison of these two approaches to transferring wealth to
+low-income households during the first two years of BRAC's ultra-poor pilot project
+in South Sudan.  We consider the effect of each program on consumption,
+income, asset holdings, and several intangible outcomes.  We find evidence that both types of
 transfer have positive effects on consumption, but only in the
 short-run.  We find a persistent increase in asset stocks, but only from
-the TUP. We also elicit suggestive evidence that BRAC's support may
-have helped TUP beneficiaries cope with the short-term economic
-effects of the outbreak of violence in 2014. We tentatively conclude
-that in this economic context cash can increase household consumption,
-but the goal of improving income or wealth is aided by the additional
-services that the ultra-poor graduation framework offer.
+the graduation program.  We also consider the graduation program's effect on
+households' responses to the outbreak of violence in 2014 civil war, and
+elicit suggestive evidence that BRAC's support may have helped the
+beneficiaries to cope with the short-term economic effects of the
+violence.  We conclude that in this economic context, cash can increase
+household consumption, but the goal of improving income or wealth is
+aided by the additional services that the ultra-poor graduation model
+offers.
 \end{abstract}
 
+%\thanks{JEL Classification: D11, D12, I32}
 \renewcommand{\keywordsname}{Keywords}
-\keywords{South Sudan, Unconditional Cash Transfers, Graduation Program, Transfers to the Ultra-Poor}
+\keywords{South Sudan, Unconditional cash transfers, Ultra-poor graduation model}
 
 \maketitle
-\thispagestyle{empty}
 \end{titlepage}
 #+END_export
 
 * Introduction
  
-Poor rural households often earn money from low-return activities such
-as small-scale cultivation or casual day labor, and face both
-financial and human capital constraints, which may prevent them from
-investing and expanding into more lucrative activities. Experience and
-research over many years has led many to believe that households
-facing particularly acute poverty are unable to solve this problem
-through the small, high-interest loans typically marketed to them.  It
-was these considerations that led to the development of the initial
-``Targeting the Ultra-Poor'' (TUP) program in Bangladesh as a
-supplement or precursor to credit services. First implemented by BRAC
-in 2007, the program aims to simultaneously alleviate physical and
-human capital constraints by providing households with a significant
-transfer of food and productive assets, followed by two years of
-training and support by extension officers citep:bandiera-etal17.  The
-general framework[fn:: Also known as the ``graduation framework''
-pointing to the original ambition to move households into an activity
-where they are able to finance further income growth without costly
-transfers.] has since expanded to a wide range of countries, with a
-general pattern of success in increasing aggregate investment, labor
-supply, and aggregate consumption citep:banerjee-etal15.
+What intervention(s) effectively alleviate poverty and can provide
+sustainable livelihoods to the extreme poor?  This question remains
+central in development economics.  The Ultra-Poor Graduation Model
+(UPG) -- an approach of combining multifaceted support services to
+address both immediate needs of the ultra-poor by giving them
+consumption supports and their long-term need for a sustainable
+livelihood by providing them a grant of productive assets coupled with
+technical skills training---has been successful in reducing extreme
+poverty in a wide range of contexts
+citep:bandiera-etal17,banerjee-etal15.  In parallel, an alternative
+poverty alleviation approach that has gained new interest in recent
+years involves offering poor households direct, unconditional cash
+transfers (UCT's) citep:haushofer-shapiro16,blattman-etal16.
+Currently, evidence on these two (sometimes competing) frameworks
+indicates that UCT are more cost-effective in the short-run, but that
+the graduation model has more convincing evidence of the long-term
+impacts citep:sulaiman18.  
 
-A second, older literature that has gained new interest in recent
-years studies the effect of offering poor households direct
-unconditional cash transfers (UCT's)
-citep:haushofer-shapiro16,blattman-etal16.  While this and the TUP
-framework are both direct capital transfer interventions, they are
-very different in their approach, with TUP programs guiding and
-constraining the use of capital towards productive investment while
-UCT's allow households to invest, save, and consume as they see
-fit. The natural question that arises is whether (and how) these
-additional features and constraints in the TUP framework change how
-households use their capital transfers.  This study provides the first
-side-by-side experimental evaluation of the two approaches.
+Long-term follow-up studies of the UPG model show that the impacts not
+only persist but also grow over 7 to 10 years in West Bengal
+citep:banerjee-etal16,banerjee-etal20 and up to 14 years in Bangladesh
+citep:balboni-etal20.  cite:haushofer-shapiro18 also find the
+short-term (9 months after program start) positive impacts of UCT on
+household assets and consumption sustained in their 3-year follow-up
+survey (although their estimates are reliant on the choice of control
+group).[fn::More explicity, they find large positive effects by
+comparing treatment households with the "control" group within
+treatment villages (i.e. treatment vs. spillover samples). However,
+most of the effects dissipate when using control households from
+control village (i.e. treatment vs. "pure control"). See this blog at
+[[https://blogs.worldbank.org/impactevaluations/givedirectly-three-year-impacts-explained]] for a discussion of this choice of control group.] In their long-term
+follow-up survey, cite:blattman-etal20 find that the impacts of cash
+transfers dissipated in Uganda after 9 years. While comparing results
+across evaluations have various limitations, a few studies have
+emabarked on comparing the two models in the same setting
+citep:sedlmayr-etal20 or comparing asset versus in-kind transfers
+(e.g. cite:fafchamps-etal14).
 
-* Treatments
+While the UCT and the UPG models are both direct capital transfer
+interventions, they are very different in their approaches. The UPG
+model guides and constrains the use of capital towards productive
+investment, while UCT's allow households to invest, save, and consume
+as they see fit. The UPG includes a sequence of support packages that
+include a grant of productive assets, business mentoring, life-skills
+training, short-term consumption support, and access to savings. The
+goal of the grant transfer is to help the poor start micro-enterprises
+while other components are related to either protecting their
+enterprises or increasing income from them. In contrast to the UPG
+model, the UCT programs follow a straightforward rationale---putting
+the development and social protection resources directly in the hands
+of poor people and letting them use these resources as they see best. The natural question that arises is whether (and how) these
+additional features and constraints in the UPG framework change how
+households use their capital transfers. This study provides an
+experimental evaluation of the two approaches in the same setting in
+South Sudan.
 
-How do the effects of TUP differ from the effects of a UCT, when the
-resources given to recipients have roughly the same value?  To provide
-some insight into this question, we worked with BRAC's South Sudanese
-branch office in Yei county to randomize selection into either a TUP
-or UCT treatment.
+The results from our field experiment show that both types of transfer
+positively impact consumption, but only in the short run (about 6
+months after transfer). We see an increase in asset stocks in our
+endline (12--18 months after transfer), but only from the UPG
+treatment.  We also elicit suggestive evidence that UPG support may
+have helped these beneficiaries cope with the short-term economic
+effects of the outbreak of violence in 2014.  We conclude that in this
+context, cash can increase household consumption, but the goal of
+improving income or wealth was aided by the additional services that
+the UPG model offers.  Our results contribute to the literature in a
+two important ways.  First, this is one of the few experiments
+attempting to directly compare these two approaches of transfer
+programs in the same population.  Second, this evaluation is conducted
+in a conflict-affected context where cash transfers are a common tool
+in humanitarian programming despite limited evidence of their impacts.
+With this introduction, Section [[The Program]] describes the experiment
+and the interventions. Section [[The Data]] describes the data and our
+empirical strategy. Results are discussed in Section [[Results]], and we
+conclude in Section [[Conclusion]].
 
-We began in April 2013 by conducting a census of all households having
-one or more adult women within the area around BRAC's office in the
-town of Yei in Western Equatoria, interviewing women in 1279
-households.
 
-The census interview included questions to assess eligibility for the
-program.  Eligibility depended on several criteria.  First, households
-were excluded if they had a salaried worker in the household; if they
-were participating in some other NGOs livelihoods program; or if they
-had no access to cultivable land (which was in some cases necessary
-for the program's model).  If not excluded on these grounds,
-households were then deemed eligible if they satisfied three or more
-of the following criteria: 
+* The Program
 
-  1. The household head was working as a day laborer (generally an occupation with poverty wages);
-  2. The household had two or more children;
-  3. At least one child in the household was working;
-  4. The household had fewer than three rooms; or
-  5. A woman in the household had not completed secondary school.
+The UPG model and the UCT program studied in this paper come from a
+randomized field experiment that was implemented in collaboration with
+BRAC South Sudan. The project was supported by the Global Poverty
+Alleviation Fund and was implemented in the Yei town of Western
+Equatoria region.
 
-Of the 1279 households interviewed in the census, 755 were deemed to
-be eligible.  We then conducted a baseline survey of these eligible
-households, successfully interviewing 649 of eligible households.  Of
-the eligible households interviewed at baseline, 250 were randomly
-assigned to participate in the TUP program, while another 125 were
-randomly assigned to a UCT group which was given cash roughly equal to
-the value of the physical assets provided to TUP households.  This
-left 274 eligible households interviewed at baseline randomly assigned
-to a control group, and another 96 eligible households who were /not/
-interviewed at baseline. 
+** Beneficiary Selection and Randomization
 
-** The TUP Program
+BRAC began their project implementation in April 2013 by conducting a
+census of all households having at least one adult women within the
+operational area of BRAC's office in Yei. The census interview
+included questions to assess their eligibility to be beneficiaries
+based on three exclusion and five inclusion criteria. Households were
+excluded if they: a) had any member with a regular salary job; b) were
+participating in any other NGO's livelihoods program; or c) had no
+access to cultivable land.[fn::The third exclusion condition was
+considered necessary as some of the enterprises planned under the UPG
+model needed access to land.  Though this the third criterion goes
+against targeting ultra-poor housheolds, it was needed due to market
+analysis by BRAC revealing that agriculture was one of the viable
+enterprises.  TODO: Can we add a sentence on how binding the criteria
+was?]  If not excluded on any of these grounds, households were then
+considered eligible if they met at least three of the following
+inclusion conditions: a) the household head was working as a day
+laborer; b) the household had two or more children; c) at least one
+child in the household was working; d) the household had fewer than
+three rooms; and e) the main woman in the household had not completed
+secondary school.  Households which seemed to be eligible based on
+their census responses had eligibility verified through group
+discussions with the local leaders and community
+representatives.[fn::While this targeting method is different from how
+the targeting is done in other UPG programmes, Chowdhury and Morel
+found that TODO]
+
+The census was completed in April 2013 and covered 1279 households, of
+which 755 were found to be eligible.  We then conducted a baseline
+survey of these eligible households, successfully interviewing 649.
+Among those who were interviewed at the baseline, 250 were randomly
+assigned to participate in the UPG program, 125 were randomly assigned
+to a UCT group, and the remaining 274 households were assigned to the
+control group.  Randomization was done stratifying on four binary
+household characteristics (viz. below median number of income earners,
+below median of assets owned, whether involved in agriculture and
+whether has a business). The study was registered on RIDIE (study ID
+#RIDIE-STUDY-ID-5450e3f81fbc6).
+
+
+
+** The Ultra-Poor Graduation Program
    
-The TUP program itself is similar to the other TUP/Graduation
-programs completed by BRAC elsewhere.  BRAC designed several possible
-enterprises: goat husbandry, duck husbandry, maize cultivation,
-vegetable cultivation, and the selling of dried fish.
-The preferences of enrolled households over these were elicited; we
-asked both for an ordering, and a willingness to pay for both the
-training and productive assets associated with the five different
-enterprises.
-
-#+begin_src python 
-import pandas as pd
-from cfe.df_utils import df_to_orgtbl
-
-df = pd.read_stata('../../TUP-data/Baseline/Tup programme sudan single file.dta',convert_categoricals=False)
-
-df = df.set_index('idno').iloc[:,-15:]
-
-# Different enumerators handled this question differently; some list
-# the assets alphabetically then giving the numeric preference
-# ordering of each asset, while others wrote the asset letters in
-# order of preference.  Here we sort this out.
-
-idx = df.rename(columns=lambda s:tuple(s.split('_'))).columns
-df.columns = pd.MultiIndex.from_tuples(idx)
-
-order  = df['rank'].stack()
-
-ac = df['ac']
-ac.columns = range(5)
-myorder = order.astype(int)-1
-
-myidx=myorder.droplevel(1).reset_index().set_index(['idno',0])
-
-maybe = ac.stack()[myidx.index]
-maybe.index = maybe.sort_index().index
-maybe =  maybe[~maybe.index.duplicated()]
-maybe.name = 'Choice'
-
-ranks = maybe.unstack()
-
-freq = pd.concat([ranks[x].value_counts() for x in ranks],axis=1)
-freq.rename(index={'A':'Goats','B':'Ducks','C':'Maize','D':'Vegetables','E':'Dry Fish','':'Missing'},inplace=True)
-freq.columns = freq.columns + 1
-
-print(df_to_orgtbl(freq,float_fmt='%d'))
-#+end_src
-
-
-#+name: tab:enterprise_choice
-#+caption: Frequency of Rankings of Enterprise Choices
-|            |   1 |   2 |   3 |   4 |   5 |
-|------------+-----+-----+-----+-----+-----|
-| Dry Fish   | 219 | 105 | 113 |  74 |  73 |
-| Goats      | 149 | 115 | 107 | 107 | 116 |
-| Ducks      | 120 | 172 | 137 |  88 |  68 |
-| Vegetables |  65 |  85 | 108 | 138 | 164 |
-| Maize      |  55 | 127 | 127 | 145 | 122 |
-| Missing    |   2 |   1 | --- |   3 |   3 |
-
-Table [[tab:enterprise_choice]] reports on the frequency of elicited
-preference ranks over the five different choices.  Dry fish was the
-most popular single first choice, with animal husbandry (goats then
-ducks) the second and third choices.  Crop cultivation (whether of
-vegetables or maize) was less popular. 
-
-*** Enterprise Assignment & Training
-
-The second phase of the program was enterprise assignment and
-training. Unlike some other programs of this type (e.g., the TUP
-program in Bangladesh described by cite:bandiera-etal17), the number
-of households given each kind of asset was set in advance, with 75
+The UPG program itself is similar to the other graduation programs
+implemented by BRAC elsewhere in terms of the core components---see
+cite:bandiera-etal17 for the model in Bangladesh and
+cite:banerjee-etal15 for pilots in six-countries.  Based on its
+assessment of the local markets, BRAC designed several possible
+enterprises for the beneficiaries: goat husbandry, duck husbandry,
+maize cultivation, vegetable cultivation, and trade in dried fish. The
+preferences of enrolled households over these different enterprises
+were elicited at baseline.  Trading of dried fish was the most popular
+enterprise, with animal husbandry (goats then ducks) the second and
+third choices.  Crop cultivation (whether of vegetables or maize) was
+less popular.  Similar to other graduation initiatives, the number of
+households to be given each kind of asset was set in advance, with 75
 enrolled in agricultural activities (either maize or vegetable
-cultivation), 85 in duck rearing, 45 in goat rearing, and the rest in
-small trade involving dried fish.  Within these limits, assignment to
-particular activities was made at the discretion of program staff,
-taking into account subjects' preferences and skills.
+cultivation), 85 in duck rearing, 45 in goat rearing, and the
+remaining 40 in small trade involving dried fish.  Within these
+limits, assignment to particular enterprises for each household was
+made at the discretion of program staff after taking into account
+participants' preferences and skills.
 
-Households then attended training sessions. The first of these were
-for general business skills around literacy, numeracy, and financial
-management. The next were sector specific and focused on animal
-husbandry or crop cultivation.
-
-After training was completed, asset transfers began in late 2013 and
-continued through the first few months of 2014. The productive assets
-related to each enterprise were valued at around $240 per household,
-with a random subset receiving an additional $60 in assets later
-in 2014.  Shortly thereafter, households started to attend weekly or
-semi-weekly meetings with other nearby participants to discuss with
-each other and a BRAC extension officer the details of their
-businesses. These meetings also included food transfers for a while,
-which were designed to help get households to the point of receiving
-revenue from their assets without having to sell them.  In all, the
-market value of these food transfers were valued at $110, bringing the
-total value of all transfers to either $350 or $410.
+One eligible women from each household (the primary recipient)
+attended two training sessions.  The first of these was for general
+business skills, including literacy, numeracy, and financial
+management. The next was sector-specific and focused on participants'
+respective enterprises.  After these enterprise orientations were
+completed, asset transfers began in late 2013 and continued through
+the first few months of 2014.  The productive assets related to each
+enterprise were valued at around $240 per household, with a random
+subset receiving an additional $60 top-up in assets later in 2014.
+Shortly after that, households started to attend weekly or semiweekly
+meetings with other nearby participants to discuss the details of
+their businesses with each other and a BRAC extension officer. In
+these group meetings, the participants also received food transfers
+for a while, which were designed to help get households to the point
+of obtaining revenue from their assets without having to sell
+them. The market value of these food transfers was valued at $110,
+bringing the total value of all transfers to either $350 or $410.
 
 ** Unconditional Cash Transfers
 
-To implement an unconditional cash transfer, we randomly assigned each
-of the 125 households in the UCT group to receive a cash transfer of
+Households assigned to this treatment arm received a cash transfer of
 either $350 or $410, matching the values of assets received by
-households in the TUP treatments.  
-
-Local community leaders were approached in advance of talking to
-individual households to reassure recipients of BRAC's intentions. It
-was made clear that the transfers were there for their benefit, that
-while they were encouraged to put them towards some productive use,
-their use was unrestricted, and that under no circunstances would they
-receive a second transfer in the future. BRAC was a well-established
+households in the UPG treatment. Local community leaders were
+approached in advance of talking to individual households to reassure
+recipients regarding BRAC's intentions.  It was made clear that the
+transfers were there for their benefit, and that while they were
+encouraged to put them towards some productive use, their use was
+unrestricted, and that under no circumstances would they receive a
+second transfer in the future.  BRAC was a well-established
 institution in the greater Yei community, so these assurances were
-taken as credible and no one refused to accept the money.
+taken as credible, and no one refused to accept the money.  Cash
+transfers were delivered by field officers in person and in the local
+currency (South Sudanese Pounds, or SSPs). The cash transfers in our
+study differ from several other cash transfer evaluations. For
+example, cite:haushofer-shapiro16 deposited funds in a bank or mobile
+money account, while cite:fafchamps-etal14 used money transfers. Since
+experimental studies of the behavioral implications of savings
+accounts citep:dupas-robinson13 show that the disbursal method might
+affect the propensity to save a cash transfer, the results of our
+experiment may not be directly comparable to other evaluations of UCT.
 
-Cash transfers were delivered by field officers in person and in the
-local currency (South Sudanese Pounds, or SSPs).  That transfers were
-delivered in cash distinguishes these from several other cash transfer
-programs.  For example, cite:haushofer-shapiro16 deposited funds in a
-bank or mobile money account, while cite:fafchamps-etal14 used money
-transfers.  In all of these experiments transfers were denominated in
-the local currency.  However, experimental studies of the behavioral
-implications of savings accounts citep:dupas-robinson13 would lead one
-to expect that the method of disbursal might affect the propensity to
-save a cash transfer.
-
-* Data Collection & Timeline
-
+* The Data
 ** Timeline                                                          :ignore:
 We have four principal sources of data.  First, as discussed above, we
 conducted a census of households with women in the area around BRAC's
 offices in April of 2013.  Second, in the summer of 2013 we conducted
 a baseline survey of eligible households.  We randomly assigned women
-who responsed to this baseline survey to one of the TUP, UCT, or
-control groups; some randomly selected TUP and UCT assignees were
+who responsed to this baseline survey to one of the UPG, UCT, or
+control groups; some randomly selected UPG and UCT assignees were
 further chosen to receive an asset/cash "top-up" valued at $60.
 Third, we conducted a "midline" survey in June 2014, and an "endline"
 survey in the summer of 2015.
 
-Training and asset transfers for the TUP group began in late 2013; our
+Training and asset transfers for the UPG group began in late 2013; our
 intention was to make transfers of cash to the UCT group at roughly
-the same time that TUP participants were ready to begin their
+the same time that UPG participants were ready to begin their
 operations, during the first quarter of 2014.  However, these plans
 were complicated by an onset of broad civil unrest in South Sudan, and
 disruption of BRAC's operations.
@@ -299,7 +295,7 @@ changed in the few intervening months.  Finally, we conducted an endline survey
 in mid-2015 to estimate the effect of program participation
 on households' financial situation and overall welfare. The key here
 is that the survey conducted in mid-2014 provides us with /short-term/
-treatment effects of the TUP program within 6--8 months of the asset
+treatment effects of the UPG program within 6--8 months of the asset
 transfers, while providing a second baseline for the UCT treatment.
 Likewise, the 2015 survey allows us to estimate treatment
 effects one year after the cash transfers, and 15--18 months after the
@@ -342,7 +338,7 @@ We estimate a single model using interactions between time effects and
 group assignment, as well as baseline values of the outcome variable
 where available; this is 
 \begin{equation*}
-Y_{it} =\alpha_{t}+\beta_{t,UCT}I_{t}*UCT_{i}+\beta_{t,TUP}I_{t}*TUP_{i}+\gamma Y_{i,2013}(1-M_{i,2013}) + \delta M_{i,2013} +\epsilon_{it},
+Y_{it} =\alpha_{t}+\beta_{t,UCT}I_{t}*UCT_{i}+\beta_{t,UPG}I_{t}*UPG_{i}+\gamma Y_{i,2013}(1-M_{i,2013}) + \delta M_{i,2013} +\epsilon_{it},
 \end{equation*}
 for $t\in\{2014,2015\}$, with $i$ indexing households.  The
 $\alpha_{t}$ are time fixed effects; $I_{t}$ is an indicator if the
@@ -354,7 +350,7 @@ as $Y_{i,2013}$ where these are non-missing; but the coefficient
 $\delta$ estimates the average baseline value conditional on it being
 missing.
 
-We take the interactions of TUP assignment with 2014 and 2015
+We take the interactions of UPG assignment with 2014 and 2015
 indicators as the treatment effects at 6--8 and 15--17 months
 respectively. The analogous interactions with the UCT group offer a
 second baseline and a 12-month treatment effect, respectively.  Since
@@ -363,17 +359,17 @@ with $I_{2014}$ acts as a placebo; there is no /ex ante/ reason to
 expect that households in the UCT group were different from the rest
 of the control group at that point.  Given the slight difference in
 timing, we report a \(t\)-test of the hypothesis
-\(\beta_{\mbox{TUP},t}=\beta_{\mbox{UCT},2015}\) for both of \(t \in
-{2014,2015}\).
+\(\beta_{\mbox{UPG},t}=\beta_{\mbox{UCT},2015}\) for both of \(t \in
+\{2014,2015\}\).
 
-Since the comparison between (TUP,2014) and (UCT,2015) allows for
+Since the comparison between (UPG,2014) and (UCT,2015) allows for
 something less than a year of exposure to the respective treatments we
-regard \(\beta_{\mbox{TUP},2014}=\beta_{\mbox{UCT},2015}\) as the
+regard \(\beta_{\mbox{UPG},2014}=\beta_{\mbox{UCT},2015}\) as the
 most interesting hypothesis, but since these points of comparison
 aren't contemporaneous we can't rule out the possibility that
 aggregate shocks might have interacted somehow with the two programs
 differently.  Accordingly, we also report
-\(\beta_{\mbox{TUP},2015}-\beta_{\mbox{UCT},2015}\), which has the
+\(\beta_{\mbox{UPG},2015}-\beta_{\mbox{UCT},2015}\), which has the
 interpretation as being the difference between the average effect of
 having been enrolled in either program from its inception until 2015.
  
@@ -381,16 +377,16 @@ having been enrolled in either program from its inception until 2015.
 ** Assets
    
 We first turn our attention to effects of the different programs on
-asset holdings.  Since TUP households were directly /given/ a variety
+asset holdings.  Since UPG households were directly /given/ a variety
 of different assets, for this program this can be regarded as a rather
-direct test---eight months later, do TUP recipients still own these
+direct test---eight months later, do UPG recipients still own these
 assets, or have they sold (or eaten) them? 
 
 *** Total Asset Holdings
 **** Discussion                                                      :ignore:
 The cash group does not appear to have seen a significant increase in
-the value of assets measured.  This contrasts sharply with the TUP
-group.  The TUP group gains significantly more asset wealth than the
+the value of assets measured.  This contrasts sharply with the UPG
+group.  The UPG group gains significantly more asset wealth than the
 cash or control groups in both 2014 and 2015, 18 months after receipt
 of transfers. They have nearly double the total asset value of control
 group in 2014 (midline), and roughly three-quarters more at endline.
@@ -408,7 +404,7 @@ endline, and 450 SSP at midline).
  assets were not included ('house', 'homestead', and 'netITN') either 
  because numbers turned out to be more or less meaningless,  or because 
  they overlap (e.g. nets & ITN nets) (as commented in
- TUP-data/TUP.py). All of the Ns are the same because NaN values were
+ UPG-data/UPG.py). All of the Ns are the same because NaN values were
  considered as having a value of 0 for that asset (this occurs
  automatically when using .sum(axis=1) to sum values in different
  columns for a given row). 
@@ -427,10 +423,10 @@ endline, and 450 SSP at midline).
 
  #+name: asset_values
  #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle asset_values.py
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
+data_endline = "../../TUP-data/Endline/UPG_endline.dta"
 
 import statsmodels.api as sm
 import pandas as pd
@@ -459,7 +455,7 @@ df = pd.merge(df,
               how='outer', left_index=True, right_index=True)
 
 # Some assets to ignore, either because numbers turned out to be more or less meaningless, 
-# or because they overlap (e.g. nets & ITN nets) (as commented in TUP-data/TUP.py)
+# or because they overlap (e.g. nets & ITN nets) (as commented in UPG-data/UPG.py)
 
 df = df.drop(columns = df.filter(like='house').columns)
 df = df.drop(columns = df.filter(like='homestead').columns)
@@ -533,9 +529,9 @@ df2 = pd.concat((asset_val[2013], asset_val[2014], asset_val[2015]))
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
 
 # make interaction terms
-df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UPG*2013', df['2013']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2014', df['2014']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2015', df['2015']*df['UPG'])
 df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
@@ -546,8 +542,8 @@ d_FE = {}
 d_no_FE = {}
 baseline_na = True
 
-controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'TUP', 'UCT']
-controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'UPG', 'UCT']
+controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 # from above, outcomes = ["Total", "Productive", "Livestock"]
 
 # remove observations from 2013
@@ -592,13 +588,13 @@ se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.in
 
 
 b = b.unstack()
-b['TUP*2014 - UCT*2015'] = b['TUP*2014'] - b['UCT*2015']
-b['TUP*2015 - UCT*2015'] = b['TUP*2015'] - b['UCT*2015']
+b['UPG*2014 - UCT*2015'] = b['UPG*2014'] - b['UCT*2015']
+b['UPG*2015 - UCT*2015'] = b['UPG*2015'] - b['UCT*2015']
 b = b.T
 
 se = se.unstack()
-se['TUP*2014 - UCT*2015'] = np.sqrt(se['TUP*2014']**2 + se['UCT*2015']**2)
-se['TUP*2015 - UCT*2015'] = np.sqrt(se['TUP*2015']**2 + se['UCT*2015']**2)
+se['UPG*2014 - UCT*2015'] = np.sqrt(se['UPG*2014']**2 + se['UCT*2015']**2)
+se['UPG*2015 - UCT*2015'] = np.sqrt(se['UPG*2015']**2 + se['UCT*2015']**2)
 
 se = se.T
 
@@ -615,9 +611,9 @@ print(df_to_orgtbl(b,sedf=se))
  | CTL mean                          | 1634.104    | 301.364    | 189.439    |
  |                                   | (2406.541)  | (580.913)  | (523.819)  |
  |-----------------------------------+-------------+------------+------------|
- | TUP*2014                          | 1617.966*** | 450.392*** | 377.437*** |
+ | UPG*2014                          | 1617.966*** | 450.392*** | 377.437*** |
  |                                   | (230.986)   | (61.004)   | (52.762)   |
- | TUP*2015                          | 1298.628*** | 341.678*** | 322.614*** |
+ | UPG*2015                          | 1298.628*** | 341.678*** | 322.614*** |
  |                                   | (230.986)   | (61.004)   | (52.762)   |
  | UCT*2014                          | 292.498     | 90.656     | 25.270     |
  |                                   | (292.493)   | (77.242)   | (66.798)   |
@@ -635,42 +631,42 @@ print(df_to_orgtbl(b,sedf=se))
  | \(F\)-stat                        | 15.911      | 15.203     | 16.350     |
  | $N$                               | 1510        | 1510       | 1510       |
  |-----------------------------------+-------------+------------+------------|
- | $\beta_{TUP2014}-\beta_{UCT2015}$ | 1655.528*** | 429.916*** | 359.67***  |
- | $\beta_{TUP2015}-\beta_{UCT2015}$ | 1336.19***  | 321.202*** | 304.847*** |
+ | $\beta_{UPG2014}-\beta_{UCT2015}$ | 1655.528*** | 429.916*** | 359.67***  |
+ | $\beta_{UPG2015}-\beta_{UCT2015}$ | 1336.19***  | 321.202*** | 304.847*** |
 
  The final two rows of Table [[tab:asset_values]] considers the difference
- in the average treatment effect between the UCT and TUP treatments.
+ in the average treatment effect between the UCT and UPG treatments.
  Here one needs to be thoughtful about the period of comparison, since
- the UCT treatment was rolled out later than the TUP.  Thus, the first
- row compares the difference in average asset holdings between the TUP
+ the UCT treatment was rolled out later than the UPG.  Thus, the first
+ row compares the difference in average asset holdings between the UPG
  and UCT groups roughly one year after the program began; here we see
- significantly higher mean TUP asset holdings, in the amount of 1655
+ significantly higher mean UPG asset holdings, in the amount of 1655
  SSP.  The second row instead compares contemporaneous endline asset
- holdings; here we again see significantly higher holdings for the TUP
+ holdings; here we again see significantly higher holdings for the UPG
  group.
 
 
 *** Savings & Land
 **** Discussion of savings accounts                                  :ignore:
-The TUP households were strongly encouraged to pay into a savings
+The UPG households were strongly encouraged to pay into a savings
 account maintained by BRAC at each of their weekly meetings.
-Regardless of their motivation, TUP households held savings accounts
+Regardless of their motivation, UPG households held savings accounts
 at significantly higher rates than both the control and UCT groups
 (Table [[tab:nonzero_savings]]); roughly 28% more in 2014, and 18% more
 in 2015.  The same is /not/ true of amounts of savings; conditional on
-having positive savings, TUP groups held roughly 30% /less/ than the
+having positive savings, UPG groups held roughly 30% /less/ than the
 control group in 2014 (Table [[tab:log_savings]]).  This pattern then
-changes dramatically in 2015, when both the TUP and UCT groups
+changes dramatically in 2015, when both the UPG and UCT groups
 dramatically increase their cash savings relative to the control, with
 both groups holding over 50% more than the control (again, conditional
 on holding any savings at all).  It is, perhaps, not surprising that
 the UCT group held large savings in 2015---after all, giving these
 households cash was the point of the treatment, implemented not long
-before.  Understanding the increase in cash savings for the TUP group
+before.  Understanding the increase in cash savings for the UPG group
 is more challenging; are their business investments yielding returns
 which allow them to save?  There may be some of this, but interpreting
-the increase for the TUP groups must also take into account that the
-number of TUP households holding positive savings fell from 2014 to
+the increase for the UPG groups must also take into account that the
+number of UPG households holding positive savings fell from 2014 to
 2015 relative to other groups, for which the prevalence of positive
 savings increased from one third in 2014 to 39% in 2015.
 
@@ -680,23 +676,23 @@ It is common in this community (and most in the region) to store non-perishable 
 like maize, cassava, or millet as a form of savings.  This makes
 particular sense in a high-inflation context, where the price of grain had doubled in the
 previous year.  Most households report saving in food (73%) as in cash
-(40%).  The prevalence of food savings increased in significantly in 2014 for both TUP
+(40%).  The prevalence of food savings increased in significantly in 2014 for both UPG
 and UCT groups relative to the control.[fn:: Note that food savings was not
 measured at baseline, so these controls are omitted.]  However (Table
 [[tab:log_savings]]) the /amount/ of food savings conditional on it being
-positive was only significant for the TUP group, for whom it increased
+positive was only significant for the UPG group, for whom it increased
 by roughly 30% in 2014, one round after treatment; similarly, after
 treatment the UCT group saved roughly 20% more in food than either the
-control or TUP groups in 2015. 
+control or UPG groups in 2015. 
 
 **** Discussion of transfers                                         :ignore:
 
-Households in the TUP group were roughly 7--8% more likely to both
+Households in the UPG group were roughly 7--8% more likely to both
 give and receive transfers from other households in 2014.  The UCT
 group showed a similar propensity to /receive/ transfers in 2014, but
 did not give significantly more than the control group.  On the other
 hand, one cannot reject the hypothesis that the propensity to both
-give and receive was equal across both the TUP & UCT groups in 2014.
+give and receive was equal across both the UPG & UCT groups in 2014.
 And for both groups the propensity to make transfers was no different
 from that of the control group in 2015.  It's worth noting, however,
 that transfers and indeed /all/ the forms of financial activity we
@@ -706,7 +702,7 @@ groups in both 2014 and 2015, relative to 2013.
 **** Discussion of land ownership & cultivation                      :ignore:
 
 We also examine land ownership and cultivation in each year.  In 2014 both the
-TUP and UCT groups are significantly  more likely cultivate land, and
+UPG and UCT groups are significantly  more likely cultivate land, and
 also to own it.  These difference from the control group disappear
 by 2015.  But interestingly, the amount of land owned or cultivated
 /conditional/ on having some land is not significantly different from
@@ -750,10 +746,10 @@ program, or a reversion to the mean.
 
  #+name: savings_tables
  #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle /tmp/foo.py
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
+data_endline = "../../TUP-data/Endline/UPG_endline.dta"
 
 import statsmodels.api as sm
 import pandas as pd
@@ -851,9 +847,9 @@ df2 = pd.concat((s2013, s2014, s2015))
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
 
 # make interaction variables
-df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UPG*2013', df['2013']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2014', df['2014']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2015', df['2015']*df['UPG'])
 df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
@@ -886,7 +882,7 @@ nonzero_d = {}
 
 baseline_na = True
 
-controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 # from above, outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
 
 # remove observations from 2013
@@ -921,26 +917,26 @@ for DF in (df, nonzero_df):
         # for computing the mean of the control group in 2015
         controlgroup = temp_df[temp_df['Control'] == 1]
 
-        # for computing the difference in TUP and Cash coefficients
-        beta_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-        pvalue_cash_TUP2014 = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+        # for computing the difference in UPG and Cash coefficients
+        beta_cash_UPG2014 = models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+        pvalue_cash_UPG2014 = models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
     
-        if pvalue_cash_TUP2014 <= 0.01: 
-            beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
-        elif pvalue_cash_TUP2014 <= 0.05: 
-            beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
-        elif pvalue_cash_TUP2014 <= 0.1: 
-            beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+        if pvalue_cash_UPG2014 <= 0.01: 
+            beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '***'
+        elif pvalue_cash_UPG2014 <= 0.05: 
+            beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '**'
+        elif pvalue_cash_UPG2014 <= 0.1: 
+            beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '*'
         
-        beta_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-        pvalue_cash_TUP2015 = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+        beta_cash_UPG2015 = models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+        pvalue_cash_UPG2015 = models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
     
-        if pvalue_cash_TUP2015 <= 0.01: 
-            beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
-        elif pvalue_cash_TUP2015 <= 0.05: 
-            beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
-        elif pvalue_cash_TUP2015 <= 0.1: 
-            beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+        if pvalue_cash_UPG2015 <= 0.01: 
+            beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '***'
+        elif pvalue_cash_UPG2015 <= 0.05: 
+            beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '**'
+        elif pvalue_cash_UPG2015 <= 0.1: 
+            beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '*'
         
         if DF.equals(nonzero_df): 
             d = nonzero_d 
@@ -958,7 +954,7 @@ for DF in (df, nonzero_df):
                   round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
                   round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
                   models_ols[outcome].fvalue, models_ols[outcome].nobs,
-                  beta_cash_TUP2014, beta_cash_TUP2015]
+                  beta_cash_UPG2014, beta_cash_UPG2015]
     
         for x in range(0,8):
             # indexes account for standard errors being in the final table
@@ -989,26 +985,26 @@ for DF in (df, nonzero_df):
     # for computing the mean of the control group in 2015
     controlgroup = temp_df[temp_df['Control'] == 1]
     
-    # for computing the difference in TUP and Cash coefficients
-    beta_cash_TUP2014 = models_ols["Food Savings"].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2014 = models_ols["Food Savings"].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    # for computing the difference in UPG and Cash coefficients
+    beta_cash_UPG2014 = models_ols["Food Savings"].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_UPG2014 = models_ols["Food Savings"].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
     
-    if pvalue_cash_TUP2014 <= 0.01: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '***'
-    elif pvalue_cash_TUP2014 <= 0.05: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '**'
-    elif pvalue_cash_TUP2014 <= 0.1: 
-        beta_cash_TUP2014 = str(round(beta_cash_TUP2014, 3)) + '*'
+    if pvalue_cash_UPG2014 <= 0.01: 
+        beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '***'
+    elif pvalue_cash_UPG2014 <= 0.05: 
+        beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '**'
+    elif pvalue_cash_UPG2014 <= 0.1: 
+        beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '*'
         
-    beta_cash_TUP2015 = models_ols["Food Savings"].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP2015 = models_ols["Food Savings"].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
+    beta_cash_UPG2015 = models_ols["Food Savings"].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    pvalue_cash_UPG2015 = models_ols["Food Savings"].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
     
-    if pvalue_cash_TUP2015 <= 0.01: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '***'
-    elif pvalue_cash_TUP2015 <= 0.05: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '**'
-    elif pvalue_cash_TUP2015 <= 0.1: 
-        beta_cash_TUP2015 = str(round(beta_cash_TUP2015, 3)) + '*'
+    if pvalue_cash_UPG2015 <= 0.01: 
+        beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '***'
+    elif pvalue_cash_UPG2015 <= 0.05: 
+        beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '**'
+    elif pvalue_cash_UPG2015 <= 0.1: 
+        beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '*'
     
     if DF.equals(nonzero_df): 
         d = nonzero_d 
@@ -1025,7 +1021,7 @@ for DF in (df, nonzero_df):
                   round(models_ols["Food Savings"].params[5], 3), models_ols["Food Savings"].bse[5],
                      "", " ", "  ", "   ",
                   models_ols["Food Savings"].fvalue, models_ols["Food Savings"].nobs, 
-                  beta_cash_TUP2014, beta_cash_TUP2015]
+                  beta_cash_UPG2014, beta_cash_UPG2015]
     
     for x in range(0,6):
         # indexes account for standard errors being in the final table
@@ -1041,18 +1037,18 @@ for DF in (df, nonzero_df):
 final = pd.DataFrame(data=regular_d)
 nonzero_final = pd.DataFrame(data=nonzero_d)
 
-final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
-                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG*2014", 3: "  ", 
+                      4: "UPG*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
                       16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: r"$\beta_{TUP2014}-\beta_{UCT2015}$", 21: r"$\beta_{TUP2015}-\beta_{UCT2015}$"}, inplace=True)
-nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP*2014", 3: "  ", 
-                      4: "TUP*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
+                      20: r"$\beta_{UPG2014}-\beta_{UCT2015}$", 21: r"$\beta_{UPG2015}-\beta_{UCT2015}$"}, inplace=True)
+nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG*2014", 3: "  ", 
+                      4: "UPG*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
                       12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
                       16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: r"$\beta_{TUP2014}-\beta_{UCT2015}$", 21: r"$\beta_{TUP2015}-\beta_{UCT2015}$"}, inplace=True)
+                      20: r"$\beta_{UPG2014}-\beta_{UCT2015}$", 21: r"$\beta_{UPG2015}-\beta_{UCT2015}$"}, inplace=True)
 
 newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.3f')
 print("""#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access""")
@@ -1075,9 +1071,9 @@ print(newdf)
  | CTL mean                          | 0.394    | 0.718    | 0.806    | 0.170        | 0.080         | 0.726        |
  |                                   | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
  |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | TUP*2014                          | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
+ | UPG*2014                          | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
  |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | TUP*2015                          | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
+ | UPG*2015                          | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
  |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
  | UCT*2014                          | 0.030    | 0.112**  | 0.142*** | 0.08**       | 0.034         | 0.196***     |
  |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
@@ -1095,8 +1091,8 @@ print(newdf)
  | F-stat                            | 13.720   | 5.086    | 10.529   | 1.594        | 3.460         | 4.797        |
  | N                                 | 1500.000 | 1500.000 | 1500.000 | 1500.000     | 1500.000      | 1500.000     |
  |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | $\beta_{TUP2014}-\beta_{UCT2015}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
- | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
+ | $\beta_{UPG2014}-\beta_{UCT2015}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
+ | $\beta_{UPG2015}-\beta_{UCT2015}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
 #+LATEX: \end{landscape}
 
 #+LATEX: \begin{landscape}
@@ -1108,9 +1104,9 @@ print(newdf)
  | CTL mean                          | 4.61      | 0.95     | 0.85     |         5.08 | 4.56          | 4.22         |
  |                                   | (1.23)    | (2.05)   | (1.82)   |       (0.93) | (0.96)        | (0.96)       |
  |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | TUP*2014                          | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
+ | UPG*2014                          | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
  |                                   | (0.15)    | (0.16)   | (0.15)   |       (0.22) | (0.27)        | (0.09)       |
- | TUP*2015                          | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
+ | UPG*2015                          | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
  |                                   | (0.14)    | (0.16)   | (0.14)   |       (0.22) | (0.31)        | (0.09)       |
  | UCT*2014                          | 0.19      | 0.23     | 0.30     |         0.27 | -0.57         | -0.05        |
  |                                   | (0.21)    | (0.21)   | (0.19)   |       (0.26) | (0.36)        | (0.11)       |
@@ -1128,8 +1124,8 @@ print(newdf)
  | F-stat                            | 20.87     | 4.50     | 2.88     |         3.93 | 3.92          | 20.33        |
  | N                                 | 671.00    | 1042.00  | 1114.00  |       255.00 | 159.00        | 1073.00      |
  |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | $\beta_{TUP2014}-\beta_{UCT2015}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
- | $\beta_{TUP2015}-\beta_{UCT2015}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
+ | $\beta_{UPG2014}-\beta_{UCT2015}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
+ | $\beta_{UPG2015}-\beta_{UCT2015}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
 #+LATEX: \end{landscape}
 
 
@@ -1139,7 +1135,7 @@ print(newdf)
 Income was reliably measured only in 2015, and so our estimates do not control for
 baseline values. The control group in 2015 has a measured income of roughly 4300 SSP
 per year, or roughly $540 US (assuming an exchange rate of around 8).
-We estimate positive impacts on total income for both the TUP and UCT
+We estimate positive impacts on total income for both the UPG and UCT
 groups, but none of these are statistically significant (Table [[tab:income]]).  
 
 *** Recreating income table                                          :ignore:
@@ -1170,7 +1166,7 @@ have standard errors under CTL mean
 
 #+name: income_table
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
 data_nonfarm = "../../TUP-data/Endline/sections_8_17.csv"
 data_farm = "../../TUP-data/Endline/Agriculture_cleaned.csv"
 
@@ -1312,7 +1308,7 @@ df.rename(columns = {'farm_income_yearly_sum': "Farm", 'livestock_income_yearly_
                    'nonfarm_yearly_sum': "Non-Farm", 'total': "Total"}, inplace=True)
 
 outcomes = ["Farm", "Livestock", "Non-Farm", "Total"]
-controls = ['constant', 'TUP', 'UCT']
+controls = ['constant', 'UPG', 'UCT']
 models_ols = {}
 d = {}
 
@@ -1321,22 +1317,22 @@ for outcome in outcomes:
     
     models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[controls]).fit()
     
-    # for computing the difference in TUP and Cash coefficients
-    beta_cash_TUP = models_ols[outcome].t_test("TUP - UCT = 0").summary_frame()["coef"][0]
-    pvalue_cash_TUP = models_ols[outcome].t_test("TUP - UCT = 0").summary_frame()["P>|t|"][0]
+    # for computing the difference in UPG and Cash coefficients
+    beta_cash_UPG = models_ols[outcome].t_test("UPG - UCT = 0").summary_frame()["coef"][0]
+    pvalue_cash_UPG = models_ols[outcome].t_test("UPG - UCT = 0").summary_frame()["P>|t|"][0]
     
-    if pvalue_cash_TUP <= 0.01: 
-        beta_cash_TUP = str(round(beta_cash_TUP, 3)) + '***'
-    elif pvalue_cash_TUP <= 0.05: 
-        beta_cash_TUP = str(round(beta_cash_TUP, 3)) + '**'
-    elif pvalue_cash_TUP <= 0.1: 
-        beta_cash_TUP = str(round(beta_cash_TUP, 3)) + '*'
+    if pvalue_cash_UPG <= 0.01: 
+        beta_cash_UPG = str(round(beta_cash_UPG, 3)) + '***'
+    elif pvalue_cash_UPG <= 0.05: 
+        beta_cash_UPG = str(round(beta_cash_UPG, 3)) + '**'
+    elif pvalue_cash_UPG <= 0.1: 
+        beta_cash_UPG = str(round(beta_cash_UPG, 3)) + '*'
 
     d[outcome] = [round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
                   round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
                   round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
                   models_ols[outcome].fvalue, models_ols[outcome].nobs, 
-                  beta_cash_TUP]
+                  beta_cash_UPG]
 
     for x in range(0,3):
         # indexes account for standard errors being in the final table
@@ -1351,8 +1347,8 @@ for outcome in outcomes:
 final = pd.DataFrame(data=d)
 
 # name the rows of the table
-final.rename(index = {0: "CTL mean", 1: " ", 2: "TUP", 3: "  ", 
-                      4: "UCT", 5: "   ", 6: "F-stat", 7: "N", 8: "beta_TUP-beta_CASH"}, inplace=True)
+final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG", 3: "  ", 
+                      4: "UCT", 5: "   ", 6: "F-stat", 7: "N", 8: "beta_UPG-beta_CASH"}, inplace=True)
 
 newdf = df_to_orgtbl(final, float_fmt = '%.3f')
 print(newdf)
@@ -1365,7 +1361,7 @@ print(newdf)
 |---------------------------+------------+------------+-------------+-------------|
 | CTL mean                  | 917.315*** | 924.611*** | 3326.162*** | 4317.337*** |
 |                           |     64.809 |    164.390 |     527.282 |     537.231 |
-| TUP                       |   -139.780 |    117.096 |     964.323 |    1253.478 |
+| UPG                       |   -139.780 |    117.096 |     964.323 |    1253.478 |
 |                           |    100.918 |    215.596 |     829.082 |     844.725 |
 | UCT                       |     48.833 |   -282.164 |     507.132 |     510.939 |
 |                           |    133.947 |    298.534 |    1077.298 |    1097.625 |
@@ -1373,7 +1369,7 @@ print(newdf)
 | F-stat                    |      1.309 |      0.983 |       0.683 |       1.101 |
 | N                         |    532.000 |    305.000 |     690.000 |     690.000 |
 |---------------------------+------------+------------+-------------+-------------|
-| $\beta_{TUP}-\beta_{UCT}$ |   -188.613 |    399.260 |     457.192 |     742.540 |
+| $\beta_{UPG}-\beta_{UCT}$ |   -188.613 |    399.260 |     457.192 |     742.540 |
 
 ** Consumption
 
@@ -1395,15 +1391,15 @@ make comparisons of total consumption misleading.
 
 These data do permit us to answer the central question we're
 interested in: what are the effects on consumption, about eight months
-later, of enrolling randomly selected households into the TUP program
+later, of enrolling randomly selected households into the UPG program
 versus giving them a cash transfer of roughly equal value?  We
 measured the effect of cash on a three-day recall of food consumption
 12 months after the transfer, and find a statistically significant
-increase of 14 SSP per day.  We first measured the effect of the TUP
+increase of 14 SSP per day.  We first measured the effect of the UPG
 program on average food consumption 6--9 months after the asset
 transfers, and found a slightly larger effect of 18 SSP. The
 differences between these two are not significant (see the \(t\)-test
-in the row labeled $\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$), and both
+in the row labeled $\beta_{UPG}^{2014}-\beta_{UCT}^{2015}$), and both
 result in a 13--17% increase in the value of food expenditures
 relative to the control group mean in 2015.
 
@@ -1413,17 +1409,17 @@ magnitude, significant at the 10% level.  Differences between the two
 are not significant. 
 
 At annual frequencies we discover a significant difference: the effect
-of the TUP program on average annual durable expenditures is
+of the UPG program on average annual durable expenditures is
 significantly greater (at the 10% level) than the effect of the UCT
 program, with the average difference equal to 484 SSP, a 46% increase
 relative to the average expenditures of the control group in 2015.
 
 #+name: consumption_tables
 #+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle consumption_tables.py
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
+data_endline = "../../TUP-data/Endline/UPG_endline.dta"
 
 import statsmodels.api as sm
 import pandas as pd
@@ -1491,9 +1487,9 @@ df2 = pd.concat((c2013, c2014, c2015))
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
 
 # make interaction terms
-df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UPG*2013', df['2013']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2014', df['2014']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2015', df['2015']*df['UPG'])
 df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
@@ -1502,10 +1498,10 @@ models_ols = {}
 b = {}
 se = {}
 
-controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 
 if FE:
-    controls += ['TUP', 'UCT']
+    controls += ['UPG', 'UCT']
 
 # remove observations from 2013, since conditioning on baseline
 df = df[df['Year'] != '2013']
@@ -1541,11 +1537,11 @@ for outcome in outcomes:
     b[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].mean()
     se[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].std()/np.sqrt(controlgroup[controlgroup['2015'] == 1][outcome].count())
 
-    b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2014}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2014 - UCT*2015 = 0").summary_frame()["t"][0]
+    b[outcome][r'$\beta_{UPG}^{2014}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se[outcome][r'$\beta_{UPG}^{2014}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{UPG}^{2014}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["t"][0]
 
-    b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{TUP}^{2015}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("TUP*2015 - UCT*2015 = 0").summary_frame()["t"][0]
+    b[outcome][r'$\beta_{UPG}^{2015}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
+    se[outcome][r'$\beta_{UPG}^{2015}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{UPG}^{2015}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["t"][0]
 
 b = pd.DataFrame(b)
 se = pd.DataFrame(se)
@@ -1561,9 +1557,9 @@ print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
 #+caption: Effect on consumption expenditures with different periods of recall.  Food expenditures are for the past three days, non-durable non-food for the past month, and durables the past year.
 |                                         | Food (3-day) | Monthly      | Yearly        |
 |-----------------------------------------+--------------+--------------+---------------|
-| TUP*2014                                | 18.41^{***}  | 59.23^{*}    | 435.43^{**}   |
+| UPG*2014                                | 18.41^{***}  | 59.23^{*}    | 435.43^{**}   |
 |                                         | (5.92)       | (31.20)      | (176.15)      |
-| TUP*2015                                | 1.82         | 34.76        | -8.48         |
+| UPG*2015                                | 1.82         | 34.76        | -8.48         |
 |                                         | (5.62)       | (29.65)      | (167.41)      |
 | UCT*2014                                | -3.80        | 32.96        | -170.68       |
 |                                         | (7.34)       | (38.70)      | (218.48)      |
@@ -1580,15 +1576,15 @@ print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
 |-----------------------------------------+--------------+--------------+---------------|
 | Control mean (2015)                     | 110.34^{***} | 288.60^{***} | 1051.76^{***} |
 |                                         | (3.89)       | (16.56)      | (103.24)      |
-| $\beta_{TUP2014}-\beta_{UCT2015}$       | 4.23         | -10.58       | 483.67^{*}    |
+| $\beta_{UPG2014}-\beta_{UCT2015}$       | 4.23         | -10.58       | 483.67^{*}    |
 |                                         | (9.17)       | (48.36)      | (273.11)      |
-| $\beta_{TUP2015}-\beta_{UCT2015}$       | -12.36^{*}   | -35.06       | 39.77         |
+| $\beta_{UPG2015}-\beta_{UCT2015}$       | -12.36^{*}   | -35.06       | 39.77         |
 |                                         | (7.45)       | (39.29)      | (221.80)      |
 
 
-It is worth noting that the effects of the TUP program on consumption
+It is worth noting that the effects of the UPG program on consumption
 are not lasting---two years after the distribution of assets (in 2015)
-the average consumption expenditures in the TUP group are not
+the average consumption expenditures in the UPG group are not
 significantly different from that of the control across all types of
 consumption.  The delayed roll-out of UCT intervention means that we
 can't measure the two-year effects of this program on these measures
@@ -1608,7 +1604,7 @@ to 2014 and 2015 can be interpreted as the proportion of people who
 report experiencing each in a typical week.  While average levels of
 these variables indicate very high food insecurity, and an
 increase in food insecurity between 2014 and 2015, the estimated
-effects of both the TUP and UCT programs are comparatively small and
+effects of both the UPG and UCT programs are comparatively small and
 are generally statistically insignificant.
 
 *** Notes on Recreating food insecurity table                      :noexport:
@@ -1642,10 +1638,10 @@ standard errors in the table?
 
 #+name: food_insecurity
 #+begin_src python :noweb no-export :exports none  :results output table raw :var FE=1 :colnames no :tangle food_security.py
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
+data_endline = "../../TUP-data/Endline/UPG_endline.dta"
 
 import statsmodels.api as sm
 import pandas as pd
@@ -1735,16 +1731,16 @@ df2 = pd.concat((fs2013, fs2014, fs2015))
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
 
 # make interaction variables
-df.insert(len(df.columns), 'TUP*2013', df['2013']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2014', df['2014']*df['TUP'])
-df.insert(len(df.columns), 'TUP*2015', df['2015']*df['TUP'])
+df.insert(len(df.columns), 'UPG*2013', df['2013']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2014', df['2014']*df['UPG'])
+df.insert(len(df.columns), 'UPG*2015', df['2015']*df['UPG'])
 df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
 df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
 
 baseline_na = True
 
-controls = ['TUP*2014', 'TUP*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 outcomes = ['z-score', 'wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
 outcomes = ['wholeday', 'hungry', 'nofood', 'fewmeals', 'portions', 'worried']
 
@@ -1789,14 +1785,14 @@ se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.in
 
 
 b = b.unstack()
-b['TUP*2014 - UCT*2015'] = b['TUP*2014'] - b['UCT*2015']
-b['TUP*2015 - UCT*2015'] = b['TUP*2015'] - b['UCT*2015']
+b['UPG*2014 - UCT*2015'] = b['UPG*2014'] - b['UCT*2015']
+b['UPG*2015 - UCT*2015'] = b['UPG*2015'] - b['UCT*2015']
 b = b.T
 b.rename(columns={'worried':'Worried', 'portions':'Limited portions', 'fewmeals':'Fewer Meals', 'nofood':'No food in house', 'hungry':'Went hungry', 'wholeday':'Whole day without eating'},inplace=True)
 
 se = se.unstack()
-se['TUP*2014 - UCT*2015'] = np.sqrt(se['TUP*2014']**2 + se['UCT*2015']**2)
-se['TUP*2015 - UCT*2015'] = np.sqrt(se['TUP*2015']**2 + se['UCT*2015']**2)
+se['UPG*2014 - UCT*2015'] = np.sqrt(se['UPG*2014']**2 + se['UCT*2015']**2)
+se['UPG*2015 - UCT*2015'] = np.sqrt(se['UPG*2015']**2 + se['UCT*2015']**2)
 
 se = se.T
 se.rename(columns={'worried':'Worried', 'portions':'Limited portions', 'fewmeals':'Fewer Meals', 'nofood':'No food in house', 'hungry':'Went hungry', 'wholeday':'Whole day without eating'},inplace=True)
@@ -1806,33 +1802,33 @@ print(df_to_orgtbl(b,sedf=se))
 
 *** food insecurity table                                            :ignore:
 
-#+latex: \begin{landscape}
 #+name: tab:food_insecurity
 #+caption: Effects of programs on different measures of food insecurity.
-|                                     | Fewer Meals     | Went hungry     | No food in house | Limited portions | Whole day without eating | Worried         |
-|-------------------------------------+-----------------+-----------------+------------------+------------------+--------------------------+-----------------|
-| 2014                                | \(0.716\)^{***} | \(0.370\)^{***} | \(0.470\)^{***}  | \(0.660\)^{***}  | \(0.369\)^{***}          | \(0.758\)^{***} |
-|                                     | (\(0.046\))     | (\(0.036\))     | (\(0.040\))      | (\(0.036\))      | (\(0.035\))              | (\(0.050\))     |
-| 2015                                | \(0.735\)^{***} | \(0.430\)^{***} | \(0.561\)^{***}  | \(0.795\)^{***}  | \(0.461\)^{***}          | \(0.917\)^{***} |
-|                                     | (\(0.044\))     | (\(0.034\))     | (\(0.038\))      | (\(0.034\))      | (\(0.033\))              | (\(0.048\))     |
-| Baseline missing                    | \(0.000\)       | \(0.000\)       | \(0.000\)        | \(0.000\)        | \(0.000\)                | \(0.000\)       |
-|                                     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))      | (\(0.000\))      | (\(0.000\))              | (\(0.000\))     |
-| Baseline value                      | \(0.014\)       | \(0.058\)^{**}  | \(0.050\)        | \(0.027\)        | \(0.010\)                | \(-0.030\)      |
-|                                     | (\(0.038\))     | (\(0.028\))     | (\(0.033\))      | (\(0.028\))      | (\(0.028\))              | (\(0.043\))     |
-| TUP*2014                            | \(-0.037\)      | \(-0.058\)      | \(-0.085\)^{*}   | \(0.065\)        | \(-0.020\)               | \(0.055\)       |
-|                                     | (\(0.044\))     | (\(0.043\))     | (\(0.044\))      | (\(0.044\))      | (\(0.044\))              | (\(0.044\))     |
-| TUP*2015                            | \(0.063\)       | \(0.079\)^{*}   | \(0.025\)        | \(-0.014\)       | \(0.013\)                | \(-0.019\)      |
-|                                     | (\(0.041\))     | (\(0.041\))     | (\(0.042\))      | (\(0.042\))      | (\(0.042\))              | (\(0.042\))     |
-| UCT*2014                            | \(-0.012\)      | \(-0.017\)      | \(0.015\)        | \(0.037\)        | \(-0.017\)               | \(0.052\)       |
-|                                     | (\(0.053\))     | (\(0.053\))     | (\(0.054\))      | (\(0.054\))      | (\(0.054\))              | (\(0.053\))     |
-| UCT*2015                            | \(0.037\)       | \(0.048\)       | \(0.051\)        | \(-0.009\)       | \(-0.015\)               | \(-0.010\)      |
-|                                     | (\(0.052\))     | (\(0.052\))     | (\(0.053\))      | (\(0.053\))      | (\(0.053\))              | (\(0.052\))     |
-|-------------------------------------+-----------------+-----------------+------------------+------------------+--------------------------+-----------------|
-| $\beta_{TUP2014} - \beta_{UCT2015}$ | \(-0.073\)      | \(-0.105\)      | \(-0.136\)^{**}  | \(0.074\)        | \(-0.004\)               | \(0.065\)       |
-|                                     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))      | (\(0.068\))      | (\(0.069\))              | (\(0.068\))     |
-| $\beta_{TUP2015} - \beta_{UCT2015}$ | \(0.027\)       | \(0.032\)       | \(-0.026\)       | \(-0.005\)       | \(0.028\)                | \(-0.008\)      |
-|                                     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))      | (\(0.067\))      | (\(0.068\))              | (\(0.067\))     |
-#+latex: \end{landscape}
+|                                     | Fewer           | Went            | No food         | Limited         | Whole day       |                 |
+|                                     | Meals           | hungry          | in house        | portions        | without eating  | Worried         |
+|-------------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| 2014                                | \(0.716\)^{***} | \(0.370\)^{***} | \(0.470\)^{***} | \(0.660\)^{***} | \(0.369\)^{***} | \(0.758\)^{***} |
+|                                     | (\(0.046\))     | (\(0.036\))     | (\(0.040\))     | (\(0.036\))     | (\(0.035\))     | (\(0.050\))     |
+| 2015                                | \(0.735\)^{***} | \(0.430\)^{***} | \(0.561\)^{***} | \(0.795\)^{***} | \(0.461\)^{***} | \(0.917\)^{***} |
+|                                     | (\(0.044\))     | (\(0.034\))     | (\(0.038\))     | (\(0.034\))     | (\(0.033\))     | (\(0.048\))     |
+| Baseline missing                    | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       |
+|                                     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     |
+| Baseline value                      | \(0.014\)       | \(0.058\)^{**}  | \(0.050\)       | \(0.027\)       | \(0.010\)       | \(-0.030\)      |
+|                                     | (\(0.038\))     | (\(0.028\))     | (\(0.033\))     | (\(0.028\))     | (\(0.028\))     | (\(0.043\))     |
+| UPG*2014                            | \(-0.037\)      | \(-0.058\)      | \(-0.085\)^{*}  | \(0.065\)       | \(-0.020\)      | \(0.055\)       |
+|                                     | (\(0.044\))     | (\(0.043\))     | (\(0.044\))     | (\(0.044\))     | (\(0.044\))     | (\(0.044\))     |
+| UPG*2015                            | \(0.063\)       | \(0.079\)^{*}   | \(0.025\)       | \(-0.014\)      | \(0.013\)       | \(-0.019\)      |
+|                                     | (\(0.041\))     | (\(0.041\))     | (\(0.042\))     | (\(0.042\))     | (\(0.042\))     | (\(0.042\))     |
+| UCT*2014                            | \(-0.012\)      | \(-0.017\)      | \(0.015\)       | \(0.037\)       | \(-0.017\)      | \(0.052\)       |
+|                                     | (\(0.053\))     | (\(0.053\))     | (\(0.054\))     | (\(0.054\))     | (\(0.054\))     | (\(0.053\))     |
+| UCT*2015                            | \(0.037\)       | \(0.048\)       | \(0.051\)       | \(-0.009\)      | \(-0.015\)      | \(-0.010\)      |
+|                                     | (\(0.052\))     | (\(0.052\))     | (\(0.053\))     | (\(0.053\))     | (\(0.053\))     | (\(0.052\))     |
+|-------------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| $\beta_{UPG2014} - \beta_{UCT2015}$ | \(-0.073\)      | \(-0.105\)      | \(-0.136\)^{**} | \(0.074\)       | \(-0.004\)      | \(0.065\)       |
+|                                     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.069\))     | (\(0.068\))     |
+| $\beta_{UPG2015} - \beta_{UCT2015}$ | \(0.027\)       | \(0.032\)       | \(-0.026\)      | \(-0.005\)      | \(0.028\)       | \(-0.008\)      |
+|                                     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.068\))     | (\(0.067\))     |
+
 
 ** Exposure to Conflict
 *** Discussion                                                       :ignore:
@@ -1855,32 +1851,31 @@ survey. All variables are binary variables. CTL mean comes from the constant
 and its standard error in the regression.
 
 Our main outcomes of interest are whether individuals say they were
-"/Worried/" or "directly /Affected/" by the violence, unable to invest
-(/NoInvest/) in
-a farm or business as a result, /Migrated/ as a cautionary measure, or
-did something else to /ProtectLives/ of family members. A final
-question among those who took no cautionary measures was whether this
-because they did not have the means (/NoMeans/). TUP participants
-are 24% (13 pp.) less likely to report having been "Affected" by the
-conflict, and 38% (7.6 pp.) less likely to report that they were
-affected specifically by being unable to plant crops or invest in
-their business. This was the second most common way in which
+/"Worried"/ or "directly /Affected/" by the violence, unable to invest
+(/"NoInvest"/) in a farm or business as a result, /"Migrated"/ as a
+cautionary measure, or did something else to /"ProtectLives"/ of family
+members.  A final question among those who took no cautionary measures
+was whether this because they did not have the means (/"NoMeans"/). UPG
+participants are 24% (13 pp.) less likely to report having been
+"Affected" by the conflict, and 38% (7.6 pp.) less likely to report
+that they were affected specifically by being unable to plant crops or
+invest in their business. This was the second most common way in which
 households reported being affected behind "needed to relocate or
-migrate", where TUP respondents are not clearly different. Finally,
-TUP respondents were significantly less likely (10.9 pp) to report
+migrate", where UPG respondents are not clearly different. Finally,
+UPG respondents were significantly less likely (10.9 pp) to report
 that they took no action to help others because they lacked the means
 (/NoMeans/) to do so.
 
 Overall, nearly all households were worried (93%), and nearly 40%
 migrated to avoid violence; 31% also did something else to protect the
-lives of their family members.  In these reactions TUP households were
-not detectably different from the control group.  However, TUP
+lives of their family members.  In these reactions UPG households were
+not detectably different from the control group.  However, UPG
 households were significantly (13 pp.) less likely to report that they were
 directly affected by violence; also 8 pp. less likely to report that
 their ability to invest in land or business was affected by the
 conflict; and 11 pp. less likely to report that any /lack/ of action
 was due to a lack of means.  All these significant differences
-seem to indicate that the TUP program had some mitigating effect on
+seem to indicate that the UPG program had some mitigating effect on
 the effects of conflict on the household.
 
 *** Recreating the exposure to conflict table                        :ignore:
@@ -1925,8 +1920,8 @@ Next steps:
 
 #+name: conflict
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
@@ -2017,7 +2012,7 @@ df.insert(len(df.columns), 'constant', 1)
 df.reset_index(level=['Group'], inplace=True)
 
 df = df.join(pd.get_dummies(df['Group']))
-controls = ["constant", "TUP"]
+controls = ["constant", "UPG"]
 
 models_ols = {}
 d={}
@@ -2050,9 +2045,9 @@ for outcome in outcomes:
     del temp_df
 
 final = pd.DataFrame(data=d)
-final.rename(index = {0: "CTL mean", 1: "  ", 2: "TUP", 3: "   ", 4: "F-stat", 5: "N"}, inplace=True)
-newdf1 = df_to_orgtbl(final.loc[ ["CTL mean", "  ", "TUP", "   "] ], float_fmt = '%.3f')
-newdf2 = df_to_orgtbl(final.loc[ ["F-stat", "N"] ], float_fmt = '%.3f')
+final.rename(index = {0: "CTL mean", 1: "  ", 2: "UPG", 3: "   ", 4: "F-stat", 5: "N"}, inplace=True)
+newdf1 = df_to_orgtbl(final.loc[ ["CTL mean", "  ", "UPG", "   "] ], float_fmt = '%.3f')
+newdf2 = df_to_orgtbl(final.loc[ ["$F$-stat", "$N$"] ], float_fmt = '%.3f')
 print("|-\n" + newdf1 + "|-\n" + newdf2 + "|-\n")
 
 #+end_src
@@ -2062,34 +2057,34 @@ print("|-\n" + newdf1 + "|-\n" + newdf2 + "|-\n")
 #+name: tab:conflict
 #+caption: Average treatment effects by group-year on the probability of having been affected in a significant way by the outbreak of violence in late 2013
 #+attr_latex: :environment longtable :align lrrrrrr
-|----------+-----------+----------+----------+----------+--------------+----------|
-|          |  Affected | Migrated | NoInvest |  NoMeans | ProtectLives |  Worried |
-|----------+-----------+----------+----------+----------+--------------+----------|
-| CTL mean |  0.532*** | 0.373*** | 0.177*** | 0.538*** |     0.311*** | 0.928*** |
-|          |     0.026 |    0.025 |    0.018 |    0.031 |        0.025 |    0.014 |
-| TUP      | -0.127*** |   -0.005 | -0.076** | -0.109** |        0.040 |   -0.016 |
-|          |     0.042 |    0.041 |    0.030 |    0.052 |        0.040 |    0.023 |
-|----------+-----------+----------+----------+----------+--------------+----------|
-|          |  Affected | Migrated | NoInvest |  NoMeans | ProtectLives |  Worried |
-|----------+-----------+----------+----------+----------+--------------+----------|
-| F-stat   |     9.203 |    0.013 |    6.609 |    4.381 |        1.003 |    0.486 |
-| N        |   601.000 |  606.000 |  606.000 |  402.000 |      585.000 |  603.000 |
-|----------+-----------+----------+----------+----------+--------------+----------|
+|------------+----------+----------+----------+---------+--------------+---------|
+|            | Affected | Migrated | NoInvest | NoMeans | ProtectLives | Worried |
+|------------+----------+----------+----------+---------+--------------+---------|
+| CTL mean   |  0.53*** |  0.37*** |  0.18*** | 0.54*** |      0.31*** | 0.93*** |
+|            |     0.03 |     0.03 |     0.02 |    0.03 |         0.03 |    0.01 |
+| UPG        | -0.13*** |    -0.01 |  -0.08** | -0.11** |         0.04 |   -0.02 |
+|            |     0.04 |     0.04 |     0.03 |    0.05 |         0.04 |    0.02 |
+|------------+----------+----------+----------+---------+--------------+---------|
+|            | Affected | Migrated | NoInvest | NoMeans | ProtectLives | Worried |
+|------------+----------+----------+----------+---------+--------------+---------|
+| \(F\)-stat |     9.20 |     0.01 |     6.61 |    4.38 |         1.00 |    0.49 |
+| $N$        |      601 |      606 |      606 |     402 |          585 |     603 |
+|------------+----------+----------+----------+---------+--------------+---------|
 
-* Concluding Remarks                                               :noexport:
+* Conclusion
   
-BRAC's South Sudan pilot of the TUP program represents the only such test of the
+BRAC's South Sudan pilot of the UPG program represents the only such test of the
 ultra-poor graduation framework conducted in an area of significant political and
 economic instability. It also represents one of the only direct comparisons of this
 model to a similarly expensive unconditional cash transfer, arguably the most
 sensible benchmark for success.  Though our study does not generalize to
 contexts with high-functioning cash economies and relative political
 stability, within its context it provides some clues about the
-benefits of both TUP and UCT programs.
+benefits of both UPG and UCT programs.
 
 Cash transfers appear to increase consumption and possibly shift
 investment from agriculture to non-farm activities, without a related
-increase in wealth or income.  Conversely, the TUP program increased
+increase in wealth or income.  Conversely, the UPG program increased
 wealth and directly shifted work from agriculture to livestock, with
 increased consumption in the short run. We also find that having
 received asset transfers dampened the negative investment effects
@@ -2158,7 +2153,7 @@ df_a = pd.read_csv(data_asset_assign) # assignments at baseline
 # take the union of locations.csv and asset_assign.csv, rename groups accordingly
 df = pd.merge(df_l, df_a[ ['respid', 'group' ] ], how='outer', left_on='RespID', right_on='respid')
 df.replace(to_replace='Gift', value='Control', inplace=True)
-df.replace(to_replace='TUP-high asset', value='TUP', inplace=True)
+df.replace(to_replace='UPG-high asset', value='UPG', inplace=True)
 df.replace(to_replace='Cash', value='UCT', inplace=True)
 
 # asset_assign.csv assignments are listed under 'group'
@@ -2198,8 +2193,8 @@ df.to_csv('master_assignment.csv')
 #+name: mean_balance
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 # <<load_data>> can use this!!
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline  = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
 import pandas as pd
 from scipy import stats
 from cfe.df_utils import df_to_orgtbl
@@ -2231,10 +2226,10 @@ df_1 = df_3_days.join(df_month.join(df_year.join(df_assets)))
 means = df_1.groupby(['Group']).mean()
 means = means.T
 
-means.insert(len(means.columns), '$\Delta$ TUP', means['TUP'] - means['Control'])
+means.insert(len(means.columns), '$\Delta$ UPG', means['UPG'] - means['Control'])
 means.insert(len(means.columns), '$\Delta$ UCT', means['UCT'] - means['Control'])
 
-d = {'Control': means['Control'], '$\Delta$ TUP': means['TUP'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
+d = {'Control': means['Control'], '$\Delta$ UPG': means['UPG'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
 means = pd.DataFrame(data=d)
 
 # so we can add * later
@@ -2257,14 +2252,14 @@ column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c
 # some are off by 0.001
 for column in column_list:
     
-    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'TUP'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'UPG'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
     
     if pvalue_tup <= 0.01: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '***'
+        means.at[column,'$\Delta$ UPG'] = means.at[column,'$\Delta$ UPG'] + '***'
     elif pvalue_tup <= 0.05: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '**'
+        means.at[column,'$\Delta$ UPG'] = means.at[column,'$\Delta$ UPG'] + '**'
     elif pvalue_tup <= 0.1: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '*'
+        means.at[column,'$\Delta$ UPG'] = means.at[column,'$\Delta$ UPG'] + '*'
         
     pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
     
@@ -2278,7 +2273,7 @@ for column in column_list:
     # as it is in the table, N is number of nonzero entries
     means.at[column, 'N'] = df_1[df_1[column] > 0][column].count()
 
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
+# label the rows using "Better Var Name" in UPG-data/ssudan_survey.org,
 # but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
 means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
             'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
@@ -2317,7 +2312,7 @@ plt.savefig("motorcycle_Elliott.png")
 #+name: tab:balance_check
 #+caption: Means of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively
 #+attr_latex: :environment longtable :align lrrrr
-| Baseline Characteristics | Control | $\Delta$ TUP | $\Delta$ UCT | $N$ |
+| Baseline Characteristics | Control | $\Delta$ UPG | $\Delta$ UCT | $N$ |
 |--------------------------+---------+--------------+--------------+-----|
 | Household size           |   7.232 |       -0.175 |          0.3 | 648 |
 | # Child                  |   3.263 |        0.118 |        0.108 | 594 |
@@ -2380,8 +2375,8 @@ attributed to differences in rates of ownership.
 
 #+name: mean_log_balance
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline  = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
 import pandas as pd
 from scipy import stats
 from cfe.df_utils import df_to_orgtbl
@@ -2422,10 +2417,10 @@ df_1 = df_1.join(df[ [ 'in_business_b', 'Group'] ])
 means = df_1.groupby(['Group']).mean()
 means = means.T
 
-means.insert(len(means.columns), '$\Delta$ TUP', means['TUP'] - means['Control'])
+means.insert(len(means.columns), '$\Delta$ UPG', means['UPG'] - means['Control'])
 means.insert(len(means.columns), '$\Delta$ UCT', means['UCT'] - means['Control'])
 
-d = {'Control': means['Control'], '$\Delta$ TUP': means['TUP'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
+d = {'Control': means['Control'], '$\Delta$ UPG': means['UPG'] - means['Control'], '$\Delta$ UCT': means['UCT'] - means['Control']}
 means = pd.DataFrame(data=d)
 
 # so we can add * later
@@ -2448,14 +2443,14 @@ column_list = ['c_meat_b', 'c_fish_b', 'c_cereals_b', 'c_sugar_b', 'c_egg_b', 'c
 # some are off by 0.001
 for column in column_list:
     
-    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'TUP'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
+    pvalue_tup = stats.ttest_ind(df_1[df_1['Group'] == 'UPG'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
     
     if pvalue_tup <= 0.01: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '***'
+        means.at[column,'$\Delta$ UPG'] = means.at[column,'$\Delta$ UPG'] + '***'
     elif pvalue_tup <= 0.05: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '**'
+        means.at[column,'$\Delta$ UPG'] = means.at[column,'$\Delta$ UPG'] + '**'
     elif pvalue_tup <= 0.1: 
-        means.at[column,'$\Delta$ TUP'] = means.at[column,'$\Delta$ TUP'] + '*'
+        means.at[column,'$\Delta$ UPG'] = means.at[column,'$\Delta$ UPG'] + '*'
         
     pvalue_cash = stats.ttest_ind(df_1[df_1['Group'] == 'UCT'][column], df_1[df_1['Group'] == 'Control'][column], nan_policy='omit').pvalue
     
@@ -2469,7 +2464,7 @@ for column in column_list:
    # N is number of nonzero entries
     means.at[column, 'N'] = df_1[column].count()
 
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org
+# label the rows using "Better Var Name" in UPG-data/ssudan_survey.org
 means.rename({'c_meat_b': ' Meat (last three days)', 'c_fish_b': 'Fish (last three days)', 
             'c_cereals_b': 'Cereals (last three days)', 'c_sugar_b': 'Sugar (last three days)', 
             'c_egg_b': 'Egg (last three days)', 'c_oil_b': 'Oil (last three days)', 
@@ -2509,7 +2504,7 @@ plt.savefig("mobile_nonzero.png")
 #+name: tab:mean_log_balance
 #+caption: Means of logs of some analysis variables at baseline.  Asterisks indicate p<.1, .05, and .01 respectively.  Zeros are treated as missing.
 #+attr_latex: :environment longtable :align lrrrr
-| Variable                       | Control | $\Delta$ TUP | $\Delta$ UCT | $N$ |
+| Variable                       | Control | $\Delta$ UPG | $\Delta$ UCT | $N$ |
 |--------------------------------+---------+--------------+--------------+-----|
 | Meat (last three days)         |   2.845 |        0.018 |        0.033 | 378 |
 | Fish (last three days)         |   2.058 |        0.041 |       -0.022 | 474 |
@@ -2585,10 +2580,10 @@ attrition tables.
 # using master_assignment.csv
 #+name: master_assignment_attrition 
 #+begin_src python :exports none  :results output table raw labels=[] :colnames no :tangle master_assignment_attrition.py
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
-data_midline = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+data_baseline  = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_midline = "../../TUP-data/Midline/UPG_midline.dta"
+data_endline = "../../TUP-data/Endline/UPG_endline.dta"
 import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
@@ -2618,7 +2613,7 @@ df.replace(to_replace='Cash', value='UCT', inplace=True)
 
 # count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-d2013 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+d2013 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'UPG': bygroupdf.at['UPG','idno'],'All': df.Group.notna().sum()}
 
 df_b = df
 
@@ -2634,7 +2629,7 @@ df.replace(to_replace='Cash', value='UCT', inplace=True)
 
 # count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-d2014 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+d2014 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'UPG': bygroupdf.at['UPG','idno'],'All': df.Group.notna().sum()}
 
 df_m = df
 
@@ -2650,7 +2645,7 @@ df.replace(to_replace='Cash', value='UCT', inplace=True)
 
 # count the number in each treatment group
 bygroupdf = df.groupby(['Group']).count()
-d2015 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'TUP': bygroupdf.at['TUP','idno'],'All': df.Group.notna().sum()}
+d2015 = {'UCT': bygroupdf.at['UCT','idno'],'Control': bygroupdf.at['Control','idno'],'UPG': bygroupdf.at['UPG','idno'],'All': df.Group.notna().sum()}
 
 df_e = df
 
@@ -2675,8 +2670,8 @@ bygroupdf_b_e = df_b_e.groupby(['Group']).count()
 
 # count the number in each treatment group
 dd2013 = d2013
-dd2014 = {'UCT': bygroupdf_b_m.at['UCT','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'TUP': bygroupdf_b_m.at['TUP','idno'],'All': df_b_m.Group.notna().sum()}
-dd2015 = {'UCT': bygroupdf_b_e.at['UCT','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'TUP': bygroupdf_b_e.at['TUP','idno'],'All': df_b_e.Group.notna().sum()}
+dd2014 = {'UCT': bygroupdf_b_m.at['UCT','idno'],'Control': bygroupdf_b_m.at['Control','idno'],'UPG': bygroupdf_b_m.at['UPG','idno'],'All': df_b_m.Group.notna().sum()}
+dd2015 = {'UCT': bygroupdf_b_e.at['UCT','idno'],'Control': bygroupdf_b_e.at['Control','idno'],'UPG': bygroupdf_b_e.at['UPG','idno'],'All': df_b_e.Group.notna().sum()}
 
 # make the table for number of households in sample with baseline survey by group and round
 dd = {'Assigned': dassign, '2013': dd2013, '2014': dd2014, '2015': dd2015}
@@ -2694,7 +2689,7 @@ print(newdf2)
 |---------+----------+------+-----------+-----------|
 | All     |      755 |  649 | 606 (554) | 700 (603) |
 | Control |      380 |  281 | 265 (219) | 353 (262) |
-| TUP     |      250 |  244 | 228 (223) | 236 (231) |
+| UPG     |      250 |  244 | 228 (223) | 236 (231) |
 | UCT     |      125 |  124 | 113 (112) | 111 (110) |
 
 *** Interview Probability Table                                      :ignore:
@@ -2705,10 +2700,10 @@ import numpy as np
 from cfe.df_utils import df_to_orgtbl
 from cfe.estimation import ols
 
-data_baseline  = "../TUP-data/data/Baseline/TUP_baseline.dta"
-data_assignment  = "../TUP-report/documents/master_assignment.csv"
-data_midline = "../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../TUP-data/Endline/TUP_endline.dta"
+data_baseline  = "../TUP-data/data/Baseline/UPG_baseline.dta"
+data_assignment  = "../UPG-report/documents/master_assignment.csv"
+data_midline = "../TUP-data/Midline/UPG_midline.dta"
+data_endline = "../TUP-data/Endline/UPG_endline.dta"
 
 df_b = pd.read_stata(data_baseline) 
 df_a = pd.read_csv(data_assignment)
@@ -2781,7 +2776,7 @@ print(df_to_orgtbl(p,float_fmt='\(%4.2f\)'))
 | Group   | 2013     | 2014     | 2015     |
 |---------+----------+----------+----------|
 | Control | \(0.75\) | \(0.70\) | \(0.94\) |
-| TUP     | \(0.98\) | \(0.92\) | \(0.95\) |
+| UPG     | \(0.98\) | \(0.92\) | \(0.95\) |
 | UCT     | \(0.99\) | \(0.90\) | \(0.89\) |
 
 *** Interview Probability Discussion                                 :ignore:
@@ -2792,7 +2787,7 @@ print(df_to_orgtbl(p,float_fmt='\(%4.2f\)'))
  and group.  There are three things to note about this table.  The first
  is that at baseline and midline the proportion of households
  interviewed from the control group was significantly lower than for
- the TUP and UCT groups.  The second is that challenges in the field
+ the UPG and UCT groups.  The second is that challenges in the field
  led to a lower probability of a successful interview at midline.  The
  third is that members of the UCT were slightly (but not
  significantly) less likely to be interviewed at endline. 
@@ -2800,7 +2795,7 @@ print(df_to_orgtbl(p,float_fmt='\(%4.2f\)'))
  The relatively low proportion of control households being interviewed
  in the first two rounds can be attributed to the fact that these
  households did not have the same consistent contact with BRAC that
- the TUP & UCT groups had, and this consistent contact was important
+ the UPG & UCT groups had, and this consistent contact was important
  for locating people in a rural area lacking certain infrastructure (phones,
  addresses) which might otherwise have made finding households
  easier, while the lower proportion of households interviewed at midline
@@ -2823,10 +2818,10 @@ print(df_to_orgtbl(p,float_fmt='\(%4.2f\)'))
 
  #+name: attrition_balance
  #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/TUP_midline.dta"
-data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/TUP_endline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline  = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/UPG_midline.dta"
+data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/UPG_endline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
 import pandas as pd
 from scipy import stats
 from cfe.df_utils import df_to_orgtbl
@@ -2916,7 +2911,7 @@ for column in column_list:
     elif pvalue_end <= 0.1: 
         means.at[column,'beta_end'] = means.at[column,'beta_end'] + '*'
 
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org,
+# label the rows using "Better Var Name" in UPG-data/ssudan_survey.org,
 # but without (last three days) or (last month) since variables are transformed (i.e. divided by 365 for yearly)
 means.rename({'c_meat_b': ' Meat', 'c_fish_b': 'Fish', 
             'c_cereals_b': 'Cereals', 'c_sugar_b': 'Sugar', 
@@ -3006,10 +3001,10 @@ print(newdf)
 
  #+name: attrition_balance_nonzero
  #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_baseline  = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/TUP_midline.dta"
-data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/TUP_endline.dta"
-data_assignment  = "../../TUP-report/documents/master_assignment.csv"
+data_baseline  = "../../TUP-data/data/Baseline/UPG_baseline.dta"
+data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/UPG_midline.dta"
+data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/UPG_endline.dta"
+data_assignment  = "../../UPG-report/documents/master_assignment.csv"
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -3105,7 +3100,7 @@ for column in column_list:
     elif pvalue_end <= 0.1: 
         means.at[column,'beta_end'] = means.at[column,'beta_end'] + '*'
 
-# label the rows using "Better Var Name" in TUP-data/ssudan_survey.org
+# label the rows using "Better Var Name" in UPG-data/ssudan_survey.org
 means.rename({'c_meat_b': ' Meat (last three days)', 'c_fish_b': 'Fish (last three days)', 
             'c_cereals_b': 'Cereals (last three days)', 'c_sugar_b': 'Sugar (last three days)', 
             'c_egg_b': 'Egg (last three days)', 'c_oil_b': 'Oil (last three days)', 
@@ -3193,7 +3188,7 @@ frequency of non-zero consumption of each good among treatment and control
 households, then look at levels of consumption among households with non-zero
 consumption. \Tab{consumption_full} presents point estimates.
 
-A few changes in the composition of consumption are interesting. TUP households appear to consume 17% less
+A few changes in the composition of consumption are interesting. UPG households appear to consume 17% less
 sorghum (often considered an inferior good in Yei) and more on rice, which is
 considered a higher-quality staple. While almost everyone reports some health
 spending over the past month, both treatment groups spent more, though only
@@ -3217,26 +3212,26 @@ Nonzero = Nonzero.drop(many_zeros,1)
 Goods = Goods.drop(many_zeros,1)
 
 #~ Merge in Control Vars
-controls = ["cons","TUP","CSH"]
+controls = ["cons","UPG","CSH"]
 Goods = Goods.join(C[controls],how="left")
 Nonzero = Nonzero.join(C[controls],how="left")
 Items = [item[:-2] for item in Goods if item.endswith("_e")]
-CTL = Goods[controls].sum(axis=1)==1 #~ i.e. only constant ==1, TUP & UCT ==0
+CTL = Goods[controls].sum(axis=1)==1 #~ i.e. only constant ==1, UPG & UCT ==0
 Goods_ctl_mean =   Goods.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 
 Zero, Zero_se = reg_table(regressions(Nonzero,"_e", outcomes=Items, Baseline="_b"), resultdf=True, Transpose=True)
 Good, Good_se = reg_table(regressions(Goods,"_e", outcomes=Items, Baseline="_b"  ), resultdf=True, Transpose=True)
 #~ Make full table of Standard errors
-SE = Zero_se[["TUP","CSH"]].join(Good_se[["TUP","CSH"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
+SE = Zero_se[["UPG","CSH"]].join(Good_se[["UPG","CSH"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
 
 #~ Make full table of point estimates and control-group means
-FullTable = pd.DataFrame({"Mean (CTL)":Goods_ctl_mean, "% >0 (CTL)":Zeros_ctl_mean}).join(Zero[["TUP","CSH"]])
-FullTable = FullTable.join(Good[["TUP","CSH","N"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
+FullTable = pd.DataFrame({"Mean (CTL)":Goods_ctl_mean, "% >0 (CTL)":Zeros_ctl_mean}).join(Zero[["UPG","CSH"]])
+FullTable = FullTable.join(Good[["UPG","CSH","N"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
 
 #~ Make % change graph
 fig, ax = plt.subplots(2,1, figsize=(6,9))
-for i, group in enumerate(("TUP","CSH")):
+for i, group in enumerate(("UPG","CSH")):
     pct_change = FullTable[group+" (Amt.)"]/FullTable["Mean (CTL)"]
     se_change  = SE[group+" (Amt.)"]/FullTable["Mean (CTL)"]
     pct_change.sort()
@@ -3267,7 +3262,7 @@ return tab
 |--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
 |              | # own  |              |             | Value     |                |                |          |
 |--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
-| Item         | CTL    | TUP          | UCT        | CTL       | TUP            | UCT           | N        |
+| Item         | CTL    | UPG          | UCT        | CTL       | UPG            | UCT           | N        |
 |--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
 | Pangas       | $1.06$ | $0.01$       | $0.13^{**}$ | $11.86$   | $1.66^{**}$    | $0.04$         | $410.00$ |
 | Chickens     | $3.79$ | $0.70$       | $-0.32$     | $154.35$  | $23.31$        | $0.80$         | $162.00$ |
@@ -3302,7 +3297,7 @@ return tab
  import sys
  DATADIR = "../../data/"
  sys.path.append(DATADIR)
- from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
  D = full_data(DIR = DATADIR,balance=[])
  WEEKLY = True
 
@@ -3341,34 +3336,34 @@ return tab
     
  Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
  Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
- Vals = Vals.join(D[["TUP","CSH"]])
+ Vals = Vals.join(D[["UPG","CSH"]])
 
- for group in ("TUP", "CSH"):
+ for group in ("UPG", "CSH"):
      for year in ("2013", "2014", "2015"):
          Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
 
- Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+ Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
 
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
  Vals=Vals.loc[2014:2015]
  regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
 
  results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
 
- CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTL = Vals["UPG"]+Vals["CSH"] ==0
  CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
  CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
  diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
  for var in Outcomes:
-     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
 
  results = results.append(diff)
@@ -3389,7 +3384,7 @@ return tab
  import sys
  DATADIR = "../../data/"
  sys.path.append("../../data")
- from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
  food =  ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
  month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
  ConsumptionItems = food+['airtime','fuel']
@@ -3441,10 +3436,10 @@ return tab
  import numpy as np
  import pandas as pd
  import statsmodels.api as sm
- from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
  
  USE_LAMBDAS = False #~ Whether to use the output of SS-lambdas.py as an outcome (You may have to run it first.)
- TGROUP_FE   = True  #~ Whether to use TUP & CSH dummy variables as controls (I'm pretty sure we should be)
+ TGROUP_FE   = True  #~ Whether to use UPG & CSH dummy variables as controls (I'm pretty sure we should be)
 
  food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
  month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
@@ -3591,34 +3586,34 @@ return tab
  for yr in (2013, 2014, 2015): C.loc[yr,"Y"]=str(int(yr))
 
  C = C.join(pd.get_dummies(C["Y"]), how="left",lsuffix="_")
- for group in ("TUP", "CSH"):
+ for group in ("UPG", "CSH"):
      for year in ("2013", "2014", "2015"):
          interaction = C[group]*C[year]
          if interaction.sum()>0: C["{}*{}".format(group,year)] = interaction
 
- if TGROUP_FE: Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015', 'TUP','CSH']
- else:         Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015']
+ if TGROUP_FE: Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015', 'UPG','CSH']
+ else:         Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015']
 
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
  C = C.loc[2014:2015]
  regs  = regressions(C, outcomes=Outcomes,  controls=Controls,  Baseline=2013, baseline_na=True)
 
  results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
 
- CTL = C["TUP"]+C["CSH"] ==0
+ CTL = C["UPG"]+C["CSH"] ==0
  CTLmean = {var: C[CTL].loc[2015,var].mean() for var in Outcomes}
  CTLsd = {var: C[CTL].loc[2015,var].std() for var in Outcomes}
  diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
  for var in Outcomes:
-     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
  results = results.append(diff)
  SE = SE.append(diff_se)
@@ -3634,7 +3629,7 @@ return tab
  import numpy as np
  import pandas as pd
  import statsmodels.api as sm
- from TUP import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
  ITEMS = ["beans", "sugar", "fish", "nuts", "vegetables", "airtime", "fuel"]
 
  D = full_data(DIR=DATADIR)
@@ -3655,19 +3650,19 @@ return tab
  C['const']  = 1.
 
  Outcomes =["Tot",  "logTot", "$\log\lambda_{it}$"]
- Controls= ['const', 'TUP', 'CSH']
+ Controls= ['const', 'UPG', 'CSH']
 
  regs = regressions(C,outcomes=Outcomes, controls=Controls, Baseline=2013)
  results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
- CTL = C["TUP"]+C["CSH"] ==0
+ CTL = C["UPG"]+C["CSH"] ==0
  CTLmean = {var: C.loc[CTL,var].mean() for var in Outcomes}
  CTLsd = {var: C.loc[CTL,var].std() for var in Outcomes}
  diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
  for var in Outcomes:
-     ttest= regs[var].t_test("TUP - CSH = 0").summary_frame()
-     diff.loc[   r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest["std err"][0]
+     ttest= regs[var].t_test("UPG - CSH = 0").summary_frame()
+     diff.loc[   r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest["std err"][0]
 
  results = results.append(diff)
  SE = SE.append(diff_se)
@@ -3685,7 +3680,7 @@ import statsmodels.api as sm
 from matplotlib import pyplot as plt
 import sys
 sys.path.append("../../data")
-from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
 def topcode(var, Nstd=3, drop=False):
     if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
     else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
@@ -3706,16 +3701,16 @@ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
 Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
 Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
-Vals = Vals.join(D[["TUP","CSH"]])
-Vals["CTL"] = (Vals["TUP"]+Vals["CSH"] ==0).apply(int)
+Vals = Vals.join(D[["UPG","CSH"]])
+Vals["CTL"] = (Vals["UPG"]+Vals["CSH"] ==0).apply(int)
 
-for group in ("TUP", "CSH"):
+for group in ("UPG", "CSH"):
     for year in ("2013", "2014", "2015"):
         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
 
 #~ Make graph of distribution
 stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
-Vals["Group"] = stringify("TUP")+stringify("CSH")+stringify("CTL")
+Vals["Group"] = stringify("UPG")+stringify("CSH")+stringify("CTL")
 
 
 amean = Vals.groupby(["Year","Group"]).mean()[["Total","Productive","Livestock"]]
@@ -3727,7 +3722,7 @@ asset_pctchange = (amean/amean.ix[2013]).unstack("Year") - 1
 for var in ("Total","Productive","Livestock"):
    #~ fig,ax = plt.subplots(1,2)
    #~ for i,yr in enumerate((2014,2015)):
-   #~     Vals.ix[yr].dropna(subset=[[var,"TUP","CSH","CTL"]]).groupby("Group")[var].plot(kind="kde",ax=ax[i])
+   #~     Vals.ix[yr].dropna(subset=[[var,"UPG","CSH","CTL"]]).groupby("Group")[var].plot(kind="kde",ax=ax[i])
    #~     ax[i].set_title("{} Asset Value in {}".format(var,yr))
    #~     ax[i].legend()
    #~     #~ ax[i].set_aspect(1)
@@ -3740,30 +3735,30 @@ for var in ("Total","Productive","Livestock"):
    plt.savefig("../figures/Asset{}_groupyear.png".format(var))
    plt.clf()
 
-if TGROUP_FE: Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015', 'TUP','CSH']
-else:         Controls = ["2014","2015", 'TUP*2014', 'CSH*2014', 'TUP*2015', 'CSH*2015']
+if TGROUP_FE: Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015', 'UPG','CSH']
+else:         Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015']
 
 
-#$\approx$ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+#$\approx$ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
 Vals=Vals.loc[2014:2015]
 regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
 
 results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
 
-CTL = Vals["TUP"]+Vals["CSH"] ==0
+CTL = Vals["UPG"]+Vals["CSH"] ==0
 CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
 CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
 diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
 for var in Outcomes:
-    ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+    ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-    diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+    diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-    diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+    diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
 
 results = results.append(diff)
@@ -3778,7 +3773,7 @@ import numpy as np
 import pandas as pd
 import sys
 sys.path.append("../../data")
-from TUP import full_data, regressions, asset_vars, reg_table, df_to_orgtbl
+from UPG import full_data, regressions, asset_vars, reg_table, df_to_orgtbl
 
 D = full_data(balance=[])
 D["cons"] = 1.
@@ -3794,27 +3789,27 @@ many_zeros = [item for item in Vals if Vals[item].notnull().sum()<too_many_zeros
 for df in (Nonzero, Count, Vals): df.drop(many_zeros,1, inplace=True)
 
 #~ Merge in Control Vars
-controls = ["cons","TUP","UCT"]
+controls = ["cons","UPG","UCT"]
 Nonzero  = Nonzero.join(D[controls],how="left")
 Count    =   Count.join(D[controls],how="left")
 Vals     =    Vals.join(D[controls],how="left")
 
 Items = [item[:-2] for item in Vals if item.endswith("_e")]
-CTL = Vals[controls].sum(axis=1)==1 #~ i.e. only constant ==1, TUP & UCT ==0
+CTL = Vals[controls].sum(axis=1)==1 #~ i.e. only constant ==1, UPG & UCT ==0
 Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 Count_ctl_mean =   Count.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 Vals_ctl_mean  =    Vals.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
 
-ZeroTable       = reg_table(regressions(Nonzero,"_e", outcomes=Items, controls = ["cons",'UCT','TUP'], Baseline="_b"), orgtbl=True, Transpose=True)
-Count, Count_se = reg_table(regressions(Count,"_e",   outcomes=Items, controls = ["cons",'UCT','TUP'], Baseline="_b"), resultdf=True, Transpose=True)
-Vals, Vals_se   = reg_table(regressions(Vals,"_e",    outcomes=Items, controls = ["cons",'UCT','TUP'], Baseline="_b"), resultdf=True, Transpose=True)
+ZeroTable       = reg_table(regressions(Nonzero,"_e", outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), orgtbl=True, Transpose=True)
+Count, Count_se = reg_table(regressions(Count,"_e",   outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), resultdf=True, Transpose=True)
+Vals, Vals_se   = reg_table(regressions(Vals,"_e",    outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), resultdf=True, Transpose=True)
 
 #~ Make full table of Standard errors-- MAKE SURE YOU HAVE THE SUFFIXES RIGHT.
-SE = Count_se[["TUP","UCT"]].join(Vals_se[["TUP","UCT"]], rsuffix=" (SSP)", lsuffix=" (# own)")
+SE = Count_se[["UPG","UCT"]].join(Vals_se[["UPG","UCT"]], rsuffix=" (SSP)", lsuffix=" (# own)")
 
 #~ Make full table of point estimates and control-group means
-FullTable = pd.DataFrame({"# own (CTL)":Count_ctl_mean, "Value (CTL)":Vals_ctl_mean}).join(Count[["TUP","UCT"]])
-FullTable = FullTable.join(Vals[["TUP","UCT","N"]], rsuffix=" (SSP)", lsuffix=" (# own)")
+FullTable = pd.DataFrame({"# own (CTL)":Count_ctl_mean, "Value (CTL)":Vals_ctl_mean}).join(Count[["UPG","UCT"]])
+FullTable = FullTable.join(Vals[["UPG","UCT","N"]], rsuffix=" (SSP)", lsuffix=" (# own)")
 FullTable = df_to_orgtbl(FullTable, sedf=SE)
 AllTables = FullTable+"\n\n"+ZeroTable
 return AllTables
@@ -3829,7 +3824,7 @@ import pandas as pd
 import statsmodels.api as sm
 import sys
 sys.path.append("../../data")
-from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
 
 def topcode(var, Nstd=3, drop=False):
     if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
@@ -3869,9 +3864,9 @@ Sav = pd.concat(by_year).reset_index().set_index(["Year", "HH"], drop=False)
 
 Sav = Sav.join(pd.get_dummies(Sav["Year"]).rename(columns=lambda col: str(int(col))), how="left")
 Sav = Sav.drop(["HH","Year"],1)
-Sav = Sav.join(D[["TUP","CSH"]])
+Sav = Sav.join(D[["UPG","CSH"]])
 
-for group in ("TUP", "CSH"): #~ Make Treatment-by-year interactions
+for group in ("UPG", "CSH"): #~ Make Treatment-by-year interactions
     for year in ("2013", "2014", "2015"):
         Sav["{}*{}".format(group,year)] = Sav[group]*Sav[year]
 
@@ -3900,7 +3895,7 @@ many_null2 =[item for item in Savings if Savings[item].count()<too_many_null]
 Sav = Sav.drop(many_null,1).copy()
 Savings = Savings.drop(many_null,1).copy()
 
-Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
 
 Sav = Sav.loc["2014":"2015"]
 Savings = Savings.loc["2014":"2015"]
@@ -3913,8 +3908,8 @@ Sav_results, Sav_SE  = reg_table(Sav_regs,  resultdf=True,table_info=["N","F-sta
 Zer_results, Zer_SE  = reg_table(Zer_regs,  resultdf=True,table_info=["N","F-stat"])
 Amt_results, Amt_SE  = reg_table(Amt_regs,  resultdf=True,table_info=["N","F-stat"])
 
-CTL  = Sav["TUP"]+Sav["CSH"] ==0
-CTL2 = Savings["TUP"]+Savings["CSH"] ==0
+CTL  = Sav["UPG"]+Sav["CSH"] ==0
+CTL2 = Savings["UPG"]+Savings["CSH"] ==0
 #~ Get control group means and standard deviations
 Sav_CTLmean = {var: Sav[CTL].loc["2015",var].mean() for var in Outcomes}
 Zer_CTLmean = {var: Nonzero[CTL].loc["2015",var].mean() for var in Outcomes}
@@ -3930,34 +3925,34 @@ Amt_diff, Amt_diff_se = pd.DataFrame(Amt_CTLmean,index=["CTL mean"]), pd.DataFra
 
 for var in Outcomes:
     #~ Savings regressions first
-    ttest1= Sav_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Sav_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+    ttest1= Sav_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Sav_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-    Sav_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Sav_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+    Sav_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Sav_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-    Sav_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Sav_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+    Sav_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Sav_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
     #~ Nonzero regressions second
-    ttest1= Zer_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Zer_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+    ttest1= Zer_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Zer_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-    Zer_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Zer_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+    Zer_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Zer_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-    Zer_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Zer_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+    Zer_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Zer_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
     #~ Savings regressions third
-    ttest1= Amt_regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Amt_regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+    ttest1= Amt_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Amt_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-    Amt_diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Amt_diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+    Amt_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Amt_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-    Amt_diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Amt_diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+    Amt_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Amt_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
 Save_results = Sav_results.append(Sav_diff)
 Zero_results = Zer_results.append(Zer_diff)
@@ -3997,7 +3992,7 @@ import statsmodels.api as sm
 from matplotlib import pyplot as plt
 import sys
 sys.path.append("../../data")
-from TUP import full_data, regressions, reg_table, df_to_orgtbl
+from UPG import full_data, regressions, reg_table, df_to_orgtbl
 """
 Note that topcoding has a large effect on the distribution here, and we see only a small (presumably non-random) portion of actual income for each household.
 """
@@ -4043,20 +4038,20 @@ A["income_livestock_year"] = A["livestock_size"]*A["price"]
 Lyear = A.groupby("HH")["income_livestock_year"].sum()
 
 Outcomes = ["Total", "Non-Farm", "Farm",  "Livestock"]
-Controls = ["cons", "TUP","CSH"]
+Controls = ["cons", "UPG","CSH"]
 Vals = pd.DataFrame({"Non-Farm": Income_12m, "Farm":Ayear, "Livestock":Lyear})
 Vals = Vals.apply(topcode)
 
 Vals["Total"] = Vals.sum(axis=1)
 Vals["cons"] = 1.
 
-Vals = Vals.join(D[["TUP","CSH"]],how="left")
-Vals["CTL"] = (Vals["TUP"]+Vals["CSH"] ==0).apply(int)
+Vals = Vals.join(D[["UPG","CSH"]],how="left")
+Vals["CTL"] = (Vals["UPG"]+Vals["CSH"] ==0).apply(int)
 
 #~ Make graph of distribution
 stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
-Vals["Group"] = stringify("TUP")+stringify("CSH")+stringify("CTL")
-Vals.dropna(subset=[["Total","TUP","CSH","CTL"]]).groupby("Group")["Total"].plot(kind="kde")
+Vals["Group"] = stringify("UPG")+stringify("CSH")+stringify("CTL")
+Vals.dropna(subset=[["Total","UPG","CSH","CTL"]]).groupby("Group")["Total"].plot(kind="kde")
 plt.title("Total Income Distribution by Group")
 plt.savefig("../figures/IncomeDistribution.png")
 plt.clf()
@@ -4080,10 +4075,10 @@ CTLsd = {var: Vals.query("CTL==1").std() for var in Outcomes}
 diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
 for var in Outcomes:
-    ttest1= regs[var].t_test("TUP - CSH = 0").summary_frame()
+    ttest1= regs[var].t_test("UPG - CSH = 0").summary_frame()
 
-    diff.loc[   r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    diff_se.loc[r"$\beta^{TUP}-\beta^{CSH}$", var] = ttest1["std err"][0]
+    diff.loc[   r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    diff_se.loc[r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
 results = results.append(diff)
 SE = SE.append(diff_se)
@@ -4103,7 +4098,7 @@ import pandas as pd
 import statsmodels.api as sm
 import sys
 sys.path.append("../../data")
-from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
 
 # Top-Code or censor outliers?
 def topcode(var, Nstd=3, drop=False):
@@ -4112,7 +4107,7 @@ def topcode(var, Nstd=3, drop=False):
     return var
 
 #~ Read in data
-D = full_data("../../data/TUP_full.dta", balance=[])
+D = full_data("../../data/UPG_full.dta", balance=[])
 D = D[D.merge_midline != 1]
 C = D.filter(like="conflict").rename(columns = lambda x: x[:-2]) #~ Set up empty DataFrame to fill
 
@@ -4132,18 +4127,18 @@ C = C.drop([var for var in C if var.startswith("conflict_")], 1)
 Outcomes = ["ProtectLives", "Worried", "Affected", "Migrated", "NoMeans", "NoInvest"]
 
 #~ Bring in Treatment variables
-C["TUP"] = D["TUP"]
+C["UPG"] = D["UPG"]
 C["cons"] = 1.
 C = C.applymap(lambda x: int(x) if not np.isnan(x) else x)
-Controls = ["cons", "TUP"] #~, "Bsln_NaN"]
+Controls = ["cons", "UPG"] #~, "Bsln_NaN"]
 
 #~ Plot
-byT=C.groupby("TUP")
+byT=C.groupby("UPG")
 Cbar=byT.mean().drop(["Bsln_NaN",'cons'],1)
 Cstd=byT.std().drop(["Bsln_NaN",'cons'],1)
 Cn=byT.count().drop(["Bsln_NaN",'cons'],1)
 for df in (Cbar,Cstd,Cn): 
-        df.index=["CTL","TUP"]
+        df.index=["CTL","UPG"]
         df.index.name="Group"
 Cse=Cstd/np.sqrt(Cn)
 Cbar.T.plot(kind="bar",yerr=Cse.T)
@@ -4157,8 +4152,8 @@ C_regs = regressions(C, outcomes=Outcomes, controls=Controls, Baseline=False, ba
 C_results, C_SE  = reg_table(C_regs,  resultdf=True,table_info=["N","F-stat"])
 
 #~ Get control group means and standard deviations and add to regression table
-CTLmean = {var: C.query("TUP==0")[var].mean() for var in Outcomes}
-CTLsdv  = {var: C.query("TUP==0")[var].std()  for var in Outcomes}
+CTLmean = {var: C.query("UPG==0")[var].mean() for var in Outcomes}
+CTLsdv  = {var: C.query("UPG==0")[var].std()  for var in Outcomes}
 CTLmean, CTLsdv = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsdv,index=["CTL mean"])
 C_results = C_results.append(CTLmean)
 C_SE      = C_SE.append(CTLsdv)
@@ -4180,7 +4175,7 @@ return Table
  import sys
  DATADIR = "../../data/"
  sys.path.append(DATADIR)
- from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
  D = full_data(DIR = DATADIR,balance=[])
 
  Decide14 = D.filter(regex="^decide_.*_m").rename(columns=lambda x: x[:-2].split("_")[-1])#~.applymap(recode)
@@ -4214,34 +4209,34 @@ return Table
     
  Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
  Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
- Vals = Vals.join(D[["TUP","CSH"]])
+ Vals = Vals.join(D[["UPG","CSH"]])
 
- for group in ("TUP", "CSH"):
+ for group in ("UPG", "CSH"):
      for year in ("2013", "2014", "2015"):
          Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
 
- Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+ Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
 
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
  Vals=Vals.loc[2014:2015]
  regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
 
  results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
 
- CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTL = Vals["UPG"]+Vals["CSH"] ==0
  CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
  CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
  diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
  for var in Outcomes:
-     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
 
  results = results.append(diff)
@@ -4258,7 +4253,7 @@ return Table
  import sys
  DATADIR = "../../data/"
  sys.path.append(DATADIR)
- from TUP import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
  D = full_data(DIR = DATADIR,balance=[])
 
  autonomy_codes = {'go_NGO',
@@ -4321,34 +4316,34 @@ return Table
     
  Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
  Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
- Vals = Vals.join(D[["TUP","CSH"]])
+ Vals = Vals.join(D[["UPG","CSH"]])
 
- for group in ("TUP", "CSH"):
+ for group in ("UPG", "CSH"):
      for year in ("2013", "2014", "2015"):
          Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
 
- Controls = ['2014', '2015', 'TUP*2014', 'TUP*2015', 'CSH*2014', 'CSH*2015']
+ Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
 
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both TUP*2014 and TUP*2015
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
  Vals=Vals.loc[2014:2015]
  regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
 
  results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
 
- CTL = Vals["TUP"]+Vals["CSH"] ==0
+ CTL = Vals["UPG"]+Vals["CSH"] ==0
  CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
  CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
  diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
 
  for var in Outcomes:
-     ttest1= regs[var].t_test("TUP*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("TUP*2015 - CSH*2015 = 0").summary_frame()
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
 
-     diff.loc[   r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
 
-     diff.loc[   r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{TUP}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
 
 
  results = results.append(diff)
@@ -4364,9 +4359,9 @@ return Table
 """
 This code does not yet work in this file. Come back to it...
 """
-  df = TUP.process_data(C, HH, T, year = year) #~ Process_data() builds consumption data if not given as an argument
+  df = UPG.process_data(C, HH, T, year = year) #~ Process_data() builds consumption data if not given as an argument
   df['Constant']=1
-  df["CTL"] = 1-df["TUP"] #~ Code the cash group as controls since they're not in the midline analysis
+  df["CTL"] = 1-df["UPG"] #~ Code the cash group as controls since they're not in the midline analysis
 
   explist=[s[2:-2] for s in df.columns[[s.startswith('c_') and s.endswith(year[1]) for s in df.columns]]]
   df = df.rename(columns= lambda x: x[:-2] if x.endswith(year[1]) else x)
@@ -4420,18 +4415,18 @@ This code does not yet work in this file. Come back to it...
   e.rename(columns={0:'Resid'},inplace=True)
   e.index.names=['HH','Good']
 
-  testdf=pd.merge(df[['TUP','CTL']].reset_index(),e.reset_index(),how='outer',on=['HH'])
+  testdf=pd.merge(df[['UPG','CTL']].reset_index(),e.reset_index(),how='outer',on=['HH'])
   testdf.set_index(['HH','Good'],inplace=True)
 
-  TUP=testdf['TUP'].mul(testdf['Resid']).dropna().unstack()
+  UPG=testdf['UPG'].mul(testdf['Resid']).dropna().unstack()
   CTL=testdf['CTL'].mul(testdf['Resid']).dropna().unstack()
 
   e=(e-e.mean()).unstack()
 
   # Test of significant differences between treatment and control:
   # Weighting matrix:
-  A=np.matrix((TUP-CTL).cov().as_matrix()).I
-  g=np.matrix((TUP-CTL).mean())
+  A=np.matrix((UPG-CTL).cov().as_matrix()).I
+  g=np.matrix((UPG-CTL).mean())
   J=e.shape[0]*g*A*g.T # Chi2 statistic
 
   p=1-chi2.cdf(J,e.shape[1])
@@ -4440,10 +4435,10 @@ This code does not yet work in this file. Come back to it...
 
   N=pd.Series([d.shape[0]-1 for d in bothdf],index=[d.index.levels[1][0] for d in bothdf])
 
-  resultdf=pd.DataFrame({'TUP':TUP.mean(),'CTL':CTL.mean(),'$N$':N})
-  sedf=pd.DataFrame({'TUP':TUP.std()/np.sqrt(resultdf['$N$']),'CTL':CTL.std()/np.sqrt(resultdf['$N$'])})
-  resultdf['Diff.']=resultdf['TUP']-resultdf['CTL']
-  sedf['Diff.']=np.sqrt((sedf['TUP']**2) + (sedf['CTL']**2))
+  resultdf=pd.DataFrame({'UPG':UPG.mean(),'CTL':CTL.mean(),'$N$':N})
+  sedf=pd.DataFrame({'UPG':UPG.std()/np.sqrt(resultdf['$N$']),'CTL':CTL.std()/np.sqrt(resultdf['$N$'])})
+  resultdf['Diff.']=resultdf['UPG']-resultdf['CTL']
+  sedf['Diff.']=np.sqrt((sedf['UPG']**2) + (sedf['CTL']**2))
 
   # Use svd (with missing data) to construct beta & log lambda
 
