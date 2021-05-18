@@ -68,3 +68,40 @@ savings_other_b  0.001666
 
 [[file:principal_components.png]]
   
+
+* Application of eligiblity criteria
+  There are supposed to be eight criteria.  A household is *not*
+  eligible if any of the following hold:
+   1. A household member has a salaried job.
+
+#+begin_src python
+import pandas as pd
+
+census = pd.read_csv('../TUP-data/csv/Census_database.csv')
+
+census['Eligible'] = census.salaried != 'Yes'
+print('Ineligible because of salaried occupation: %g' % (1-census['Eligible'].mean(),))
+
+census['Eligible'] =  census['Eligible'] & (census.NGO != 'Yes')
+print('Ineligible because of other NGO: %g' % (1-census['Eligible'].mean(),))
+
+# Inclusion criteria; need at least 3
+criteria = (census.day_labor == 'Yes') + 0
+criteria = criteria + (census.child_total>=2)
+criteria = criteria + (census.childlabor > 0) + 0
+criteria = criteria + (census.houses <= 3) + 0
+criteria = criteria + ((census.highestedu == ' primary') | (census.highestedu == 'bellow primary')) + 0
+
+census['Eligible'] =  census['Eligible'] & (criteria>=3)
+print('Ineligible because not enough criteria satisfied: %g' % (1-census['Eligible'].mean(),))
+
+census['Eligible'] =  census['Eligible'] & (census.cultivable_land=='Yes')
+print('Ineligible because of no access to land: %g' % (1-census['Eligible'].mean(),))
+
+#+end_src
+
+#+results:
+: Ineligible because of salaried occupation: 0.240031
+: Ineligible because of other NGO: 0.269742
+: Ineligible because not enough criteria satisfied: 0.57545
+: Ineligible because of no access to land: 0.643471
