@@ -79,12 +79,6 @@ import pandas as pd
 
 census = pd.read_csv('../TUP-data/csv/Census_database.csv')
 
-census['Eligible'] = census.salaried != 'Yes'
-print('Ineligible because of salaried occupation: %g' % (1-census['Eligible'].mean(),))
-
-census['Eligible'] =  census['Eligible'] & (census.NGO != 'Yes')
-print('Ineligible because of other NGO: %g' % (1-census['Eligible'].mean(),))
-
 # Inclusion criteria; need at least 3
 criteria = (census.day_labor == 'Yes') + 0
 criteria = criteria + (census.child_total>=2)
@@ -92,16 +86,62 @@ criteria = criteria + (census.childlabor > 0) + 0
 criteria = criteria + (census.houses <= 3) + 0
 criteria = criteria + ((census.highestedu == ' primary') | (census.highestedu == 'bellow primary')) + 0
 
-census['Eligible'] =  census['Eligible'] & (criteria>=3)
+census['Eligible'] =  (criteria>=3)
 print('Ineligible because not enough criteria satisfied: %g' % (1-census['Eligible'].mean(),))
 
-census['Eligible'] =  census['Eligible'] & (census.cultivable_land=='Yes')
+census['Eligible'] =  census['Eligible'] & ((census.how_poor != 'well off') | (census.how_poor != 'rich'))
+print('Ineligible because subjectively assessed non-poor: %g' % (1-census['Eligible'].mean(),))
+
+census['Eligible'] =  census['Eligible'] & (census.salaried != 'Yes')
+print('Ineligible because of salaried occupation: %g' % (1-census['Eligible'].mean(),))
+
+census['Eligible'] =  census['Eligible'] & (census.NGO != 'Yes')
+print('Ineligible because of other NGO: %g' % (1-census['Eligible'].mean(),))
+
+census['Eligible'] =  census['Eligible'] & (census.homestead_land=='Yes')
 print('Ineligible because of no access to land: %g' % (1-census['Eligible'].mean(),))
 
 #+end_src
 
 #+results:
-: Ineligible because of salaried occupation: 0.240031
-: Ineligible because of other NGO: 0.269742
-: Ineligible because not enough criteria satisfied: 0.57545
-: Ineligible because of no access to land: 0.643471
+: Ineligible because not enough criteria satisfied: 0.502737
+: Ineligible because subjectively assessed non-poor: 0.502737
+: Ineligible because of salaried occupation: 0.557467
+: Ineligible because of other NGO: 0.57545
+: Ineligible because of no access to land: 0.589523
+
+
+* Munshi's March 2021 notes
+  1. Do we need to spend so much discussing balance and
+     attrition. It's until Table 8 that we start discussing
+     findings. It's true that we have a somewhat unusual situation of
+     having a few HHs missing at baseline but found later. But I feel
+     we can just keep the explanations in the text, and just show one
+     balance table in Annex. Similarly for attrition, we can show one
+     table for just attrition rates by arms and F-test for
+     differential attritions (instead of the long tables). Hopefully,
+     the second one is also not significant and we can do without
+     having to do IPW etc.
+
+  2. I think we need to make a few decisions about the outcomes of monetary values. 
+     a. I feel looking at the sub-sample conditional on having
+        something (asset, savings) is always going to be marky. Could
+        we not just put zero and include them all in regressions?
+     b. We currently have log for savings etc (Table 10), but not for
+        asset, income and expenditure. Could we do uniformly? I don't
+        have a strong preference for log/no log (and would rely on
+        your opinion). If not log, do we need to winsorize for
+        outliers?
+     c. I like the flow of outcome indicators - asset,
+        savings/transfer, income, expenditure. I was wondering if we
+        could also be consistent in showing dummies and then
+        values. Currently we have it for savings stuffs (Table 9 and
+        10), but could do the same for assets and income?
+
+     d. I was wondering if we can just make a food insecurity index out of the indicators in table 13, and add it to the expenditures table?
+
+  3. A few minor things for presenting the tables:
+    - I wasn't sure if the control means are for baseline or overall? Need to specify
+    - perhaps we can drop the baseline and baseline missings from the table. I don't think they tell us anything as such, and we can just menton in footnote that we controlled for them. 
+    - should we try to deflate the values to 2013 price? It might be tricky given the massive official and market exchange rate differences, If we don't, we can mention hyperinflation and exchange rate complexity as reasons. In that case, we can also drop the year dummies perhaps?
+
