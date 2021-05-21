@@ -3,9 +3,9 @@
 #+AUTHOR: Reajul Chowdhury, Elliott Collins, Ethan Ligon, Munshi Sulaiman
 #+DATE: \today
 #+BIBLIOGRAPHY: main chicago
-#+OPTIONS: texht:t toc:nil num:nil ':t inline:nil todo:nil
+#+OPTIONS: texht:t toc:nil ':t inline:nil todo:nil
 #+OPTIONS: title:nil  author:nil
-#+LATEX_CLASS_OPTIONS: [12pt,letterpaper,titlepage]
+#+LATEX_CLASS_OPTIONS: [12pt,letterpaper]
 #+LATEX_HEADER: \usepackage{amsaddr}
 #+LATEX_HEADER:       \newcommand{\Eq}[1]{(\ref{eq:#1})}
 #+LaTeX_HEADER:       \usepackage[T1]{fontenc}
@@ -21,7 +21,6 @@
 * Title Page                                                         :ignore:
 #+BEGIN_export latex
 \begin{titlepage}
-\thispagestyle{empty}
 \title[Cash vs. Asset Transfers]{Comparing Cash and Asset Transfers to Low-Income Households in South Sudan}
 
 \date{\today}
@@ -68,6 +67,7 @@ offers.
 \keywords{South Sudan, Unconditional cash transfers, Ultra-poor graduation model}
 
 \maketitle
+\thispagestyle{empty}
 \end{titlepage}
 #+END_export
 
@@ -97,19 +97,13 @@ citep:banerjee-etal16,banerjee-etal20 and up to 14 years in Bangladesh
 citep:balboni-etal20.  cite:haushofer-shapiro18 also find the
 short-term (9 months after program start) positive impacts of UCT on
 household assets and consumption sustained in their 3-year follow-up
-survey (although their estimates are reliant on the choice of control
-group).[fn::More explicity, they find large positive effects by
-comparing treatment households with the "control" group within
-treatment villages (i.e. treatment vs. spillover samples). However,
-most of the effects dissipate when using control households from
-control village (i.e. treatment vs. "pure control"). See this blog at
-[[https://blogs.worldbank.org/impactevaluations/givedirectly-three-year-impacts-explained]] for a discussion of this choice of control group.] In their long-term
-follow-up survey, cite:blattman-etal20 find that the impacts of cash
-transfers dissipated in Uganda after 9 years. While comparing results
-across evaluations have various limitations, a few studies have
-emabarked on comparing the two models in the same setting
-citep:sedlmayr-etal20 or comparing asset versus in-kind transfers
-(e.g. cite:fafchamps-etal14).
+survey, although their estimates depend on the choice of control
+group citep:ozler18.  In their long-term follow-up survey,
+cite:blattman-etal20 find that the impacts of cash transfers
+dissipated in Uganda after 9 years. While comparing results across
+evaluations have various limitations, a few studies have emabarked on
+comparing the two models in the same setting citep:sedlmayr-etal20 or
+comparing asset versus in-kind transfers (e.g. cite:fafchamps-etal14).
 
 While the UCT and the UPG models are both direct capital transfer
 interventions, they are very different in their approaches. The UPG
@@ -123,7 +117,8 @@ while other components are related to either protecting their
 enterprises or increasing income from them. In contrast to the UPG
 model, the UCT programs follow a straightforward rationale---putting
 the development and social protection resources directly in the hands
-of poor people and letting them use these resources as they see best. The natural question that arises is whether (and how) these
+of poor people and letting them use these resources as they see
+best. The natural question that arises is whether (and how) these
 additional features and constraints in the UPG framework change how
 households use their capital transfers. This study provides an
 experimental evaluation of the two approaches in the same setting in
@@ -144,14 +139,13 @@ attempting to directly compare these two approaches of transfer
 programs in the same population.  Second, this evaluation is conducted
 in a conflict-affected context where cash transfers are a common tool
 in humanitarian programming despite limited evidence of their impacts.
-With this introduction, Section [[The Program]] describes the experiment
-and the interventions. Section [[The Data]] describes the data and our
-empirical strategy. Results are discussed in Section [[Results]], and we
-conclude in Section [[Conclusion]].
+With this introduction, Section [[sec:program]] describes the experiment
+and the interventions. Section [[sec:data]] describes the data, Section [[sec:strategy]] our
+empirical strategy, and results are discussed in Section [[sec:results]]. 
 
 
 * The Program
-
+  <<sec:program>>
 The UPG model and the UCT program studied in this paper come from a
 randomized field experiment that was implemented in collaboration with
 BRAC South Sudan. The project was supported by the Global Poverty
@@ -163,39 +157,21 @@ Equatoria region.
 BRAC began their project implementation in April 2013 by conducting a
 census of all households having at least one adult women within the
 operational area of BRAC's office in Yei. The census interview
-included questions to assess their eligibility to be beneficiaries
-based on three exclusion and five inclusion criteria. Households were
-excluded if they: a) had any member with a regular salary job; b) were
-participating in any other NGO's livelihoods program; or c) had no
-access to cultivable land.[fn::The third exclusion condition was
-considered necessary as some of the enterprises planned under the UPG
-model needed access to land.  Though this the third criterion goes
-against targeting ultra-poor housheolds, it was needed due to market
-analysis by BRAC revealing that agriculture was one of the viable
-enterprises.  TODO: Can we add a sentence on how binding the criteria
-was?]  If not excluded on any of these grounds, households were then
-considered eligible if they met at least three of the following
-inclusion conditions: a) the household head was working as a day
-laborer; b) the household had two or more children; c) at least one
-child in the household was working; d) the household had fewer than
-three rooms; and e) the main woman in the household had not completed
-secondary school.  Households which seemed to be eligible based on
-their census responses had eligibility verified through group
-discussions with the local leaders and community
-representatives.[fn::While this targeting method is different from how
-the targeting is done in other UPG programmes, Chowdhury and Morel
-found that TODO]
+included questions to assess their eligibility to be beneficiaries; a
+program goal was to enroll only "ultra-poor" households who were
+unlikely to migrate.  Details of the eligibility criteria are given in
+cite:morel-chowdhury15.
 
-The census was completed in April 2013 and covered 1279 households, of
-which 755 were found to be eligible.  We then conducted a baseline
-survey of these eligible households, successfully interviewing 649.
-Among those who were interviewed at the baseline, 250 were randomly
-assigned to participate in the UPG program, 125 were randomly assigned
-to a UCT group, and the remaining 274 households were assigned to the
-control group.  Randomization was done stratifying on four binary
-household characteristics (viz. below median number of income earners,
-below median of assets owned, whether involved in agriculture and
-whether has a business). The study was registered on RIDIE (study ID
+The census covered 1279 households, of which 755 were found to be
+eligible.  We then conducted a baseline survey of these eligible
+households, successfully interviewing 649.  Among those who were
+interviewed at the baseline, 250 were randomly assigned to participate
+in the UPG program, 125 were randomly assigned to a UCT group, and the
+remaining 274 households were assigned to the control group.
+Randomization was done stratifying on four binary household
+characteristics (viz. below median number of income earners, below
+median of assets owned, whether involved in agriculture and whether
+has a business). The study was registered on RIDIE (study ID
 #RIDIE-STUDY-ID-5450e3f81fbc6).
 
 
@@ -263,7 +239,10 @@ accounts citep:dupas-robinson13 show that the disbursal method might
 affect the propensity to save a cash transfer, the results of our
 experiment may not be directly comparable to other evaluations of UCT.
 
+
+
 * The Data
+  <<sec:data>>
 ** Timeline                                                          :ignore:
 We have four principal sources of data.  First, as discussed above, we
 conducted a census of households with women in the area around BRAC's
@@ -333,13 +312,14 @@ in a sort of adjusted ANCOVA specification of the sort discussed by
 cite:mckenzie12.
 
 * Empirical Strategy
-
+  <<sec:strategy>>
 We estimate a single model using interactions between time effects and
 group assignment, as well as baseline values of the outcome variable
 where available; this is 
-\begin{equation*}
-Y_{it} =\alpha_{t}+\beta_{t,UCT}I_{t}*UCT_{i}+\beta_{t,UPG}I_{t}*UPG_{i}+\gamma Y_{i,2013}(1-M_{i,2013}) + \delta M_{i,2013} +\epsilon_{it},
-\end{equation*}
+\begin{equation}
+\label{eq:estimating}
+Y_{it} =\alpha_{t}+\beta^t_{UCT}I_{t}*UCT_{i}+\beta^t_{UPG}I_{t}*UPG_{i}+\gamma Y_{i,2013}(1-M_{i,2013}) + \delta M_{i,2013} +\epsilon_{it},
+\end{equation}
 for $t\in\{2014,2015\}$, with $i$ indexing households.  The
 $\alpha_{t}$ are time fixed effects; $I_{t}$ is an indicator if the
 year is $t$; and $Y_{it}$ is an outcome of interest for household $i$ in
@@ -359,43 +339,49 @@ with $I_{2014}$ acts as a placebo; there is no /ex ante/ reason to
 expect that households in the UCT group were different from the rest
 of the control group at that point.  Given the slight difference in
 timing, we report a \(t\)-test of the hypothesis
-\(\beta_{\mbox{UPG},t}=\beta_{\mbox{UCT},2015}\) for both of \(t \in
+\(\beta^t_{UPG}=\beta^{2015}_{UCT}\) for both of \(t \in
 \{2014,2015\}\).
 
 Since the comparison between (UPG,2014) and (UCT,2015) allows for
 something less than a year of exposure to the respective treatments we
-regard \(\beta_{\mbox{UPG},2014}=\beta_{\mbox{UCT},2015}\) as the
+regard \(\beta^{2014}_{UPG}=\beta^{2015}_{UCT}\) as the
 most interesting hypothesis, but since these points of comparison
 aren't contemporaneous we can't rule out the possibility that
 aggregate shocks might have interacted somehow with the two programs
 differently.  Accordingly, we also report
-\(\beta_{\mbox{UPG},2015}-\beta_{\mbox{UCT},2015}\), which has the
+\(\beta^{2015}_{UPG}-\beta^{2015}_{UCT}\), which has the
 interpretation as being the difference between the average effect of
 having been enrolled in either program from its inception until 2015.
  
 * Results
+  <<sec:results>>
 ** Assets
-   
-We first turn our attention to effects of the different programs on
-asset holdings.  Since UPG households were directly /given/ a variety
-of different assets, for this program this can be regarded as a rather
-direct test---eight months later, do UPG recipients still own these
-assets, or have they sold (or eaten) them? 
 
-*** Total Asset Holdings
-**** Discussion                                                      :ignore:
-The cash group does not appear to have seen a significant increase in
-the value of assets measured.  This contrasts sharply with the UPG
-group.  The UPG group gains significantly more asset wealth than the
-cash or control groups in both 2014 and 2015, 18 months after receipt
-of transfers. They have nearly double the total asset value of control
-group in 2014 (midline), and roughly three-quarters more at endline.
-These patterns reproduce themselves for both productive[fn:: So-called
-"Productive" assets include anything that could plausibly be used in
-productive activity.  Included in this list: small and large
-livestock, farm equipment, mobiles, carts, sewing equipment, sheds,
-and shop premises.] assets (341 SSP more than the control group at
-endline, and 450 SSP at midline). 
+We consider the effects of different treatments on three broad classes
+of assets.    The first is /physical/ assets, including livestock,
+productive assets, and consumer durables.  The second are measures of
+financial assets and transfers, including savings (both in currency
+and in grain or other food stores) and transfers both into and out of
+the household.  The third is agricultural land, either cultivated or
+owned. 
+
+
+*** Physical Asset Holdings
+We first turn our attention to effects of the different programs on
+the value of physical assets held.  Since UPG households were directly
+/given/ a variety of different assets, for this program this can be
+regarded as a rather direct test---eight months later, do UPG
+recipients still own these assets, or have they sold (or eaten) them?
+
+We aggregate physical assets into three distinct groups.  The first is
+consumer "durables", which include things like televisions, bicycles, electric fans, and
+household furnishings.  The second is 
+"livestock", which includes cows, goats, poultry, and other small
+animals.  Third is "production" assets, which includes not only
+livestock but also other assets plausibly used by the household to
+generate income, such as farm equipment, mobile phones, carts, sewing
+equipment, sheds, and shop premises.  Finally we have "total" assets,
+which includes all of the above.
 
 **** Recreating asset tables with and without treatment group fixed effects :ignore:
 *************** NOTE
@@ -423,16 +409,15 @@ endline, and 450 SSP at midline).
 
  #+name: asset_values
  #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle asset_values.py
-data_assignment  = "../../UPG-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
-data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
-data_endline = "../../TUP-data/Endline/UPG_endline.dta"
+data_assignment  = "../../Report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 
-import statsmodels.api as sm
+import ss_standard
 import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
-from scipy.linalg import block_diag
 
 df_b = pd.read_stata(data_baseline)
 df_m = pd.read_stata(data_midline)
@@ -455,7 +440,7 @@ df = pd.merge(df,
               how='outer', left_index=True, right_index=True)
 
 # Some assets to ignore, either because numbers turned out to be more or less meaningless, 
-# or because they overlap (e.g. nets & ITN nets) (as commented in UPG-data/UPG.py)
+# or because they overlap (e.g. nets & ITN nets) (as commented in TUP-data/TUP.py)
 
 df = df.drop(columns = df.filter(like='house').columns)
 df = df.drop(columns = df.filter(like='homestead').columns)
@@ -480,35 +465,37 @@ for year in (2013, 2014, 2015):
 
 # add top code here if needed
 
-productive_2013 = ['cows', 'smallanimals', 'poultry', 'plough', 'shed', 'shop', 'mobile', 'carts', 'sewing']
+productive_2013 = ['plough', 'shed', 'shop', 'mobile', 'carts', 'sewing']
 livestock_2013 = ['cows', 'smallanimals', 'poultry']
+consdurables_2013 = [ 'radio', 'tv', 'fan', 'chairtables', 'bed', 'bicycle', 'net', 'motorcycle']
+
 
 # not including 'ploughs again' variable
-productive_2014_2015 = ['cows', 'smallanimals', 'chickens', 'ducks', 'plough', 'shed', 'shop', 'pangas', 'axes', 'mobile', 'carts', 'sewing']
+productive_2014_2015 = ['plough', 'shed', 'shop', 'pangas', 'axes', 'mobile', 'carts', 'sewing']
 livestock_2014_2015 = ['cows', 'smallanimals', 'chickens', 'ducks']
+consdurables_2014_2015 = ['radio', 'tv', 'fan', 'chairtables', 'bed', 'bicycle',
+                          'net', 'charcoal', 'stoves', 'potspans', 'motorcycle']
 
 # for 2013
-asset_val[2013]['Productive'] = asset_val[2013][productive_2013].sum(axis=1)
-asset_val[2013]['Livestock'] = asset_val[2013][livestock_2013].sum(axis=1)
-    
-# add year 
 asset_val[2013]['Year'] = '2013'
-
+asset_val[2013]['Production'] = asset_val[2013][productive_2013].sum(axis=1)
+asset_val[2013]['Livestock'] = asset_val[2013][livestock_2013].sum(axis=1)
+asset_val[2013]['Durables'] = asset_val[2013][consdurables_2013].sum(axis=1)
+    
 for year in (2014, 2015):
+    asset_val[year]['Year'] = str(year)
     # 2013 only has poultry, but 2014 and 2015 have chickens and ducks separately
     asset_val[year]['poultry'] = asset_val[year][ ['chickens', 'ducks'] ].sum(axis = 1)
     asset_n[year]['poultry'] = asset_n[year][ ['chickens', 'ducks'] ].sum(axis = 1)
     
-    asset_val[year]['Productive'] = asset_val[year][productive_2014_2015].sum(axis=1)
+    asset_val[year]['Production'] = asset_val[year][productive_2014_2015].sum(axis=1)
     asset_val[year]['Livestock'] = asset_val[year][livestock_2014_2015].sum(axis=1)
-    
-    # add year
-    asset_val[year]['Year'] = str(year)
+    asset_val[year]['Durables'] = asset_val[year][consdurables_2014_2015].sum(axis=1)    
 
-outcomes = ["Total", "Productive", "Livestock"]
+outcomes = ["Total", "Production", "Livestock", "Durables"]
 
 for year in (2013, 2014, 2015): 
-    asset_val[year]['Total'] = asset_val[year].sum(axis=1)
+    asset_val[year]['Total'] = asset_val[year][['Production','Livestock','Durables']].sum(axis=1)
     
     # set up to make year dummies
     asset_val[year]['2013'] = 0
@@ -527,112 +514,89 @@ asset_val[2015]['2015'].replace(to_replace = 0, value = 1, inplace=True)
 # add in group dummies from master_assignment.csv
 df2 = pd.concat((asset_val[2013], asset_val[2014], asset_val[2015]))
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
+df = df.fillna(0)
 
-# make interaction terms
-df.insert(len(df.columns), 'UPG*2013', df['2013']*df['UPG'])
-df.insert(len(df.columns), 'UPG*2014', df['2014']*df['UPG'])
-df.insert(len(df.columns), 'UPG*2015', df['2015']*df['UPG'])
-df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+Results = {}
 
-models_ols_FE = {}
-models_ols_no_FE = {}
-d_FE = {}
-d_no_FE = {}
-baseline_na = True
+Results['Values (SSP)'] = ss_standard.results(df,outcomes,positive=False,logs=False,return_stats=True)
+Results['Positive'] = ss_standard.results(df,outcomes,positive=True,logs=False,return_stats=True)
+Results['Log Values'] = ss_standard.results(df,outcomes,positive=False,logs=True,return_stats=True)
 
-controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015', 'UPG', 'UCT']
-controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
-# from above, outcomes = ["Total", "Productive", "Livestock"]
+other = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
+other.index.names = ['Variable','Outcome']
+other.columns.name = 'Class'
+other = other.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
 
-# remove observations from 2013
-df = df[df['Year'] != '2013']
-df.index.name = 'idno'
-df = df.reset_index().set_index(['idno','Year'])
-
-myX = {}
-myY = {}
-for outcome in outcomes: 
-    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
-    temp_df.rename(columns={outcome+"2013":'Baseline value'},inplace=True)
-    temp_controls = controls
-    
-    if baseline_na==True:
-        
-        # indicator for whether outcome in 2013 is na, and cast it to be an integer
-        temp_df["Baseline missing"] = temp_df["Baseline value"].isnull().apply(int)
-        
-        # code missing values of the baseline variable as 0
-        temp_df["Baseline missing"].fillna(0,inplace=True)
-        
-        temp_controls = temp_controls + ['Baseline missing']
-    
-    temp_controls = temp_controls + ["Baseline value"]
-    temp_df = temp_df.dropna()
-
-    myX[outcome] = temp_df[temp_controls]
-    myY[outcome] = temp_df[outcome]
-
-myY = pd.concat(myY)
-myX = pd.DataFrame(block_diag(*myX.values()),
-                   columns=pd.concat(myX,axis=1).columns,
-                   index=myY.index)
-    
-est = sm.OLS(myY,myX).fit()
-b = est.params
-se = est.bse
-
-b.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])
-se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])    
+print(df_to_orgtbl(other,float_fmt='%6.2f'))
 
 
-b = b.unstack()
-b['UPG*2014 - UCT*2015'] = b['UPG*2014'] - b['UCT*2015']
-b['UPG*2015 - UCT*2015'] = b['UPG*2015'] - b['UCT*2015']
-b = b.T
-
-se = se.unstack()
-se['UPG*2014 - UCT*2015'] = np.sqrt(se['UPG*2014']**2 + se['UCT*2015']**2)
-se['UPG*2015 - UCT*2015'] = np.sqrt(se['UPG*2015']**2 + se['UCT*2015']**2)
-
-se = se.T
-
-print(df_to_orgtbl(b,sedf=se))
+print(ss_standard.table_stacked_by_class(Results))
 
  #+end_src
 
+#+name: tab:asset_control
+#+caption: Statistics for physical assets owned by the control group in 2015, grouped into consumer durables, livestock, production assets, and total.  We measure (i) total value (in SSP) ; (ii) the proportion having positive values; and (iii) the log values, conditional on being positive.
+ | Class        | Outcome    | Control mean (2015) | Standard deviation |  $N$ |
+ |--------------+------------+---------------------+--------------------+------|
+ | Values (SSP) | Durables   |              786.13 |            1098.90 | 1500 |
+ |              | Livestock  |              191.45 |             526.24 | 1500 |
+ |              | Production |              113.12 |             135.68 | 1500 |
+ |              | Total      |             1090.70 |            1444.18 | 1500 |
+ |--------------+------------+---------------------+--------------------+------|
+ | Positive     | Durables   |                0.90 |               0.30 | 1500 |
+ |              | Livestock  |                0.38 |               0.49 | 1500 |
+ |              | Production |                0.86 |               0.35 | 1500 |
+ |              | Total      |                0.90 |               0.29 | 1500 |
+ |--------------+------------+---------------------+--------------------+------|
+ | Log Values   | Durables   |                6.28 |               1.01 | 1274 |
+ |              | Livestock  |                5.43 |               1.38 |  704 |
+ |              | Production |                4.47 |               0.98 | 1176 |
+ |              | Total      |                6.61 |               1.01 | 1281 |
 
- #+name: tab:asset_values
- #+caption: Average treatment effects by group-year on total value (in SSP) of all assets measured and of productive assets measured.
- #+attr_latex: :environment longtable :align lrrr
- | Variables                         | Total       | Productive | Livestock  |
- |-----------------------------------+-------------+------------+------------|
- | CTL mean                          | 1634.104    | 301.364    | 189.439    |
- |                                   | (2406.541)  | (580.913)  | (523.819)  |
- |-----------------------------------+-------------+------------+------------|
- | UPG*2014                          | 1617.966*** | 450.392*** | 377.437*** |
- |                                   | (230.986)   | (61.004)   | (52.762)   |
- | UPG*2015                          | 1298.628*** | 341.678*** | 322.614*** |
- |                                   | (230.986)   | (61.004)   | (52.762)   |
- | UCT*2014                          | 292.498     | 90.656     | 25.270     |
- |                                   | (292.493)   | (77.242)   | (66.798)   |
- | UCT*2015                          | -37.562     | 20.476     | 17.767     |
- |                                   | (292.493)   | (77.242)   | (66.798)   |
- | 2014                              | 1291.392*** | 262.936*** | 134.5***   |
- |                                   | (149.060)   | (39.001)   | (33.588)   |
- | 2015                              | 1540.804*** | 293.132*** | 181.163*** |
- |                                   | (149.060)   | (39.001)   | (33.588)   |
- | Bsln Missing                      | 0.000       | 0.000      | 0.000      |
- |                                   | (0.000)     | (0.000)    | (0.000)    |
- | Bsln 2013                         | 0.042***    | 0.015      | 0.021*     |
- |                                   | (0.014)     | (0.012)    | (0.012)    |
- |-----------------------------------+-------------+------------+------------|
- | \(F\)-stat                        | 15.911      | 15.203     | 16.350     |
- | $N$                               | 1510        | 1510       | 1510       |
- |-----------------------------------+-------------+------------+------------|
- | $\beta_{UPG2014}-\beta_{UCT2015}$ | 1655.528*** | 429.916*** | 359.67***  |
- | $\beta_{UPG2015}-\beta_{UCT2015}$ | 1336.19***  | 321.202*** | 304.847*** |
+
+#+name: tab:asset_values
+#+caption: Estimated treatment effects by group-year on on physical assets,  grouped into consumer durables, livestock, production assets, and total.  We measure (i) total value (in SSP); (ii) the proportion having positive values; and (iii) the log values, conditional on being positive.
+ | Class        | Outcome    | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+ |--------------+------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+ | Values (SSP) | Durables   | \( 53.10\)           | \(-144.28\)          | \(151.62\)^{*}       | \( 97.31\)           | \(295.90\)^{**}                           | \(241.59\)^{*}                            |
+ |              |            | (\(107.51\))         | (\(107.51\))         | (\( 84.97\))         | (\( 84.97\))         | (\(137.04\))                              | (\(137.04\))                              |
+ |              | Livestock  | \( 23.81\)           | \( 15.81\)           | \(378.03\)^{***}     | \(322.68\)^{***}     | \(362.22\)^{***}                          | \(306.87\)^{**}                           |
+ |              |            | (\(107.12\))         | (\(107.12\))         | (\( 84.78\))         | (\( 84.78\))         | (\(136.61\))                              | (\(136.61\))                              |
+ |              | Production | \( 64.43\)           | \(  1.93\)           | \( 72.40\)           | \( 18.40\)           | \( 70.47\)                                | \( 16.47\)                                |
+ |              |            | (\(107.10\))         | (\(107.10\))         | (\( 84.78\))         | (\( 84.78\))         | (\(136.59\))                              | (\(136.59\))                              |
+ |              | Total      | \(148.30\)           | \(-119.57\)          | \(607.12\)^{***}     | \(443.46\)^{***}     | \(726.69\)^{***}                          | \(563.03\)^{***}                          |
+ |              |            | (\(107.24\))         | (\(107.24\))         | (\( 84.83\))         | (\( 84.83\))         | (\(136.73\))                              | (\(136.73\))                              |
+ |--------------+------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+ | Positive     | Durables   | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.19\)^{***}     | \( -0.01\)           | \(  0.24\)^{***}                          | \(  0.05\)                                |
+ |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
+ |              | Livestock  | \(  0.06\)           | \(  0.05\)           | \(  0.47\)^{***}     | \(  0.37\)^{***}     | \(  0.42\)^{***}                          | \(  0.32\)^{***}                          |
+ |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
+ |              | Production | \(  0.13\)^{***}     | \( -0.03\)           | \(  0.21\)^{***}     | \( -0.01\)           | \(  0.24\)^{***}                          | \(  0.02\)                                |
+ |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
+ |              | Total      | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.19\)^{***}     | \(  0.00\)           | \(  0.24\)^{***}                          | \(  0.05\)                                |
+ |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
+ |--------------+------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+ | Log Values   | Durables   | \( -0.08\)           | \( -0.18\)           | \(  0.01\)           | \(  0.03\)           | \(  0.19\)                                | \(  0.21\)                                |
+ |              |            | (\(  0.12\))         | (\(  0.12\))         | (\(  0.10\))         | (\(  0.09\))         | (\(  0.15\))                              | (\(  0.15\))                              |
+ |              | Livestock  | \( -0.16\)           | \(  0.12\)           | \(  0.58\)^{***}     | \(  0.51\)^{***}     | \(  0.46\)^{**}                           | \(  0.39\)^{*}                            |
+ |              |            | (\(  0.20\))         | (\(  0.17\))         | (\(  0.14\))         | (\(  0.12\))         | (\(  0.22\))                              | (\(  0.21\))                              |
+ |              | Production | \(  0.19\)           | \(  0.14\)           | \(  0.26\)^{**}      | \(  0.12\)           | \(  0.11\)                                | \( -0.02\)                                |
+ |              |            | (\(  0.13\))         | (\(  0.12\))         | (\(  0.10\))         | (\(  0.10\))         | (\(  0.16\))                              | (\(  0.15\))                              |
+ |              | Total      | \( -0.06\)           | \( -0.05\)           | \(  0.41\)^{***}     | \(  0.33\)^{***}     | \(  0.47\)^{***}                          | \(  0.39\)^{**}                           |
+ |              |            | (\(  0.12\))         | (\(  0.12\))         | (\(  0.10\))         | (\(  0.09\))         | (\(  0.15\))                              | (\(  0.15\))                              |
+
+
+**** Discussion                                                      :ignore:
+We first consider [[tab:asset_control]], which tells us that the average
+value of all physical assets held by the control group in 2015
+The cash (UCT) group did not have a significant increase in the value
+of assets measured.  This contrasts sharply with the UPG group.  The
+UPG group gains significantly more asset wealth than the cash or
+control groups in both 2014 and 2015, 18 months after receipt of
+transfers. They have nearly double the total asset value of control
+group in 2014 (midline), and roughly three-quarters more at endline.
+These patterns reproduce themselves for both productive assets (341
+SSP more than the control group at endline, and 450 SSP at midline).
 
  The final two rows of Table [[tab:asset_values]] considers the difference
  in the average treatment effect between the UCT and UPG treatments.
@@ -643,7 +607,7 @@ print(df_to_orgtbl(b,sedf=se))
  significantly higher mean UPG asset holdings, in the amount of 1655
  SSP.  The second row instead compares contemporaneous endline asset
  holdings; here we again see significantly higher holdings for the UPG
- group.
+ group
 
 
 *** Savings & Land
@@ -746,15 +710,16 @@ program, or a reversion to the mean.
 
  #+name: savings_tables
  #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle /tmp/foo.py
-data_assignment  = "../../UPG-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
-data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
-data_endline = "../../TUP-data/Endline/UPG_endline.dta"
-
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
+import ss_standard
+
+data_assignment = "../../Report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 
 df_b = pd.read_stata(data_baseline)
 df_m = pd.read_stata(data_midline)
@@ -765,8 +730,6 @@ df_b.set_index('idno', inplace=True)
 df_m.set_index('idno', inplace=True)
 df_e.set_index('idno', inplace=True)
 df_a.set_index('RespID', inplace=True)
-
-# merge baseline and midline based on idno index
 
 #format savings_maize_q_m  savings_maize_val_m 
 #s8b_2c_m and  s8b_2d_m are for other food savings values
@@ -846,19 +809,10 @@ df2 = pd.concat((s2013, s2014, s2015))
 # add group dummies from master_assignment.csv
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
 
-# make interaction variables
-df.insert(len(df.columns), 'UPG*2013', df['2013']*df['UPG'])
-df.insert(len(df.columns), 'UPG*2014', df['2014']*df['UPG'])
-df.insert(len(df.columns), 'UPG*2015', df['2015']*df['UPG'])
-df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+Table = []
+Table.append(ss_standard.results(df,['Savings', 'Food Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer']))
 
-outcomes = ['Savings', 'Food Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer']
-nonzero_df = df.copy()
 
-# Drop zero values, take logs.
-df[outcomes] = np.log(df[outcomes].replace(0,np.nan))
 for outcome in outcomes:
     try:
         df[outcome + '2013'] = np.log(df[outcome+'2013'].replace(0,np.nan))
@@ -1040,17 +994,17 @@ nonzero_final = pd.DataFrame(data=nonzero_d)
 final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG*2014", 3: "  ", 
                       4: "UPG*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: r"$\beta_{UPG2014}-\beta_{UCT2015}$", 21: r"$\beta_{UPG2015}-\beta_{UCT2015}$"}, inplace=True)
+                      12: "2015", 13: "       ", 14: "Baseline missing", 15: "        ",
+                      16: "Baseline values", 17: "         ", 18: "F-stat", 19: "N",
+                      20: r"$\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$", 21: r"$\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$"}, inplace=True)
 nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG*2014", 3: "  ", 
                       4: "UPG*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
                       8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "Bsln NA", 15: "        ",
-                      16: "Bsln2013", 17: "         ", 18: "F-stat", 19: "N",
-                      20: r"$\beta_{UPG2014}-\beta_{UCT2015}$", 21: r"$\beta_{UPG2015}-\beta_{UCT2015}$"}, inplace=True)
+                      12: "2015", 13: "       ", 14: "Baseline missing", 15: "        ",
+                      16: "Baseline values", 17: "         ", 18: "F-stat", 19: "N",
+                      20: r"$\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$", 21: r"$\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$"}, inplace=True)
 
-newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.3f')
+newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.2f')
 print("""#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access""")
 print(newdf_nonzero)
 
@@ -1061,71 +1015,122 @@ print(newdf)
  #+end_src
 
  #+results: savings_tables
+ #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access
+ |                                         | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
+ |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | CTL mean                                | 0.39     | 0.72     | 0.81     | 0.17         | 0.08          | 0.73         |
+ |                                         | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
+ | UPG*2014                                | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
+ |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | UPG*2015                                | 0.183*** | 0.01     | -0.00    | -0.01        | 0.03          | 0.00         |
+ |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | UCT*2014                                | 0.03     | 0.112**  | 0.142*** | 0.08**       | 0.03          | 0.196***     |
+ |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | UCT*2015                                | 0.01     | -0.03    | -0.03    | -0.03        | -0.01         | -0.04        |
+ |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | 2014                                    | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
+ |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
+ | 2015                                    | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
+ |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.02         |
+ | Baseline missing                                 | 0.00     | 0.00     | 0.00     | 0.00         | 0.00          |              |
+ |                                         | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
+ | Baseline values                                | 0.00     | 0.017**  | 0.015**  | 0.00         | 0.0**         |              |
+ |                                         | 0.00     | 0.01     | 0.01     | 0.00         | 0.00          |              |
+ | F-stat                                  | 13.72    | 5.09     | 10.53    | 1.59         | 3.46          | 4.80         |
+ | N                                       | 1500.00  | 1500.00  | 1500.00  | 1500.00      | 1500.00       | 1500.00      |
+ | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
+ | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.176*** | 0.04     | 0.03     | 0.02         | 0.04          | 0.04         |
+
+ #+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
+ |                                         | Savings   | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
+ |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | CTL mean                                | 4.61      | 0.95     | 0.85     |         5.08 | 4.56          | 4.22         |
+ |                                         | (1.23)    | (2.05)   | (1.82)   |       (0.93) | (0.96)        | (0.96)       |
+ | UPG*2014                                | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
+ |                                         | (0.15)    | (0.16)   | (0.15)   |       (0.22) | (0.27)        | (0.09)       |
+ | UPG*2015                                | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
+ |                                         | (0.14)    | (0.16)   | (0.14)   |       (0.22) | (0.31)        | (0.09)       |
+ | UCT*2014                                | 0.19      | 0.23     | 0.30     |         0.27 | -0.57         | -0.05        |
+ |                                         | (0.21)    | (0.21)   | (0.19)   |       (0.26) | (0.36)        | (0.11)       |
+ | UCT*2015                                | 0.513**   | -0.447** | -0.348*  |         0.46 | -0.01         | 0.202*       |
+ |                                         | (0.20)    | (0.20)   | (0.18)   |       (0.30) | (0.45)        | (0.12)       |
+ | 2014                                    | 3.434***  | 0.246**  | 0.332*** |     3.856*** | 3.526***      | 3.626***     |
+ |                                         | (0.24)    | (0.12)   | (0.11)   |       (0.46) | (0.56)        | (0.06)       |
+ | 2015                                    | 4.003***  | 0.96***  | 0.887*** |     4.475*** | 4.525***      | 4.216***     |
+ |                                         | (0.24)    | (0.11)   | (0.10)   |       (0.46) | (0.56)        | 0.06         |
+ | Baseline missing                        | 0.598***  | -0.03    | -0.06    |         0.61 | 0.01          |              |
+ |                                         | (0.23)    | (0.12)   | (0.11)   |       (0.46) | (0.55)        |              |
+ | Baseline values                         | 0.123***  | 0.01     | -0.03    |         0.13 | 0.02          |              |
+ |                                         | 0.04      | 0.08     | 0.06     |         0.09 | 0.12          |              |
+ | F-stat                                  | 20.87     | 4.50     | 2.88     |         3.93 | 3.92          | 20.33        |
+ | N                                       | 671.00    | 1042.00  | 1114.00  |       255.00 | 159.00        | 1073.00      |
+ | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
+ | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
 
 #+LATEX: \begin{landscape}
  #+name: tab:nonzero_savings
- #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access 
+ #+caption: Average treatment effects by group-year on proportion of households reporting any savings or land access 
  #+attr_latex: :environment longtable :align lrrrrrrr
- |                                   | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | CTL mean                          | 0.394    | 0.718    | 0.806    | 0.170        | 0.080         | 0.726        |
- |                                   | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | UPG*2014                          | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
- |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | UPG*2015                          | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
- |                                   | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | UCT*2014                          | 0.030    | 0.112**  | 0.142*** | 0.08**       | 0.034         | 0.196***     |
- |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | UCT*2015                          | 0.006    | -0.026   | -0.031   | -0.026       | -0.006        | -0.038       |
- |                                   | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | 2014                              | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
- |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
- | 2015                              | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
- |                                   | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.023        |
- | Bsln NA                           | 0.000    | 0.000    | 0.000    | 0.000        | 0.000         |              |
- |                                   | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
- | Bsln2013                          | 0.000    | 0.017**  | 0.015**  | 0.000        | 0.0**         |              |
- |                                   | 0.000    | 0.008    | 0.006    | 0.000        | 0.000         |              |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | F-stat                            | 13.720   | 5.086    | 10.529   | 1.594        | 3.460         | 4.797        |
- | N                                 | 1500.000 | 1500.000 | 1500.000 | 1500.000     | 1500.000      | 1500.000     |
- |-----------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | $\beta_{UPG2014}-\beta_{UCT2015}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
- | $\beta_{UPG2015}-\beta_{UCT2015}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
+ |                                         | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
+ |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | CTL mean                                | 0.394    | 0.718    | 0.806    | 0.170        | 0.080         | 0.726        |
+ |                                         | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
+ |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | UPG*2014                                | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
+ |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | UPG*2015                                | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
+ |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
+ | UCT*2014                                | 0.030    | 0.112**  | 0.142*** | 0.08**       | 0.034         | 0.196***     |
+ |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | UCT*2015                                | 0.006    | -0.026   | -0.031   | -0.026       | -0.006        | -0.038       |
+ |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
+ | 2014                                    | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
+ |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
+ | 2015                                    | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
+ |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.023        |
+ | Baseline missing                        | 0.000    | 0.000    | 0.000    | 0.000        | 0.000         |              |
+ |                                         | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
+ | Baseline values                         | 0.000    | 0.017**  | 0.015**  | 0.000        | 0.0**         |              |
+ |                                         | 0.000    | 0.008    | 0.006    | 0.000        | 0.000         |              |
+ |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | F-stat                                  | 13.720   | 5.086    | 10.529   | 1.594        | 3.460         | 4.797        |
+ | N                                       | 1500.000 | 1500.000 | 1500.000 | 1500.000     | 1500.000      | 1500.000     |
+ |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
+ | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
+ | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
 #+LATEX: \end{landscape}
 
 #+LATEX: \begin{landscape}
  #+name: tab:log_savings
   #+attr_latex: :environment longtable :align lrrrrrrr
  #+caption: Average log value (in SSP) of all cash and food savings and area of land.
- |                                   | Savings   | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
- |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | CTL mean                          | 4.61      | 0.95     | 0.85     |         5.08 | 4.56          | 4.22         |
- |                                   | (1.23)    | (2.05)   | (1.82)   |       (0.93) | (0.96)        | (0.96)       |
- |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | UPG*2014                          | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
- |                                   | (0.15)    | (0.16)   | (0.15)   |       (0.22) | (0.27)        | (0.09)       |
- | UPG*2015                          | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
- |                                   | (0.14)    | (0.16)   | (0.14)   |       (0.22) | (0.31)        | (0.09)       |
- | UCT*2014                          | 0.19      | 0.23     | 0.30     |         0.27 | -0.57         | -0.05        |
- |                                   | (0.21)    | (0.21)   | (0.19)   |       (0.26) | (0.36)        | (0.11)       |
- | UCT*2015                          | 0.513**   | -0.447** | -0.348*  |         0.46 | -0.01         | 0.202*       |
- |                                   | (0.20)    | (0.20)   | (0.18)   |       (0.30) | (0.45)        | (0.12)       |
- | 2014                              | 3.434***  | 0.246**  | 0.332*** |     3.856*** | 3.526***      | 3.626***     |
- |                                   | (0.24)    | (0.12)   | (0.11)   |       (0.46) | (0.56)        | (0.06)       |
- | 2015                              | 4.003***  | 0.96***  | 0.887*** |     4.475*** | 4.525***      | 4.216***     |
- |                                   | (0.24)    | (0.11)   | (0.10)   |       (0.46) | (0.56)        | 0.06         |
- | Bsln NA                           | 0.598***  | -0.03    | -0.06    |         0.61 | 0.01          |              |
- |                                   | (0.23)    | (0.12)   | (0.11)   |       (0.46) | (0.55)        |              |
- | Bsln2013                          | 0.123***  | 0.01     | -0.03    |         0.13 | 0.02          |              |
- |                                   | 0.04      | 0.08     | 0.06     |         0.09 | 0.12          |              |
- |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | F-stat                            | 20.87     | 4.50     | 2.88     |         3.93 | 3.92          | 20.33        |
- | N                                 | 671.00    | 1042.00  | 1114.00  |       255.00 | 159.00        | 1073.00      |
- |-----------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | $\beta_{UPG2014}-\beta_{UCT2015}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
- | $\beta_{UPG2015}-\beta_{UCT2015}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
+ |                                         | Savings   | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
+ |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | CTL mean                                | 4.61      | 0.95     | 0.85     |         5.08 | 4.56          | 4.22         |
+ |                                         | (1.23)    | (2.05)   | (1.82)   |       (0.93) | (0.96)        | (0.96)       |
+ |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | UPG*2014                                | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
+ |                                         | (0.15)    | (0.16)   | (0.15)   |       (0.22) | (0.27)        | (0.09)       |
+ | UPG*2015                                | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
+ |                                         | (0.14)    | (0.16)   | (0.14)   |       (0.22) | (0.31)        | (0.09)       |
+ | UCT*2014                                | 0.19      | 0.23     | 0.30     |         0.27 | -0.57         | -0.05        |
+ |                                         | (0.21)    | (0.21)   | (0.19)   |       (0.26) | (0.36)        | (0.11)       |
+ | UCT*2015                                | 0.513**   | -0.447** | -0.348*  |         0.46 | -0.01         | 0.202*       |
+ |                                         | (0.20)    | (0.20)   | (0.18)   |       (0.30) | (0.45)        | (0.12)       |
+ | 2014                                    | 3.434***  | 0.246**  | 0.332*** |     3.856*** | 3.526***      | 3.626***     |
+ |                                         | (0.24)    | (0.12)   | (0.11)   |       (0.46) | (0.56)        | (0.06)       |
+ | 2015                                    | 4.003***  | 0.96***  | 0.887*** |     4.475*** | 4.525***      | 4.216***     |
+ |                                         | (0.24)    | (0.11)   | (0.10)   |       (0.46) | (0.56)        | 0.06         |
+ | Baseline missing                        | 0.598***  | -0.03    | -0.06    |         0.61 | 0.01          |              |
+ |                                         | (0.23)    | (0.12)   | (0.11)   |       (0.46) | (0.55)        |              |
+ | Baseline values                                | 0.123***  | 0.01     | -0.03    |         0.13 | 0.02          |              |
+ |                                         | 0.04      | 0.08     | 0.06     |         0.09 | 0.12          |              |
+ |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | F-stat                                  | 20.87     | 4.50     | 2.88     |         3.93 | 3.92          | 20.33        |
+ | N                                       | 671.00    | 1042.00  | 1114.00  |       255.00 | 159.00        | 1073.00      |
+ |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
+ | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
+ | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
 #+LATEX: \end{landscape}
 
 
@@ -1166,7 +1171,7 @@ have standard errors under CTL mean
 
 #+name: income_table
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_assignment  = "../../Report/documents/master_assignment.csv"
 data_nonfarm = "../../TUP-data/Endline/sections_8_17.csv"
 data_farm = "../../TUP-data/Endline/Agriculture_cleaned.csv"
 
@@ -1416,10 +1421,10 @@ relative to the average expenditures of the control group in 2015.
 
 #+name: consumption_tables
 #+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle consumption_tables.py
-data_assignment  = "../../UPG-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
-data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
-data_endline = "../../TUP-data/Endline/UPG_endline.dta"
+data_assignment  = "../../Report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 
 import statsmodels.api as sm
 import pandas as pd
@@ -1576,9 +1581,9 @@ print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
 |-----------------------------------------+--------------+--------------+---------------|
 | Control mean (2015)                     | 110.34^{***} | 288.60^{***} | 1051.76^{***} |
 |                                         | (3.89)       | (16.56)      | (103.24)      |
-| $\beta_{UPG2014}-\beta_{UCT2015}$       | 4.23         | -10.58       | 483.67^{*}    |
+| $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | 4.23         | -10.58       | 483.67^{*}    |
 |                                         | (9.17)       | (48.36)      | (273.11)      |
-| $\beta_{UPG2015}-\beta_{UCT2015}$       | -12.36^{*}   | -35.06       | 39.77         |
+| $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | -12.36^{*}   | -35.06       | 39.77         |
 |                                         | (7.45)       | (39.29)      | (221.80)      |
 
 
@@ -1638,10 +1643,10 @@ standard errors in the table?
 
 #+name: food_insecurity
 #+begin_src python :noweb no-export :exports none  :results output table raw :var FE=1 :colnames no :tangle food_security.py
-data_assignment  = "../../UPG-report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/UPG_baseline.dta"
-data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
-data_endline = "../../TUP-data/Endline/UPG_endline.dta"
+data_assignment  = "../../Report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 
 import statsmodels.api as sm
 import pandas as pd
@@ -1804,30 +1809,30 @@ print(df_to_orgtbl(b,sedf=se))
 
 #+name: tab:food_insecurity
 #+caption: Effects of programs on different measures of food insecurity.
-|                                     | Fewer           | Went            | No food         | Limited         | Whole day       |                 |
-|                                     | Meals           | hungry          | in house        | portions        | without eating  | Worried         |
-|-------------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-| 2014                                | \(0.716\)^{***} | \(0.370\)^{***} | \(0.470\)^{***} | \(0.660\)^{***} | \(0.369\)^{***} | \(0.758\)^{***} |
-|                                     | (\(0.046\))     | (\(0.036\))     | (\(0.040\))     | (\(0.036\))     | (\(0.035\))     | (\(0.050\))     |
-| 2015                                | \(0.735\)^{***} | \(0.430\)^{***} | \(0.561\)^{***} | \(0.795\)^{***} | \(0.461\)^{***} | \(0.917\)^{***} |
-|                                     | (\(0.044\))     | (\(0.034\))     | (\(0.038\))     | (\(0.034\))     | (\(0.033\))     | (\(0.048\))     |
-| Baseline missing                    | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       |
-|                                     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     |
-| Baseline value                      | \(0.014\)       | \(0.058\)^{**}  | \(0.050\)       | \(0.027\)       | \(0.010\)       | \(-0.030\)      |
-|                                     | (\(0.038\))     | (\(0.028\))     | (\(0.033\))     | (\(0.028\))     | (\(0.028\))     | (\(0.043\))     |
-| UPG*2014                            | \(-0.037\)      | \(-0.058\)      | \(-0.085\)^{*}  | \(0.065\)       | \(-0.020\)      | \(0.055\)       |
-|                                     | (\(0.044\))     | (\(0.043\))     | (\(0.044\))     | (\(0.044\))     | (\(0.044\))     | (\(0.044\))     |
-| UPG*2015                            | \(0.063\)       | \(0.079\)^{*}   | \(0.025\)       | \(-0.014\)      | \(0.013\)       | \(-0.019\)      |
-|                                     | (\(0.041\))     | (\(0.041\))     | (\(0.042\))     | (\(0.042\))     | (\(0.042\))     | (\(0.042\))     |
-| UCT*2014                            | \(-0.012\)      | \(-0.017\)      | \(0.015\)       | \(0.037\)       | \(-0.017\)      | \(0.052\)       |
-|                                     | (\(0.053\))     | (\(0.053\))     | (\(0.054\))     | (\(0.054\))     | (\(0.054\))     | (\(0.053\))     |
-| UCT*2015                            | \(0.037\)       | \(0.048\)       | \(0.051\)       | \(-0.009\)      | \(-0.015\)      | \(-0.010\)      |
-|                                     | (\(0.052\))     | (\(0.052\))     | (\(0.053\))     | (\(0.053\))     | (\(0.053\))     | (\(0.052\))     |
-|-------------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
-| $\beta_{UPG2014} - \beta_{UCT2015}$ | \(-0.073\)      | \(-0.105\)      | \(-0.136\)^{**} | \(0.074\)       | \(-0.004\)      | \(0.065\)       |
-|                                     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.069\))     | (\(0.068\))     |
-| $\beta_{UPG2015} - \beta_{UCT2015}$ | \(0.027\)       | \(0.032\)       | \(-0.026\)      | \(-0.005\)      | \(0.028\)       | \(-0.008\)      |
-|                                     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.068\))     | (\(0.067\))     |
+|                                         | Fewer           | Went            | No food         | Limited         | Whole day       |                 |
+|                                         | Meals           | hungry          | in house        | portions        | without eating  | Worried         |
+|-----------------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| 2014                                    | \(0.716\)^{***} | \(0.370\)^{***} | \(0.470\)^{***} | \(0.660\)^{***} | \(0.369\)^{***} | \(0.758\)^{***} |
+|                                         | (\(0.046\))     | (\(0.036\))     | (\(0.040\))     | (\(0.036\))     | (\(0.035\))     | (\(0.050\))     |
+| 2015                                    | \(0.735\)^{***} | \(0.430\)^{***} | \(0.561\)^{***} | \(0.795\)^{***} | \(0.461\)^{***} | \(0.917\)^{***} |
+|                                         | (\(0.044\))     | (\(0.034\))     | (\(0.038\))     | (\(0.034\))     | (\(0.033\))     | (\(0.048\))     |
+| Baseline missing                        | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       | \(0.000\)       |
+|                                         | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     | (\(0.000\))     |
+| Baseline value                          | \(0.014\)       | \(0.058\)^{**}  | \(0.050\)       | \(0.027\)       | \(0.010\)       | \(-0.030\)      |
+|                                         | (\(0.038\))     | (\(0.028\))     | (\(0.033\))     | (\(0.028\))     | (\(0.028\))     | (\(0.043\))     |
+| UPG*2014                                | \(-0.037\)      | \(-0.058\)      | \(-0.085\)^{*}  | \(0.065\)       | \(-0.020\)      | \(0.055\)       |
+|                                         | (\(0.044\))     | (\(0.043\))     | (\(0.044\))     | (\(0.044\))     | (\(0.044\))     | (\(0.044\))     |
+| UPG*2015                                | \(0.063\)       | \(0.079\)^{*}   | \(0.025\)       | \(-0.014\)      | \(0.013\)       | \(-0.019\)      |
+|                                         | (\(0.041\))     | (\(0.041\))     | (\(0.042\))     | (\(0.042\))     | (\(0.042\))     | (\(0.042\))     |
+| UCT*2014                                | \(-0.012\)      | \(-0.017\)      | \(0.015\)       | \(0.037\)       | \(-0.017\)      | \(0.052\)       |
+|                                         | (\(0.053\))     | (\(0.053\))     | (\(0.054\))     | (\(0.054\))     | (\(0.054\))     | (\(0.053\))     |
+| UCT*2015                                | \(0.037\)       | \(0.048\)       | \(0.051\)       | \(-0.009\)      | \(-0.015\)      | \(-0.010\)      |
+|                                         | (\(0.052\))     | (\(0.052\))     | (\(0.053\))     | (\(0.053\))     | (\(0.053\))     | (\(0.052\))     |
+|-----------------------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------|
+| $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | \(-0.073\)      | \(-0.105\)      | \(-0.136\)^{**} | \(0.074\)       | \(-0.004\)      | \(0.065\)       |
+|                                         | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.069\))     | (\(0.068\))     |
+| $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | \(0.027\)       | \(0.032\)       | \(-0.026\)      | \(-0.005\)      | \(0.028\)       | \(-0.008\)      |
+|                                         | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.068\))     | (\(0.067\))     |
 
 
 ** Exposure to Conflict
@@ -1920,8 +1925,8 @@ Next steps:
 
 #+name: conflict
 #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_midline  = "../../TUP-data/Midline/UPG_midline.dta"
-data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_assignment  = "../../Report/documents/master_assignment.csv"
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
@@ -2072,6 +2077,7 @@ print("|-\n" + newdf1 + "|-\n" + newdf2 + "|-\n")
 |------------+----------+----------+----------+---------+--------------+---------|
 
 * Conclusion
+  <<sec:conclusion>>
   
 BRAC's South Sudan pilot of the UPG program represents the only such test of the
 ultra-poor graduation framework conducted in an area of significant political and
@@ -3002,9 +3008,9 @@ print(newdf)
  #+name: attrition_balance_nonzero
  #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
 data_baseline  = "../../TUP-data/data/Baseline/UPG_baseline.dta"
-data_midline  = "/Users/beckycardinali/Desktop/TUP-data/Midline/UPG_midline.dta"
-data_endline = "/Users/beckycardinali/Desktop/TUP-data/Endline/UPG_endline.dta"
-data_assignment  = "../../UPG-report/documents/master_assignment.csv"
+data_midline  = "../..//TUP-data/Midline/UPG_midline.dta"
+data_endline = "../..//TUP-data/Endline/UPG_endline.dta"
+data_assignment  = "../../Report/documents/master_assignment.csv"
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -3175,1348 +3181,5 @@ print(newdf)
  | # Child                        |         1.142 |  0.219*** |   0.173* |
  | Household size                 |         1.919 |   0.081** |    0.062 |
  | In business                    |         0.415 |     0.038 |    0.007 |
-
-
-* COMMENT Extra Analysis
-
-** Good-level analysis
-
-Next, \ref{tab:consumption_full} sets aside these aggregated measures to look more
-carefully at potential changes in the composition of consumption in each group. Given
-the large number of zeros, we use a linear model to consider first the 
-frequency of non-zero consumption of each good among treatment and control
-households, then look at levels of consumption among households with non-zero
-consumption. \Tab{consumption_full} presents point estimates.
-
-A few changes in the composition of consumption are interesting. UPG households appear to consume 17% less
-sorghum (often considered an inferior good in Yei) and more on rice, which is
-considered a higher-quality staple. While almost everyone reports some health
-spending over the past month, both treatment groups spent more, though only
-statistically significant in the cash group, which saw a 50% increase over the
-control group. The cash group was also 30% (14 pp) more likely to have spent money
-on funerals, though they did not spend more on average.
-
-#+name: consumption_disaggreate_results
-#+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
-<<consumption_analysis>>
-from matplotlib import pyplot as plt
-#~ Only keep disaggregate items
-Goods = C.filter(regex="^c_").rename(columns=lambda col: col[2:] if col.startswith("c_") else col)
-#~ 1 if coded as >0, 0 if zero, keep NaN's missing, since those are only from missing surveys.
-Nonzero = Goods.applymap(lambda i: float(i>0) if not np.isnan(i) else np.nan)
-#~ Restrict Goods df to positive responses.
-Goods = Goods.replace(0,np.nan)
-too_many_zeros = 30
-many_zeros = [item for item in Goods if Goods[item].notnull().sum()<too_many_zeros]
-Nonzero = Nonzero.drop(many_zeros,1)
-Goods = Goods.drop(many_zeros,1)
-
-#~ Merge in Control Vars
-controls = ["cons","UPG","CSH"]
-Goods = Goods.join(C[controls],how="left")
-Nonzero = Nonzero.join(C[controls],how="left")
-Items = [item[:-2] for item in Goods if item.endswith("_e")]
-CTL = Goods[controls].sum(axis=1)==1 #~ i.e. only constant ==1, UPG & UCT ==0
-Goods_ctl_mean =   Goods.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
-Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
-
-Zero, Zero_se = reg_table(regressions(Nonzero,"_e", outcomes=Items, Baseline="_b"), resultdf=True, Transpose=True)
-Good, Good_se = reg_table(regressions(Goods,"_e", outcomes=Items, Baseline="_b"  ), resultdf=True, Transpose=True)
-#~ Make full table of Standard errors
-SE = Zero_se[["UPG","CSH"]].join(Good_se[["UPG","CSH"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
-
-#~ Make full table of point estimates and control-group means
-FullTable = pd.DataFrame({"Mean (CTL)":Goods_ctl_mean, "% >0 (CTL)":Zeros_ctl_mean}).join(Zero[["UPG","CSH"]])
-FullTable = FullTable.join(Good[["UPG","CSH","N"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
-
-#~ Make % change graph
-fig, ax = plt.subplots(2,1, figsize=(6,9))
-for i, group in enumerate(("UPG","CSH")):
-    pct_change = FullTable[group+" (Amt.)"]/FullTable["Mean (CTL)"]
-    se_change  = SE[group+" (Amt.)"]/FullTable["Mean (CTL)"]
-    pct_change.sort()
-    pct_change.plot(kind="bar", yerr=SE[group+" (Amt.)"], ax=ax[i])
-    ax[i].set_title(group, fontsize=6)
-fig.savefig("../figures/Consumption.png")
-
-FullTable = df_to_orgtbl(FullTable, sedf=SE)
-return FullTable
-#+end_src
-
-#+name: tab:consumption_full
-#+caption: Control group means and estimated treatment effects for percent consuming any and total amounts consumed.
-#+attr_latex: :environment longtable :align lrrrrrrr
- #+RESULTS: consumption_disaggreate_results
-
-** Disaggregate Asset Results 
-
-#+name: asset_disaggreate_results
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
-<<assets_disaggreate_analysis>>
-return tab
-#+end_src
-
-#+name: tab:asset_disaggregate
-#+caption: Control means and treatment effects for Assets owned by >40 households
-#+RESULTS: asset_disaggreate_results
-|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
-|              | # own  |              |             | Value     |                |                |          |
-|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
-| Item         | CTL    | UPG          | UCT        | CTL       | UPG            | UCT           | N        |
-|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
-| Pangas       | $1.06$ | $0.01$       | $0.13^{**}$ | $11.86$   | $1.66^{**}$    | $0.04$         | $410.00$ |
-| Chickens     | $3.79$ | $0.70$       | $-0.32$     | $154.35$  | $23.31$        | $0.80$         | $162.00$ |
-| Mobile       | $1.88$ | $-0.09$      | $0.08$      | $113.96$  | $2.62$         | $1.70$         | $569.00$ |
-| Radio        | $1.62$ | $0.84$       | $-0.40$     | $57.25$   | $4.98$         | $5.10$         | $333.00$ |
-| Shed         | $1.22$ | $-0.14$      | $-0.22$     | $48.81$   | $37.57$        | $6.81$         | $53.00$  |
-| Stoves       | $1.44$ | $0.34$       | $0.31$      | $20.32$   | $18.19^{**}$   | $8.31$         | $84.00$  |
-| Potspans     | $4.46$ | $-0.06$      | $-0.23$     | $102.73$  | $15.90$        | $-15.40$       | $582.00$ |
-| Ducks        | $5.72$ | $4.26^{***}$ | $-0.16$     | $230.93$  | $109.99^{***}$ | $-19.34$       | $223.00$ |
-| Motorcycle   | $1.51$ | $-0.48$      | $0.12$      | $2288.48$ | $300.46$       | $-196.32$      | $66.00$  |
-| Chairtables  | $5.02$ | $0.25$       | $0.39$      | $167.62$  | $19.00$        | $-24.73$       | $638.00$ |
-| Net          | $3.07$ | $0.03$       | $-0.08$     | $24.49$   | $0.66$         | $-3.81$        | $382.00$ |
-| Axes         | $1.02$ | $0.03$       | $-0.02$     | $17.74$   | $0.02$         | $-3.94^{**}$   | $218.00$ |
-| Smallanimals | $3.39$ | $0.29$       | $-0.90$     | $767.26$  | $-151.35$      | $-311.05^{**}$ | $155.00$ |
-| Charcoal     | $2.20$ | $-0.26$      | $-0.83$     | $35.81$   | $-1.43$        | $-4.65$        | $176.00$ |
-| Bicycle      | $6.34$ | $-5.46$      | $-5.52$     | $272.90$  | $-31.50$       | $-42.67$       | $135.00$ |
-| Bed          | $3.17$ | $-0.23$      | $-0.40$     | $300.64$  | $19.32$        | $-57.78^{*}$   | $628.00$ |
-| Tv           | $1.48$ | $-0.36$      | $-0.26$     | $380.45$  | $121.95$       | $348.23^{**}$  | $45.00$  |
-|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
-
-
-* COMMENT Code appendix
-  
-** Food Security
-
- #+name: foodsecure_analysis
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle foodsecurity.py
- #~ DevLunch_analysis.py
- import numpy as np
- import pandas as pd
- import statsmodels.api as sm
- import sys
- DATADIR = "../../data/"
- sys.path.append(DATADIR)
- from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
- D = full_data(DIR = DATADIR,balance=[])
- WEEKLY = True
-
- codes = {"1-2 times a week": 3,
-         "3-6 times a week": 2,
-         "Everyday": 1,
-         "everyday": 1,
-         "Less than once a week": 4,
-         "less than once a week": 4,
-         "Never": 5,
-         "never": 5}
-
- recode = lambda x: codes.setdefault(x,x)
-
- Aval2013 = D.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2]).applymap(recode)
- Aval2014 = D.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
- Aval2015 = D.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
-
- if WEEKLY:
-     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
-     Aval2013 = Aval2013.applymap(weekly)
-     Aval2014 = Aval2014.applymap(weekly)      
-     Aval2015 = Aval2015.applymap(weekly)
- 
- index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
- Outcomes = index_vars+["z-score"]
- #~ Creates Year dummies, z-scores and baseline values as `var'2013
- for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
-     Aval["Year"]=Year
-     if not weekly:
-        for var in index_vars:
-            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
-     FS_sum = Aval[index_vars].sum(axis=1)
-     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
-     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
-    
- Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
- Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
- Vals = Vals.join(D[["UPG","CSH"]])
-
- for group in ("UPG", "CSH"):
-     for year in ("2013", "2014", "2015"):
-         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
-
- Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
-
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
- Vals=Vals.loc[2014:2015]
- regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-
- results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
-
- CTL = Vals["UPG"]+Vals["CSH"] ==0
- CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
- CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
- diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
-
- for var in Outcomes:
-     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-
- results = results.append(diff)
- SE = SE.append(diff_se)
-
- tab = df_to_orgtbl(results, sedf=SE)
- #+end_src
-
-** Consumption
-
- #+name: lambda_analysis
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-lambdas.py
-
- import numpy as np
- import pandas as pd
- import cfe.estimation as nd
- import statsmodels.api as sm
- import sys
- DATADIR = "../../data/"
- sys.path.append("../../data")
- from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
- food =  ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
- month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
- ConsumptionItems = food+['airtime','fuel']
- mobile=True
-
- D = full_data(DIR=DATADIR)
- C, HH, T = consumption_data(D,WRITE=False,include2016=False)
- HH['log HHSIZE'] = HH["hh_size"].apply(np.log)
- HH = HH.drop("hh_size",1)
- y,z = C.replace(0,np.nan).apply(np.log).sort_index(level=[0,1,2])[ConsumptionItems].copy(),HH.sort_index(level=[0,1,2]).copy()
- y.index.names, z.index.names = ['j','t','mkt'], ['j','t','mkt']
- keep = pd.notnull(y.index.get_level_values("mkt"))
- y,z = y.loc[keep,:].align(z,join="left",axis=0)
- b,ce,d,sed= nd.estimate_reduced_form(y,z,return_se=True,VERBOSE=True)
- ce = ce.dropna(how='all')
- print("Getting Loglambdas")
- bphi,logL=nd.get_loglambdas(ce,TEST="warn")
- try:
-    xrange
-    logL.to_pickle(DATADIR + "ss-lambdas.df")
- except NameError: logL.to_pickle(DATADIR + "ss-lambdas3.df")
- 
- if mobile:
-     M,Mc,Mhh = mobile_data(use_dates=True,DIR = DATADIR+"Mobile/")
-     y = Mc.replace(0,np.nan).apply(np.log).sort_index(level=[0,1,2]).filter(items=ConsumptionItems).copy()
-     z = Mhh.sort_index(level=[0,1,2]).copy()
-     y.index.names, z.index.names = ['j','t','mkt'], ['j','t','mkt']
-     keep = pd.notnull(y.index.get_level_values("mkt"))
-     y,z = y.loc[keep,:].align(z,join="left",axis=0)
-     b,ce,d,sed= nd.estimate_reduced_form(y,z,return_se=True,VERBOSE=True)
-     ce = ce.dropna(how='all')
-     print("Getting Loglambdas")
-     Mbphi,MlogL=nd.get_loglambdas(ce,TEST="warn")
-     MlogL -= MlogL.mean()
-     MlogL /= MlogL.std()
-     MlogL = MlogL.unstack('t').drop('4February',1).stack()
-     try:
-       xrange
-       MlogL.to_pickle(DATADIR + "ss-lambdas_mobile.df")
-     except NameError: MlogL.to_pickle(DATADIR + "ss-lambdas_mobile3.df")
-
- #+end_src 
-
- #+name: consumption_analysis
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-consumption.py
- import sys
- DATADIR = "../../data/"
- sys.path.append(DATADIR)
- import numpy as np
- import pandas as pd
- import statsmodels.api as sm
- from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
- 
- USE_LAMBDAS = False #~ Whether to use the output of SS-lambdas.py as an outcome (You may have to run it first.)
- TGROUP_FE   = True  #~ Whether to use UPG & CSH dummy variables as controls (I'm pretty sure we should be)
-
- food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
- month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
- year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
-
-
- D = full_data(DIR=DATADIR)
- C, HH, T = consumption_data(D,WRITE=True) #"csv")
- if USE_LAMBDAS:
-    logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
-    logL.index.names=["HH","Year","Location"]
-    C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
- C = C.reorder_levels([1,2,0])#.sort_index(level=0)
- keep = pd.notnull(C.index.get_level_values("Location"))
- C = C.loc[keep,:]
-
- # Make aggregate variables
- C["Food"]   = C.filter(items=food).sum(axis=1).replace(0,np.nan)
- C["Month"]   = C.filter(items=food).sum(axis=1)
- C["Year"]   = C.filter(items=food).sum(axis=1)
- C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
-
- def align_indices(df1,df2):
-    """
-    Reorder levels of df2 to match that of df1
-    Must have same index.names
-    """
-    I1, I2 = df1.index, df2.index
-    try: assert(not set(I1.names).difference(I2.names))
-    except AssertionError: raise ValueError("Index names must be the same")
-    new_order = []
-    for lvl in I1.names: new_order.append(I2.names.index(lvl))
-    df2 = df2.reorder_levels(new_order)
-    return df1, df2
-
- def winsorize(Series, **kwargs):
-    """
-    Need to implement two-sided censoring as well.
-    WARNING: if Top<0, all zeros will be changed to Top
-    """
-    percent    = kwargs.setdefault("percent",99)
-    stdev      = kwargs.setdefault("stdev",False)
-    drop       = kwargs.setdefault("drop",False)
-    drop_zeros = kwargs.setdefault("drop_zeros",True)
-    twoway     = kwargs.setdefault("twoway",False)
-
-    if drop_zeros: S = Series.replace(0,np.nan).dropna()
-    else: S = Series.dropna()
-    N_OBS = S.notnull().sum()
-    if N_OBS<10: return S
-
-    if percent: Top = np.percentile(S, percent)
-    if stdev:   
-        Top =  S.dropna().mean()
-        Top += stdev*S.dropna().std()
-    try: assert((not drop_zeros) or Top>0)
-    except AssertionError: raise ValueError("Top < 0 but zeros excluded")
-    if drop: replace_with = np.nan
-    else:    replace_with = Top
-
-    _Series = Series.copy()
-    _Series[_Series>Top]=replace_with
-
-    if not twoway: return _Series
-    else:
-        kwargs['twoway'] = False
-        return -1*winsorize(-1*_Series, **kwargs)
-
- def USD_conversion(Exp,exchange_rate=1.,PPP=1.,inflation=1.,time='Year'):
-    """
-    Convert nominal local currency into price- and inflation-adjusted USD
-
-    Exp - A numeric or pd.Series object 
-    exchange_rate - Taken as LCU/USD. 
-    PPP - Taken as $Real/$nominal
-    inflation - Taken as % inflation compared to some baseline.
-    time - If a list is passed, `time' indicates the name or position of the time level in Exp.index
-        NOTE: This has to be a cumulative number, so if inflation is 20% for two straight years, that year should be divided by (1+.2)**2
-    Final calculation will basically be Exp_usdppp = Exp*(exchange_rate*PPP)/inflation
-
-    if pd.Series are passed for any kwarg, index name needs to be in the multi-index of Exp.
-    """
-    if type(inflation)==list: inflation=[1./i for i in inflation]
-    else: inflation = 1/inflation
-    if type(exchange_rate)==list: exchange_rate=[1./i for i in exchange_rate]
-    else: exchange_rate = 1/exchange_rate
-    
-    _Exp = Exp.copy()
-    VARS = (exchange_rate, PPP,inflation)
-    if list in map(type,VARS):
-        if time in _Exp.index.names: time=_Exp.index.names.index(time)
-        time = _Exp.index.levels[time]
-    for var in VARS:
-        if type(var)==list: var=pd.Series(var,index=time)
-        try: _Exp = _Exp.mul(var)
-        except ValueError: #~ If Series index doesn't have a name, try this...
-            var.index.name = var.name
-            _Exp = _Exp.mul(var)
-    return _Exp
-
- def percapita_conversion(Exp,HH,children=["boys","girls"],adult_equivalent=1.,minus_children='hh_size'):
-    """
-    Returns household per-capita expenditures given:
-        `Exp'- Total household expenditures
-        `HH' - Total number of individuals in the household
-            If HH is a pd.DataFrame, Exp is divided by HH.sum(1)
-            if `children' is the name of a column or a list of column names, 
-            those first get divided by the factor adult_equivalent
-    """
-    try: HH.columns #~ If HH is a series, just divide though
-    except AttributeError: return Exp.div(HH)
-    _HH = HH.copy()
-    if type(children)==str: children=[children]
-    children = _HH.columns.intersection(children).tolist()
-    if minus_children: _HH[minus_children] -= _HH[children].sum(1)
-    if children: _HH[children] *= adult_equivalent
-    Exp,_HH = align_indices(Exp,_HH)
-    return Exp.div(_HH.sum(1).replace(0,1))
-
- #~ Source: http://data.worldbank.org/indicator/PA.NUS.PRVT.PP?locations=SS&name_desc=false
- xrate = [ 2.161, 2.162, 3.293] #~ Using PPP adjusted xrate and just setting PPP=1.
- PPP = 1.
- inflation= 1. #~ Bank data uses international $, which is inflation adjusted.
- C["Exp_usd"] = winsorize(USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation))
- C["Tot_pc"] = percapita_conversion(C["Exp_usd"],HH,adult_equivalent=.5)
- #C["Exp_usdpc_tc"] = winsorize(C["Exp_usdpc"])
-
- #C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
- C["FoodShr"]= C["Food"].div(C["Tot"]) #$\approx$ FoodShare variable
- C["logTot"] = C["Tot"].apply(np.log)
- C = C.join(T, how="left",lsuffix="_")
-
- if USE_LAMBDAS: Outcomes = ["Tot","logTot","FoodShr", "Food", "$\log\lambda_{it}$"]
- else: Outcomes = ["Tot","logTot","FoodShr", "Food"]
-
- #$\approx$ Make Baseline variable
- for var in Outcomes: 
-     Bl = C.loc[2013,var].reset_index("Location",drop=True)
-     #if var in mC: mC = mC.join(Bl,rsuffix="2013", how="left")
-     C = C.join(Bl,rsuffix="2013", how="left")
-
-
- C["Y"]=np.nan
- for yr in (2013, 2014, 2015): C.loc[yr,"Y"]=str(int(yr))
-
- C = C.join(pd.get_dummies(C["Y"]), how="left",lsuffix="_")
- for group in ("UPG", "CSH"):
-     for year in ("2013", "2014", "2015"):
-         interaction = C[group]*C[year]
-         if interaction.sum()>0: C["{}*{}".format(group,year)] = interaction
-
- if TGROUP_FE: Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015', 'UPG','CSH']
- else:         Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015']
-
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
- C = C.loc[2014:2015]
- regs  = regressions(C, outcomes=Outcomes,  controls=Controls,  Baseline=2013, baseline_na=True)
-
- results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
-
- CTL = C["UPG"]+C["CSH"] ==0
- CTLmean = {var: C[CTL].loc[2015,var].mean() for var in Outcomes}
- CTLsd = {var: C[CTL].loc[2015,var].std() for var in Outcomes}
- diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
-
- for var in Outcomes:
-     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
- results = results.append(diff)
- SE = SE.append(diff_se)
-
- tab = df_to_orgtbl(results, sedf=SE)
- #+END_SRC
-   
- #+name: mobile_analysis
- #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-mobile.py
- import sys
- DATADIR = "../../data/"
- sys.path.append("../../data")
- import numpy as np
- import pandas as pd
- import statsmodels.api as sm
- from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
- ITEMS = ["beans", "sugar", "fish", "nuts", "vegetables", "airtime", "fuel"]
-
- D = full_data(DIR=DATADIR)
- HH, T = consumption_data(D,WRITE=True)[1:] #"csv")
- M, C,mHH= mobile_data(DIR = DATADIR+"Mobile/")
- try: logL = pd.read_pickle(DATADIR+"ss-lambdas_mobile.df")
- except EnvironmentError: raise IOError("Need to run SS-lambdas.py")
- logL.index.names=["HH","Year","Location"]
- logL.name       =["loglambda"]
- C    = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
- C    = C.reorder_levels([1,0,2]).sortlevel()
- keep = pd.notnull(C.index.get_level_values("Location"))
- C    = C.loc[keep,:]
- # Make aggregate variables
- C["Tot"]    = C.filter(ITEMS).sum(axis=1).replace(0,np.nan)
- C["logTot"] = C["Tot"].apply(np.log)
- C           = C.join(T, how="left",lsuffix="_")
- C['const']  = 1.
-
- Outcomes =["Tot",  "logTot", "$\log\lambda_{it}$"]
- Controls= ['const', 'UPG', 'CSH']
-
- regs = regressions(C,outcomes=Outcomes, controls=Controls, Baseline=2013)
- results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
- CTL = C["UPG"]+C["CSH"] ==0
- CTLmean = {var: C.loc[CTL,var].mean() for var in Outcomes}
- CTLsd = {var: C.loc[CTL,var].std() for var in Outcomes}
- diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
-
- for var in Outcomes:
-     ttest= regs[var].t_test("UPG - CSH = 0").summary_frame()
-     diff.loc[   r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest["std err"][0]
-
- results = results.append(diff)
- SE = SE.append(diff_se)
- mtab = df_to_orgtbl(results, sedf=SE)
-
- #+end_src
-   
-** Assets
-   
-#+name: asset_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/asset_analysis.py
-import numpy as np
-import pandas as pd
-import statsmodels.api as sm
-from matplotlib import pyplot as plt
-import sys
-sys.path.append("../../data")
-from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
-def topcode(var, Nstd=3, drop=False):
-    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
-    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
-    return var
-
-TGROUP_FE = True
-
-D = full_data(DIR="../../data/")
-
-Outcomes = ["Total", "Productive","Livestock"]
-Aval2013 = asset_vars(D,year=2013)[0][Outcomes]
-Aval2014 = asset_vars(D,year=2014)[0][Outcomes]
-Aval2015 = asset_vars(D,year=2015)[0][Outcomes]
-
-#$\approx$ Creates Year dummies and baseline values as `var'2013
-for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
-    Aval["Year"]=Year
-    for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
-Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
-Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
-Vals = Vals.join(D[["UPG","CSH"]])
-Vals["CTL"] = (Vals["UPG"]+Vals["CSH"] ==0).apply(int)
-
-for group in ("UPG", "CSH"):
-    for year in ("2013", "2014", "2015"):
-        Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
-
-#~ Make graph of distribution
-stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
-Vals["Group"] = stringify("UPG")+stringify("CSH")+stringify("CTL")
-
-
-amean = Vals.groupby(["Year","Group"]).mean()[["Total","Productive","Livestock"]]
-aN = Vals.groupby(["Year","Group"]).count()[["Total","Productive","Livestock"]]
-astd = Vals.groupby(["Year","Group"]).std()[["Total","Productive","Livestock"]]
-ase = astd/np.sqrt(aN)
-asset_pctchange = (amean/amean.ix[2013]).unstack("Year") - 1
-
-for var in ("Total","Productive","Livestock"):
-   #~ fig,ax = plt.subplots(1,2)
-   #~ for i,yr in enumerate((2014,2015)):
-   #~     Vals.ix[yr].dropna(subset=[[var,"UPG","CSH","CTL"]]).groupby("Group")[var].plot(kind="kde",ax=ax[i])
-   #~     ax[i].set_title("{} Asset Value in {}".format(var,yr))
-   #~     ax[i].legend()
-   #~     #~ ax[i].set_aspect(1)
-   #~     ax[i].set_xlim(left=0)
-   #~ plt.savefig("../figures/Asset{}_kde.png".format(var))
-   #~ plt.clf()
-   amean.unstack("Group")["Total"].plot(kind="bar",yerr=ase.unstack("Group")["Total"].values)
-   plt.tight_layout()
-   plt.xticks(rotation=45)
-   plt.savefig("../figures/Asset{}_groupyear.png".format(var))
-   plt.clf()
-
-if TGROUP_FE: Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015', 'UPG','CSH']
-else:         Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015']
-
-
-#$\approx$ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
-Vals=Vals.loc[2014:2015]
-regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-
-results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
-
-CTL = Vals["UPG"]+Vals["CSH"] ==0
-CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
-CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
-diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
-
-for var in Outcomes:
-    ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-    diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-    diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-
-results = results.append(diff)
-SE = SE.append(diff_se)
-
-tab = df_to_orgtbl(results, sedf=SE)
-#+end_src
-
-#+name: assets_disaggreate_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
-import numpy as np
-import pandas as pd
-import sys
-sys.path.append("../../data")
-from UPG import full_data, regressions, asset_vars, reg_table, df_to_orgtbl
-
-D = full_data(balance=[])
-D["cons"] = 1.
-Count = D.filter(regex="^asset_n_").rename(columns=lambda col: col[8:])
-Vals = D.filter(regex="^asset_val_").rename(columns=lambda col: col[10:])
-#~ 1 if coded as >0, 0 if zero, keep NaN's missing, since those are only from missing surveys.
-Nonzero = Count.applymap(lambda i: float(i>0) if not np.isnan(i) else np.nan)
-#~ Restrict both df's to nonzero responses.
-Count = Count.replace(0,np.nan)
-Vals  =  Vals.replace(0,np.nan)
-too_many_zeros = 30
-many_zeros = [item for item in Vals if Vals[item].notnull().sum()<too_many_zeros]
-for df in (Nonzero, Count, Vals): df.drop(many_zeros,1, inplace=True)
-
-#~ Merge in Control Vars
-controls = ["cons","UPG","UCT"]
-Nonzero  = Nonzero.join(D[controls],how="left")
-Count    =   Count.join(D[controls],how="left")
-Vals     =    Vals.join(D[controls],how="left")
-
-Items = [item[:-2] for item in Vals if item.endswith("_e")]
-CTL = Vals[controls].sum(axis=1)==1 #~ i.e. only constant ==1, UPG & UCT ==0
-Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
-Count_ctl_mean =   Count.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
-Vals_ctl_mean  =    Vals.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
-
-ZeroTable       = reg_table(regressions(Nonzero,"_e", outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), orgtbl=True, Transpose=True)
-Count, Count_se = reg_table(regressions(Count,"_e",   outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), resultdf=True, Transpose=True)
-Vals, Vals_se   = reg_table(regressions(Vals,"_e",    outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), resultdf=True, Transpose=True)
-
-#~ Make full table of Standard errors-- MAKE SURE YOU HAVE THE SUFFIXES RIGHT.
-SE = Count_se[["UPG","UCT"]].join(Vals_se[["UPG","UCT"]], rsuffix=" (SSP)", lsuffix=" (# own)")
-
-#~ Make full table of point estimates and control-group means
-FullTable = pd.DataFrame({"# own (CTL)":Count_ctl_mean, "Value (CTL)":Vals_ctl_mean}).join(Count[["UPG","UCT"]])
-FullTable = FullTable.join(Vals[["UPG","UCT","N"]], rsuffix=" (SSP)", lsuffix=" (# own)")
-FullTable = df_to_orgtbl(FullTable, sedf=SE)
-AllTables = FullTable+"\n\n"+ZeroTable
-return AllTables
-#+end_src
-
-** Savings
-
-#+name: savings_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/savings_analysis.py
-import numpy as np
-import pandas as pd
-import statsmodels.api as sm
-import sys
-sys.path.append("../../data")
-from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
-
-def topcode(var, Nstd=3, drop=False):
-    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
-    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
-    return var
-
-D = full_data(balance=[])
-
-Sav = pd.DataFrame(index=D.index) #~ Set up empty DataFrame to fill
-
-years = [("_b",2013), ("_m",2014), ("_e", 2015)]
-for suff,year in years: #~ Make Aggregate savings and land holding variables
-    Sav["Savings{}".format(year)]  = D.filter(regex="^savings_(home|bank|BRAC|NGOs|other){}".format(suff)).sum(1)
-    Sav["Food Sav{}".format(year)] = D.filter(regex="^savings_(maize|sorghum|otherfood)_val{}".format(suff)).sum(1)
-
-    Sav["LandCult{}".format(year)] = D.filter(regex="^land_(owncult|rentcult|communitycult){}".format(suff)).sum(1)
-    Sav["LandOwn{}".format(year)]  = D.filter(regex="^land_own.*{}".format(suff)).sum(1)
-
-    Sav["Get Trans{}".format(year)]  = D.filter(regex="^transfers_get.*{}".format(suff)).sum(1)
-    Sav["Give Trans{}".format(year)] = D.filter(regex="^transfers_give.*{}".format(suff)).sum(1)
-
-Outcomes = ["Savings","Food Sav","LandCult","LandOwn", "Get Trans", "Give Trans"] #~ Loans give/received omitted
-
-by_year = []
-for yr in ("2013","2014","2015"): #~ Provide Baseline Values & put in long format
-    S_Year = Sav.filter(like=yr).rename(columns=lambda x:x[:-4])
-    for var in Outcomes: 
-        if var+"2013" in Sav: S_Year[var+"2013"] = Sav[var+"2013"]
-    #~ Note that adding "Year" has to come after topcode, which switches strings to Nan...
-    S_Year["Year"] = yr
-    by_year.append(S_Year)
-
-#~ In long format with Year,HH index
-Sav = pd.concat(by_year).reset_index().set_index(["Year", "HH"], drop=False)
-#~ Make Year Dummies for fixed effects
-
-
-Sav = Sav.join(pd.get_dummies(Sav["Year"]).rename(columns=lambda col: str(int(col))), how="left")
-Sav = Sav.drop(["HH","Year"],1)
-Sav = Sav.join(D[["UPG","CSH"]])
-
-for group in ("UPG", "CSH"): #~ Make Treatment-by-year interactions
-    for year in ("2013", "2014", "2015"):
-        Sav["{}*{}".format(group,year)] = Sav[group]*Sav[year]
-
-def isPositive(i):
-    #~ Returns 1 if number is positive, 0 if number<=0, nan if already nan, and self if string.
-    #~ Note that it's safe to run dummy variables through..
-    try:
-        if np.isnan(i): return i
-        else: return float(i>0)
-    except TypeError: return i
-
-too_many_null = 30
-Nonzero = Sav.applymap(isPositive)
-
-#~ Save DataFrame with zeros
-Savings = Sav.copy()
-#~ Naturally, only do this after Creating Nonzero dataframe.
-for var in Outcomes: #~ Set zeros to missing And topcode among non-zero values
-    for outcome in (var,var+"2013"):
-       if outcome in Sav:
-           Sav[outcome] = Sav[outcome].replace(0,np.nan)
-           Sav[outcome] = Sav.groupby(level="Year")[outcome].apply(topcode) #~ (Untested)
-
-many_null = [item for item in Sav if Sav[item].count()<too_many_null]
-many_null2 =[item for item in Savings if Savings[item].count()<too_many_null]
-Sav = Sav.drop(many_null,1).copy()
-Savings = Savings.drop(many_null,1).copy()
-
-Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
-
-Sav = Sav.loc["2014":"2015"]
-Savings = Savings.loc["2014":"2015"]
-Nonzero = Nonzero.loc["2014":"2015"]
-Sav_regs = regressions(Sav,     outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-Zer_regs = regressions(Nonzero, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-Amt_regs = regressions(Savings, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-
-Sav_results, Sav_SE  = reg_table(Sav_regs,  resultdf=True,table_info=["N","F-stat"])
-Zer_results, Zer_SE  = reg_table(Zer_regs,  resultdf=True,table_info=["N","F-stat"])
-Amt_results, Amt_SE  = reg_table(Amt_regs,  resultdf=True,table_info=["N","F-stat"])
-
-CTL  = Sav["UPG"]+Sav["CSH"] ==0
-CTL2 = Savings["UPG"]+Savings["CSH"] ==0
-#~ Get control group means and standard deviations
-Sav_CTLmean = {var: Sav[CTL].loc["2015",var].mean() for var in Outcomes}
-Zer_CTLmean = {var: Nonzero[CTL].loc["2015",var].mean() for var in Outcomes}
-Amt_CTLmean = {var: Savings[CTL2].loc["2015",var].mean() for var in Outcomes}
-
-Sav_CTLsd = {var: Sav[CTL].loc["2015",var].std() for var in Outcomes}
-Zer_CTLsd = {var: Nonzero[CTL].loc["2015",var].std() for var in Outcomes}
-Amt_CTLsd = {var: Savings[CTL2].loc["2015",var].std() for var in Outcomes}
-
-Sav_diff, Sav_diff_se = pd.DataFrame(Sav_CTLmean,index=["CTL mean"]), pd.DataFrame(Sav_CTLsd,index=["CTL mean"])
-Zer_diff, Zer_diff_se = pd.DataFrame(Zer_CTLmean,index=["CTL mean"]), pd.DataFrame(Zer_CTLsd,index=["CTL mean"])
-Amt_diff, Amt_diff_se = pd.DataFrame(Amt_CTLmean,index=["CTL mean"]), pd.DataFrame(Amt_CTLsd,index=["CTL mean"])
-
-for var in Outcomes:
-    #~ Savings regressions first
-    ttest1= Sav_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Sav_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-    Sav_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Sav_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-    Sav_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Sav_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-    #~ Nonzero regressions second
-    ttest1= Zer_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Zer_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-    Zer_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Zer_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-    Zer_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Zer_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-    #~ Savings regressions third
-    ttest1= Amt_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-    ttest2= Amt_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-    Amt_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    Amt_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-    Amt_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-    Amt_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-Save_results = Sav_results.append(Sav_diff)
-Zero_results = Zer_results.append(Zer_diff)
-Amnt_results = Amt_results.append(Amt_diff)
-Save_SE = Sav_SE.append(Sav_diff_se)
-Zero_SE = Zer_SE.append(Zer_diff_se)
-Amnt_SE = Amt_SE.append(Amt_diff_se)
-
-#~ Land = ["LandCult","LandOwn"] 
-#~ Savings = ["Savings","Food Sav", "Get Trans", "Give Trans"] 
-#~ Land_results = Sav_results[Land]
-#~ zLan_results = Zer_results[Land]
-#~ Land_SE = Sav_SE[Land]
-#~ zLan_SE = Zer_SE[Land]
-#~ 
-#~ Sav_results = Sav_results[Savings]
-#~ Zer_results = Zer_results[Savings]
-#~ Sav_SE =           Sav_SE[Savings]
-#~ Zer_SE =           Zer_SE[Savings]
-
-Save_tab = df_to_orgtbl(Save_results, sedf=Sav_SE)
-Zero_tab = df_to_orgtbl(Zero_results, sedf=Zer_SE)
-Amnt_tab = df_to_orgtbl(Amnt_results, sedf=Amt_SE)
-
-Table = Zero_tab +"\n"+ Save_tab + "\n"+ Amnt_tab
-
-#+end_src
-
-** Income
-
-#+name: income_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
-import numpy as np
-import pandas as pd
-from pandas.io import stata
-import statsmodels.api as sm
-from matplotlib import pyplot as plt
-import sys
-sys.path.append("../../data")
-from UPG import full_data, regressions, reg_table, df_to_orgtbl
-"""
-Note that topcoding has a large effect on the distribution here, and we see only a small (presumably non-random) portion of actual income for each household.
-"""
-
-# Top-Code or censor outliers?
-def topcode(var, Nstd=3, drop=False):
-    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
-    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
-    return var
-
-D = full_data(balance=[])
-keep = D.index
-
-I_file = '../../data/Endline/sections_8_17.csv'
-I = pd.read_csv(I_file).rename(columns={"id":"HH"}).set_index("HH", drop=True).ix[keep]
-
-#~Getting non-agriculture income data is easy
-I = I.filter(regex="^s16")
-Imonths    = I.filter(regex="s16_\dc").rename(columns=lambda x: x[:-1])
-Ipermonth  = I.filter(regex="s16_\dd").rename(columns=lambda x: x[:-1])
-Income_12m = Imonths.mul(Ipermonth).sum(axis=1)
-Iyear      = I.filter(regex="s16_\de").rename(columns=lambda x: x[:-1]).sum(axis=1)
-
-A_file = "../../data/Endline/Agriculture_cleaned.csv"
-A = pd.read_csv(A_file).rename(columns={"id":"HH"}).set_index("HH",drop=False).ix[keep]
-unit_prices = A.groupby(["harvest_type", "harvest_price_unit"])["harvest_price"].median()
-prices = unit_prices.loc[zip(A["harvest_type"],A["harvest_price_unit"])]
-A["price"]=list(prices)
-
-A["harvest_unit_match"] = A["harvest_price_unit"] == A["harvest_unit"]
-A["price"] = A["harvest_unit_match"]*A["harvest_price"] + (1-A["harvest_unit_match"])*A["price"]
-
-A["income_farm_year"] = A["harvest_size"]*A["price"]
-Ayear = A.groupby("HH")["income_farm_year"].sum()
-
-unit_prices = A.groupby(["livestock_type", "livestock_price_unit"])["livestock_price"].median()
-prices = unit_prices.loc[zip(A["livestock_type"],A["livestock_price_unit"])]
-A["price"]=list(prices)
-A["livestock_unit_match"] = A["livestock_price_unit"] == A["livestock_unit"]
-A["price"] = A["livestock_unit_match"]*A["livestock_price"] + (1-A["livestock_unit_match"])*A["price"]
-
-A["income_livestock_year"] = A["livestock_size"]*A["price"]
-Lyear = A.groupby("HH")["income_livestock_year"].sum()
-
-Outcomes = ["Total", "Non-Farm", "Farm",  "Livestock"]
-Controls = ["cons", "UPG","CSH"]
-Vals = pd.DataFrame({"Non-Farm": Income_12m, "Farm":Ayear, "Livestock":Lyear})
-Vals = Vals.apply(topcode)
-
-Vals["Total"] = Vals.sum(axis=1)
-Vals["cons"] = 1.
-
-Vals = Vals.join(D[["UPG","CSH"]],how="left")
-Vals["CTL"] = (Vals["UPG"]+Vals["CSH"] ==0).apply(int)
-
-#~ Make graph of distribution
-stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
-Vals["Group"] = stringify("UPG")+stringify("CSH")+stringify("CTL")
-Vals.dropna(subset=[["Total","UPG","CSH","CTL"]]).groupby("Group")["Total"].plot(kind="kde")
-plt.title("Total Income Distribution by Group")
-plt.savefig("../figures/IncomeDistribution.png")
-plt.clf()
-#~ Make bar graphs
-Imean  = Vals.groupby("Group").mean()[Outcomes]
-Icount = Vals.groupby("Group").count()[Outcomes]
-Istd = Vals.groupby("Group").std()[Outcomes]
-Ise=Istd/np.sqrt(Icount)
-Imean.T.plot(kind="bar",yerr=Ise.T)
-plt.tight_layout()
-plt.xticks(rotation=45)
-plt.savefig('../figures/Income_group.png')
-plt.clf()
-
-regs = {var: sm.OLS(Vals[var], Vals[Controls], missing="drop").fit() for var in Outcomes}
-results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
-
-CTL = Vals["CTL"] 
-CTLmean = {var: Vals.query("CTL==1")[var].mean() for var in Outcomes}
-CTLsd = {var: Vals.query("CTL==1").std() for var in Outcomes}
-diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
-
-for var in Outcomes:
-    ttest1= regs[var].t_test("UPG - CSH = 0").summary_frame()
-
-    diff.loc[   r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest1["coef"][0]
-    diff_se.loc[r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-results = results.append(diff)
-SE = SE.append(diff_se)
-
-tab = df_to_orgtbl(results, sedf=SE)
-
-#+end_src
-
-#+RESULTS: income_analysis
-: None
-
-** Conflict Exposure
-#+name: conflict_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
-import numpy as np
-import pandas as pd
-import statsmodels.api as sm
-import sys
-sys.path.append("../../data")
-from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
-
-# Top-Code or censor outliers?
-def topcode(var, Nstd=3, drop=False):
-    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
-    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
-    return var
-
-#~ Read in data
-D = full_data("../../data/UPG_full.dta", balance=[])
-D = D[D.merge_midline != 1]
-C = D.filter(like="conflict").rename(columns = lambda x: x[:-2]) #~ Set up empty DataFrame to fill
-
-#~ Make Outcome variables
-#~ NOTE: Not looking at whether they protected assets as only 50 #~ said they did, and all said "Migrated to stay with other family"
-C["Bsln_NaN"] = D["merge_midline"] == 2
-C["Worried"]  = C["conflict_worried"]
-C["Affected"] = C["conflict_affected"]
-protect_lives_codes = lambda x: {"Nothing": 0, "Migrate to stay with friend/family": 1, "Migrated and found new accommodation": 1,
-                                 "Looked for protection with Govt. Military": 2, "Looked for protection with NGO": 2}.get(x)
-C["ProtectLives"] = C["conflict_protectlives"].apply(protect_lives_codes)
-C["Migrated"] = (C["ProtectLives"]==1) + \
-                (C["conflict_affected1"]=="Needed to elocate or migrate")
-C["NoMeans"] = C["conflict_whynotprotect"]=="Didn't have the means"
-C["NoInvest"]= C.filter(like="affected").applymap(lambda x: x=="Could not plant crop or invest in business").sum(axis=1)
-C = C.drop([var for var in C if var.startswith("conflict_")], 1)
-Outcomes = ["ProtectLives", "Worried", "Affected", "Migrated", "NoMeans", "NoInvest"]
-
-#~ Bring in Treatment variables
-C["UPG"] = D["UPG"]
-C["cons"] = 1.
-C = C.applymap(lambda x: int(x) if not np.isnan(x) else x)
-Controls = ["cons", "UPG"] #~, "Bsln_NaN"]
-
-#~ Plot
-byT=C.groupby("UPG")
-Cbar=byT.mean().drop(["Bsln_NaN",'cons'],1)
-Cstd=byT.std().drop(["Bsln_NaN",'cons'],1)
-Cn=byT.count().drop(["Bsln_NaN",'cons'],1)
-for df in (Cbar,Cstd,Cn): 
-        df.index=["CTL","UPG"]
-        df.index.name="Group"
-Cse=Cstd/np.sqrt(Cn)
-Cbar.T.plot(kind="bar",yerr=Cse.T)
-plt.tight_layout()
-plt.xticks(rotation=45)
-plt.savefig("../figures/conflict_exposure.png")
-plt.clf()
-
-
-C_regs = regressions(C, outcomes=Outcomes, controls=Controls, Baseline=False, baseline_na=False)
-C_results, C_SE  = reg_table(C_regs,  resultdf=True,table_info=["N","F-stat"])
-
-#~ Get control group means and standard deviations and add to regression table
-CTLmean = {var: C.query("UPG==0")[var].mean() for var in Outcomes}
-CTLsdv  = {var: C.query("UPG==0")[var].std()  for var in Outcomes}
-CTLmean, CTLsdv = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsdv,index=["CTL mean"])
-C_results = C_results.append(CTLmean)
-C_SE      = C_SE.append(CTLsdv)
-C_results.drop('cons',inplace=True)
-C_SE.drop('cons',inplace=True)
-
-Table = df_to_orgtbl(C_results, sedf=C_SE)
-return Table
-
-#+end_src
-
-** Confidence & Autonomy
-
-#+name: decision_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
- import numpy as np
- import pandas as pd
- import statsmodels.api as sm
- import sys
- DATADIR = "../../data/"
- sys.path.append(DATADIR)
- from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
- D = full_data(DIR = DATADIR,balance=[])
-
- Decide14 = D.filter(regex="^decide_.*_m").rename(columns=lambda x: x[:-2].split("_")[-1])#~.applymap(recode)
- Decide15 = D.filter(regex="^decide_.*_e").rename(columns=lambda x: x[:-2].split("_")[-1])#~.applymap(recode)
-
-{'decide_arguments',
- 'decide_fearful',
-
- 'decide_pressuretospend'}
-
- who_decides = ['dailypurchase', 'familyvisits', 'healthchild', 'healthown', 'majorpurchase', 'moneyown']
- who_recode  = lambda x: float("Herself" in x) if pd.notnull(x) else x
-
- if WEEKLY:
-     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
-     Aval2013 = Aval2013.applymap(weekly)
-     Aval2014 = Aval2014.applymap(weekly)      
-     Aval2015 = Aval2015.applymap(weekly)
- 
- index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
- Outcomes = index_vars+["z-score"]
- #~ Creates Year dummies, z-scores and baseline values as `var'2013
- for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
-     Aval["Year"]=Year
-     if not weekly:
-        for var in index_vars:
-            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
-     FS_sum = Aval[index_vars].sum(axis=1)
-     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
-     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
-    
- Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
- Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
- Vals = Vals.join(D[["UPG","CSH"]])
-
- for group in ("UPG", "CSH"):
-     for year in ("2013", "2014", "2015"):
-         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
-
- Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
-
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
- Vals=Vals.loc[2014:2015]
- regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-
- results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
-
- CTL = Vals["UPG"]+Vals["CSH"] ==0
- CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
- CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
- diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
-
- for var in Outcomes:
-     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-
- results = results.append(diff)
- SE = SE.append(diff_se)
-
- tab = df_to_orgtbl(results, sedf=SE)
- #+end_src
-
-#+name: confidence_analysis
-#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
- import numpy as np
- import pandas as pd
- import statsmodels.api as sm
- import sys
- DATADIR = "../../data/"
- sys.path.append(DATADIR)
- from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
- D = full_data(DIR = DATADIR,balance=[])
-
- autonomy_codes = {'go_NGO',
-                   'go_church',
-                   'go_healthcenter',
-                   'go_housenonrelative',
-                   'go_houserelative',
-                   'go_market',
-                   'go_school',
-                   'go_water'}
-
- codes = {"1-2 times a week": 3,
-         "3-6 times a week": 2,
-         "Everyday": 1,
-         "everyday": 1,
-         "Less than once a week": 4,
-         "less than once a week": 4,
-         "Never": 5,
-         "never": 5}
-
- recode = lambda x: codes.setdefault(x,x)
-
- Autnmy14 = D.filter(regex="^cango_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
- Autnmy15 = D.filter(regex="^cango_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
-
-{'decide_arguments',
- 'decide_fearful',
-
- 'decide_dailypurchase',
- 'decide_familyvisits',
- 'decide_healthchild',
- 'decide_healthown',
- 'decide_majorpurchase',
- 'decide_moneyown',
- 'decide_pressuretospend'}
-
- Decide14 = D.filter(regex="^decide_.*_m").rename(columns=lambda x: x[:-2])#~.applymap(recode)
- Decide15 = D.filter(regex="^decide_.*_e").rename(columns=lambda x: x[:-2])#~.applymap(recode)
-
- Confid14 = D.filter(regex="^conf_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
- Confid15 = D.filter(regex="^conf_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
-
- if WEEKLY:
-     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
-     Aval2013 = Aval2013.applymap(weekly)
-     Aval2014 = Aval2014.applymap(weekly)      
-     Aval2015 = Aval2015.applymap(weekly)
- 
- index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
- Outcomes = index_vars+["z-score"]
- #~ Creates Year dummies, z-scores and baseline values as `var'2013
- for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
-     Aval["Year"]=Year
-     if not weekly:
-        for var in index_vars:
-            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
-     FS_sum = Aval[index_vars].sum(axis=1)
-     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
-     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
-    
- Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
- Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
- Vals = Vals.join(D[["UPG","CSH"]])
-
- for group in ("UPG", "CSH"):
-     for year in ("2013", "2014", "2015"):
-         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
-
- Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
-
- #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
- Vals=Vals.loc[2014:2015]
- regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
-
- results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
-
- CTL = Vals["UPG"]+Vals["CSH"] ==0
- CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
- CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
- diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
-
- for var in Outcomes:
-     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
-     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
-
-     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
-
-     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
-     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
-
-
- results = results.append(diff)
- SE = SE.append(diff_se)
-
- tab = df_to_orgtbl(results, sedf=SE)
- #+end_src
-
-** Extras
-#+name: get_loglambdas
-#+BEGIN_SRC python :noweb no-export :results silent
-
-"""
-This code does not yet work in this file. Come back to it...
-"""
-  df = UPG.process_data(C, HH, T, year = year) #~ Process_data() builds consumption data if not given as an argument
-  df['Constant']=1
-  df["CTL"] = 1-df["UPG"] #~ Code the cash group as controls since they're not in the midline analysis
-
-  explist=[s[2:-2] for s in df.columns[[s.startswith('c_') and s.endswith(year[1]) for s in df.columns]]]
-  df = df.rename(columns= lambda x: x[:-2] if x.endswith(year[1]) else x)
-
-  bothdf=[]
-  xvars=['hh_size_b','child_total_b','Loc']
-  for x in explist:
-      if 'c_'+x+r'_b' not in df:
-          #~ When you take out the baseline controls in favor of repeated cross-sections, this is where to start...
-          print(x+" has no baseline data or had too few non-zero responses at baseline. Skipping.")
-          continue
-      ydf=pd.DataFrame(df[['c_'+x]].rename(columns={'c_'+x:x.capitalize()}).stack())
-      rdict=dict(zip(xvars+['c_'+x+r'_b'],["%s_%s" % (s,x.capitalize()) for s in xvars]+['Baseline_%s' % x.capitalize()]))
-      xdf=pd.DataFrame(df[xvars+['c_'+x+r'_b']])
-      xdf.index=pd.MultiIndex.from_tuples([(i,x.capitalize()) for i in xdf.index])
-      locations=pd.get_dummies(xdf['Loc'],prefix='Loc_%s' % x.capitalize())
-      del xdf['Loc']
-      xdf.rename(columns=rdict,inplace=True)
-      xdf=xdf.join(locations)
-      xdf.replace(to_replace=np.NaN,value=0,inplace=True)
-
-      # Add row to restrict location dummies to sum to one
-      ydf=pd.concat([ydf,pd.DataFrame([0],index=[(0,x.capitalize())])])
-      xdf=pd.concat([xdf,pd.DataFrame([s.startswith('Loc_')+0. for s in xdf.columns],index=xdf.columns,columns=[(0,x.capitalize())]).T]) 
-
-      xdf[0]=ydf
-      xdf.dropna(how='any',inplace=True)
-      bothdf.append(xdf)
-
-  #~ Are this fillna() call and the xdf.replace call above a problem? It seems necessary for the block-diagonal ols function
-  #~ we're using, but aren't we coding zeros as missing and calculating residuals for only those positive consumption? Wouldn't
-  #~ replacing them to zero insert some non-zero residual for households that never consume a given good?
-  #~ And isn't this the motivation behind svd_missing?
-  mydf=pd.concat(bothdf).fillna(value=0)
-
-  X=mydf.iloc[:,1:]
-
-  y=mydf[[0]]
-
-  x=np.exp(y.unstack().iloc[1:,:]) # Expenditures (in levels)
-  xshares=x.divide(x.sum(axis=1),axis=0).fillna(value=0).mean() # Expenditure shares (taking missing as zero)
-  xshares.index=xshares.index.droplevel(0)
-
-  b,se=ols(X,y)
-
-  ## betahat=b[['Constant_%s' % s.capitalize() for s in explist]]
-  ## betahat.rename(columns=dict(zip(betahat.columns,[s.capitalize() for s in explist])),inplace=True)
-
-  e=y-X.dot(b.T)
-
-  e.rename(columns={0:'Resid'},inplace=True)
-  e.index.names=['HH','Good']
-
-  testdf=pd.merge(df[['UPG','CTL']].reset_index(),e.reset_index(),how='outer',on=['HH'])
-  testdf.set_index(['HH','Good'],inplace=True)
-
-  UPG=testdf['UPG'].mul(testdf['Resid']).dropna().unstack()
-  CTL=testdf['CTL'].mul(testdf['Resid']).dropna().unstack()
-
-  e=(e-e.mean()).unstack()
-
-  # Test of significant differences between treatment and control:
-  # Weighting matrix:
-  A=np.matrix((UPG-CTL).cov().as_matrix()).I
-  g=np.matrix((UPG-CTL).mean())
-  J=e.shape[0]*g*A*g.T # Chi2 statistic
-
-  p=1-chi2.cdf(J,e.shape[1])
-
-  chi2test="Chi2 test: %f (%f)" % (J,p)
-
-  N=pd.Series([d.shape[0]-1 for d in bothdf],index=[d.index.levels[1][0] for d in bothdf])
-
-  resultdf=pd.DataFrame({'UPG':UPG.mean(),'CTL':CTL.mean(),'$N$':N})
-  sedf=pd.DataFrame({'UPG':UPG.std()/np.sqrt(resultdf['$N$']),'CTL':CTL.std()/np.sqrt(resultdf['$N$'])})
-  resultdf['Diff.']=resultdf['UPG']-resultdf['CTL']
-  sedf['Diff.']=np.sqrt((sedf['UPG']**2) + (sedf['CTL']**2))
-
-  # Use svd (with missing data) to construct beta & log lambda
-
-  myb,myl = get_loglambdas(e,TEST=True)
-
-  myb.index=myb.index.droplevel(0)
-
-  # Normalize log lambdas
-  l=myl/myl.std()
-#+END_SRC
-
-#+name: residuals_by_group
-#+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
-def residuals_by_group(models, groups, outcomes=[], kind="kde", figure_dir="../figures/", seriesname="Treat", blanks_to = "Control"):
-    """
-     Takes a set of statsmodels regression results and,
-     for each outcome, produces a plot comparing the
-     distribution of residuals by group.
-
-     models:
-         A dictionary of the form {variable name: sm.RegressionResults}. Empty defaults to all available.
-     groups:
-         A list, pd.Series, or pd.DataFrame with variables
-         (A later version could contain an arbitrary set of categorical and give groups for every combination.)
-     outcomes:
-         A list specifying which variables in models to make plots for.
-     kind:
-         kde (or density) or histogram (or hist)
-         Density plots are on a single axis. Histograms are stacked by group.
-     figure_dir:
-         The directory into which the figures get saved. If doesn't exist, throws error (future version might make that directory on the fly.)
-     Seriesname:
-         If a series or list is passed without a name, defaults to `seriesname'
-     blanks_to:
-         Observations with no treatment status from "groups" gets renamed to `blanks_to'
-    """
-
-    #~ Make outcomes a list. If empty, defaults to all variables in models
-    if type(outcomes)==str: outcomes=[outcomes]
-    if not outcomes: outcomes = sorted(models.keys())
-
-    #~ Make data frame and make "Group" categorical
-    df = pd.DataFrame(groups).rename(columns={0:seriesname})
-    for var in df: df[var] = df[var].applymap(lambda x: var if x else "")
-    df["Group"] = df.sum(axis=1).replace("",blanks_to)
-
-    #~ Make residuals
-    for var in outcomes:
-        #~ Make column of residual values
-        resid_var = "resid_{}".format(var)
-        df[resid_var] = models[var].resid
-        #~ Groupby object
-        groups = df.dropna(subset=[resid_var]).groupby("Group")[resid_var]
-
-        #~ Plot density by group
-        if kind in ("kde", "density"):
-            fig, ax = plt.subplots()
-            groups.plot(kind=kind, ax=ax, legend=True)
-            fig.savefig(figure_dir+resid_var+".png")
-
-        #~ Plot histograms by group
-        elif kind in ("hist", "histogram"):
-            i=0
-            fig, ax = plt.subplots(len(set(df["Group"])),1,sharex=True)
-            for group, data in grps[var]:
-                ax[i].hist(data.values, bins=20)
-                ax[i].set_title(group)
-                i+=1
-            i=0
-            fig.savefig(figure_dir+resid_var+".png")
-        print(resid_var+".png created.")
-
-
-#+end_src
-   
-
-
-
- 
 
 
