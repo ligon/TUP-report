@@ -1187,3 +1187,1358 @@ revenue from their assets without having to sell them.  In all, the
 market value of these food transfers were valued at $110, bringing the
 total value of all transfers to either $350 or $410.
 
+
+* COMMENT Extra Analysis
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-05-18 Tue 13:33
+  :ARCHIVE_FILE: ~/Research/SS-TUP/Report/documents/EndlineReport.org
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+
+** Good-level analysis
+
+Next, \ref{tab:consumption_full} sets aside these aggregated measures to look more
+carefully at potential changes in the composition of consumption in each group. Given
+the large number of zeros, we use a linear model to consider first the 
+frequency of non-zero consumption of each good among treatment and control
+households, then look at levels of consumption among households with non-zero
+consumption. \Tab{consumption_full} presents point estimates.
+
+A few changes in the composition of consumption are interesting. UPG households appear to consume 17% less
+sorghum (often considered an inferior good in Yei) and more on rice, which is
+considered a higher-quality staple. While almost everyone reports some health
+spending over the past month, both treatment groups spent more, though only
+statistically significant in the cash group, which saw a 50% increase over the
+control group. The cash group was also 30% (14 pp) more likely to have spent money
+on funerals, though they did not spend more on average.
+
+#+name: consumption_disaggreate_results
+#+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
+<<consumption_analysis>>
+from matplotlib import pyplot as plt
+#~ Only keep disaggregate items
+Goods = C.filter(regex="^c_").rename(columns=lambda col: col[2:] if col.startswith("c_") else col)
+#~ 1 if coded as >0, 0 if zero, keep NaN's missing, since those are only from missing surveys.
+Nonzero = Goods.applymap(lambda i: float(i>0) if not np.isnan(i) else np.nan)
+#~ Restrict Goods df to positive responses.
+Goods = Goods.replace(0,np.nan)
+too_many_zeros = 30
+many_zeros = [item for item in Goods if Goods[item].notnull().sum()<too_many_zeros]
+Nonzero = Nonzero.drop(many_zeros,1)
+Goods = Goods.drop(many_zeros,1)
+
+#~ Merge in Control Vars
+controls = ["cons","UPG","CSH"]
+Goods = Goods.join(C[controls],how="left")
+Nonzero = Nonzero.join(C[controls],how="left")
+Items = [item[:-2] for item in Goods if item.endswith("_e")]
+CTL = Goods[controls].sum(axis=1)==1 #~ i.e. only constant ==1, UPG & UCT ==0
+Goods_ctl_mean =   Goods.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
+Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
+
+Zero, Zero_se = reg_table(regressions(Nonzero,"_e", outcomes=Items, Baseline="_b"), resultdf=True, Transpose=True)
+Good, Good_se = reg_table(regressions(Goods,"_e", outcomes=Items, Baseline="_b"  ), resultdf=True, Transpose=True)
+#~ Make full table of Standard errors
+SE = Zero_se[["UPG","CSH"]].join(Good_se[["UPG","CSH"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
+
+#~ Make full table of point estimates and control-group means
+FullTable = pd.DataFrame({"Mean (CTL)":Goods_ctl_mean, "% >0 (CTL)":Zeros_ctl_mean}).join(Zero[["UPG","CSH"]])
+FullTable = FullTable.join(Good[["UPG","CSH","N"]], lsuffix=" (%>0)", rsuffix=" (Amt.)")
+
+#~ Make % change graph
+fig, ax = plt.subplots(2,1, figsize=(6,9))
+for i, group in enumerate(("UPG","CSH")):
+    pct_change = FullTable[group+" (Amt.)"]/FullTable["Mean (CTL)"]
+    se_change  = SE[group+" (Amt.)"]/FullTable["Mean (CTL)"]
+    pct_change.sort()
+    pct_change.plot(kind="bar", yerr=SE[group+" (Amt.)"], ax=ax[i])
+    ax[i].set_title(group, fontsize=6)
+fig.savefig("../figures/Consumption.png")
+
+FullTable = df_to_orgtbl(FullTable, sedf=SE)
+return FullTable
+#+end_src
+
+#+name: tab:consumption_full
+#+caption: Control group means and estimated treatment effects for percent consuming any and total amounts consumed.
+#+attr_latex: :environment longtable :align lrrrrrrr
+ #+RESULTS: consumption_disaggreate_results
+
+** Disaggregate Asset Results 
+
+#+name: asset_disaggreate_results
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none 
+<<assets_disaggreate_analysis>>
+return tab
+#+end_src
+
+#+name: tab:asset_disaggregate
+#+caption: Control means and treatment effects for Assets owned by >40 households
+#+RESULTS: asset_disaggreate_results
+|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
+|              | # own  |              |             | Value     |                |                |          |
+|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
+| Item         | CTL    | UPG          | UCT        | CTL       | UPG            | UCT           | N        |
+|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
+| Pangas       | $1.06$ | $0.01$       | $0.13^{**}$ | $11.86$   | $1.66^{**}$    | $0.04$         | $410.00$ |
+| Chickens     | $3.79$ | $0.70$       | $-0.32$     | $154.35$  | $23.31$        | $0.80$         | $162.00$ |
+| Mobile       | $1.88$ | $-0.09$      | $0.08$      | $113.96$  | $2.62$         | $1.70$         | $569.00$ |
+| Radio        | $1.62$ | $0.84$       | $-0.40$     | $57.25$   | $4.98$         | $5.10$         | $333.00$ |
+| Shed         | $1.22$ | $-0.14$      | $-0.22$     | $48.81$   | $37.57$        | $6.81$         | $53.00$  |
+| Stoves       | $1.44$ | $0.34$       | $0.31$      | $20.32$   | $18.19^{**}$   | $8.31$         | $84.00$  |
+| Potspans     | $4.46$ | $-0.06$      | $-0.23$     | $102.73$  | $15.90$        | $-15.40$       | $582.00$ |
+| Ducks        | $5.72$ | $4.26^{***}$ | $-0.16$     | $230.93$  | $109.99^{***}$ | $-19.34$       | $223.00$ |
+| Motorcycle   | $1.51$ | $-0.48$      | $0.12$      | $2288.48$ | $300.46$       | $-196.32$      | $66.00$  |
+| Chairtables  | $5.02$ | $0.25$       | $0.39$      | $167.62$  | $19.00$        | $-24.73$       | $638.00$ |
+| Net          | $3.07$ | $0.03$       | $-0.08$     | $24.49$   | $0.66$         | $-3.81$        | $382.00$ |
+| Axes         | $1.02$ | $0.03$       | $-0.02$     | $17.74$   | $0.02$         | $-3.94^{**}$   | $218.00$ |
+| Smallanimals | $3.39$ | $0.29$       | $-0.90$     | $767.26$  | $-151.35$      | $-311.05^{**}$ | $155.00$ |
+| Charcoal     | $2.20$ | $-0.26$      | $-0.83$     | $35.81$   | $-1.43$        | $-4.65$        | $176.00$ |
+| Bicycle      | $6.34$ | $-5.46$      | $-5.52$     | $272.90$  | $-31.50$       | $-42.67$       | $135.00$ |
+| Bed          | $3.17$ | $-0.23$      | $-0.40$     | $300.64$  | $19.32$        | $-57.78^{*}$   | $628.00$ |
+| Tv           | $1.48$ | $-0.36$      | $-0.26$     | $380.45$  | $121.95$       | $348.23^{**}$  | $45.00$  |
+|--------------+--------+--------------+-------------+-----------+----------------+----------------+----------|
+
+
+
+* COMMENT Code appendix
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-05-18 Tue 13:33
+  :ARCHIVE_FILE: ~/Research/SS-TUP/Report/documents/EndlineReport.org
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+  
+** Food Security
+
+ #+name: foodsecure_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle foodsecurity.py
+ #~ DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append(DATADIR)
+ from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ D = full_data(DIR = DATADIR,balance=[])
+ WEEKLY = True
+
+ codes = {"1-2 times a week": 3,
+         "3-6 times a week": 2,
+         "Everyday": 1,
+         "everyday": 1,
+         "Less than once a week": 4,
+         "less than once a week": 4,
+         "Never": 5,
+         "never": 5}
+
+ recode = lambda x: codes.setdefault(x,x)
+
+ Aval2013 = D.filter(regex="^fs_.*_b").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Aval2014 = D.filter(regex="^fs_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Aval2015 = D.filter(regex="^fs_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
+
+ if WEEKLY:
+     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
+     Aval2013 = Aval2013.applymap(weekly)
+     Aval2014 = Aval2014.applymap(weekly)      
+     Aval2015 = Aval2015.applymap(weekly)
+ 
+ index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
+ Outcomes = index_vars+["z-score"]
+ #~ Creates Year dummies, z-scores and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     if not weekly:
+        for var in index_vars:
+            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
+     FS_sum = Aval[index_vars].sum(axis=1)
+     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+    
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["UPG","CSH"]])
+
+ for group in ("UPG", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+ Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["UPG"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
+
+** Consumption
+
+ #+name: lambda_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-lambdas.py
+
+ import numpy as np
+ import pandas as pd
+ import cfe.estimation as nd
+ import statsmodels.api as sm
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append("../../data")
+ from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ food =  ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
+ month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
+ ConsumptionItems = food+['airtime','fuel']
+ mobile=True
+
+ D = full_data(DIR=DATADIR)
+ C, HH, T = consumption_data(D,WRITE=False,include2016=False)
+ HH['log HHSIZE'] = HH["hh_size"].apply(np.log)
+ HH = HH.drop("hh_size",1)
+ y,z = C.replace(0,np.nan).apply(np.log).sort_index(level=[0,1,2])[ConsumptionItems].copy(),HH.sort_index(level=[0,1,2]).copy()
+ y.index.names, z.index.names = ['j','t','mkt'], ['j','t','mkt']
+ keep = pd.notnull(y.index.get_level_values("mkt"))
+ y,z = y.loc[keep,:].align(z,join="left",axis=0)
+ b,ce,d,sed= nd.estimate_reduced_form(y,z,return_se=True,VERBOSE=True)
+ ce = ce.dropna(how='all')
+ print("Getting Loglambdas")
+ bphi,logL=nd.get_loglambdas(ce,TEST="warn")
+ try:
+    xrange
+    logL.to_pickle(DATADIR + "ss-lambdas.df")
+ except NameError: logL.to_pickle(DATADIR + "ss-lambdas3.df")
+ 
+ if mobile:
+     M,Mc,Mhh = mobile_data(use_dates=True,DIR = DATADIR+"Mobile/")
+     y = Mc.replace(0,np.nan).apply(np.log).sort_index(level=[0,1,2]).filter(items=ConsumptionItems).copy()
+     z = Mhh.sort_index(level=[0,1,2]).copy()
+     y.index.names, z.index.names = ['j','t','mkt'], ['j','t','mkt']
+     keep = pd.notnull(y.index.get_level_values("mkt"))
+     y,z = y.loc[keep,:].align(z,join="left",axis=0)
+     b,ce,d,sed= nd.estimate_reduced_form(y,z,return_se=True,VERBOSE=True)
+     ce = ce.dropna(how='all')
+     print("Getting Loglambdas")
+     Mbphi,MlogL=nd.get_loglambdas(ce,TEST="warn")
+     MlogL -= MlogL.mean()
+     MlogL /= MlogL.std()
+     MlogL = MlogL.unstack('t').drop('4February',1).stack()
+     try:
+       xrange
+       MlogL.to_pickle(DATADIR + "ss-lambdas_mobile.df")
+     except NameError: MlogL.to_pickle(DATADIR + "ss-lambdas_mobile3.df")
+
+ #+end_src 
+
+ #+name: consumption_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-consumption.py
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append(DATADIR)
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ 
+ USE_LAMBDAS = False #~ Whether to use the output of SS-lambdas.py as an outcome (You may have to run it first.)
+ TGROUP_FE   = True  #~ Whether to use UPG & CSH dummy variables as controls (I'm pretty sure we should be)
+
+ food = ['cereals', 'maize', 'sorghum', 'millet', 'potato', 'sweetpotato', 'rice', 'bread', 'beans', 'oil', 'salt', 'sugar', 'meat', 'livestock', 'poultry', 'fish', 'egg', 'nuts', 'milk', 'vegetables', 'fruit', 'tea', 'spices', 'alcohol', 'otherfood']
+ month = ['fuel', 'medicine', 'airtime', 'cosmetics', 'soap', 'transport', 'entertainment', 'childcare', 'tobacco', 'batteries', 'church', 'othermonth']    
+ year = ['clothesfootwear', 'womensclothes', 'childrensclothes', 'shoes', 'homeimprovement', 'utensils', 'furniture', 'textiles', 'ceremonies', 'funerals', 'charities', 'dowry', 'other']    
+
+
+ D = full_data(DIR=DATADIR)
+ C, HH, T = consumption_data(D,WRITE=True) #"csv")
+ if USE_LAMBDAS:
+    logL = pd.read_pickle(DATADIR + "ss-lambdas.df")
+    logL.index.names=["HH","Year","Location"]
+    C = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
+ C = C.reorder_levels([1,2,0])#.sort_index(level=0)
+ keep = pd.notnull(C.index.get_level_values("Location"))
+ C = C.loc[keep,:]
+
+ # Make aggregate variables
+ C["Food"]   = C.filter(items=food).sum(axis=1).replace(0,np.nan)
+ C["Month"]   = C.filter(items=food).sum(axis=1)
+ C["Year"]   = C.filter(items=food).sum(axis=1)
+ C["Tot"]    = C[["Food","Month","Year"]].sum(axis=1).replace(0,np.nan)
+
+ def align_indices(df1,df2):
+    """
+    Reorder levels of df2 to match that of df1
+    Must have same index.names
+    """
+    I1, I2 = df1.index, df2.index
+    try: assert(not set(I1.names).difference(I2.names))
+    except AssertionError: raise ValueError("Index names must be the same")
+    new_order = []
+    for lvl in I1.names: new_order.append(I2.names.index(lvl))
+    df2 = df2.reorder_levels(new_order)
+    return df1, df2
+
+ def winsorize(Series, **kwargs):
+    """
+    Need to implement two-sided censoring as well.
+    WARNING: if Top<0, all zeros will be changed to Top
+    """
+    percent    = kwargs.setdefault("percent",99)
+    stdev      = kwargs.setdefault("stdev",False)
+    drop       = kwargs.setdefault("drop",False)
+    drop_zeros = kwargs.setdefault("drop_zeros",True)
+    twoway     = kwargs.setdefault("twoway",False)
+
+    if drop_zeros: S = Series.replace(0,np.nan).dropna()
+    else: S = Series.dropna()
+    N_OBS = S.notnull().sum()
+    if N_OBS<10: return S
+
+    if percent: Top = np.percentile(S, percent)
+    if stdev:   
+        Top =  S.dropna().mean()
+        Top += stdev*S.dropna().std()
+    try: assert((not drop_zeros) or Top>0)
+    except AssertionError: raise ValueError("Top < 0 but zeros excluded")
+    if drop: replace_with = np.nan
+    else:    replace_with = Top
+
+    _Series = Series.copy()
+    _Series[_Series>Top]=replace_with
+
+    if not twoway: return _Series
+    else:
+        kwargs['twoway'] = False
+        return -1*winsorize(-1*_Series, **kwargs)
+
+ def USD_conversion(Exp,exchange_rate=1.,PPP=1.,inflation=1.,time='Year'):
+    """
+    Convert nominal local currency into price- and inflation-adjusted USD
+
+    Exp - A numeric or pd.Series object 
+    exchange_rate - Taken as LCU/USD. 
+    PPP - Taken as $Real/$nominal
+    inflation - Taken as % inflation compared to some baseline.
+    time - If a list is passed, `time' indicates the name or position of the time level in Exp.index
+        NOTE: This has to be a cumulative number, so if inflation is 20% for two straight years, that year should be divided by (1+.2)**2
+    Final calculation will basically be Exp_usdppp = Exp*(exchange_rate*PPP)/inflation
+
+    if pd.Series are passed for any kwarg, index name needs to be in the multi-index of Exp.
+    """
+    if type(inflation)==list: inflation=[1./i for i in inflation]
+    else: inflation = 1/inflation
+    if type(exchange_rate)==list: exchange_rate=[1./i for i in exchange_rate]
+    else: exchange_rate = 1/exchange_rate
+    
+    _Exp = Exp.copy()
+    VARS = (exchange_rate, PPP,inflation)
+    if list in map(type,VARS):
+        if time in _Exp.index.names: time=_Exp.index.names.index(time)
+        time = _Exp.index.levels[time]
+    for var in VARS:
+        if type(var)==list: var=pd.Series(var,index=time)
+        try: _Exp = _Exp.mul(var)
+        except ValueError: #~ If Series index doesn't have a name, try this...
+            var.index.name = var.name
+            _Exp = _Exp.mul(var)
+    return _Exp
+
+ def percapita_conversion(Exp,HH,children=["boys","girls"],adult_equivalent=1.,minus_children='hh_size'):
+    """
+    Returns household per-capita expenditures given:
+        `Exp'- Total household expenditures
+        `HH' - Total number of individuals in the household
+            If HH is a pd.DataFrame, Exp is divided by HH.sum(1)
+            if `children' is the name of a column or a list of column names, 
+            those first get divided by the factor adult_equivalent
+    """
+    try: HH.columns #~ If HH is a series, just divide though
+    except AttributeError: return Exp.div(HH)
+    _HH = HH.copy()
+    if type(children)==str: children=[children]
+    children = _HH.columns.intersection(children).tolist()
+    if minus_children: _HH[minus_children] -= _HH[children].sum(1)
+    if children: _HH[children] *= adult_equivalent
+    Exp,_HH = align_indices(Exp,_HH)
+    return Exp.div(_HH.sum(1).replace(0,1))
+
+ #~ Source: http://data.worldbank.org/indicator/PA.NUS.PRVT.PP?locations=SS&name_desc=false
+ xrate = [ 2.161, 2.162, 3.293] #~ Using PPP adjusted xrate and just setting PPP=1.
+ PPP = 1.
+ inflation= 1. #~ Bank data uses international $, which is inflation adjusted.
+ C["Exp_usd"] = winsorize(USD_conversion(C["Tot"],exchange_rate=xrate,PPP=PPP,inflation=inflation))
+ C["Tot_pc"] = percapita_conversion(C["Exp_usd"],HH,adult_equivalent=.5)
+ #C["Exp_usdpc_tc"] = winsorize(C["Exp_usdpc"])
+
+ #C["z-score"]  = (C["Tot"]-C["Tot"].mean())/C["Tot"].std()
+ C["FoodShr"]= C["Food"].div(C["Tot"]) #$\approx$ FoodShare variable
+ C["logTot"] = C["Tot"].apply(np.log)
+ C = C.join(T, how="left",lsuffix="_")
+
+ if USE_LAMBDAS: Outcomes = ["Tot","logTot","FoodShr", "Food", "$\log\lambda_{it}$"]
+ else: Outcomes = ["Tot","logTot","FoodShr", "Food"]
+
+ #$\approx$ Make Baseline variable
+ for var in Outcomes: 
+     Bl = C.loc[2013,var].reset_index("Location",drop=True)
+     #if var in mC: mC = mC.join(Bl,rsuffix="2013", how="left")
+     C = C.join(Bl,rsuffix="2013", how="left")
+
+
+ C["Y"]=np.nan
+ for yr in (2013, 2014, 2015): C.loc[yr,"Y"]=str(int(yr))
+
+ C = C.join(pd.get_dummies(C["Y"]), how="left",lsuffix="_")
+ for group in ("UPG", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         interaction = C[group]*C[year]
+         if interaction.sum()>0: C["{}*{}".format(group,year)] = interaction
+
+ if TGROUP_FE: Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015', 'UPG','CSH']
+ else:         Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
+ C = C.loc[2014:2015]
+ regs  = regressions(C, outcomes=Outcomes,  controls=Controls,  Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = C["UPG"]+C["CSH"] ==0
+ CTLmean = {var: C[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: C[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+END_SRC
+   
+ #+name: mobile_analysis
+ #+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/SS-mobile.py
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append("../../data")
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ from UPG import full_data, consumption_data, regressions, reg_table, df_to_orgtbl, mobile_data
+ ITEMS = ["beans", "sugar", "fish", "nuts", "vegetables", "airtime", "fuel"]
+
+ D = full_data(DIR=DATADIR)
+ HH, T = consumption_data(D,WRITE=True)[1:] #"csv")
+ M, C,mHH= mobile_data(DIR = DATADIR+"Mobile/")
+ try: logL = pd.read_pickle(DATADIR+"ss-lambdas_mobile.df")
+ except EnvironmentError: raise IOError("Need to run SS-lambdas.py")
+ logL.index.names=["HH","Year","Location"]
+ logL.name       =["loglambda"]
+ C    = C.join(logL,how="left").rename(columns={"loglambda":"$\log\lambda_{it}$"})
+ C    = C.reorder_levels([1,0,2]).sortlevel()
+ keep = pd.notnull(C.index.get_level_values("Location"))
+ C    = C.loc[keep,:]
+ # Make aggregate variables
+ C["Tot"]    = C.filter(ITEMS).sum(axis=1).replace(0,np.nan)
+ C["logTot"] = C["Tot"].apply(np.log)
+ C           = C.join(T, how="left",lsuffix="_")
+ C['const']  = 1.
+
+ Outcomes =["Tot",  "logTot", "$\log\lambda_{it}$"]
+ Controls= ['const', 'UPG', 'CSH']
+
+ regs = regressions(C,outcomes=Outcomes, controls=Controls, Baseline=2013)
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+ CTL = C["UPG"]+C["CSH"] ==0
+ CTLmean = {var: C.loc[CTL,var].mean() for var in Outcomes}
+ CTLsd = {var: C.loc[CTL,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest= regs[var].t_test("UPG - CSH = 0").summary_frame()
+     diff.loc[   r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest["std err"][0]
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+ mtab = df_to_orgtbl(results, sedf=SE)
+
+ #+end_src
+   
+** Assets
+   
+#+name: asset_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/asset_analysis.py
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from matplotlib import pyplot as plt
+import sys
+sys.path.append("../../data")
+from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+def topcode(var, Nstd=3, drop=False):
+    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
+    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
+    return var
+
+TGROUP_FE = True
+
+D = full_data(DIR="../../data/")
+
+Outcomes = ["Total", "Productive","Livestock"]
+Aval2013 = asset_vars(D,year=2013)[0][Outcomes]
+Aval2014 = asset_vars(D,year=2014)[0][Outcomes]
+Aval2015 = asset_vars(D,year=2015)[0][Outcomes]
+
+#$\approx$ Creates Year dummies and baseline values as `var'2013
+for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+    Aval["Year"]=Year
+    for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+Vals = Vals.join(D[["UPG","CSH"]])
+Vals["CTL"] = (Vals["UPG"]+Vals["CSH"] ==0).apply(int)
+
+for group in ("UPG", "CSH"):
+    for year in ("2013", "2014", "2015"):
+        Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+#~ Make graph of distribution
+stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
+Vals["Group"] = stringify("UPG")+stringify("CSH")+stringify("CTL")
+
+
+amean = Vals.groupby(["Year","Group"]).mean()[["Total","Productive","Livestock"]]
+aN = Vals.groupby(["Year","Group"]).count()[["Total","Productive","Livestock"]]
+astd = Vals.groupby(["Year","Group"]).std()[["Total","Productive","Livestock"]]
+ase = astd/np.sqrt(aN)
+asset_pctchange = (amean/amean.ix[2013]).unstack("Year") - 1
+
+for var in ("Total","Productive","Livestock"):
+   #~ fig,ax = plt.subplots(1,2)
+   #~ for i,yr in enumerate((2014,2015)):
+   #~     Vals.ix[yr].dropna(subset=[[var,"UPG","CSH","CTL"]]).groupby("Group")[var].plot(kind="kde",ax=ax[i])
+   #~     ax[i].set_title("{} Asset Value in {}".format(var,yr))
+   #~     ax[i].legend()
+   #~     #~ ax[i].set_aspect(1)
+   #~     ax[i].set_xlim(left=0)
+   #~ plt.savefig("../figures/Asset{}_kde.png".format(var))
+   #~ plt.clf()
+   amean.unstack("Group")["Total"].plot(kind="bar",yerr=ase.unstack("Group")["Total"].values)
+   plt.tight_layout()
+   plt.xticks(rotation=45)
+   plt.savefig("../figures/Asset{}_groupyear.png".format(var))
+   plt.clf()
+
+if TGROUP_FE: Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015', 'UPG','CSH']
+else:         Controls = ["2014","2015", 'UPG*2014', 'CSH*2014', 'UPG*2015', 'CSH*2015']
+
+
+#$\approx$ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
+Vals=Vals.loc[2014:2015]
+regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+CTL = Vals["UPG"]+Vals["CSH"] ==0
+CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+for var in Outcomes:
+    ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+    diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+results = results.append(diff)
+SE = SE.append(diff_se)
+
+tab = df_to_orgtbl(results, sedf=SE)
+#+end_src
+
+#+name: assets_disaggreate_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
+import numpy as np
+import pandas as pd
+import sys
+sys.path.append("../../data")
+from UPG import full_data, regressions, asset_vars, reg_table, df_to_orgtbl
+
+D = full_data(balance=[])
+D["cons"] = 1.
+Count = D.filter(regex="^asset_n_").rename(columns=lambda col: col[8:])
+Vals = D.filter(regex="^asset_val_").rename(columns=lambda col: col[10:])
+#~ 1 if coded as >0, 0 if zero, keep NaN's missing, since those are only from missing surveys.
+Nonzero = Count.applymap(lambda i: float(i>0) if not np.isnan(i) else np.nan)
+#~ Restrict both df's to nonzero responses.
+Count = Count.replace(0,np.nan)
+Vals  =  Vals.replace(0,np.nan)
+too_many_zeros = 30
+many_zeros = [item for item in Vals if Vals[item].notnull().sum()<too_many_zeros]
+for df in (Nonzero, Count, Vals): df.drop(many_zeros,1, inplace=True)
+
+#~ Merge in Control Vars
+controls = ["cons","UPG","UCT"]
+Nonzero  = Nonzero.join(D[controls],how="left")
+Count    =   Count.join(D[controls],how="left")
+Vals     =    Vals.join(D[controls],how="left")
+
+Items = [item[:-2] for item in Vals if item.endswith("_e")]
+CTL = Vals[controls].sum(axis=1)==1 #~ i.e. only constant ==1, UPG & UCT ==0
+Zeros_ctl_mean = Nonzero.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
+Count_ctl_mean =   Count.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
+Vals_ctl_mean  =    Vals.ix[CTL].filter(regex="_e$").mean(axis=0).rename(lambda col:col[:-2])
+
+ZeroTable       = reg_table(regressions(Nonzero,"_e", outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), orgtbl=True, Transpose=True)
+Count, Count_se = reg_table(regressions(Count,"_e",   outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), resultdf=True, Transpose=True)
+Vals, Vals_se   = reg_table(regressions(Vals,"_e",    outcomes=Items, controls = ["cons",'UCT','UPG'], Baseline="_b"), resultdf=True, Transpose=True)
+
+#~ Make full table of Standard errors-- MAKE SURE YOU HAVE THE SUFFIXES RIGHT.
+SE = Count_se[["UPG","UCT"]].join(Vals_se[["UPG","UCT"]], rsuffix=" (SSP)", lsuffix=" (# own)")
+
+#~ Make full table of point estimates and control-group means
+FullTable = pd.DataFrame({"# own (CTL)":Count_ctl_mean, "Value (CTL)":Vals_ctl_mean}).join(Count[["UPG","UCT"]])
+FullTable = FullTable.join(Vals[["UPG","UCT","N"]], rsuffix=" (SSP)", lsuffix=" (# own)")
+FullTable = df_to_orgtbl(FullTable, sedf=SE)
+AllTables = FullTable+"\n\n"+ZeroTable
+return AllTables
+#+end_src
+
+** Savings
+
+#+name: savings_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle ../analysis/savings_analysis.py
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import sys
+sys.path.append("../../data")
+from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+
+def topcode(var, Nstd=3, drop=False):
+    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
+    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
+    return var
+
+D = full_data(balance=[])
+
+Sav = pd.DataFrame(index=D.index) #~ Set up empty DataFrame to fill
+
+years = [("_b",2013), ("_m",2014), ("_e", 2015)]
+for suff,year in years: #~ Make Aggregate savings and land holding variables
+    Sav["Savings{}".format(year)]  = D.filter(regex="^savings_(home|bank|BRAC|NGOs|other){}".format(suff)).sum(1)
+    Sav["Food Sav{}".format(year)] = D.filter(regex="^savings_(maize|sorghum|otherfood)_val{}".format(suff)).sum(1)
+
+    Sav["LandCult{}".format(year)] = D.filter(regex="^land_(owncult|rentcult|communitycult){}".format(suff)).sum(1)
+    Sav["LandOwn{}".format(year)]  = D.filter(regex="^land_own.*{}".format(suff)).sum(1)
+
+    Sav["Get Trans{}".format(year)]  = D.filter(regex="^transfers_get.*{}".format(suff)).sum(1)
+    Sav["Give Trans{}".format(year)] = D.filter(regex="^transfers_give.*{}".format(suff)).sum(1)
+
+Outcomes = ["Savings","Food Sav","LandCult","LandOwn", "Get Trans", "Give Trans"] #~ Loans give/received omitted
+
+by_year = []
+for yr in ("2013","2014","2015"): #~ Provide Baseline Values & put in long format
+    S_Year = Sav.filter(like=yr).rename(columns=lambda x:x[:-4])
+    for var in Outcomes: 
+        if var+"2013" in Sav: S_Year[var+"2013"] = Sav[var+"2013"]
+    #~ Note that adding "Year" has to come after topcode, which switches strings to Nan...
+    S_Year["Year"] = yr
+    by_year.append(S_Year)
+
+#~ In long format with Year,HH index
+Sav = pd.concat(by_year).reset_index().set_index(["Year", "HH"], drop=False)
+#~ Make Year Dummies for fixed effects
+
+
+Sav = Sav.join(pd.get_dummies(Sav["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+Sav = Sav.drop(["HH","Year"],1)
+Sav = Sav.join(D[["UPG","CSH"]])
+
+for group in ("UPG", "CSH"): #~ Make Treatment-by-year interactions
+    for year in ("2013", "2014", "2015"):
+        Sav["{}*{}".format(group,year)] = Sav[group]*Sav[year]
+
+def isPositive(i):
+    #~ Returns 1 if number is positive, 0 if number<=0, nan if already nan, and self if string.
+    #~ Note that it's safe to run dummy variables through..
+    try:
+        if np.isnan(i): return i
+        else: return float(i>0)
+    except TypeError: return i
+
+too_many_null = 30
+Nonzero = Sav.applymap(isPositive)
+
+#~ Save DataFrame with zeros
+Savings = Sav.copy()
+#~ Naturally, only do this after Creating Nonzero dataframe.
+for var in Outcomes: #~ Set zeros to missing And topcode among non-zero values
+    for outcome in (var,var+"2013"):
+       if outcome in Sav:
+           Sav[outcome] = Sav[outcome].replace(0,np.nan)
+           Sav[outcome] = Sav.groupby(level="Year")[outcome].apply(topcode) #~ (Untested)
+
+many_null = [item for item in Sav if Sav[item].count()<too_many_null]
+many_null2 =[item for item in Savings if Savings[item].count()<too_many_null]
+Sav = Sav.drop(many_null,1).copy()
+Savings = Savings.drop(many_null,1).copy()
+
+Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
+
+Sav = Sav.loc["2014":"2015"]
+Savings = Savings.loc["2014":"2015"]
+Nonzero = Nonzero.loc["2014":"2015"]
+Sav_regs = regressions(Sav,     outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+Zer_regs = regressions(Nonzero, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+Amt_regs = regressions(Savings, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+Sav_results, Sav_SE  = reg_table(Sav_regs,  resultdf=True,table_info=["N","F-stat"])
+Zer_results, Zer_SE  = reg_table(Zer_regs,  resultdf=True,table_info=["N","F-stat"])
+Amt_results, Amt_SE  = reg_table(Amt_regs,  resultdf=True,table_info=["N","F-stat"])
+
+CTL  = Sav["UPG"]+Sav["CSH"] ==0
+CTL2 = Savings["UPG"]+Savings["CSH"] ==0
+#~ Get control group means and standard deviations
+Sav_CTLmean = {var: Sav[CTL].loc["2015",var].mean() for var in Outcomes}
+Zer_CTLmean = {var: Nonzero[CTL].loc["2015",var].mean() for var in Outcomes}
+Amt_CTLmean = {var: Savings[CTL2].loc["2015",var].mean() for var in Outcomes}
+
+Sav_CTLsd = {var: Sav[CTL].loc["2015",var].std() for var in Outcomes}
+Zer_CTLsd = {var: Nonzero[CTL].loc["2015",var].std() for var in Outcomes}
+Amt_CTLsd = {var: Savings[CTL2].loc["2015",var].std() for var in Outcomes}
+
+Sav_diff, Sav_diff_se = pd.DataFrame(Sav_CTLmean,index=["CTL mean"]), pd.DataFrame(Sav_CTLsd,index=["CTL mean"])
+Zer_diff, Zer_diff_se = pd.DataFrame(Zer_CTLmean,index=["CTL mean"]), pd.DataFrame(Zer_CTLsd,index=["CTL mean"])
+Amt_diff, Amt_diff_se = pd.DataFrame(Amt_CTLmean,index=["CTL mean"]), pd.DataFrame(Amt_CTLsd,index=["CTL mean"])
+
+for var in Outcomes:
+    #~ Savings regressions first
+    ttest1= Sav_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Sav_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+    Sav_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Sav_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    Sav_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Sav_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+    #~ Nonzero regressions second
+    ttest1= Zer_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Zer_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+    Zer_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Zer_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    Zer_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Zer_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+    #~ Savings regressions third
+    ttest1= Amt_regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+    ttest2= Amt_regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+    Amt_diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    Amt_diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+    Amt_diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+    Amt_diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+Save_results = Sav_results.append(Sav_diff)
+Zero_results = Zer_results.append(Zer_diff)
+Amnt_results = Amt_results.append(Amt_diff)
+Save_SE = Sav_SE.append(Sav_diff_se)
+Zero_SE = Zer_SE.append(Zer_diff_se)
+Amnt_SE = Amt_SE.append(Amt_diff_se)
+
+#~ Land = ["LandCult","LandOwn"] 
+#~ Savings = ["Savings","Food Sav", "Get Trans", "Give Trans"] 
+#~ Land_results = Sav_results[Land]
+#~ zLan_results = Zer_results[Land]
+#~ Land_SE = Sav_SE[Land]
+#~ zLan_SE = Zer_SE[Land]
+#~ 
+#~ Sav_results = Sav_results[Savings]
+#~ Zer_results = Zer_results[Savings]
+#~ Sav_SE =           Sav_SE[Savings]
+#~ Zer_SE =           Zer_SE[Savings]
+
+Save_tab = df_to_orgtbl(Save_results, sedf=Sav_SE)
+Zero_tab = df_to_orgtbl(Zero_results, sedf=Zer_SE)
+Amnt_tab = df_to_orgtbl(Amnt_results, sedf=Amt_SE)
+
+Table = Zero_tab +"\n"+ Save_tab + "\n"+ Amnt_tab
+
+#+end_src
+
+** Income
+
+#+name: income_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+import numpy as np
+import pandas as pd
+from pandas.io import stata
+import statsmodels.api as sm
+from matplotlib import pyplot as plt
+import sys
+sys.path.append("../../data")
+from UPG import full_data, regressions, reg_table, df_to_orgtbl
+"""
+Note that topcoding has a large effect on the distribution here, and we see only a small (presumably non-random) portion of actual income for each household.
+"""
+
+# Top-Code or censor outliers?
+def topcode(var, Nstd=3, drop=False):
+    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
+    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
+    return var
+
+D = full_data(balance=[])
+keep = D.index
+
+I_file = '../../data/Endline/sections_8_17.csv'
+I = pd.read_csv(I_file).rename(columns={"id":"HH"}).set_index("HH", drop=True).ix[keep]
+
+#~Getting non-agriculture income data is easy
+I = I.filter(regex="^s16")
+Imonths    = I.filter(regex="s16_\dc").rename(columns=lambda x: x[:-1])
+Ipermonth  = I.filter(regex="s16_\dd").rename(columns=lambda x: x[:-1])
+Income_12m = Imonths.mul(Ipermonth).sum(axis=1)
+Iyear      = I.filter(regex="s16_\de").rename(columns=lambda x: x[:-1]).sum(axis=1)
+
+A_file = "../../data/Endline/Agriculture_cleaned.csv"
+A = pd.read_csv(A_file).rename(columns={"id":"HH"}).set_index("HH",drop=False).ix[keep]
+unit_prices = A.groupby(["harvest_type", "harvest_price_unit"])["harvest_price"].median()
+prices = unit_prices.loc[zip(A["harvest_type"],A["harvest_price_unit"])]
+A["price"]=list(prices)
+
+A["harvest_unit_match"] = A["harvest_price_unit"] == A["harvest_unit"]
+A["price"] = A["harvest_unit_match"]*A["harvest_price"] + (1-A["harvest_unit_match"])*A["price"]
+
+A["income_farm_year"] = A["harvest_size"]*A["price"]
+Ayear = A.groupby("HH")["income_farm_year"].sum()
+
+unit_prices = A.groupby(["livestock_type", "livestock_price_unit"])["livestock_price"].median()
+prices = unit_prices.loc[zip(A["livestock_type"],A["livestock_price_unit"])]
+A["price"]=list(prices)
+A["livestock_unit_match"] = A["livestock_price_unit"] == A["livestock_unit"]
+A["price"] = A["livestock_unit_match"]*A["livestock_price"] + (1-A["livestock_unit_match"])*A["price"]
+
+A["income_livestock_year"] = A["livestock_size"]*A["price"]
+Lyear = A.groupby("HH")["income_livestock_year"].sum()
+
+Outcomes = ["Total", "Non-Farm", "Farm",  "Livestock"]
+Controls = ["cons", "UPG","CSH"]
+Vals = pd.DataFrame({"Non-Farm": Income_12m, "Farm":Ayear, "Livestock":Lyear})
+Vals = Vals.apply(topcode)
+
+Vals["Total"] = Vals.sum(axis=1)
+Vals["cons"] = 1.
+
+Vals = Vals.join(D[["UPG","CSH"]],how="left")
+Vals["CTL"] = (Vals["UPG"]+Vals["CSH"] ==0).apply(int)
+
+#~ Make graph of distribution
+stringify = lambda var: Vals[var].apply(lambda x: var if x else "")
+Vals["Group"] = stringify("UPG")+stringify("CSH")+stringify("CTL")
+Vals.dropna(subset=[["Total","UPG","CSH","CTL"]]).groupby("Group")["Total"].plot(kind="kde")
+plt.title("Total Income Distribution by Group")
+plt.savefig("../figures/IncomeDistribution.png")
+plt.clf()
+#~ Make bar graphs
+Imean  = Vals.groupby("Group").mean()[Outcomes]
+Icount = Vals.groupby("Group").count()[Outcomes]
+Istd = Vals.groupby("Group").std()[Outcomes]
+Ise=Istd/np.sqrt(Icount)
+Imean.T.plot(kind="bar",yerr=Ise.T)
+plt.tight_layout()
+plt.xticks(rotation=45)
+plt.savefig('../figures/Income_group.png')
+plt.clf()
+
+regs = {var: sm.OLS(Vals[var], Vals[Controls], missing="drop").fit() for var in Outcomes}
+results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+CTL = Vals["CTL"] 
+CTLmean = {var: Vals.query("CTL==1")[var].mean() for var in Outcomes}
+CTLsd = {var: Vals.query("CTL==1").std() for var in Outcomes}
+diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+for var in Outcomes:
+    ttest1= regs[var].t_test("UPG - CSH = 0").summary_frame()
+
+    diff.loc[   r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest1["coef"][0]
+    diff_se.loc[r"$\beta^{UPG}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+results = results.append(diff)
+SE = SE.append(diff_se)
+
+tab = df_to_orgtbl(results, sedf=SE)
+
+#+end_src
+
+#+RESULTS: income_analysis
+: None
+
+** Conflict Exposure
+#+name: conflict_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import sys
+sys.path.append("../../data")
+from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+
+# Top-Code or censor outliers?
+def topcode(var, Nstd=3, drop=False):
+    if drop: var[var>var.mean()+Nstd*var.std()] = np.nan
+    else: var[var>var.mean()+Nstd*var.std()] = var.mean()+Nstd*var.std() 
+    return var
+
+#~ Read in data
+D = full_data("../../data/UPG_full.dta", balance=[])
+D = D[D.merge_midline != 1]
+C = D.filter(like="conflict").rename(columns = lambda x: x[:-2]) #~ Set up empty DataFrame to fill
+
+#~ Make Outcome variables
+#~ NOTE: Not looking at whether they protected assets as only 50 #~ said they did, and all said "Migrated to stay with other family"
+C["Bsln_NaN"] = D["merge_midline"] == 2
+C["Worried"]  = C["conflict_worried"]
+C["Affected"] = C["conflict_affected"]
+protect_lives_codes = lambda x: {"Nothing": 0, "Migrate to stay with friend/family": 1, "Migrated and found new accommodation": 1,
+                                 "Looked for protection with Govt. Military": 2, "Looked for protection with NGO": 2}.get(x)
+C["ProtectLives"] = C["conflict_protectlives"].apply(protect_lives_codes)
+C["Migrated"] = (C["ProtectLives"]==1) + \
+                (C["conflict_affected1"]=="Needed to elocate or migrate")
+C["NoMeans"] = C["conflict_whynotprotect"]=="Didn't have the means"
+C["NoInvest"]= C.filter(like="affected").applymap(lambda x: x=="Could not plant crop or invest in business").sum(axis=1)
+C = C.drop([var for var in C if var.startswith("conflict_")], 1)
+Outcomes = ["ProtectLives", "Worried", "Affected", "Migrated", "NoMeans", "NoInvest"]
+
+#~ Bring in Treatment variables
+C["UPG"] = D["UPG"]
+C["cons"] = 1.
+C = C.applymap(lambda x: int(x) if not np.isnan(x) else x)
+Controls = ["cons", "UPG"] #~, "Bsln_NaN"]
+
+#~ Plot
+byT=C.groupby("UPG")
+Cbar=byT.mean().drop(["Bsln_NaN",'cons'],1)
+Cstd=byT.std().drop(["Bsln_NaN",'cons'],1)
+Cn=byT.count().drop(["Bsln_NaN",'cons'],1)
+for df in (Cbar,Cstd,Cn): 
+        df.index=["CTL","UPG"]
+        df.index.name="Group"
+Cse=Cstd/np.sqrt(Cn)
+Cbar.T.plot(kind="bar",yerr=Cse.T)
+plt.tight_layout()
+plt.xticks(rotation=45)
+plt.savefig("../figures/conflict_exposure.png")
+plt.clf()
+
+
+C_regs = regressions(C, outcomes=Outcomes, controls=Controls, Baseline=False, baseline_na=False)
+C_results, C_SE  = reg_table(C_regs,  resultdf=True,table_info=["N","F-stat"])
+
+#~ Get control group means and standard deviations and add to regression table
+CTLmean = {var: C.query("UPG==0")[var].mean() for var in Outcomes}
+CTLsdv  = {var: C.query("UPG==0")[var].std()  for var in Outcomes}
+CTLmean, CTLsdv = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsdv,index=["CTL mean"])
+C_results = C_results.append(CTLmean)
+C_SE      = C_SE.append(CTLsdv)
+C_results.drop('cons',inplace=True)
+C_SE.drop('cons',inplace=True)
+
+Table = df_to_orgtbl(C_results, sedf=C_SE)
+return Table
+
+#+end_src
+
+** Confidence & Autonomy
+
+#+name: decision_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append(DATADIR)
+ from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ D = full_data(DIR = DATADIR,balance=[])
+
+ Decide14 = D.filter(regex="^decide_.*_m").rename(columns=lambda x: x[:-2].split("_")[-1])#~.applymap(recode)
+ Decide15 = D.filter(regex="^decide_.*_e").rename(columns=lambda x: x[:-2].split("_")[-1])#~.applymap(recode)
+
+{'decide_arguments',
+ 'decide_fearful',
+
+ 'decide_pressuretospend'}
+
+ who_decides = ['dailypurchase', 'familyvisits', 'healthchild', 'healthown', 'majorpurchase', 'moneyown']
+ who_recode  = lambda x: float("Herself" in x) if pd.notnull(x) else x
+
+ if WEEKLY:
+     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
+     Aval2013 = Aval2013.applymap(weekly)
+     Aval2014 = Aval2014.applymap(weekly)      
+     Aval2015 = Aval2015.applymap(weekly)
+ 
+ index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
+ Outcomes = index_vars+["z-score"]
+ #~ Creates Year dummies, z-scores and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     if not weekly:
+        for var in index_vars:
+            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
+     FS_sum = Aval[index_vars].sum(axis=1)
+     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+    
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["UPG","CSH"]])
+
+ for group in ("UPG", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+ Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["UPG"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
+
+#+name: confidence_analysis
+#+begin_src python :dir ../analysis :noweb no-export :results values :exports none :tangle DevLunch_analysis.py
+ import numpy as np
+ import pandas as pd
+ import statsmodels.api as sm
+ import sys
+ DATADIR = "../../data/"
+ sys.path.append(DATADIR)
+ from UPG import full_data, regressions, asset_vars, reg_table , df_to_orgtbl
+ D = full_data(DIR = DATADIR,balance=[])
+
+ autonomy_codes = {'go_NGO',
+                   'go_church',
+                   'go_healthcenter',
+                   'go_housenonrelative',
+                   'go_houserelative',
+                   'go_market',
+                   'go_school',
+                   'go_water'}
+
+ codes = {"1-2 times a week": 3,
+         "3-6 times a week": 2,
+         "Everyday": 1,
+         "everyday": 1,
+         "Less than once a week": 4,
+         "less than once a week": 4,
+         "Never": 5,
+         "never": 5}
+
+ recode = lambda x: codes.setdefault(x,x)
+
+ Autnmy14 = D.filter(regex="^cango_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Autnmy15 = D.filter(regex="^cango_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
+
+{'decide_arguments',
+ 'decide_fearful',
+
+ 'decide_dailypurchase',
+ 'decide_familyvisits',
+ 'decide_healthchild',
+ 'decide_healthown',
+ 'decide_majorpurchase',
+ 'decide_moneyown',
+ 'decide_pressuretospend'}
+
+ Decide14 = D.filter(regex="^decide_.*_m").rename(columns=lambda x: x[:-2])#~.applymap(recode)
+ Decide15 = D.filter(regex="^decide_.*_e").rename(columns=lambda x: x[:-2])#~.applymap(recode)
+
+ Confid14 = D.filter(regex="^conf_.*_m").rename(columns=lambda x: x[3:-2]).applymap(recode)
+ Confid15 = D.filter(regex="^conf_.*_e").rename(columns=lambda x: x[3:-2]).applymap(recode)
+
+ if WEEKLY:
+     weekly = lambda i: float(i<3) if pd.notnull(i) else np.nan
+     Aval2013 = Aval2013.applymap(weekly)
+     Aval2014 = Aval2014.applymap(weekly)      
+     Aval2015 = Aval2015.applymap(weekly)
+ 
+ index_vars = "worried,portions,fewmeals,nofood,hungry,wholeday".split(",")
+ Outcomes = index_vars+["z-score"]
+ #~ Creates Year dummies, z-scores and baseline values as `var'2013
+ for Year, Aval in zip((2013, 2014, 2015), (Aval2013, Aval2014, Aval2015)):
+     Aval["Year"]=Year
+     if not weekly:
+        for var in index_vars:
+            Aval[index_vars] = (Aval[index_vars]-Aval[index_vars].mean())/Aval[index_vars].std()
+     FS_sum = Aval[index_vars].sum(axis=1)
+     Aval["z-score"] = (FS_sum-FS_sum.mean())/FS_sum.std()
+     for var in Outcomes: Aval[var+"2013"] = Aval2013[var]
+    
+ Vals = pd.concat((Aval2013, Aval2014, Aval2015)).reset_index().set_index(["Year", "HH"], drop=False)
+ Vals = Vals.join(pd.get_dummies(Vals["Year"]).rename(columns=lambda col: str(int(col))), how="left")
+ Vals = Vals.join(D[["UPG","CSH"]])
+
+ for group in ("UPG", "CSH"):
+     for year in ("2013", "2014", "2015"):
+         Vals["{}*{}".format(group,year)] = Vals[group]*Vals[year]
+
+ Controls = ['2014', '2015', 'UPG*2014', 'UPG*2015', 'CSH*2014', 'CSH*2015']
+
+ #~ This is the main specification. Given the mismatch in timing, we compare CSH*2015 to both UPG*2014 and UPG*2015
+ Vals=Vals.loc[2014:2015]
+ regs = regressions(Vals, outcomes=Outcomes, controls=Controls, Baseline=2013, baseline_na=True)
+
+ results, SE  = reg_table(regs,  resultdf=True,table_info=["N","F-stat"])
+
+ CTL = Vals["UPG"]+Vals["CSH"] ==0
+ CTLmean = {var: Vals[CTL].loc[2015,var].mean() for var in Outcomes}
+ CTLsd = {var: Vals[CTL].loc[2015,var].std() for var in Outcomes}
+ diff, diff_se = pd.DataFrame(CTLmean,index=["CTL mean"]), pd.DataFrame(CTLsd,index=["CTL mean"])
+
+ for var in Outcomes:
+     ttest1= regs[var].t_test("UPG*2014 - CSH*2015 = 0").summary_frame()
+     ttest2= regs[var].t_test("UPG*2015 - CSH*2015 = 0").summary_frame()
+
+     diff.loc[   r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2014}-\beta^{CSH}$", var] = ttest1["std err"][0]
+
+     diff.loc[   r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["coef"][0]
+     diff_se.loc[r"$\beta^{UPG}_{2015}-\beta^{CSH}$", var] = ttest2["std err"][0]
+
+
+ results = results.append(diff)
+ SE = SE.append(diff_se)
+
+ tab = df_to_orgtbl(results, sedf=SE)
+ #+end_src
+
+** Extras
+#+name: get_loglambdas
+#+BEGIN_SRC python :noweb no-export :results silent
+
+"""
+This code does not yet work in this file. Come back to it...
+"""
+  df = UPG.process_data(C, HH, T, year = year) #~ Process_data() builds consumption data if not given as an argument
+  df['Constant']=1
+  df["CTL"] = 1-df["UPG"] #~ Code the cash group as controls since they're not in the midline analysis
+
+  explist=[s[2:-2] for s in df.columns[[s.startswith('c_') and s.endswith(year[1]) for s in df.columns]]]
+  df = df.rename(columns= lambda x: x[:-2] if x.endswith(year[1]) else x)
+
+  bothdf=[]
+  xvars=['hh_size_b','child_total_b','Loc']
+  for x in explist:
+      if 'c_'+x+r'_b' not in df:
+          #~ When you take out the baseline controls in favor of repeated cross-sections, this is where to start...
+          print(x+" has no baseline data or had too few non-zero responses at baseline. Skipping.")
+          continue
+      ydf=pd.DataFrame(df[['c_'+x]].rename(columns={'c_'+x:x.capitalize()}).stack())
+      rdict=dict(zip(xvars+['c_'+x+r'_b'],["%s_%s" % (s,x.capitalize()) for s in xvars]+['Baseline_%s' % x.capitalize()]))
+      xdf=pd.DataFrame(df[xvars+['c_'+x+r'_b']])
+      xdf.index=pd.MultiIndex.from_tuples([(i,x.capitalize()) for i in xdf.index])
+      locations=pd.get_dummies(xdf['Loc'],prefix='Loc_%s' % x.capitalize())
+      del xdf['Loc']
+      xdf.rename(columns=rdict,inplace=True)
+      xdf=xdf.join(locations)
+      xdf.replace(to_replace=np.NaN,value=0,inplace=True)
+
+      # Add row to restrict location dummies to sum to one
+      ydf=pd.concat([ydf,pd.DataFrame([0],index=[(0,x.capitalize())])])
+      xdf=pd.concat([xdf,pd.DataFrame([s.startswith('Loc_')+0. for s in xdf.columns],index=xdf.columns,columns=[(0,x.capitalize())]).T]) 
+
+      xdf[0]=ydf
+      xdf.dropna(how='any',inplace=True)
+      bothdf.append(xdf)
+
+  #~ Are this fillna() call and the xdf.replace call above a problem? It seems necessary for the block-diagonal ols function
+  #~ we're using, but aren't we coding zeros as missing and calculating residuals for only those positive consumption? Wouldn't
+  #~ replacing them to zero insert some non-zero residual for households that never consume a given good?
+  #~ And isn't this the motivation behind svd_missing?
+  mydf=pd.concat(bothdf).fillna(value=0)
+
+  X=mydf.iloc[:,1:]
+
+  y=mydf[[0]]
+
+  x=np.exp(y.unstack().iloc[1:,:]) # Expenditures (in levels)
+  xshares=x.divide(x.sum(axis=1),axis=0).fillna(value=0).mean() # Expenditure shares (taking missing as zero)
+  xshares.index=xshares.index.droplevel(0)
+
+  b,se=ols(X,y)
+
+  ## betahat=b[['Constant_%s' % s.capitalize() for s in explist]]
+  ## betahat.rename(columns=dict(zip(betahat.columns,[s.capitalize() for s in explist])),inplace=True)
+
+  e=y-X.dot(b.T)
+
+  e.rename(columns={0:'Resid'},inplace=True)
+  e.index.names=['HH','Good']
+
+  testdf=pd.merge(df[['UPG','CTL']].reset_index(),e.reset_index(),how='outer',on=['HH'])
+  testdf.set_index(['HH','Good'],inplace=True)
+
+  UPG=testdf['UPG'].mul(testdf['Resid']).dropna().unstack()
+  CTL=testdf['CTL'].mul(testdf['Resid']).dropna().unstack()
+
+  e=(e-e.mean()).unstack()
+
+  # Test of significant differences between treatment and control:
+  # Weighting matrix:
+  A=np.matrix((UPG-CTL).cov().as_matrix()).I
+  g=np.matrix((UPG-CTL).mean())
+  J=e.shape[0]*g*A*g.T # Chi2 statistic
+
+  p=1-chi2.cdf(J,e.shape[1])
+
+  chi2test="Chi2 test: %f (%f)" % (J,p)
+
+  N=pd.Series([d.shape[0]-1 for d in bothdf],index=[d.index.levels[1][0] for d in bothdf])
+
+  resultdf=pd.DataFrame({'UPG':UPG.mean(),'CTL':CTL.mean(),'$N$':N})
+  sedf=pd.DataFrame({'UPG':UPG.std()/np.sqrt(resultdf['$N$']),'CTL':CTL.std()/np.sqrt(resultdf['$N$'])})
+  resultdf['Diff.']=resultdf['UPG']-resultdf['CTL']
+  sedf['Diff.']=np.sqrt((sedf['UPG']**2) + (sedf['CTL']**2))
+
+  # Use svd (with missing data) to construct beta & log lambda
+
+  myb,myl = get_loglambdas(e,TEST=True)
+
+  myb.index=myb.index.droplevel(0)
+
+  # Normalize log lambdas
+  l=myl/myl.std()
+#+END_SRC
+
+#+name: residuals_by_group
+#+begin_src python :dir ../analysis :noweb no-export :results values  :exports none
+def residuals_by_group(models, groups, outcomes=[], kind="kde", figure_dir="../figures/", seriesname="Treat", blanks_to = "Control"):
+    """
+     Takes a set of statsmodels regression results and,
+     for each outcome, produces a plot comparing the
+     distribution of residuals by group.
+
+     models:
+         A dictionary of the form {variable name: sm.RegressionResults}. Empty defaults to all available.
+     groups:
+         A list, pd.Series, or pd.DataFrame with variables
+         (A later version could contain an arbitrary set of categorical and give groups for every combination.)
+     outcomes:
+         A list specifying which variables in models to make plots for.
+     kind:
+         kde (or density) or histogram (or hist)
+         Density plots are on a single axis. Histograms are stacked by group.
+     figure_dir:
+         The directory into which the figures get saved. If doesn't exist, throws error (future version might make that directory on the fly.)
+     Seriesname:
+         If a series or list is passed without a name, defaults to `seriesname'
+     blanks_to:
+         Observations with no treatment status from "groups" gets renamed to `blanks_to'
+    """
+
+    #~ Make outcomes a list. If empty, defaults to all variables in models
+    if type(outcomes)==str: outcomes=[outcomes]
+    if not outcomes: outcomes = sorted(models.keys())
+
+    #~ Make data frame and make "Group" categorical
+    df = pd.DataFrame(groups).rename(columns={0:seriesname})
+    for var in df: df[var] = df[var].applymap(lambda x: var if x else "")
+    df["Group"] = df.sum(axis=1).replace("",blanks_to)
+
+    #~ Make residuals
+    for var in outcomes:
+        #~ Make column of residual values
+        resid_var = "resid_{}".format(var)
+        df[resid_var] = models[var].resid
+        #~ Groupby object
+        groups = df.dropna(subset=[resid_var]).groupby("Group")[resid_var]
+
+        #~ Plot density by group
+        if kind in ("kde", "density"):
+            fig, ax = plt.subplots()
+            groups.plot(kind=kind, ax=ax, legend=True)
+            fig.savefig(figure_dir+resid_var+".png")
+
+        #~ Plot histograms by group
+        elif kind in ("hist", "histogram"):
+            i=0
+            fig, ax = plt.subplots(len(set(df["Group"])),1,sharex=True)
+            for group, data in grps[var]:
+                ax[i].hist(data.values, bins=20)
+                ax[i].set_title(group)
+                i+=1
+            i=0
+            fig.savefig(figure_dir+resid_var+".png")
+        print(resid_var+".png created.")
+
+
+#+end_src
+   
+
+
+
+ 
+
+
