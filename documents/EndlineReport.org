@@ -143,7 +143,6 @@ With this introduction, Section [[sec:program]] describes the experiment
 and the interventions. Section [[sec:data]] describes the data, Section [[sec:strategy]] our
 empirical strategy, and results are discussed in Section [[sec:results]]. 
 
-
 * The Program
   <<sec:program>>
 The UPG model and the UCT program studied in this paper come from a
@@ -238,7 +237,6 @@ experimental studies of the behavioral implications of savings
 accounts citep:dupas-robinson13 show that the disbursal method might
 affect the propensity to save a cash transfer, the results of our
 experiment may not be directly comparable to other evaluations of UCT.
-
 
 
 * The Data
@@ -352,6 +350,14 @@ differently.  Accordingly, we also report
 \(\beta^{2015}_{UPG}-\beta^{2015}_{UCT}\), which has the
 interpretation as being the difference between the average effect of
 having been enrolled in either program from its inception until 2015.
+
+Because our various treatments are randomly assigned at the individual
+level, there is no reason to "cluster" when computing the covariances
+necessary for inference.  Instead, we flexibly allow for unspecified
+forms of heterogeneity, using the `HC3' estimator proposed by
+cite:mackinnon-white85 (note that this is generally regarded as the
+most conservative of conventional heteroskedasticity consistent
+estimators of the covariance matrix). 
  
 * Results
   <<sec:results>>
@@ -381,43 +387,36 @@ animals.  Third is "production" assets, which includes not only
 livestock but also other assets plausibly used by the household to
 generate income, such as farm equipment, mobile phones, carts, sewing
 equipment, sheds, and shop premises.  Finally we have "total" assets,
-which includes all of the above.
+which includes the value of all of the above.
 
 **** Recreating asset tables with and without treatment group fixed effects :ignore:
 *************** NOTE
- In these tables, "Productive" includes "Livestock." CTL mean lists 
- the mean and standard deviation of the control group in 2015. Some
- assets were not included ('house', 'homestead', and 'netITN') either 
- because numbers turned out to be more or less meaningless,  or because 
- they overlap (e.g. nets & ITN nets) (as commented in
- UPG-data/UPG.py). All of the Ns are the same because NaN values were
+ Some assets were not included ('house', 'homestead', and 'netITN')
+ either because numbers turned out to be more or less meaningless, or
+ because they overlap (e.g. nets & ITN nets) (as commented in
+ TUP-data/TUP.py). All of the Ns are the same because NaN values were
  considered as having a value of 0 for that asset (this occurs
  automatically when using .sum(axis=1) to sum values in different
- columns for a given row). 
+ columns for a given row).
 
  Differences with previous code: 
  -This code does not do any censoring, truncating, or converting of
  values to US dollars or anything like that
-
- Next steps: 
- -recreate bar graph figure
- -divide the standard deviation of CTL mean by the sqrt of the number of control
- observations to make it comparable with the other point estimates and
- standard errors in the table?
 *************** END
 
 
  #+name: asset_values
- #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle asset_values.py
+ #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle /tmp/asset_values.py
+import ss_standard
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+
 data_assignment  = "../../Report/documents/master_assignment.csv"
 data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
 data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
 data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 
-import ss_standard
-import pandas as pd
-import numpy as np
-from cfe.df_utils import df_to_orgtbl
 
 df_b = pd.read_stata(data_baseline)
 df_m = pd.read_stata(data_midline)
@@ -526,88 +525,114 @@ other = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
 other.index.names = ['Variable','Outcome']
 other.columns.name = 'Class'
 other = other.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+other = other.reindex(['Values (SSP)','Positive','Log Values'],level=0)
 
-print(df_to_orgtbl(other,float_fmt='%6.2f'))
+print(df_to_orgtbl(other[['2014','2015']].unstack('Class'),float_fmt='%6.2f'))
 
 
-print(ss_standard.table_stacked_by_class(Results))
+print(ss_standard.table_stacked_by_class(Results,elide=True))
 
+print(ss_standard.table_stacked_by_class(Results,elide=False))
  #+end_src
 
-#+name: tab:asset_control
-#+caption: Statistics for physical assets owned by the control group in 2015, grouped into consumer durables, livestock, production assets, and total.  We measure (i) total value (in SSP) ; (ii) the proportion having positive values; and (iii) the log values, conditional on being positive.
- | Class        | Outcome    | Control mean (2015) | Standard deviation |  $N$ |
- |--------------+------------+---------------------+--------------------+------|
- | Values (SSP) | Durables   |              786.13 |            1098.90 | 1500 |
- |              | Livestock  |              191.45 |             526.24 | 1500 |
- |              | Production |              113.12 |             135.68 | 1500 |
- |              | Total      |             1090.70 |            1444.18 | 1500 |
- |--------------+------------+---------------------+--------------------+------|
- | Positive     | Durables   |                0.90 |               0.30 | 1500 |
- |              | Livestock  |                0.38 |               0.49 | 1500 |
- |              | Production |                0.86 |               0.35 | 1500 |
- |              | Total      |                0.90 |               0.29 | 1500 |
- |--------------+------------+---------------------+--------------------+------|
- | Log Values   | Durables   |                6.28 |               1.01 | 1274 |
- |              | Livestock  |                5.43 |               1.38 |  704 |
- |              | Production |                4.47 |               0.98 | 1176 |
- |              | Total      |                6.61 |               1.01 | 1281 |
+ #+results: asset_values
 
+#+name: tab:asset_control
+#+caption: Averages of physical assets owned by the control group in 2015, grouped into consumer durables, livestock, production assets, and total.  We measure (i) total value (in SSP) ; (ii) the proportion having positive values; and (iii) the log values, conditional on being positive.
+ |            |         2014 |          |            |         2015 |          |            |
+ | Outcome    | Values (SSP) | Positive | Log Values | Values (SSP) | Positive | Log Values |
+ |------------+--------------+----------+------------+--------------+----------+------------|
+ | Durables   |       666.99 |     0.70 |       6.30 |       786.13 |     0.90 |       6.28 |
+ | Livestock  |       144.30 |     0.25 |       5.45 |       191.45 |     0.38 |       5.43 |
+ | Production |       129.76 |     0.62 |       4.63 |       113.12 |     0.86 |       4.47 |
+ | Total      |       941.05 |     0.70 |       6.64 |      1090.70 |     0.90 |       6.61 |
 
 #+name: tab:asset_values
 #+caption: Estimated treatment effects by group-year on on physical assets,  grouped into consumer durables, livestock, production assets, and total.  We measure (i) total value (in SSP); (ii) the proportion having positive values; and (iii) the log values, conditional on being positive.
- | Class        | Outcome    | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+ | Class        | Outcome    | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
  |--------------+------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
- | Values (SSP) | Durables   | \( 53.10\)           | \(-144.28\)          | \(151.62\)^{*}       | \( 97.31\)           | \(295.90\)^{**}                           | \(241.59\)^{*}                            |
- |              |            | (\(107.51\))         | (\(107.51\))         | (\( 84.97\))         | (\( 84.97\))         | (\(137.04\))                              | (\(137.04\))                              |
- |              | Livestock  | \( 23.81\)           | \( 15.81\)           | \(378.03\)^{***}     | \(322.68\)^{***}     | \(362.22\)^{***}                          | \(306.87\)^{**}                           |
- |              |            | (\(107.12\))         | (\(107.12\))         | (\( 84.78\))         | (\( 84.78\))         | (\(136.61\))                              | (\(136.61\))                              |
- |              | Production | \( 64.43\)           | \(  1.93\)           | \( 72.40\)           | \( 18.40\)           | \( 70.47\)                                | \( 16.47\)                                |
- |              |            | (\(107.10\))         | (\(107.10\))         | (\( 84.78\))         | (\( 84.78\))         | (\(136.59\))                              | (\(136.59\))                              |
- |              | Total      | \(148.30\)           | \(-119.57\)          | \(607.12\)^{***}     | \(443.46\)^{***}     | \(726.69\)^{***}                          | \(563.03\)^{***}                          |
- |              |            | (\(107.24\))         | (\(107.24\))         | (\( 84.83\))         | (\( 84.83\))         | (\(136.73\))                              | (\(136.73\))                              |
- |--------------+------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
- | Positive     | Durables   | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.19\)^{***}     | \( -0.01\)           | \(  0.24\)^{***}                          | \(  0.05\)                                |
- |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
- |              | Livestock  | \(  0.06\)           | \(  0.05\)           | \(  0.47\)^{***}     | \(  0.37\)^{***}     | \(  0.42\)^{***}                          | \(  0.32\)^{***}                          |
- |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
- |              | Production | \(  0.13\)^{***}     | \( -0.03\)           | \(  0.21\)^{***}     | \( -0.01\)           | \(  0.24\)^{***}                          | \(  0.02\)                                |
- |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
- |              | Total      | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.19\)^{***}     | \(  0.00\)           | \(  0.24\)^{***}                          | \(  0.05\)                                |
- |              |            | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
- |--------------+------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
- | Log Values   | Durables   | \( -0.08\)           | \( -0.18\)           | \(  0.01\)           | \(  0.03\)           | \(  0.19\)                                | \(  0.21\)                                |
- |              |            | (\(  0.12\))         | (\(  0.12\))         | (\(  0.10\))         | (\(  0.09\))         | (\(  0.15\))                              | (\(  0.15\))                              |
- |              | Livestock  | \( -0.16\)           | \(  0.12\)           | \(  0.58\)^{***}     | \(  0.51\)^{***}     | \(  0.46\)^{**}                           | \(  0.39\)^{*}                            |
- |              |            | (\(  0.20\))         | (\(  0.17\))         | (\(  0.14\))         | (\(  0.12\))         | (\(  0.22\))                              | (\(  0.21\))                              |
- |              | Production | \(  0.19\)           | \(  0.14\)           | \(  0.26\)^{**}      | \(  0.12\)           | \(  0.11\)                                | \( -0.02\)                                |
- |              |            | (\(  0.13\))         | (\(  0.12\))         | (\(  0.10\))         | (\(  0.10\))         | (\(  0.16\))                              | (\(  0.15\))                              |
- |              | Total      | \( -0.06\)           | \( -0.05\)           | \(  0.41\)^{***}     | \(  0.33\)^{***}     | \(  0.47\)^{***}                          | \(  0.39\)^{**}                           |
- |              |            | (\(  0.12\))         | (\(  0.12\))         | (\(  0.10\))         | (\(  0.09\))         | (\(  0.15\))                              | (\(  0.15\))                              |
+ | Values (SSP) | Durables   | \(151.62\)           | \( 97.31\)           | \( 53.10\)           | \(-144.28\)          | \(295.90\)^{**}                           | \(241.59\)                                |
+ |              | $N=1500$   | (\( 92.10\))         | (\(102.83\))         | (\(104.33\))         | (\(111.03\))         | (\(144.26\))                              | (\(151.34\))                              |
+ |              | Livestock  | \(378.03\)^{***}     | \(322.68\)^{***}     | \( 23.81\)           | \( 15.81\)           | \(362.22\)^{***}                          | \(306.87\)^{***}                          |
+ |              | $N=1500$   | (\( 62.74\))         | (\( 55.57\))         | (\( 60.08\))         | (\( 52.31\))         | (\( 81.69\))                              | (\( 76.31\))                              |
+ |              | Production | \( 72.40\)^{***}     | \( 18.40\)           | \( 64.43\)^{*}       | \(  1.93\)           | \( 70.47\)^{***}                          | \( 16.47\)                                |
+ |              | $N=1500$   | (\( 22.66\))         | (\( 12.22\))         | (\( 33.31\))         | (\( 12.74\))         | (\( 26.00\))                              | (\( 17.65\))                              |
+ |              | Total      | \(607.12\)^{***}     | \(443.46\)^{***}     | \(148.30\)           | \(-119.57\)          | \(726.69\)^{***}                          | \(563.03\)^{***}                          |
+ |              | $N=1500$   | (\(137.08\))         | (\(139.61\))         | (\(155.40\))         | (\(137.90\))         | (\(194.44\))                              | (\(196.24\))                              |
+ | Positive     | Durables   | \(  0.19\)^{***}     | \( -0.01\)           | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.24\)^{***}                          | \(  0.05\)                                |
+ |              | $N=1500$   | (\(  0.03\))         | (\(  0.03\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.05\))                              | (\(  0.04\))                              |
+ |              | Livestock  | \(  0.47\)^{***}     | \(  0.37\)^{***}     | \(  0.06\)           | \(  0.05\)           | \(  0.42\)^{***}                          | \(  0.32\)^{***}                          |
+ |              | $N=1500$   | (\(  0.04\))         | (\(  0.04\))         | (\(  0.05\))         | (\(  0.05\))         | (\(  0.06\))                              | (\(  0.06\))                              |
+ |              | Production | \(  0.21\)^{***}     | \( -0.01\)           | \(  0.13\)^{***}     | \( -0.03\)           | \(  0.24\)^{***}                          | \(  0.02\)                                |
+ |              | $N=1500$   | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.05\))                              | (\(  0.05\))                              |
+ |              | Total      | \(  0.19\)^{***}     | \(  0.00\)           | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.24\)^{***}                          | \(  0.05\)                                |
+ |              | $N=1500$   | (\(  0.03\))         | (\(  0.02\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.04\))                              |
+ | Log Values   | Durables   | \(  0.01\)           | \(  0.03\)           | \( -0.08\)           | \( -0.18\)           | \(  0.19\)                                | \(  0.21\)                                |
+ |              | $N=1274$   | (\(  0.10\))         | (\(  0.09\))         | (\(  0.12\))         | (\(  0.12\))         | (\(  0.15\))                              | (\(  0.15\))                              |
+ |              | Livestock  | \(  0.58\)^{***}     | \(  0.51\)^{***}     | \( -0.16\)           | \(  0.12\)           | \(  0.46\)^{*}                            | \(  0.39\)                                |
+ |              | $N=704$    | (\(  0.16\))         | (\(  0.14\))         | (\(  0.26\))         | (\(  0.19\))         | (\(  0.25\))                              | (\(  0.24\))                              |
+ |              | Production | \(  0.26\)^{**}      | \(  0.12\)           | \(  0.19\)           | \(  0.14\)           | \(  0.11\)                                | \( -0.02\)                                |
+ |              | $N=1176$   | (\(  0.12\))         | (\(  0.09\))         | (\(  0.16\))         | (\(  0.10\))         | (\(  0.15\))                              | (\(  0.13\))                              |
+ |              | Total      | \(  0.41\)^{***}     | \(  0.33\)^{***}     | \( -0.06\)           | \( -0.05\)           | \(  0.47\)^{***}                          | \(  0.39\)^{***}                          |
+ |              | $N=1281$   | (\(  0.09\))         | (\(  0.09\))         | (\(  0.12\))         | (\(  0.11\))         | (\(  0.14\))                              | (\(  0.14\))                              |
+
+
+#+LATEX: \begin{landscape}
+#+name: tab:asset_values_full
+#+caption: Estimated treatment effects by group-year on on physical assets,  grouped into consumer durables, livestock, production assets, and total.  We measure (i) total value (in SSP); (ii) the proportion having positive values; and (iii) the log values, conditional on being positive.
+ | Class        | Outcome    | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | 2014             | 2015             | Baseline value   | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+ |--------------+------------+----------------------+----------------------+----------------------+----------------------+------------------+------------------+------------------+-------------------------------------------+-------------------------------------------|
+ | Values (SSP) | Durables   | \(151.62\)           | \( 97.31\)           | \( 53.10\)           | \(-144.28\)          | \(609.47\)^{***} | \(728.60\)^{***} | \(  0.08\)^{***} | \(295.90\)^{**}                           | \(241.59\)                                |
+ |              | $N=1500$   | (\( 92.10\))         | (\(102.83\))         | (\(104.33\))         | (\(111.03\))         | (\( 60.36\))     | (\( 60.23\))     | (\(  0.03\))     | (\(144.26\))                              | (\(151.34\))                              |
+ |              | Livestock  | \(378.03\)^{***}     | \(322.68\)^{***}     | \( 23.81\)           | \( 15.81\)           | \(136.05\)^{***} | \(183.21\)^{***} | \(  0.02\)^{*}   | \(362.22\)^{***}                          | \(306.87\)^{***}                          |
+ |              | $N=1500$   | (\( 62.74\))         | (\( 55.57\))         | (\( 60.08\))         | (\( 52.31\))         | (\( 27.70\))     | (\( 27.66\))     | (\(  0.01\))     | (\( 81.69\))                              | (\( 76.31\))                              |
+ |              | Production | \( 72.40\)^{***}     | \( 18.40\)           | \( 64.43\)^{*}       | \(  1.93\)           | \(125.11\)^{***} | \(108.47\)^{***} | \(  0.03\)^{*}   | \( 70.47\)^{***}                          | \( 16.47\)                                |
+ |              | $N=1500$   | (\( 22.66\))         | (\( 12.22\))         | (\( 33.31\))         | (\( 12.74\))         | (\( 13.04\))     | (\(  7.34\))     | (\(  0.02\))     | (\( 26.00\))                              | (\( 17.65\))                              |
+ |              | Total      | \(607.12\)^{***}     | \(443.46\)^{***}     | \(148.30\)           | \(-119.57\)          | \(846.74\)^{***} | \(996.39\)^{***} | \(  0.07\)^{***} | \(726.69\)^{***}                          | \(563.03\)^{***}                          |
+ |              | $N=1500$   | (\(137.08\))         | (\(139.61\))         | (\(155.40\))         | (\(137.90\))         | (\( 80.78\))     | (\( 77.33\))     | (\(  0.02\))     | (\(194.44\))                              | (\(196.24\))                              |
+ | Positive     | Durables   | \(  0.19\)^{***}     | \( -0.01\)           | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.66\)^{***} | \(  0.86\)^{***} | \(  0.06\)^{**}  | \(  0.24\)^{***}                          | \(  0.05\)                                |
+ |              | $N=1500$   | (\(  0.03\))         | (\(  0.03\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))     | (\(  0.02\))     | (\(  0.02\))     | (\(  0.05\))                              | (\(  0.04\))                              |
+ |              | Livestock  | \(  0.47\)^{***}     | \(  0.37\)^{***}     | \(  0.06\)           | \(  0.05\)           | \(  0.22\)^{***} | \(  0.35\)^{***} | \(  0.10\)^{***} | \(  0.42\)^{***}                          | \(  0.32\)^{***}                          |
+ |              | $N=1500$   | (\(  0.04\))         | (\(  0.04\))         | (\(  0.05\))         | (\(  0.05\))         | (\(  0.02\))     | (\(  0.03\))     | (\(  0.03\))     | (\(  0.06\))                              | (\(  0.06\))                              |
+ |              | Production | \(  0.21\)^{***}     | \( -0.01\)           | \(  0.13\)^{***}     | \( -0.03\)           | \(  0.59\)^{***} | \(  0.82\)^{***} | \(  0.06\)^{***} | \(  0.24\)^{***}                          | \(  0.02\)                                |
+ |              | $N=1500$   | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.03\))     | (\(  0.02\))     | (\(  0.02\))     | (\(  0.05\))                              | (\(  0.05\))                              |
+ |              | Total      | \(  0.19\)^{***}     | \(  0.00\)           | \(  0.19\)^{***}     | \( -0.05\)           | \(  0.66\)^{***} | \(  0.85\)^{***} | \(  0.07\)^{***} | \(  0.24\)^{***}                          | \(  0.05\)                                |
+ |              | $N=1500$   | (\(  0.03\))         | (\(  0.02\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))     | (\(  0.02\))     | (\(  0.02\))     | (\(  0.05\))                              | (\(  0.04\))                              |
+ | Log Values   | Durables   | \(  0.01\)           | \(  0.03\)           | \( -0.08\)           | \( -0.18\)           | \(  6.12\)^{***} | \(  6.13\)^{***} | \(  0.04\)^{***} | \(  0.19\)                                | \(  0.21\)                                |
+ |              | $N=1274$   | (\(  0.10\))         | (\(  0.09\))         | (\(  0.12\))         | (\(  0.12\))         | (\(  0.08\))     | (\(  0.07\))     | (\(  0.01\))     | (\(  0.15\))                              | (\(  0.15\))                              |
+ |              | Livestock  | \(  0.58\)^{***}     | \(  0.51\)^{***}     | \( -0.16\)           | \(  0.12\)           | \(  5.36\)^{***} | \(  5.37\)^{***} | \(  0.03\)^{**}  | \(  0.46\)^{*}                            | \(  0.39\)                                |
+ |              | $N=704$    | (\(  0.16\))         | (\(  0.14\))         | (\(  0.26\))         | (\(  0.19\))         | (\(  0.14\))     | (\(  0.12\))     | (\(  0.02\))     | (\(  0.25\))                              | (\(  0.24\))                              |
+ |              | Production | \(  0.26\)^{**}      | \(  0.12\)           | \(  0.19\)           | \(  0.14\)           | \(  4.52\)^{***} | \(  4.38\)^{***} | \(  0.04\)^{***} | \(  0.11\)                                | \( -0.02\)                                |
+ |              | $N=1176$   | (\(  0.12\))         | (\(  0.09\))         | (\(  0.16\))         | (\(  0.10\))         | (\(  0.09\))     | (\(  0.06\))     | (\(  0.01\))     | (\(  0.15\))                              | (\(  0.13\))                              |
+ |              | Total      | \(  0.41\)^{***}     | \(  0.33\)^{***}     | \( -0.06\)           | \( -0.05\)           | \(  6.47\)^{***} | \(  6.46\)^{***} | \(  0.03\)^{***} | \(  0.47\)^{***}                          | \(  0.39\)^{***}                          |
+ |              | $N=1281$   | (\(  0.09\))         | (\(  0.09\))         | (\(  0.12\))         | (\(  0.11\))         | (\(  0.08\))     | (\(  0.07\))     | (\(  0.01\))     | (\(  0.14\))                              | (\(  0.14\))                              |
+#+LATEX: \end{landscape}
 
 
 **** Discussion                                                      :ignore:
-We first consider [[tab:asset_control]], which tells us that the average
-value of all physical assets held by the control group in 2015
-The cash (UCT) group did not have a significant increase in the value
-of assets measured.  This contrasts sharply with the UPG group.  The
-UPG group gains significantly more asset wealth than the cash or
-control groups in both 2014 and 2015, 18 months after receipt of
-transfers. They have nearly double the total asset value of control
-group in 2014 (midline), and roughly three-quarters more at endline.
-These patterns reproduce themselves for both productive assets (341
-SSP more than the control group at endline, and 450 SSP at midline).
 
- The final two rows of Table [[tab:asset_values]] considers the difference
+The cash (UCT) group did not have a significant increase in the value
+of assets measured in either 2014 or 2015.  This contrasts sharply
+with the UPG group.  The UPG group gains significantly more asset
+wealth than the cash or control groups in both 2014 and 2015, 18
+months after receipt of transfers. The total value of assets held by
+the UPG group is roughly three-quarters more than the control group in
+2014 (midline), and roughly 45% more at endline.  As one might expect
+given the design of the program, these differences are due principally
+to differences in livestock holdings, with values of 378 and 322 SSP
+more than average for households in the control group in 2014 and
+2015, respectively.  
+
+ The final two columns of Table [[tab:asset_values]] considers the difference
  in the average treatment effect between the UCT and UPG treatments.
  Here one needs to be thoughtful about the period of comparison, since
  the UCT treatment was rolled out later than the UPG.  Thus, the first
  row compares the difference in average asset holdings between the UPG
  and UCT groups roughly one year after the program began; here we see
- significantly higher mean UPG asset holdings, in the amount of 1655
+ significantly higher mean UPG asset holdings, in the amount of 726
  SSP.  The second row instead compares contemporaneous endline asset
  holdings; here we again see significantly higher holdings for the UPG
- group
+ group. 
 
 
 *** Savings & Land
@@ -616,10 +641,10 @@ The UPG households were strongly encouraged to pay into a savings
 account maintained by BRAC at each of their weekly meetings.
 Regardless of their motivation, UPG households held savings accounts
 at significantly higher rates than both the control and UCT groups
-(Table [[tab:nonzero_savings]]); roughly 28% more in 2014, and 18% more
+(Table [[tab:savings_values]]); roughly 29% more in 2014, and 18% more
 in 2015.  The same is /not/ true of amounts of savings; conditional on
 having positive savings, UPG groups held roughly 30% /less/ than the
-control group in 2014 (Table [[tab:log_savings]]).  This pattern then
+control group in 2014.  This pattern then
 changes dramatically in 2015, when both the UPG and UCT groups
 dramatically increase their cash savings relative to the control, with
 both groups holding over 50% more than the control (again, conditional
@@ -639,11 +664,11 @@ savings increased from one third in 2014 to 39% in 2015.
 It is common in this community (and most in the region) to store non-perishable food
 like maize, cassava, or millet as a form of savings.  This makes
 particular sense in a high-inflation context, where the price of grain had doubled in the
-previous year.  Most households report saving in food (73%) as in cash
+previous year.  More households report saving in food (73%) as in cash
 (40%).  The prevalence of food savings increased in significantly in 2014 for both UPG
 and UCT groups relative to the control.[fn:: Note that food savings was not
 measured at baseline, so these controls are omitted.]  However (Table
-[[tab:log_savings]]) the /amount/ of food savings conditional on it being
+[[tab:savings_values]]) the /amount/ of food savings conditional on it being
 positive was only significant for the UPG group, for whom it increased
 by roughly 30% in 2014, one round after treatment; similarly, after
 treatment the UCT group saved roughly 20% more in food than either the
@@ -660,26 +685,8 @@ give and receive was equal across both the UPG & UCT groups in 2014.
 And for both groups the propensity to make transfers was no different
 from that of the control group in 2015.  It's worth noting, however,
 that transfers and indeed /all/ the forms of financial activity we
-record in Table [[tab:nonzero_savings]] showed marked increases across all
+record in Table [[tab:savings_values]] showed marked increases across all
 groups in both 2014 and 2015, relative to 2013.
-
-**** Discussion of land ownership & cultivation                      :ignore:
-
-We also examine land ownership and cultivation in each year.  In 2014 both the
-UPG and UCT groups are significantly  more likely cultivate land, and
-also to own it.  These difference from the control group disappear
-by 2015.  But interestingly, the amount of land owned or cultivated
-/conditional/ on having some land is not significantly different from
-the control for either group in 2014, and land cultivated is
-significantly /less/ than the control both groups in 2015 (the same
-goes for land ownership, but not at the same level of significance.
-
-As with the savings accounts, one is reminded that eligibility for the
-program depended on having access to cultivatable land---one wonders
-if the the high initial prevalence followed by a drop in area is a
-reallocation of resources for these households in response to the
-program, or a reversion to the mean.
-
 
 **** Recreating savings tables                                       :ignore:
 **************** NOTE
@@ -701,10 +708,7 @@ program, or a reversion to the mean.
  -this code includes columns for 'get transfer' and 'give transfer'
  that were not included in the previous table
 
- Next steps: 
- -divide the standard deviation of CTL mean by the sqrt of the number of control
- observations to make it comparable with the other point estimates and
- standard errors in the table?
+
 *************** END
 
 
@@ -772,6 +776,8 @@ s2013['Year'] = '2013'
 s2014['Year'] = '2014'
 s2015['Year'] = '2015'
 
+outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
+
 # make the sum variables
 for var in (s2013, s2014, s2015):
     var["Savings"] = var[ ['savings_home', 'savings_bank', 'savings_BRAC', 'savings_NGOs', 'savings_other'] ].sum(axis=1)
@@ -784,12 +790,6 @@ for var in (s2013, s2014, s2015):
     var["LandOwn"] = var[ ['land_owncult', 'land_ownnocult', 'land_ownrent'] ].sum(axis=1)
     var["Get Transfer"] = var[ ['transfers_get1', 'transfers_get2', 'transfers_get3'] ].sum(axis=1)
     var["Give Transfer"] = var[ ['transfers_give1', 'transfers_give2', 'transfers_give3'] ].sum(axis=1)
-    
-# LandOwn and LandCult are asked in fedan (unit of area)
-
-outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
-
-for var in (s2013, s2014, s2015): 
     
     # set up to make year dummies
     var.insert(len(var.columns), '2013', 0)
@@ -809,344 +809,289 @@ df2 = pd.concat((s2013, s2014, s2015))
 # add group dummies from master_assignment.csv
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
 
-Table = []
-Table.append(ss_standard.results(df,['Savings', 'Food Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer']))
+outcomes = ['Savings', 'Food Savings', 'Get Transfer', 'Give Transfer']
+Results = {}
+
+Results['Values (SSP)'] = ss_standard.results(df,outcomes,positive=False,logs=False,return_stats=True)
+Results['Positive'] = ss_standard.results(df,outcomes,positive=True,logs=False,return_stats=True)
+Results['Log Values'] = ss_standard.results(df,outcomes,positive=False,logs=True,return_stats=True)
+
+other = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
+other.index.names = ['Variable','Outcome']
+other.columns.name = 'Class'
+other = other.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+other = other.reindex(['Values (SSP)','Positive','Log Values'],level=0)
+
+print(df_to_orgtbl(other[['2014','2015']].unstack('Class'),float_fmt='%6.2f'))
 
 
-for outcome in outcomes:
-    try:
-        df[outcome + '2013'] = np.log(df[outcome+'2013'].replace(0,np.nan))
-    except KeyError: # No food savings baseline
-        pass
+print(ss_standard.table_stacked_by_class(Results,elide=True))
 
-# make positive values = 1, 0 values = NaN, and NaN stay NaN
-for i in range(len(nonzero_df)):
-    for outcome in outcomes:
-         if pd.notna(nonzero_df.iloc[i][outcome]):
-            if nonzero_df.iloc[i][outcome] <= 0: 
-                nonzero_df.iloc[i, nonzero_df.columns.get_loc(outcome)] = 0
-            elif nonzero_df.iloc[i][outcome] > 0:
-                nonzero_df.iloc[i, nonzero_df.columns.get_loc(outcome)] = 1
-                
-
-regular_models_ols = {}
-regular_d = {}
-nonzero_models_ols = {}
-nonzero_d = {}
-
-baseline_na = True
-
-controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
-# from above, outcomes_with_baseline = ['Savings', 'LandCult', 'LandOwn', 'Get Transfer', 'Give Transfer'] #excludes Food Savings
-
-# remove observations from 2013
-df = df[df['Year'] != '2013']
-nonzero_df = nonzero_df[nonzero_df['Year'] != '2013']
-
-for DF in (df, nonzero_df):
-    for outcome in outcomes_with_baseline: 
-        temp_df = DF[ [outcome, outcome + "2013", 'Control'] + controls]
-        temp_controls = controls
-    
-        if baseline_na==True:
-        
-            # indicator for whether outcome in 2013 is na, and cast it to be an integer
-            temp_df["Baseline_NAN"] = temp_df[outcome + "2013"].isnull().apply(int)
-        
-            # code missing values of the baseline variable as 0
-            temp_df[outcome + "2013"].fillna(0,inplace=True)
-        
-            temp_controls = temp_controls + ['Baseline_NAN']
-    
-        temp_controls = temp_controls + [outcome+"2013"]
-        temp_df = temp_df.dropna()
-    
-        if DF.equals(nonzero_df): 
-            models_ols = nonzero_models_ols
-        else: 
-            models_ols = regular_models_ols
-            
-        models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
-    
-        # for computing the mean of the control group in 2015
-        controlgroup = temp_df[temp_df['Control'] == 1]
-
-        # for computing the difference in UPG and Cash coefficients
-        beta_cash_UPG2014 = models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-        pvalue_cash_UPG2014 = models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-        if pvalue_cash_UPG2014 <= 0.01: 
-            beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '***'
-        elif pvalue_cash_UPG2014 <= 0.05: 
-            beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '**'
-        elif pvalue_cash_UPG2014 <= 0.1: 
-            beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '*'
-        
-        beta_cash_UPG2015 = models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-        pvalue_cash_UPG2015 = models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-        if pvalue_cash_UPG2015 <= 0.01: 
-            beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '***'
-        elif pvalue_cash_UPG2015 <= 0.05: 
-            beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '**'
-        elif pvalue_cash_UPG2015 <= 0.1: 
-            beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '*'
-        
-        if DF.equals(nonzero_df): 
-            d = nonzero_d 
-        else: 
-            d = regular_d
-            
-        d[outcome] = [controlgroup[controlgroup['2015'] == 1][outcome].mean(),
-                  controlgroup[controlgroup['2015'] == 1][outcome].std(),
-                  round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
-                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
-                  round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
-                  round(models_ols[outcome].params[3], 3), models_ols[outcome].bse[3],
-                  round(models_ols[outcome].params[4], 3), models_ols[outcome].bse[4],
-                  round(models_ols[outcome].params[5], 3), models_ols[outcome].bse[5],
-                  round(models_ols[outcome].params[6], 3), models_ols[outcome].bse[6],
-                  round(models_ols[outcome].params[7], 3), models_ols[outcome].bse[7],
-                  models_ols[outcome].fvalue, models_ols[outcome].nobs,
-                  beta_cash_UPG2014, beta_cash_UPG2015]
-    
-        for x in range(0,8):
-            # indexes account for standard errors being in the final table
-            # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-            if models_ols[outcome].pvalues[x] <= 0.01: 
-                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '***'
-            elif models_ols[outcome].pvalues[x] <= 0.05: 
-                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '**'
-            elif models_ols[outcome].pvalues[x] <= 0.1:
-                d[outcome][x*2 + 2] = str(d[outcome][x*2 + 2]) + '*'
-            d[outcome][x*2+1] = "(%4.2f)" %  d[outcome][x*2+1] 
-
-        del temp_df   
-
-# for food savings, which had no baseline value
-for DF in (df, nonzero_df):
-
-    temp_df = DF[ ["Food Savings", 'Control'] + controls]
-    temp_df = temp_df.dropna()
-    
-    if DF.equals(nonzero_df): 
-        models_ols = nonzero_models_ols
-    else: 
-        models_ols = regular_models_ols
-    
-    models_ols["Food Savings"] = sm.OLS(temp_df["Food Savings"], temp_df[controls]).fit()
-    
-    # for computing the mean of the control group in 2015
-    controlgroup = temp_df[temp_df['Control'] == 1]
-    
-    # for computing the difference in UPG and Cash coefficients
-    beta_cash_UPG2014 = models_ols["Food Savings"].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_UPG2014 = models_ols["Food Savings"].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_UPG2014 <= 0.01: 
-        beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '***'
-    elif pvalue_cash_UPG2014 <= 0.05: 
-        beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '**'
-    elif pvalue_cash_UPG2014 <= 0.1: 
-        beta_cash_UPG2014 = str(round(beta_cash_UPG2014, 3)) + '*'
-        
-    beta_cash_UPG2015 = models_ols["Food Savings"].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    pvalue_cash_UPG2015 = models_ols["Food Savings"].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_UPG2015 <= 0.01: 
-        beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '***'
-    elif pvalue_cash_UPG2015 <= 0.05: 
-        beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '**'
-    elif pvalue_cash_UPG2015 <= 0.1: 
-        beta_cash_UPG2015 = str(round(beta_cash_UPG2015, 3)) + '*'
-    
-    if DF.equals(nonzero_df): 
-        d = nonzero_d 
-    else: 
-        d = regular_d
-            
-    d["Food Savings"] = [controlgroup[controlgroup['2015'] == 1]["Food Savings"].mean(),
-                  controlgroup[controlgroup['2015'] == 1]["Food Savings"].std(),
-                  round(models_ols["Food Savings"].params[0], 3), models_ols["Food Savings"].bse[0],
-                  round(models_ols["Food Savings"].params[1], 3), models_ols["Food Savings"].bse[1], 
-                  round(models_ols["Food Savings"].params[2], 3), models_ols["Food Savings"].bse[2],
-                  round(models_ols["Food Savings"].params[3], 3), models_ols["Food Savings"].bse[3],
-                  round(models_ols["Food Savings"].params[4], 3), models_ols["Food Savings"].bse[4],
-                  round(models_ols["Food Savings"].params[5], 3), models_ols["Food Savings"].bse[5],
-                     "", " ", "  ", "   ",
-                  models_ols["Food Savings"].fvalue, models_ols["Food Savings"].nobs, 
-                  beta_cash_UPG2014, beta_cash_UPG2015]
-    
-    for x in range(0,6):
-        # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-        if models_ols["Food Savings"].pvalues[x] <= 0.01: 
-            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '***'
-        elif models_ols["Food Savings"].pvalues[x] <= 0.05: 
-            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '**'
-        elif models_ols["Food Savings"].pvalues[x] <= 0.1:
-            d["Food Savings"][x*2 + 2] = str(d["Food Savings"][x*2 + 2]) + '*'
-        d["Food Savings"][x*2+1] = "(%4.2f)" %  d["Food Savings"][x*2+1] 
-
-final = pd.DataFrame(data=regular_d)
-nonzero_final = pd.DataFrame(data=nonzero_d)
-
-final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG*2014", 3: "  ", 
-                      4: "UPG*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
-                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "Baseline missing", 15: "        ",
-                      16: "Baseline values", 17: "         ", 18: "F-stat", 19: "N",
-                      20: r"$\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$", 21: r"$\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$"}, inplace=True)
-nonzero_final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG*2014", 3: "  ", 
-                      4: "UPG*2015", 5: "   ", 6: "UCT*2014", 7: "    ",
-                      8: "UCT*2015", 9: "     ", 10: "2014", 11: "      ",
-                      12: "2015", 13: "       ", 14: "Baseline missing", 15: "        ",
-                      16: "Baseline values", 17: "         ", 18: "F-stat", 19: "N",
-                      20: r"$\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$", 21: r"$\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$"}, inplace=True)
-
-newdf_nonzero = df_to_orgtbl(nonzero_final, float_fmt = '%.2f')
-print("""#+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access""")
-print(newdf_nonzero)
-
-newdf = df_to_orgtbl(final, float_fmt = '%.2f')
-print("""#+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.""")
-print(newdf)
+print(ss_standard.table_stacked_by_class(Results,elide=False))
 
  #+end_src
 
  #+results: savings_tables
- #+caption: Average treatment effects by group-year on percentage of households reporting any savings or land access
- |                                         | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
- |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | CTL mean                                | 0.39     | 0.72     | 0.81     | 0.17         | 0.08          | 0.73         |
- |                                         | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
- | UPG*2014                                | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
- |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | UPG*2015                                | 0.183*** | 0.01     | -0.00    | -0.01        | 0.03          | 0.00         |
- |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | UCT*2014                                | 0.03     | 0.112**  | 0.142*** | 0.08**       | 0.03          | 0.196***     |
- |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | UCT*2015                                | 0.01     | -0.03    | -0.03    | -0.03        | -0.01         | -0.04        |
- |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | 2014                                    | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
- |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
- | 2015                                    | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
- |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.02         |
- | Baseline missing                                 | 0.00     | 0.00     | 0.00     | 0.00         | 0.00          |              |
- |                                         | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
- | Baseline values                                | 0.00     | 0.017**  | 0.015**  | 0.00         | 0.0**         |              |
- |                                         | 0.00     | 0.01     | 0.01     | 0.00         | 0.00          |              |
- | F-stat                                  | 13.72    | 5.09     | 10.53    | 1.59         | 3.46          | 4.80         |
- | N                                       | 1500.00  | 1500.00  | 1500.00  | 1500.00      | 1500.00       | 1500.00      |
- | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
- | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.176*** | 0.04     | 0.03     | 0.02         | 0.04          | 0.04         |
 
- #+caption: Total value (in SSP) of all cash and food savings and area (in fedan) of land being cultiviated by the household (including rented or temporary-use) and owned by the household.
- |                                         | Savings   | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
- |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | CTL mean                                | 4.61      | 0.95     | 0.85     |         5.08 | 4.56          | 4.22         |
- |                                         | (1.23)    | (2.05)   | (1.82)   |       (0.93) | (0.96)        | (0.96)       |
- | UPG*2014                                | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
- |                                         | (0.15)    | (0.16)   | (0.15)   |       (0.22) | (0.27)        | (0.09)       |
- | UPG*2015                                | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
- |                                         | (0.14)    | (0.16)   | (0.14)   |       (0.22) | (0.31)        | (0.09)       |
- | UCT*2014                                | 0.19      | 0.23     | 0.30     |         0.27 | -0.57         | -0.05        |
- |                                         | (0.21)    | (0.21)   | (0.19)   |       (0.26) | (0.36)        | (0.11)       |
- | UCT*2015                                | 0.513**   | -0.447** | -0.348*  |         0.46 | -0.01         | 0.202*       |
- |                                         | (0.20)    | (0.20)   | (0.18)   |       (0.30) | (0.45)        | (0.12)       |
- | 2014                                    | 3.434***  | 0.246**  | 0.332*** |     3.856*** | 3.526***      | 3.626***     |
- |                                         | (0.24)    | (0.12)   | (0.11)   |       (0.46) | (0.56)        | (0.06)       |
- | 2015                                    | 4.003***  | 0.96***  | 0.887*** |     4.475*** | 4.525***      | 4.216***     |
- |                                         | (0.24)    | (0.11)   | (0.10)   |       (0.46) | (0.56)        | 0.06         |
- | Baseline missing                        | 0.598***  | -0.03    | -0.06    |         0.61 | 0.01          |              |
- |                                         | (0.23)    | (0.12)   | (0.11)   |       (0.46) | (0.55)        |              |
- | Baseline values                         | 0.123***  | 0.01     | -0.03    |         0.13 | 0.02          |              |
- |                                         | 0.04      | 0.08     | 0.06     |         0.09 | 0.12          |              |
- | F-stat                                  | 20.87     | 4.50     | 2.88     |         3.93 | 3.92          | 20.33        |
- | N                                       | 671.00    | 1042.00  | 1114.00  |       255.00 | 159.00        | 1073.00      |
- | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
- | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
+#+name: tab:savings_control
+ |               |         2014 |          |            |         2015 |          |            |
+ | Outcome       | Values (SSP) | Positive | Log Values | Values (SSP) | Positive | Log Values |
+ |---------------+--------------+----------+------------+--------------+----------+------------|
+ | Food Savings  |        44.77 |     0.64 |       3.63 |        85.13 |     0.73 |       4.22 |
+ | Get Transfer  |        23.19 |     0.14 |       4.45 |        45.84 |     0.17 |       5.08 |
+ | Give Transfer |        18.62 |     0.10 |       3.54 |        11.82 |     0.08 |       4.56 |
+ | Savings       |        50.51 |     0.34 |       4.05 |        78.70 |     0.39 |       4.61 |
 
-#+LATEX: \begin{landscape}
- #+name: tab:nonzero_savings
- #+caption: Average treatment effects by group-year on proportion of households reporting any savings or land access 
- #+attr_latex: :environment longtable :align lrrrrrrr
- |                                         | Savings  | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
- |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | CTL mean                                | 0.394    | 0.718    | 0.806    | 0.170        | 0.080         | 0.726        |
- |                                         | (0.49)   | (0.45)   | (0.40)   | (0.38)       | (0.27)        | (0.45)       |
- |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | UPG*2014                                | 0.287*** | 0.159*** | 0.181*** | 0.081***     | 0.069***      | 0.127***     |
- |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | UPG*2015                                | 0.183*** | 0.013    | -0.004   | -0.006       | 0.029         | 0.001        |
- |                                         | (0.04)   | (0.04)   | (0.04)   | (0.03)       | (0.03)        | (0.04)       |
- | UCT*2014                                | 0.030    | 0.112**  | 0.142*** | 0.08**       | 0.034         | 0.196***     |
- |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | UCT*2015                                | 0.006    | -0.026   | -0.031   | -0.026       | -0.006        | -0.038       |
- |                                         | (0.05)   | (0.05)   | (0.04)   | (0.04)       | (0.03)        | (0.05)       |
- | 2014                                    | 0.333*** | 0.579*** | 0.58***  | 0.136***     | 0.091***      | 0.636***     |
- |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | (0.02)       |
- | 2015                                    | 0.389*** | 0.701*** | 0.784*** | 0.17***      | 0.075***      | 0.726***     |
- |                                         | (0.03)   | (0.02)   | (0.02)   | (0.02)       | (0.02)        | 0.023        |
- | Baseline missing                        | 0.000    | 0.000    | 0.000    | 0.000        | 0.000         |              |
- |                                         | (0.00)   | (0.00)   | (0.00)   | (0.00)       | (0.00)        |              |
- | Baseline values                         | 0.000    | 0.017**  | 0.015**  | 0.000        | 0.0**         |              |
- |                                         | 0.000    | 0.008    | 0.006    | 0.000        | 0.000         |              |
- |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | F-stat                                  | 13.720   | 5.086    | 10.529   | 1.594        | 3.460         | 4.797        |
- | N                                       | 1500.000 | 1500.000 | 1500.000 | 1500.000     | 1500.000      | 1500.000     |
- |-----------------------------------------+----------+----------+----------+--------------+---------------+--------------|
- | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | 0.28***  | 0.185*** | 0.212*** | 0.107**      | 0.075*        | 0.165***     |
- | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.176*** | 0.039    | 0.027    | 0.021        | 0.035         | 0.039        |
-#+LATEX: \end{landscape}
+#+name: tab:savings_values
+ | Class        | Outcome       | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+ |--------------+---------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+ | Values (SSP) | Food Savings  | \( 12.33\)           | \( -4.72\)           | \( 42.53\)^{**}      | \( -1.42\)           | \( 47.25\)^{**}                           | \(  3.29\)                                |
+ |              | $N=1500$      | (\( 13.75\))         | (\( 12.92\))         | (\( 18.97\))         | (\( 12.45\))         | (\( 22.95\))                              | (\( 17.94\))                              |
+ |              | Get Transfer  | \( 18.58\)           | \(  7.62\)           | \( 42.00\)           | \(  0.83\)           | \( 34.39\)                                | \( -6.79\)                                |
+ |              | $N=1500$      | (\( 14.67\))         | (\( 19.72\))         | (\( 36.32\))         | (\( 15.26\))         | (\( 41.33\))                              | (\( 24.94\))                              |
+ |              | Give Transfer | \(-13.87\)           | \(  3.53\)           | \(  2.75\)           | \( -1.18\)           | \( -0.78\)                                | \( -4.71\)                                |
+ |              | $N=1500$      | (\( 14.34\))         | (\( 10.47\))         | (\( 15.20\))         | (\(  4.19\))         | (\( 18.46\))                              | (\( 11.28\))                              |
+ |              | Savings       | \( 32.46\)           | \( 32.31\)           | \( 16.64\)           | \( 99.28\)^{***}     | \(-15.67\)                                | \( 66.97\)                                |
+ |              | $N=1500$      | (\( 33.50\))         | (\( 22.98\))         | (\( 15.03\))         | (\( 34.60\))         | (\( 27.46\))                              | (\( 41.54\))                              |
+ | Positive     | Food Savings  | \(  0.20\)^{***}     | \( -0.04\)           | \(  0.13\)^{***}     | \(  0.00\)           | \(  0.17\)^{***}                          | \(  0.04\)                                |
+ |              | $N=1500$      | (\(  0.04\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.06\))                              |
+ |              | Get Transfer  | \(  0.08\)^{*}       | \( -0.03\)           | \(  0.08\)^{**}      | \( -0.01\)           | \(  0.11\)^{**}                           | \(  0.02\)                                |
+ |              | $N=1500$      | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
+ |              | Give Transfer | \(  0.03\)           | \( -0.01\)           | \(  0.07\)^{**}      | \(  0.03\)           | \(  0.08\)^{**}                           | \(  0.04\)                                |
+ |              | $N=1500$      | (\(  0.03\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.02\))         | (\(  0.04\))                              | (\(  0.04\))                              |
+ |              | Savings       | \(  0.03\)           | \(  0.00\)           | \(  0.29\)^{***}     | \(  0.18\)^{***}     | \(  0.28\)^{***}                          | \(  0.18\)^{***}                          |
+ |              | $N=1500$      | (\(  0.05\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.07\))                              |
+ | Log Values   | Food Savings  | \( -0.05\)           | \(  0.20\)^{*}       | \(  0.30\)^{***}     | \(  0.06\)           | \(  0.10\)                                | \( -0.14\)                                |
+ |              | $N=1073$      | (\(  0.11\))         | (\(  0.10\))         | (\(  0.10\))         | (\(  0.09\))         | (\(  0.15\))                              | (\(  0.14\))                              |
+ |              | Get Transfer  | \(  0.30\)           | \(  0.47\)^{*}       | \(  0.09\)           | \(  0.14\)           | \( -0.38\)                                | \( -0.34\)                                |
+ |              | $N=255$       | (\(  0.28\))         | (\(  0.25\))         | (\(  0.26\))         | (\(  0.19\))         | (\(  0.36\))                              | (\(  0.31\))                              |
+ |              | Give Transfer | \( -0.57\)           | \( -0.01\)           | \(  0.49\)           | \( -0.31\)           | \(  0.50\)                                | \( -0.30\)                                |
+ |              | $N=159$       | (\(  0.38\))         | (\(  0.46\))         | (\(  0.31\))         | (\(  0.25\))         | (\(  0.55\))                              | (\(  0.52\))                              |
+ |              | Savings       | \(  0.14\)           | \(  0.47\)^{**}      | \( -0.33\)^{**}      | \(  0.55\)^{***}     | \( -0.80\)^{***}                          | \(  0.08\)                                |
+ |              | $N=671$       | (\(  0.25\))         | (\(  0.20\))         | (\(  0.16\))         | (\(  0.13\))         | (\(  0.25\))                              | (\(  0.24\))                              |
 
-#+LATEX: \begin{landscape}
- #+name: tab:log_savings
-  #+attr_latex: :environment longtable :align lrrrrrrr
- #+caption: Average log value (in SSP) of all cash and food savings and area of land.
- |                                         | Savings   | LandCult | LandOwn  | Get Transfer | Give Transfer | Food Savings |
- |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | CTL mean                                | 4.61      | 0.95     | 0.85     |         5.08 | 4.56          | 4.22         |
- |                                         | (1.23)    | (2.05)   | (1.82)   |       (0.93) | (0.96)        | (0.96)       |
- |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | UPG*2014                                | -0.304**  | 0.03     | 0.20     |         0.07 | 0.493*        | 0.3***       |
- |                                         | (0.15)    | (0.16)   | (0.15)   |       (0.22) | (0.27)        | (0.09)       |
- | UPG*2015                                | 0.567***  | -0.273*  | -0.13    |         0.13 | -0.31         | 0.06         |
- |                                         | (0.14)    | (0.16)   | (0.14)   |       (0.22) | (0.31)        | (0.09)       |
- | UCT*2014                                | 0.19      | 0.23     | 0.30     |         0.27 | -0.57         | -0.05        |
- |                                         | (0.21)    | (0.21)   | (0.19)   |       (0.26) | (0.36)        | (0.11)       |
- | UCT*2015                                | 0.513**   | -0.447** | -0.348*  |         0.46 | -0.01         | 0.202*       |
- |                                         | (0.20)    | (0.20)   | (0.18)   |       (0.30) | (0.45)        | (0.12)       |
- | 2014                                    | 3.434***  | 0.246**  | 0.332*** |     3.856*** | 3.526***      | 3.626***     |
- |                                         | (0.24)    | (0.12)   | (0.11)   |       (0.46) | (0.56)        | (0.06)       |
- | 2015                                    | 4.003***  | 0.96***  | 0.887*** |     4.475*** | 4.525***      | 4.216***     |
- |                                         | (0.24)    | (0.11)   | (0.10)   |       (0.46) | (0.56)        | 0.06         |
- | Baseline missing                        | 0.598***  | -0.03    | -0.06    |         0.61 | 0.01          |              |
- |                                         | (0.23)    | (0.12)   | (0.11)   |       (0.46) | (0.55)        |              |
- | Baseline values                                | 0.123***  | 0.01     | -0.03    |         0.13 | 0.02          |              |
- |                                         | 0.04      | 0.08     | 0.06     |         0.09 | 0.12          |              |
- |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | F-stat                                  | 20.87     | 4.50     | 2.88     |         3.93 | 3.92          | 20.33        |
- | N                                       | 671.00    | 1042.00  | 1114.00  |       255.00 | 159.00        | 1073.00      |
- |-----------------------------------------+-----------+----------+----------+--------------+---------------+--------------|
- | $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | -0.818*** | 0.478*   | 0.553**  |        -0.39 | 0.50          | 0.10         |
- | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | 0.05      | 0.17     | 0.22     |        -0.33 | -0.30         | -0.14        |
-#+LATEX: \end{landscape}
+#+name: tab:savings_values_full
+#+latex: \begin{landscape}
+ | Class        | Outcome       | 2014             | 2015             | Baseline value | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+ |--------------+---------------+------------------+------------------+----------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+ | Values (SSP) | Food Savings  | \( 44.77\)^{***} | \( 85.13\)^{***} | ---            | \( 12.33\)           | \( -4.72\)           | \( 42.53\)^{**}      | \( -1.42\)           | \( 47.25\)^{**}                           | \(  3.29\)                                |
+ |              | $N=1500$      | (\(  8.47\))     | (\(  8.41\))     |                | (\( 13.75\))         | (\( 12.92\))         | (\( 18.97\))         | (\( 12.45\))         | (\( 22.95\))                              | (\( 17.94\))                              |
+ |              | Get Transfer  | \( 22.63\)^{***} | \( 45.28\)^{***} | \(  0.01\)     | \( 18.58\)           | \(  7.62\)           | \( 42.00\)           | \(  0.83\)           | \( 34.39\)                                | \( -6.79\)                                |
+ |              | $N=1500$      | (\(  4.92\))     | (\( 10.05\))     | (\(  0.02\))   | (\( 14.67\))         | (\( 19.72\))         | (\( 36.32\))         | (\( 15.26\))         | (\( 41.33\))                              | (\( 24.94\))                              |
+ |              | Give Transfer | \( 18.11\)       | \( 11.31\)^{***} | \(  0.02\)     | \(-13.87\)           | \(  3.53\)           | \(  2.75\)           | \( -1.18\)           | \( -0.78\)                                | \( -4.71\)                                |
+ |              | $N=1500$      | (\( 14.35\))     | (\(  3.40\))     | (\(  0.02\))   | (\( 14.34\))         | (\( 10.47\))         | (\( 15.20\))         | (\(  4.19\))         | (\( 18.46\))                              | (\( 11.28\))                              |
+ |              | Savings       | \( 46.37\)^{***} | \( 74.56\)^{***} | \(  0.03\)     | \( 32.46\)           | \( 32.31\)           | \( 16.64\)           | \( 99.28\)^{***}     | \(-15.67\)                                | \( 66.97\)                                |
+ |              | $N=1500$      | (\( 10.47\))     | (\( 11.93\))     | (\(  0.02\))   | (\( 33.50\))         | (\( 22.98\))         | (\( 15.03\))         | (\( 34.60\))         | (\( 27.46\))                              | (\( 41.54\))                              |
+ | Positive     | Food Savings  | \(  0.64\)^{***} | \(  0.73\)^{***} | ---            | \(  0.20\)^{***}     | \( -0.04\)           | \(  0.13\)^{***}     | \(  0.00\)           | \(  0.17\)^{***}                          | \(  0.04\)                                |
+ |              | $N=1500$      | (\(  0.02\))     | (\(  0.02\))     |                | (\(  0.04\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.06\))                              |
+ |              | Get Transfer  | \(  0.13\)^{***} | \(  0.16\)^{***} | \(  0.05\)^{*} | \(  0.08\)^{*}       | \( -0.03\)           | \(  0.08\)^{**}      | \( -0.01\)           | \(  0.11\)^{**}                           | \(  0.02\)                                |
+ |              | $N=1500$      | (\(  0.02\))     | (\(  0.02\))     | (\(  0.03\))   | (\(  0.04\))         | (\(  0.04\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.05\))                              | (\(  0.05\))                              |
+ |              | Give Transfer | \(  0.09\)^{***} | \(  0.07\)^{***} | \(  0.04\)^{*} | \(  0.03\)           | \( -0.01\)           | \(  0.07\)^{**}      | \(  0.03\)           | \(  0.08\)^{**}                           | \(  0.04\)                                |
+ |              | $N=1500$      | (\(  0.02\))     | (\(  0.01\))     | (\(  0.02\))   | (\(  0.03\))         | (\(  0.03\))         | (\(  0.03\))         | (\(  0.02\))         | (\(  0.04\))                              | (\(  0.04\))                              |
+ |              | Savings       | \(  0.33\)^{***} | \(  0.38\)^{***} | \(  0.02\)     | \(  0.03\)           | \(  0.00\)           | \(  0.29\)^{***}     | \(  0.18\)^{***}     | \(  0.28\)^{***}                          | \(  0.18\)^{***}                          |
+ |              | $N=1500$      | (\(  0.03\))     | (\(  0.03\))     | (\(  0.03\))   | (\(  0.05\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.07\))                              |
+ | Log Values   | Food Savings  | \(  3.63\)^{***} | \(  4.22\)^{***} | ---            | \( -0.05\)           | \(  0.20\)^{*}       | \(  0.30\)^{***}     | \(  0.06\)           | \(  0.10\)                                | \( -0.14\)                                |
+ |              | $N=1073$      | (\(  0.06\))     | (\(  0.06\))     |                | (\(  0.11\))         | (\(  0.10\))         | (\(  0.10\))         | (\(  0.09\))         | (\(  0.15\))                              | (\(  0.14\))                              |
+ |              | Get Transfer  | \(  4.43\)^{***} | \(  5.06\)^{***} | \(  0.02\)     | \(  0.30\)           | \(  0.47\)^{*}       | \(  0.09\)           | \(  0.14\)           | \( -0.38\)                                | \( -0.34\)                                |
+ |              | $N=255$       | (\(  0.19\))     | (\(  0.12\))     | (\(  0.03\))   | (\(  0.28\))         | (\(  0.25\))         | (\(  0.26\))         | (\(  0.19\))         | (\(  0.36\))                              | (\(  0.31\))                              |
+ |              | Give Transfer | \(  3.54\)^{***} | \(  4.54\)^{***} | \(  0.02\)     | \( -0.57\)           | \( -0.01\)           | \(  0.49\)           | \( -0.31\)           | \(  0.50\)                                | \( -0.30\)                                |
+ |              | $N=159$       | (\(  0.23\))     | (\(  0.19\))     | (\(  0.05\))   | (\(  0.38\))         | (\(  0.46\))         | (\(  0.31\))         | (\(  0.25\))         | (\(  0.55\))                              | (\(  0.52\))                              |
+ |              | Savings       | \(  3.98\)^{***} | \(  4.55\)^{***} | \(  0.02\)     | \(  0.14\)           | \(  0.47\)^{**}      | \( -0.33\)^{**}      | \(  0.55\)^{***}     | \( -0.80\)^{***}                          | \(  0.08\)                                |
+ |              | $N=671$       | (\(  0.14\))     | (\(  0.11\))     | (\(  0.02\))   | (\(  0.25\))         | (\(  0.20\))         | (\(  0.16\))         | (\(  0.13\))         | (\(  0.25\))                              | (\(  0.24\))                              |
+#+latex: \end{landscape}
 
 
+
+
+**** Discussion of land ownership & cultivation                      :ignore:
+
+We also examine land ownership and cultivation in each year.  In 2014 both the
+UPG and UCT groups are significantly  more likely cultivate land, and
+also to own it.  These differences from the control group disappear
+by 2015.  But interestingly, the amount of land owned or cultivated
+/conditional/ on having some land is not significantly different from
+the control for either group in 2014, and land cultivated is
+significantly /less/ than the control both groups in 2015 (the same
+goes for land ownership, but not at the same level of significance.
+
+
+
+
+ #+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle /tmp/foo.py
+import statsmodels.api as sm
+import pandas as pd
+import numpy as np
+from cfe.df_utils import df_to_orgtbl
+import ss_standard
+
+data_assignment = "../../Report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+df_b = pd.read_stata(data_baseline)
+df_m = pd.read_stata(data_midline)
+df_e = pd.read_stata(data_endline)
+df_a = pd.read_csv(data_assignment)
+
+df_b.set_index('idno', inplace=True)
+df_m.set_index('idno', inplace=True)
+df_e.set_index('idno', inplace=True)
+df_a.set_index('RespID', inplace=True)
+
+#format savings_maize_q_m  savings_maize_val_m 
+#s8b_2c_m and  s8b_2d_m are for other food savings values
+#transfers_get1_m is value of transfers
+df = pd.merge(df_b[ ['savings_home_b', 'savings_bank_b', 'savings_BRAC_b', 'savings_NGOs_b', 
+                     'savings_other_b', 'land_owncult_b', 'land_rentcult_b', 'land_communitycult_b',
+                     'land_ownnocult_b', 'land_ownrent_b', 'transfers_get1_b', 'transfers_get2_b', 
+                     'transfers_get3_b', 'transfers_give1_b', 'transfers_give2_b', 'transfers_give3_b'] ], 
+              df_m[ ['savings_home_m', 'savings_bank_m', 'savings_BRAC_m', 'savings_NGOs_m', 
+                     'savings_other_m', 'savings_maize_val_m', 'savings_sorghum_val_m', 
+                     's8b_2c_m', 's8b_2d_m', 'land_owncult_m', 'land_rentcult_m', 'land_communitycult_m',
+                     'land_ownnocult_m', 'land_ownrent_m', 'transfers_get1_m', 'transfers_get2_m', 
+                     'transfers_get3_m', 'transfers_give1_m', 'transfers_give2_m', 'transfers_give3_m'] ], 
+              how='outer', left_index=True, right_index=True)
+
+
+# # merge baseline/midline and endline based on idno index
+# endline issue with how sum being calculated for 'savings_otherfood_val_e' - 40+NaN=NaN, so using s4b_oth_1b_e and s4b_oth_2b_e instead
+df = pd.merge(df, 
+              df_e[ ['savings_home_e', 'savings_bank_e', 'savings_BRAC_e', 'savings_NGOs_e', 
+                     'savings_other_e', 'savings_maize_val_e', 'savings_sorghum_val_e', 
+                     's4b_oth_1b_e', 's4b_oth_2b_e', 'land_owncult_e', 'land_rentcult_e', 'land_communitycult_e',
+                     'land_ownnocult_e', 'land_ownrent_e', 'transfers_get1_e', 'transfers_get2_e', 
+                     'transfers_get3_e', 'transfers_give1_e', 'transfers_give2_e', 'transfers_give3_e'] ], 
+              how='outer', left_index=True, right_index=True)
+
+
+df.rename({'s8b_2c_m': 'savings_otherfood1_val_m',
+           's8b_2d_m': 'savings_otherfood2_val_m',
+           's4b_oth_1b_e': 'savings_otherfood1_val_e',
+           's4b_oth_2b_e': 'savings_otherfood2_val_e'}, axis=1, inplace=True)
+
+# find columns that end with "_b", "_m", or "_e"
+# cut off the the last 2 characters "_b", "_m", or "_e"
+s2013 = df.filter(regex="_b$").rename(columns=lambda x: x[:-2])
+s2014 = df.filter(regex="_m$").rename(columns=lambda x: x[:-2])
+s2015 = df.filter(regex="_e$").rename(columns=lambda x: x[:-2])
+
+s2013['Year'] = '2013'
+s2014['Year'] = '2014'
+s2015['Year'] = '2015'
+
+outcomes_with_baseline = ['Land Cultivated', 'Land Owned']
+
+# make the sum variables
+for var in (s2013, s2014, s2015):
+    
+    var["Land Cultivated"] = var[ ['land_owncult', 'land_rentcult', 'land_communitycult'] ].sum(axis=1)
+    var["Land Owned"] = var[ ['land_owncult', 'land_ownnocult', 'land_ownrent'] ].sum(axis=1)
+    
+    # set up to make year dummies
+    var.insert(len(var.columns), '2013', 0)
+    var.insert(len(var.columns), '2014', 0)
+    var.insert(len(var.columns), '2015', 0)
+    
+    # baseline values as 'var'2013
+    for outcome in outcomes_with_baseline: 
+        var[outcome+'2013'] = s2013[outcome]
+    
+# make year dummmies
+s2013['2013'].replace(to_replace = 0, value = 1, inplace=True)
+s2014['2014'].replace(to_replace = 0, value = 1, inplace=True)
+s2015['2015'].replace(to_replace = 0, value = 1, inplace=True)
+
+df2 = pd.concat((s2013, s2014, s2015))
+# add group dummies from master_assignment.csv
+df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))
+
+outcomes = ['Land Cultivated','Land Owned']
+Results = {}
+
+Results['Values (SSP)'] = ss_standard.results(df,outcomes,positive=False,logs=False,return_stats=True)
+Results['Positive'] = ss_standard.results(df,outcomes,positive=True,logs=False,return_stats=True)
+Results['Log Values'] = ss_standard.results(df,outcomes,positive=False,logs=True,return_stats=True)
+
+other = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
+other.index.names = ['Variable','Outcome']
+other.columns.name = 'Class'
+other = other.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+other = other.reindex(['Values (SSP)','Positive','Log Values'],level=0)
+
+print(df_to_orgtbl(other[['2014','2015']].unstack('Class'),float_fmt='%6.2f'))
+
+
+print(ss_standard.table_stacked_by_class(Results,elide=True))
+
+print(ss_standard.table_stacked_by_class(Results,elide=False))
+
+ #+end_src
+
+#+name: tab:land_control
+ |                 |         2014 |          |            |         2015 |          |            |
+ | Outcome         | Values (SSP) | Positive | Log Values | Values (SSP) | Positive | Log Values |
+ |-----------------+--------------+----------+------------+--------------+----------+------------|
+ | Land Cultivated |         9.90 |     0.60 |       0.24 |        59.90 |     0.72 |       0.95 |
+ | Land Owned      |         9.06 |     0.60 |       0.30 |        53.51 |     0.81 |       0.85 |
+
+#+name: tab:land_values
+ | Class        | Outcome         | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+ |--------------+-----------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+ | Values (SSP) | Land Cultivated | \( 16.47\)           | \(-43.96\)^{**}      | \( -2.35\)           | \(-14.17\)           | \( 41.61\)^{*}                            | \( 29.79\)                                |
+ |              | $N=1500$        | (\( 19.34\))         | (\( 19.34\))         | (\( 15.31\))         | (\( 15.31\))         | (\( 24.66\))                              | (\( 24.66\))                              |
+ |              | Land Owned      | \( 18.03\)           | \(-42.24\)^{**}      | \(  2.60\)           | \(-16.18\)           | \( 44.84\)^{*}                            | \( 26.06\)                                |
+ |              | $N=1500$        | (\( 19.32\))         | (\( 19.32\))         | (\( 15.29\))         | (\( 15.29\))         | (\( 24.64\))                              | (\( 24.64\))                              |
+ | Positive     | Land Cultivated | \(  0.10\)^{**}      | \( -0.04\)           | \(  0.15\)^{***}     | \(  0.00\)           | \(  0.18\)^{***}                          | \(  0.04\)                                |
+ |              | $N=1500$        | (\(  0.05\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.06\))                              |
+ |              | Land Owned      | \(  0.13\)^{***}     | \( -0.05\)           | \(  0.16\)^{***}     | \( -0.02\)           | \(  0.21\)^{***}                          | \(  0.03\)                                |
+ |              | $N=1500$        | (\(  0.05\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.06\))                              |
+ | Log Values   | Land Cultivated | \(  0.24\)           | \( -0.44\)^{**}      | \(  0.04\)           | \( -0.27\)^{*}       | \(  0.48\)^{*}                            | \(  0.17\)                                |
+ |              | $N=1042$        | (\(  0.20\))         | (\(  0.19\))         | (\(  0.16\))         | (\(  0.15\))         | (\(  0.25\))                              | (\(  0.25\))                              |
+ |              | Land Owned      | \(  0.31\)           | \( -0.34\)^{*}       | \(  0.22\)           | \( -0.12\)           | \(  0.55\)^{**}                           | \(  0.22\)                                |
+ |              | $N=1114$        | (\(  0.19\))         | (\(  0.18\))         | (\(  0.15\))         | (\(  0.14\))         | (\(  0.24\))                              | (\(  0.23\))                              |
+
+#+name: tab:land_values_full
+#+latex: \begin{landscape}
+ | Class        | Outcome         | 2014             | 2015             | Baseline value   | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+ |--------------+-----------------+------------------+------------------+------------------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+ | Values (SSP) | Land Cultivated | \(  8.88\)       | \( 58.87\)^{***} | \(  1.01\)       | \( 16.47\)           | \(-43.96\)^{**}      | \( -2.35\)           | \(-14.17\)           | \( 41.61\)^{*}                            | \( 29.79\)                                |
+ |              | $N=1500$        | (\( 10.15\))     | (\( 10.15\))     | (\(  3.10\))     | (\( 19.34\))         | (\( 19.34\))         | (\( 15.31\))         | (\( 15.31\))         | (\( 24.66\))                              | (\( 24.66\))                              |
+ |              | Land Owned      | \( 12.89\)       | \( 57.34\)^{***} | \( -2.60\)       | \( 18.03\)           | \(-42.24\)^{**}      | \(  2.60\)           | \(-16.18\)           | \( 44.84\)^{*}                            | \( 26.06\)                                |
+ |              | $N=1500$        | (\( 10.36\))     | (\( 10.36\))     | (\(  2.55\))     | (\( 19.32\))         | (\( 19.32\))         | (\( 15.29\))         | (\( 15.29\))         | (\( 24.64\))                              | (\( 24.64\))                              |
+ | Positive     | Land Cultivated | \(  0.55\)^{***} | \(  0.67\)^{***} | \(  0.08\)^{***} | \(  0.10\)^{**}      | \( -0.04\)           | \(  0.15\)^{***}     | \(  0.00\)           | \(  0.18\)^{***}                          | \(  0.04\)                                |
+ |              | $N=1500$        | (\(  0.03\))     | (\(  0.03\))     | (\(  0.03\))     | (\(  0.05\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.06\))                              |
+ |              | Land Owned      | \(  0.55\)^{***} | \(  0.75\)^{***} | \(  0.09\)^{***} | \(  0.13\)^{***}     | \( -0.05\)           | \(  0.16\)^{***}     | \( -0.02\)           | \(  0.21\)^{***}                          | \(  0.03\)                                |
+ |              | $N=1500$        | (\(  0.03\))     | (\(  0.03\))     | (\(  0.03\))     | (\(  0.05\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.06\))                              |
+ | Log Values   | Land Cultivated | \(  0.24\)^{**}  | \(  0.95\)^{***} | \(  0.02\)       | \(  0.24\)           | \( -0.44\)^{**}      | \(  0.04\)           | \( -0.27\)^{*}       | \(  0.48\)^{*}                            | \(  0.17\)                                |
+ |              | $N=1042$        | (\(  0.11\))     | (\(  0.10\))     | (\(  0.08\))     | (\(  0.20\))         | (\(  0.19\))         | (\(  0.16\))         | (\(  0.15\))         | (\(  0.25\))                              | (\(  0.25\))                              |
+ |              | Land Owned      | \(  0.31\)^{***} | \(  0.86\)^{***} | \( -0.02\)       | \(  0.31\)           | \( -0.34\)^{*}       | \(  0.22\)           | \( -0.12\)           | \(  0.55\)^{**}                           | \(  0.22\)                                |
+ |              | $N=1114$        | (\(  0.11\))     | (\(  0.09\))     | (\(  0.06\))     | (\(  0.19\))         | (\(  0.18\))         | (\(  0.15\))         | (\(  0.14\))         | (\(  0.24\))                              | (\(  0.23\))                              |
+#+latex: \end{landscape}
 
 ** Income
 *** Discussion                                                       :ignore:
-Income was reliably measured only in 2015, and so our estimates do not control for
-baseline values. The control group in 2015 has a measured income of roughly 4300 SSP
-per year, or roughly $540 US (assuming an exchange rate of around 8).
-We estimate positive impacts on total income for both the UPG and UCT
-groups, but none of these are statistically significant (Table [[tab:income]]).  
+Income was reliably measured only in 2015, and so our estimates do not
+control for baseline values or allow for estimation of treatment
+effects in different years.  The control group in 2015 has a measured
+income of roughly 4300 SSP per year, or roughly $540 US (assuming an
+exchange rate of around 8).  We estimate positive impacts on total
+income for both the UPG and UCT groups, but only the former of these is
+statistically significant (Table [[tab:income]]).
+
+We saw earlier that the UPG group was more likely to hold positive
+amounts of livestock, consistent with the design of the program.
+Table [[tab:income]] further reveals that the UPG group is also
+significantly more likely to receive positive amounts of income from
+livestock (even though the average difference in livestock income between the
+UPG group and others is not significant).  Further, conditional on
+having positive livestock, the UPG group obtains 0.53 
+log points more income from that livestock than does the control
+group, and 0.60 log points more than the UCT group.
 
 *** Recreating income table                                          :ignore:
 *************** NOTE
-This table uses income data from the endline survey. CTL mean comes from the constant
-and its standard error in the regression.
+This table uses income data from the endline survey.
 
 Differences with previous code: 
 -This code does not do any type of censoring, truncating, or converting of the
@@ -1160,25 +1105,23 @@ specific unit
 - The original table does not have standard errors under CTL mean
 
 Next steps: 
--make bar graph figure
 -consider whether multiplying (reported months of work)*(avg monthly
 income) (what is currently being used) is better than using reported
 annual income
--run the regressions without the constant? The original table does not
-have standard errors under CTL mean
+
 *************** END
 
-
 #+name: income_table
-#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no
-data_assignment  = "../../Report/documents/master_assignment.csv"
-data_nonfarm = "../../TUP-data/Endline/sections_8_17.csv"
-data_farm = "../../TUP-data/Endline/Agriculture_cleaned.csv"
-
+#+begin_src python :noweb no-export :exports none  :results output table raw labels=[] :colnames no :tangle /tmp/income.py
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
 from cfe.df_utils import df_to_orgtbl
+import ss_standard
+
+data_assignment  = "../../Report/documents/master_assignment.csv"
+data_nonfarm = "../../TUP-data/Endline/sections_8_17.csv"
+data_farm = "../../TUP-data/Endline/Agriculture_cleaned.csv"
 
 df_a = pd.read_csv(data_assignment)
 df_n = pd.read_csv(data_nonfarm)
@@ -1188,7 +1131,7 @@ df_n.set_index('res_id', inplace=True)
 df_f.set_index('res_id', inplace=True)
 df_a.set_index('RespID', inplace=True)
 
-"""Nonagricultural income"""
+# """Nonagricultural income"""
 
 df_n = df_n.filter(regex='^s16')
 
@@ -1200,10 +1143,13 @@ nonfarm_yearly = pd.DataFrame()
 for i in range(1,6):
     nonfarm_yearly['source' + str(i)] = df_n['s16_' + str(i) + 'c']*df_n['s16_' + str(i) + 'd']
 
-nonfarm_yearly['nonfarm_yearly_sum'] = nonfarm_yearly.sum(axis=1)
+nonfarm_yearly_sum = nonfarm_yearly.sum(axis=1).groupby('res_id').sum()
+nonfarm_yearly_sum.name = 'nonfarm_yearly_sum'
+nonfarm_yearly_sum = nonfarm_yearly_sum.fillna(0)
+#nonfarm_yearly['nonfarm_yearly_sum'] = nonfarm_yearly.sum(axis=1)
 
 
-"""Agricultural income"""
+# """Agricultural income"""
 
 # HARVEST VARIABLE NAMES: harvest_type (crop), harvest_size, harvest_unit (qty and unit harvested)
 # harvest_price (market price in SSP), harvest_price_unit (market price unit), harvest_sold (qty sold assuming same unit as harvest_unit)
@@ -1240,7 +1186,7 @@ for i in range(len(df_f)):
     
                 else: 
                     # set the adjusted harvest price to be the median price for that type and harvest unit
-                    df_f['adjusted_harvest_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['harvest_unit']][0]
+                    df_f['adjusted_harvest_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['harvest_unit']].values[0]
         
             # if units match
             else: df_f['adjusted_harvest_price'].iloc[i] = df_f.iloc[i]['harvest_price']
@@ -1289,7 +1235,7 @@ for i in range(len(df_f)):
                     df_f['adjusted_livestock_price'].iloc[i] = np.nan
                 else: 
                     # set the adjusted livestock price to be the median price for that type and livestock unit
-                    df_f['adjusted_livestock_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['livestock_unit']][0]
+                    df_f['adjusted_livestock_price'].iloc[i] = find_type[find_type.index.get_level_values(1) == df_f.iloc[i]['livestock_unit']].values[0]
         
             # if units match
             else: df_f['adjusted_livestock_price'].iloc[i] = df_f.iloc[i]['livestock_price']
@@ -1299,11 +1245,13 @@ for i in range(len(df_f)):
 # print("there are {} rows for which no one reported a market price for that animal and unit".format(k))
  
 df_f["livestock_income_yearly"] = df_f["livestock_size"]*df_f["adjusted_livestock_price"]
+df_f["livestock_income_yearly"] = df_f["livestock_income_yearly"].fillna(0) 
 
 # there could be  multiple rows for the same household, so we group by respondent ID
 farm_yearly['livestock_income_yearly_sum'] = df_f[ ['livestock_income_yearly'] ].dropna().groupby("res_id")["livestock_income_yearly"].sum()
+farm_yearly['livestock_income_yearly_sum'] = farm_yearly['livestock_income_yearly_sum'].fillna(0)
 
-df = pd.merge(nonfarm_yearly[ ['nonfarm_yearly_sum'] ], farm_yearly, how='outer', left_index=True, right_index=True)
+df = pd.merge(nonfarm_yearly_sum, farm_yearly, how='outer', left_index=True, right_index=True)
 df = pd.merge(df, df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group'])), how='inner', left_index=True, right_index=True)
 
 df.insert(len(df.columns), 'total', df[['nonfarm_yearly_sum', 'farm_income_yearly_sum', 'livestock_income_yearly_sum']].sum(axis=1))
@@ -1313,71 +1261,91 @@ df.rename(columns = {'farm_income_yearly_sum': "Farm", 'livestock_income_yearly_
                    'nonfarm_yearly_sum': "Non-Farm", 'total': "Total"}, inplace=True)
 
 outcomes = ["Farm", "Livestock", "Non-Farm", "Total"]
-controls = ['constant', 'UPG', 'UCT']
-models_ols = {}
-d = {}
 
-for outcome in outcomes: 
-    temp_df = df[ [outcome] + controls].dropna()
-    
-    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[controls]).fit()
-    
-    # for computing the difference in UPG and Cash coefficients
-    beta_cash_UPG = models_ols[outcome].t_test("UPG - UCT = 0").summary_frame()["coef"][0]
-    pvalue_cash_UPG = models_ols[outcome].t_test("UPG - UCT = 0").summary_frame()["P>|t|"][0]
-    
-    if pvalue_cash_UPG <= 0.01: 
-        beta_cash_UPG = str(round(beta_cash_UPG, 3)) + '***'
-    elif pvalue_cash_UPG <= 0.05: 
-        beta_cash_UPG = str(round(beta_cash_UPG, 3)) + '**'
-    elif pvalue_cash_UPG <= 0.1: 
-        beta_cash_UPG = str(round(beta_cash_UPG, 3)) + '*'
+Results = {}
 
-    d[outcome] = [round(models_ols[outcome].params[0], 3), models_ols[outcome].bse[0],
-                  round(models_ols[outcome].params[1], 3), models_ols[outcome].bse[1], 
-                  round(models_ols[outcome].params[2], 3), models_ols[outcome].bse[2],
-                  models_ols[outcome].fvalue, models_ols[outcome].nobs, 
-                  beta_cash_UPG]
+Results['Values (SSP)'] = ss_standard.results(df,outcomes,positive=False,logs=False,return_stats=True)
+Results['Positive'] = ss_standard.results(df,outcomes,positive=True,logs=False,return_stats=True)
+Results['Log Values'] = ss_standard.results(df,outcomes,positive=False,logs=True,return_stats=True)
 
-    for x in range(0,3):
-        # indexes account for standard errors being in the final table
-        # e.g. second coefficient is beneath standard error so add asterisks to d[outcome][2] not d[outcome][1] and same for next coefficients
-        if models_ols[outcome].pvalues[x] <= 0.01: 
-            d[outcome][x*2] = str(d[outcome][x*2]) + '***'
-        elif models_ols[outcome].pvalues[x] <= 0.05: 
-            d[outcome][x*2] = str(d[outcome][x*2]) + '**'
-        elif models_ols[outcome].pvalues[x] <= 0.1:
-            d[outcome][x*2] = str(d[outcome][x*2]) + '*'
+other = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
+other.index.names = ['Variable','Outcome']
+other.columns.name = 'Class'
+other = other.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+other = other.reindex(['Values (SSP)','Positive','Log Values'],level=0)
 
-final = pd.DataFrame(data=d)
+#print(df_to_orgtbl(other[['2014','2015']].unstack('Class'),float_fmt='%6.2f'))
 
-# name the rows of the table
-final.rename(index = {0: "CTL mean", 1: " ", 2: "UPG", 3: "  ", 
-                      4: "UCT", 5: "   ", 6: "F-stat", 7: "N", 8: "beta_UPG-beta_CASH"}, inplace=True)
 
-newdf = df_to_orgtbl(final, float_fmt = '%.3f')
-print(newdf)
+print(ss_standard.table_stacked_by_class(Results,elide=True))
+
+print(ss_standard.table_stacked_by_class(Results,elide=False))
+
 
 #+end_src
 
+#+results: income_table
 #+name: tab:income
 #+caption: Average treatment effects by group-year on total value (in SSP) of income reported in 2015 by sector.
-|                           |       Farm |  Livestock |    Non-Farm |       Total |
-|---------------------------+------------+------------+-------------+-------------|
-| CTL mean                  | 917.315*** | 924.611*** | 3326.162*** | 4317.337*** |
-|                           |     64.809 |    164.390 |     527.282 |     537.231 |
-| UPG                       |   -139.780 |    117.096 |     964.323 |    1253.478 |
-|                           |    100.918 |    215.596 |     829.082 |     844.725 |
-| UCT                       |     48.833 |   -282.164 |     507.132 |     510.939 |
-|                           |    133.947 |    298.534 |    1077.298 |    1097.625 |
-|---------------------------+------------+------------+-------------+-------------|
-| F-stat                    |      1.309 |      0.983 |       0.683 |       1.101 |
-| N                         |    532.000 |    305.000 |     690.000 |     690.000 |
-|---------------------------+------------+------------+-------------+-------------|
-| $\beta_{UPG}-\beta_{UCT}$ |   -188.613 |    399.260 |     457.192 |     742.540 |
+| Class        | Outcome   | $\beta_{UPG}$    | $\beta_{UCT}$    | $\beta_{UPG}-\beta_{UCT}$ |
+|--------------+-----------+------------------+------------------+---------------------------|
+| Values (SSP) | Farm      | \(-137.45\)      | \( 60.12\)       | \(-197.57\)               |
+|              | $N=522$   | (\( 98.53\))     | (\(138.09\))     | (\(169.64\))              |
+|              | Livestock | \(474.63\)^{***} | \(  4.36\)       | \(470.27\)^{**}           |
+|              | $N=522$   | (\(140.49\))     | (\(128.82\))     | (\(190.61\))              |
+|              | Non-Farm  | \(1027.97\)      | \(493.85\)       | \(534.11\)                |
+|              | $N=678$   | (\(991.00\))     | (\(1008.89\))    | (\(1414.19\))             |
+|              | Total     | \(1330.07\)      | \(526.33\)       | \(803.74\)                |
+|              | $N=678$   | (\(1005.04\))    | (\(1022.34\))    | (\(1433.62\))             |
+| Positive     | Farm      | \( -0.00\)       | \(  0.01\)       | \( -0.01\)                |
+|              | $N=522$   | (\(  0.01\))     | (\(  0.01\))     | (\(  0.01\))              |
+|              | Livestock | \(  0.40\)^{***} | \(  0.18\)^{***} | \(  0.22\)^{***}          |
+|              | $N=522$   | (\(  0.04\))     | (\(  0.06\))     | (\(  0.08\))              |
+|              | Non-Farm  | \(  0.07\)^{*}   | \(  0.02\)       | \(  0.05\)                |
+|              | $N=678$   | (\(  0.03\))     | (\(  0.05\))     | (\(  0.06\))              |
+|              | Total     | \(  0.05\)^{***} | \( -0.02\)       | \(  0.07\)^{**}           |
+|              | $N=678$   | (\(  0.02\))     | (\(  0.03\))     | (\(  0.03\))              |
+| Log Values   | Farm      | \( -0.15\)       | \(  0.01\)       | \( -0.16\)                |
+|              | $N=518$   | (\(  0.12\))     | (\(  0.17\))     | (\(  0.20\))              |
+|              | Livestock | \(  0.53\)^{***} | \( -0.07\)       | \(  0.60\)^{**}           |
+|              | $N=296$   | (\(  0.16\))     | (\(  0.23\))     | (\(  0.28\))              |
+|              | Non-Farm  | \( -0.12\)       | \( -0.26\)       | \(  0.14\)                |
+|              | $N=538$   | (\(  0.12\))     | (\(  0.18\))     | (\(  0.22\))              |
+|              | Total     | \(  0.15\)       | \( -0.04\)       | \(  0.19\)                |
+|              | $N=645$   | (\(  0.11\))     | (\(  0.16\))     | (\(  0.20\))              |
+
+#+results: income_table
+#+name: tab:income_full
+| Class        | Outcome   | $\beta_{UPG}$    | $\beta_{UCT}$    | Constant          | $\beta_{UPG}-\beta_{UCT}$ |
+|--------------+-----------+------------------+------------------+-------------------+---------------------------|
+| Values (SSP) | Farm      | \(-137.45\)      | \( 60.12\)       | \(906.03\)^{***}  | \(-197.57\)               |
+|              | $N=522$   | (\( 98.53\))     | (\(138.09\))     | (\( 71.24\))      | (\(169.64\))              |
+|              | Livestock | \(474.63\)^{***} | \(  4.36\)       | \(368.42\)^{***}  | \(470.27\)^{**}           |
+|              | $N=522$   | (\(140.49\))     | (\(128.82\))     | (\( 88.23\))      | (\(190.61\))              |
+|              | Non-Farm  | \(1027.97\)      | \(493.85\)       | \(3374.93\)^{***} | \(534.11\)                |
+|              | $N=678$   | (\(991.00\))     | (\(1008.89\))    | (\(271.88\))      | (\(1414.19\))             |
+|              | Total     | \(1330.07\)      | \(526.33\)       | \(4346.65\)^{***} | \(803.74\)                |
+|              | $N=678$   | (\(1005.04\))    | (\(1022.34\))    | (\(297.53\))      | (\(1433.62\))             |
+| Positive     | Farm      | \( -0.00\)       | \(  0.01\)       | \(  0.99\)^{***}  | \( -0.01\)                |
+|              | $N=522$   | (\(  0.01\))     | (\(  0.01\))     | (\(  0.01\))      | (\(  0.01\))              |
+|              | Livestock | \(  0.40\)^{***} | \(  0.18\)^{***} | \(  0.40\)^{***}  | \(  0.22\)^{***}          |
+|              | $N=522$   | (\(  0.04\))     | (\(  0.06\))     | (\(  0.03\))      | (\(  0.08\))              |
+|              | Non-Farm  | \(  0.07\)^{*}   | \(  0.02\)       | \(  0.77\)^{***}  | \(  0.05\)                |
+|              | $N=678$   | (\(  0.03\))     | (\(  0.05\))     | (\(  0.02\))      | (\(  0.06\))              |
+|              | Total     | \(  0.05\)^{***} | \( -0.02\)       | \(  0.94\)^{***}  | \(  0.07\)^{**}           |
+|              | $N=678$   | (\(  0.02\))     | (\(  0.03\))     | (\(  0.01\))      | (\(  0.03\))              |
+| Log Values   | Farm      | \( -0.15\)       | \(  0.01\)       | \(  6.18\)^{***}  | \( -0.16\)                |
+|              | $N=518$   | (\(  0.12\))     | (\(  0.17\))     | (\(  0.08\))      | (\(  0.20\))              |
+|              | Livestock | \(  0.53\)^{***} | \( -0.07\)       | \(  5.84\)^{***}  | \(  0.60\)^{**}           |
+|              | $N=296$   | (\(  0.16\))     | (\(  0.23\))     | (\(  0.14\))      | (\(  0.28\))              |
+|              | Non-Farm  | \( -0.12\)       | \( -0.26\)       | \(  7.76\)^{***}  | \(  0.14\)                |
+|              | $N=538$   | (\(  0.12\))     | (\(  0.18\))     | (\(  0.08\))      | (\(  0.22\))              |
+|              | Total     | \(  0.15\)       | \( -0.04\)       | \(  7.79\)^{***}  | \(  0.19\)                |
+|              | $N=645$   | (\(  0.11\))     | (\(  0.16\))     | (\(  0.07\))      | (\(  0.20\))              |
+
 
 ** Consumption
-
+*** Discussion                                                       :ignore:
 The next outcome of interest we consider is household consumption,
 defined as the market value of goods or services used by the
 household.  A sizable basket of goods were included in the survey
@@ -1420,17 +1388,18 @@ program, with the average difference equal to 484 SSP, a 46% increase
 relative to the average expenditures of the control group in 2015.
 
 #+name: consumption_tables
-#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle consumption_tables.py
-data_assignment  = "../../Report/documents/master_assignment.csv"
-data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
-data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
-data_endline = "../../TUP-data/Endline/TUP_endline.dta"
-
+#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=0 baseline_na=1 :colnames no :tangle /tmp/consumption_tables.py
 import statsmodels.api as sm
 import pandas as pd
 import numpy as np
 from scipy import stats
 from cfe.df_utils import df_to_orgtbl
+import ss_standard
+
+data_assignment  = "../../Report/documents/master_assignment.csv"
+data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+data_endline = "../../TUP-data/Endline/TUP_endline.dta"
 
 df_b = pd.read_stata(data_baseline)
 df_m = pd.read_stata(data_midline)
@@ -1491,101 +1460,58 @@ df2 = pd.concat((c2013, c2014, c2015))
 # add group dummies from master_assignment.csv
 df = df2.join((df_a[ ['Group'] ].join(pd.get_dummies(df_a['Group']))))   
 
-# make interaction terms
-df.insert(len(df.columns), 'UPG*2013', df['2013']*df['UPG'])
-df.insert(len(df.columns), 'UPG*2014', df['2014']*df['UPG'])
-df.insert(len(df.columns), 'UPG*2015', df['2015']*df['UPG'])
-df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
-df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+Results = {}
 
-models_ols = {}
-b = {}
-se = {}
+Results['Values (SSP)'] = ss_standard.results(df,outcomes,positive=False,logs=False,return_stats=True)
+Results['Positive'] = ss_standard.results(df,outcomes,positive=True,logs=False,return_stats=True)
+Results['Log Values'] = ss_standard.results(df,outcomes,positive=False,logs=True,return_stats=True)
 
-controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+other = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
+other.index.names = ['Variable','Outcome']
+other.columns.name = 'Class'
+other = other.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+other = other.reindex(['Values (SSP)','Positive','Log Values'],level=0)
 
-if FE:
-    controls += ['UPG', 'UCT']
+print(df_to_orgtbl(other[['2014','2015']].unstack('Class'),float_fmt='%6.2f'))
 
-# remove observations from 2013, since conditioning on baseline
-df = df[df['Year'] != '2013']
 
-for outcome in outcomes: 
-    temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
-    temp_controls = controls
-    temp_df.rename(columns={outcome + "2013":'Baseline Value'},inplace=True)
-    
-    if baseline_na==True:
-        
-        # indicator for whether outcome in 2013 is na, and cast it to be an integer
-        temp_df["Baseline missing"] = temp_df['Baseline Value'].isnull().apply(int)
-        
-        # code missing values of the baseline variable as 0
-        temp_df['Baseline Value'].fillna(0,inplace=True)
-        
-        temp_controls = temp_controls + ['Baseline missing']
-    
-    temp_controls = temp_controls + ['Baseline Value']
-    temp_df = temp_df.dropna()
-    
-    models_ols[outcome] = sm.OLS(temp_df[outcome], temp_df[temp_controls]).fit()
+print(ss_standard.table_stacked_by_class(Results,elide=True))
 
-    # for computing the mean of the control group in 2015
-    controlgroup = temp_df[temp_df['Control'] == 1]
-    
-    """for table with Fixed Effects"""
-
-    b[outcome] = models_ols[outcome].params
-    se[outcome] = models_ols[outcome].bse
-    
-    b[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].mean()
-    se[outcome]['Control mean'] = controlgroup[controlgroup['2015'] == 1][outcome].std()/np.sqrt(controlgroup[controlgroup['2015'] == 1][outcome].count())
-
-    b[outcome][r'$\beta_{UPG}^{2014}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se[outcome][r'$\beta_{UPG}^{2014}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{UPG}^{2014}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("UPG*2014 - UCT*2015 = 0").summary_frame()["t"][0]
-
-    b[outcome][r'$\beta_{UPG}^{2015}-\beta_{UCT}^{2015}$'] = models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["coef"][0]
-    se[outcome][r'$\beta_{UPG}^{2015}-\beta_{UCT}^{2015}$'] = b[outcome][r'$\beta_{UPG}^{2015}-\beta_{UCT}^{2015}$']/models_ols[outcome].t_test("UPG*2015 - UCT*2015 = 0").summary_frame()["t"][0]
-
-b = pd.DataFrame(b)
-se = pd.DataFrame(se)
-
-print("#+name: tab:consumption_w_fe")
-print("#+caption: Consumption Results")
-print(df_to_orgtbl(b, sedf = se, float_fmt = '%.2f'))
+print(ss_standard.table_stacked_by_class(Results,elide=False))
 
 
 #+end_src
 
+#+results: consumption_tables
+|         |         2014 |          |            |         2015 |          |            |
+| Outcome | Values (SSP) | Positive | Log Values | Values (SSP) | Positive | Log Values |
+|---------+--------------+----------+------------+--------------+----------+------------|
+| Food    |        79.09 |     1.00 |       4.19 |       106.04 |     0.99 |       4.45 |
+| Monthly |       253.98 |     1.00 |       5.08 |       296.78 |     0.99 |       5.32 |
+| Yearly  |       830.49 |     0.96 |       6.09 |      1049.22 |     0.96 |       6.09 |
+
 #+name: tab:consumption
 #+caption: Effect on consumption expenditures with different periods of recall.  Food expenditures are for the past three days, non-durable non-food for the past month, and durables the past year.
-|                                         | Food (3-day) | Monthly      | Yearly        |
-|-----------------------------------------+--------------+--------------+---------------|
-| UPG*2014                                | 18.41^{***}  | 59.23^{*}    | 435.43^{**}   |
-|                                         | (5.92)       | (31.20)      | (176.15)      |
-| UPG*2015                                | 1.82         | 34.76        | -8.48         |
-|                                         | (5.62)       | (29.65)      | (167.41)      |
-| UCT*2014                                | -3.80        | 32.96        | -170.68       |
-|                                         | (7.34)       | (38.70)      | (218.48)      |
-| UCT*2015                                | 14.18^{**}   | 69.81^{*}    | -48.24        |
-|                                         | (7.20)       | (37.96)      | (214.33)      |
-| 2014                                    | 73.52^{***}  | 259.41^{***} | 808.30^{***}  |
-|                                         | (4.87)       | (23.51)      | (125.90)      |
-| 2015                                    | 103.00^{***} | 294.59^{***} | 1022.19^{***} |
-|                                         | (4.56)       | (21.91)      | (115.48)      |
-| Baseline missing                        | 15.72^{**}   | -13.31       | 17.33         |
-|                                         | (6.50)       | (32.81)      | (180.06)      |
-| Baseline value                          | 0.06^{*}     | -0.05        | 0.04          |
-|                                         | (0.03)       | (0.14)       | (0.03)        |
-|-----------------------------------------+--------------+--------------+---------------|
-| Control mean (2015)                     | 110.34^{***} | 288.60^{***} | 1051.76^{***} |
-|                                         | (3.89)       | (16.56)      | (103.24)      |
-| $\beta^{2014}_{UPG}-\beta^{2015}_{UCT}$ | 4.23         | -10.58       | 483.67^{*}    |
-|                                         | (9.17)       | (48.36)      | (273.11)      |
-| $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | -12.36^{*}   | -35.06       | 39.77         |
-|                                         | (7.45)       | (39.29)      | (221.80)      |
-
+| Class        | Outcome  | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+|--------------+----------+----------------------+----------------------+----------------------+----------------------+-------------------------------------------+-------------------------------------------|
+| Values (SSP) | Food     | \( 16.85\)^{***}     | \(  4.02\)           | \( -4.78\)           | \( 16.06\)^{***}     | \(  0.79\)                                | \(-12.04\)^{**}                           |
+|              | $N=1157$ | (\(  3.20\))         | (\(  2.60\))         | (\(  4.43\))         | (\(  3.93\))         | (\(  5.07\))                              | (\(  4.72\))                              |
+|              | Monthly  | \( 62.83\)^{***}     | \( 30.52\)^{**}      | \( 37.09\)           | \( 46.43\)^{**}      | \( 16.40\)                                | \(-15.91\)                                |
+|              | $N=1157$ | (\( 16.92\))         | (\( 13.78\))         | (\( 23.68\))         | (\( 21.02\))         | (\( 26.98\))                              | (\( 25.13\))                              |
+|              | Yearly   | \(462.08\)^{***}     | \(  8.31\)           | \(-149.48\)          | \(-38.69\)           | \(500.77\)^{***}                          | \( 47.01\)                                |
+|              | $N=1157$ | (\( 95.73\))         | (\( 77.84\))         | (\(133.98\))         | (\(118.68\))         | (\(152.48\))                              | (\(141.94\))                              |
+| Positive     | Food     | \(  0.00\)           | \(  0.00\)           | \( -0.01\)           | \(  0.00\)           | \(  0.00\)                                | \(  0.00\)                                |
+|              | $N=1157$ | (\(  0.01\))         | (\(  0.00\))         | (\(  0.01\))         | (\(  0.01\))         | (\(  0.01\))                              | (\(  0.01\))                              |
+|              | Monthly  | \( -0.00\)           | \( -0.00\)           | \( -0.03\)^{***}     | \(  0.01\)           | \( -0.01\)^{*}                            | \( -0.01\)                                |
+|              | $N=1157$ | (\(  0.00\))         | (\(  0.00\))         | (\(  0.01\))         | (\(  0.01\))         | (\(  0.01\))                              | (\(  0.01\))                              |
+|              | Yearly   | \(  0.02\)^{**}      | \(  0.00\)           | \(  0.01\)           | \( -0.01\)           | \(  0.04\)^{**}                           | \(  0.02\)                                |
+|              | $N=1157$ | (\(  0.01\))         | (\(  0.01\))         | (\(  0.01\))         | (\(  0.01\))         | (\(  0.01\))                              | (\(  0.01\))                              |
+| Log Values   | Food     | \(  0.21\)^{***}     | \(  0.04\)           | \(  0.00\)           | \(  0.15\)^{***}     | \(  0.06\)                                | \( -0.11\)^{**}                           |
+|              | $N=1148$ | (\(  0.04\))         | (\(  0.03\))         | (\(  0.05\))         | (\(  0.04\))         | (\(  0.06\))                              | (\(  0.05\))                              |
+|              | Monthly  | \(  0.32\)^{***}     | \(  0.14\)^{***}     | \(  0.12\)^{*}       | \(  0.18\)^{***}     | \(  0.14\)^{**}                           | \( -0.04\)                                |
+|              | $N=1149$ | (\(  0.05\))         | (\(  0.04\))         | (\(  0.06\))         | (\(  0.05\))         | (\(  0.07\))                              | (\(  0.07\))                              |
+|              | Yearly   | \(  0.13\)^{*}       | \(  0.02\)           | \( -0.08\)           | \(  0.11\)           | \(  0.02\)                                | \( -0.09\)                                |
+|              | $N=1117$ | (\(  0.07\))         | (\(  0.06\))         | (\(  0.10\))         | (\(  0.09\))         | (\(  0.11\))                              | (\(  0.11\))                              |
 
 It is worth noting that the effects of the UPG program on consumption
 are not lasting---two years after the distribution of assets (in 2015)
@@ -1833,7 +1759,6 @@ print(df_to_orgtbl(b,sedf=se))
 |                                         | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.068\))     | (\(0.069\))     | (\(0.068\))     |
 | $\beta^{2015}_{UPG}-\beta^{2015}_{UCT}$ | \(0.027\)       | \(0.032\)       | \(-0.026\)      | \(-0.005\)      | \(0.028\)       | \(-0.008\)      |
 |                                         | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.067\))     | (\(0.068\))     | (\(0.067\))     |
-
 
 ** Exposure to Conflict
 *** Discussion                                                       :ignore:
