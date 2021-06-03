@@ -4,7 +4,7 @@ import pandas as pd
 from scipy.linalg import block_diag
 import numpy as np
 
-def results(df, outcomes, baseline_na=True,logs=False,positive=False,elide=False,return_stats=False):
+def results(df,outcomes,controls=None,baseline_na=True,logs=False,positive=False,elide=False,return_stats=False):
 
     df = df.copy()
     # make interaction terms
@@ -17,7 +17,8 @@ def results(df, outcomes, baseline_na=True,logs=False,positive=False,elide=False
         df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
         df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
 
-        controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+        if controls is None:
+            controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
 
         # remove observations from 2013
         df = df[df['Year'] != '2013']
@@ -26,7 +27,8 @@ def results(df, outcomes, baseline_na=True,logs=False,positive=False,elide=False
     except KeyError:
         df['Constant'] = 1
         df.rename(columns={'TUP':'UPG'},inplace=True)
-        controls = ['UPG', 'UCT', 'Constant']
+        if controls is None:
+            controls = ['UPG', 'UCT', 'Constant']
         df.index.name = 'idno'
 
     myX = {}
@@ -105,8 +107,12 @@ def results(df, outcomes, baseline_na=True,logs=False,positive=False,elide=False
         se['UPG*2014 - UCT*2015'] = np.sqrt(se['UPG*2014']**2 + se['UCT*2015']**2)
         se['UPG*2015 - UCT*2015'] = np.sqrt(se['UPG*2015']**2 + se['UCT*2015']**2)
     except KeyError: # No treatment-year interactions?
-        b['UPG - UCT'] = b['UPG'] - b['UCT']
-        se['UPG - UCT'] = np.sqrt(se['UPG']**2 + se['UCT']**2)
+        try:
+            b['UPG - UCT'] = b['UPG'] - b['UCT']
+            se['UPG - UCT'] = np.sqrt(se['UPG']**2 + se['UCT']**2)
+        except KeyError: # No pair of treatments at all
+            pass
+
 
     b = b.T
     se = se.T
