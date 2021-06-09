@@ -1,10 +1,85 @@
 import statsmodels.api as sm
-from cfe.df_utils import df_to_orgtbl, ols
+from cfe.df_utils import df_to_orgtbl, ols, use_indices
 import pandas as pd
 from scipy.linalg import block_diag
 import numpy as np
+import re
 
-def results(df,outcomes,controls=None,baseline_na=True,logs=False,positive=False,elide=False,return_stats=False):
+def basic_data(outcomes=None, filter=None):
+
+    data_assignment  = "../../Report/documents/master_assignment.csv"
+    data_baseline = "../../TUP-data/data/Baseline/TUP_baseline.dta"
+    data_midline  = "../../TUP-data/Midline/TUP_midline.dta"
+    data_endline = "../../TUP-data/Endline/TUP_endline.dta"
+
+    DFs = []
+    
+    # Baseline
+    df = pd.read_stata(data_baseline)
+    df['Year'] = '2013'
+    df.rename(columns=dict(zip([s for s in df.columns.to_list() if s[-2:]=='_b'],
+                               [s[:-2] for s in df.columns.to_list() if s[-2:]=='_b'])),
+              inplace=True)
+
+    DFs.append(df)        
+    
+    df = pd.read_stata(data_midline)
+    df['Year'] = '2014'
+    df.rename(columns=dict(zip([s for s in df.columns.to_list() if  s[-2:]=='_m'],
+                               [s[:-2] for s in df.columns.to_list() if s[-2:]=='_m'])),
+              inplace=True)
+
+    DFs.append(df)        
+
+    df = pd.read_stata(data_endline)
+    df['Year'] = '2015'
+    
+    df.rename(columns=dict(zip([s for s in df.columns.to_list() if s[-2:]=='_e'],
+                               [s[:-2] for s in df.columns.to_list() if s[-2:]=='_e'])),
+              inplace=True)
+
+    DFs.append(df)
+
+    df = pd.concat(DFs,axis=0)
+    df['idno'] = df.idno.astype(int)
+    df.set_index(['idno','Year'],inplace=True)
+
+    DFs = []
+    if outcomes is not None:
+        DFs.append(df[df.columns.intersection(outcomes)])
+
+    if filter is not None:
+        use = df.filter(regex=filter).columns
+        df1 = df.filter(regex=filter)
+        c = re.compile(r'('+filter+')')
+        DFs.append(df1.rename(columns=dict(zip(use,[c.sub('',s) for s in df1.columns.tolist()]))))
+
+    df = pd.concat(DFs,axis=1)
+
+    # Find original assignment
+    assignment = pd.read_csv(data_assignment).rename(columns={'RespID':'idno'})[['idno','Group']].set_index('idno')
+    df = df.join(assignment,on='idno')
+
+    return df
+
+def ancova_form(df,outcomes):
+    """
+    Return dataframe in "ANCOVA" form, with dummies for years, treatment groups, and baseline values.
+    """
+
+    years = pd.get_dummies(use_indices(df,['Year']).squeeze())
+    groups = pd.get_dummies(df['Group'])
+
+    baseline = df.xs('2013',level='Year')[outcomes]
+
+    df = pd.concat([df[outcomes],years,groups],axis=1)
+
+    df = df.join(baseline,on='idno',rsuffix='2013')
+
+    return df.query("Year in ['2014','2015']")
+    
+
+def results(df,outcomes,controls=None,baseline_na=True,logs=False,nonzero=False,elide=False,return_stats=False):
 
     df = df.copy()
     # make interaction terms
@@ -45,9 +120,8 @@ def results(df,outcomes,controls=None,baseline_na=True,logs=False,positive=False
                 missings = temp_df["Baseline value"].isnull().apply(int)
                 if missings.sum()>0:
                     temp_df["Baseline missing"] = missings
-                    # code missing values of the baseline variable as 0
-                    temp_df["Baseline missing"].fillna(0,inplace=True)
                     temp_controls = temp_controls + ['Baseline missing']
+                temp_df['Baseline value'] = temp_df['Baseline value'].fillna(0)
         except KeyError: # No baseline?
             temp_df = df[ [outcome, 'Control'] + controls]
     
@@ -66,11 +140,11 @@ def results(df,outcomes,controls=None,baseline_na=True,logs=False,positive=False
     except ValueError:
         myY.index.set_names(['Outcome','idno'],inplace=True)
 
-    if positive:
-        myY = (myY>0) + 0
+    if nonzero:
+        myY = (myY != 0) + 0
         for v in myX.columns.levels[0]:
             try:
-                myX[(v,'Baseline value')] = (myX[(v,'Baseline value')]>0) + 0
+                myX[(v,'Baseline value')] = (myX[(v,'Baseline value')]!=0) + 0
             except KeyError:
                 pass
 
@@ -89,10 +163,11 @@ def results(df,outcomes,controls=None,baseline_na=True,logs=False,positive=False
     B = {}
     SE = {}
     for outcome in outcomes:
-        #b,se = ols(myX.xs(outcome,level='Outcome').xs(outcome,level='Outcome',axis=1),myY.xs(outcome,level='Outcome'))
-        est = sm.OLS(myY.xs(outcome,level='Outcome'),myX.xs(outcome,level='Outcome').xs(outcome,level='Outcome',axis=1)).fit()
-        B[outcome] = est.params
-        SE[outcome] = pd.Series(est.get_robustcov_results(cov_type='HC3').bse,index=B[outcome].index)
+        try:
+            est = sm.OLS(myY.xs(outcome,level='Outcome'),myX.xs(outcome,level='Outcome').xs(outcome,level='Outcome',axis=1)).fit()
+            B[outcome] = est.params
+            SE[outcome] = pd.Series(est.get_robustcov_results(cov_type='HC3').bse,index=B[outcome].index)
+        except KeyError: pass
 
     #b.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])
     #se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])    
@@ -156,23 +231,78 @@ def results(df,outcomes,controls=None,baseline_na=True,logs=False,positive=False
 
     return '\n'.join(Table)
 
+def residuals(df,outcomes,controls=None,baseline_na=True,elide=False):
+
+    df = df.copy()
+    # make interaction terms
+
+    if controls is None:
+        controls = ['2014', '2015']
+
+    # remove observations from 2013
+    df = df.query("Year in ['2014','2015']")
+
+    myX = {}
+    myY = {}
+    for outcome in outcomes:
+        temp_controls = controls
+        try:
+            temp_df = df[ [outcome, outcome + "2013"] + controls]
+            temp_df.rename(columns={outcome+"2013":'Baseline value'},inplace=True)
+            temp_controls = temp_controls + ["Baseline value"]
+            if baseline_na:
+
+                # indicator for whether outcome in 2013 is na, and cast it to be an integer
+                missings = temp_df["Baseline value"].isnull().apply(int)
+                if missings.sum()>0:
+                    temp_df["Baseline missing"] = missings
+                    temp_controls = temp_controls + ['Baseline missing']
+                temp_df['Baseline value'] = temp_df['Baseline value'].fillna(0)
+        except KeyError: # No baseline?
+            temp_df = df[ [outcome] + controls]
+    
+        temp_df = temp_df.dropna()
+
+        myX[outcome] = temp_df[temp_controls]
+        myY[outcome] = temp_df[outcome]
+
+    myY = pd.concat(myY)
+    myX = pd.DataFrame(block_diag(*myX.values()),
+                       columns=pd.concat(myX,axis=1).columns,
+                       index=myY.index)
+    myX.columns.names = ['Outcome','Variable']
+    try:
+        myY.index.set_names(['Outcome','idno','Year'],inplace=True)
+    except ValueError:
+        myY.index.set_names(['Outcome','idno'],inplace=True)
+
+
+    E = {}
+    for outcome in outcomes:
+        try:
+            est = sm.OLS(myY.xs(outcome,level='Outcome'),myX.xs(outcome,level='Outcome').xs(outcome,level='Outcome',axis=1)).fit()
+            E[outcome] = est.resid 
+        except KeyError: pass
+
+    return pd.DataFrame(E)
+
 def table_stacked_by_class(Results, elide=True, transpose=False):
     b = pd.DataFrame({k:r[0].stack() for k,r in Results.items()})
     b.index.names = ['Variable','Outcome']
     b.columns.name = 'Class'
-    b = b.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+    b = b.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index(level='Class')
     b = b.reindex(Results.keys(),level='Class')
 
     se = pd.DataFrame({k:r[1].stack() for k,r in Results.items()})
     se.index.names = ['Variable','Outcome']
     se.columns.name = 'Class'
-    se = se.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+    se = se.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index(level='Class')
     se = se.reindex(Results.keys(),level='Class')
 
     bonus = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
     bonus.index.names = ['Variable','Outcome']
     bonus.columns.name = 'Class'
-    bonus = bonus.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+    bonus = bonus.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index(level='Class')
     N = pd.DataFrame({'N':bonus.reindex(Results.keys(),level='Class')['N'].apply(lambda x: '$N=%d$' % x)})
     
     if elide:
