@@ -1,7 +1,10 @@
 import statsmodels.api as sm
-from cfe.df_utils import df_to_orgtbl, ols, use_indices
+from metrics_miscellany.estimators import ols
+from metrics_miscellany import utils
+from cfe.df_utils import df_to_orgtbl, use_indices, drop_missing
 import pandas as pd
 from scipy.linalg import block_diag
+from scipy import stats
 import numpy as np
 import re
 
@@ -164,16 +167,16 @@ def results(df,outcomes,controls=None,baseline_na=True,logs=False,nonzero=False,
     SE = {}
     for outcome in outcomes:
         try:
-            est = sm.OLS(myY.xs(outcome,level='Outcome'),myX.xs(outcome,level='Outcome').xs(outcome,level='Outcome',axis=1)).fit()
-            B[outcome] = est.params
-            SE[outcome] = pd.Series(est.get_robustcov_results(cov_type='HC3').bse,index=B[outcome].index)
+            b,V = ols(myX.xs(outcome,level='Outcome').xs(outcome,level='Outcome',axis=1),myY.xs(outcome,level='Outcome'))
+            B[outcome] = b.squeeze()
+            SE[outcome] = pd.Series(np.sqrt(np.diag(V)),index=B[outcome].index)
         except KeyError: pass
 
     #b.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])
     #se.index = pd.MultiIndex.from_tuples([tuple(i.split('_')) for i in est.params.index])    
 
-    b = pd.DataFrame(B).T #b.unstack().T[outcomes].T
-    se = pd.DataFrame(SE).T #se.unstack().T[outcomes].T
+    b = pd.DataFrame(B).T 
+    se = pd.DataFrame(SE).T 
    
     try:
         b['UPG*2014 - UCT*2015'] = b['UPG*2014'] - b['UCT*2015']
@@ -230,6 +233,141 @@ def results(df,outcomes,controls=None,baseline_na=True,logs=False,nonzero=False,
     Table = df_to_orgtbl(b,sedf=se,float_fmt='\(%6.2f\)')[:-1].split('\n') + df_to_orgtbl(otherstats,float_fmt='\(%6.2f\)').split('\n')[1:]
 
     return '\n'.join(Table)
+
+def system_data(df,outcomes,controls=None,baseline_na=False,logs=False,nonzero=False,elide=False,return_stats=False):
+
+    df = df.copy()
+    # make interaction terms
+
+    try: # Not all outcomes observed in multiple years
+        df.insert(len(df.columns), 'UPG*2013', df['2013']*df['TUP'])
+        df.insert(len(df.columns), 'UPG*2014', df['2014']*df['TUP'])
+        df.insert(len(df.columns), 'UPG*2015', df['2015']*df['TUP'])
+        df.insert(len(df.columns), 'UCT*2013', df['2013']*df['UCT'])
+        df.insert(len(df.columns), 'UCT*2014', df['2014']*df['UCT'])
+        df.insert(len(df.columns), 'UCT*2015', df['2015']*df['UCT'])
+
+        if controls is None:
+            controls = ['UPG*2014', 'UPG*2015', 'UCT*2014', 'UCT*2015', '2014', '2015']
+
+        # remove observations from 2013
+        df = df[df['Year'] != '2013']
+        df.index.name = 'idno'
+        df = df.reset_index().set_index(['idno','Year'])
+    except KeyError:
+        df['Constant'] = 1
+        df.rename(columns={'TUP':'UPG'},inplace=True)
+        if controls is None:
+            controls = ['UPG', 'UCT', 'Constant']
+        df.index.name = 'idno'
+
+    myX = {}
+    myY = {}
+    for outcome in outcomes:
+        temp_controls = controls
+        try:
+            temp_df = df[ [outcome, outcome + "2013", 'Control'] + controls]
+            temp_df.rename(columns={outcome+"2013":'Baseline value'},inplace=True)
+            temp_controls = temp_controls + ["Baseline value"]
+            if baseline_na:
+
+                # indicator for whether outcome in 2013 is na, and cast it to be an integer
+                missings = temp_df["Baseline value"].isnull().apply(int)
+                if missings.sum()>0:
+                    temp_df.loc[:,"Baseline missing"] = missings
+                    temp_controls = temp_controls + ['Baseline missing']
+                temp_df.loc[:,'Baseline value'] = temp_df['Baseline value'].fillna(0)
+        except KeyError: # No baseline?
+            temp_df = df[ [outcome, 'Control'] + controls]
+    
+        temp_df = temp_df.dropna()
+        if temp_df[outcome].std()>0:
+            myX[outcome] = temp_df[temp_controls]
+            myY[outcome] = temp_df[outcome]
+        else:
+            outcomes.remove(outcome)
+
+    Ybar = pd.concat(myY)
+    Xbar = pd.DataFrame(block_diag(*myX.values()),
+                       columns=pd.concat(myX,axis=1).columns,
+                       index=Ybar.index)
+    
+    Xbar.columns.names = ['Outcome','Variable']
+    try:
+        Ybar.index.set_names(['Outcome','idno','Year'],inplace=True)
+    except ValueError:
+        Ybar.index.set_names(['Outcome','idno'],inplace=True)
+
+    if nonzero:
+        Ybar = (Ybar != 0) + 0
+        for v in Xbar.columns.levels[0]:
+            try:
+                Xbar[(v,'Baseline value')] = (Xbar[(v,'Baseline value')]!=0) + 0
+            except KeyError:
+                pass
+
+    if logs:
+        Ybar = np.log(Ybar.replace(0,np.nan))
+        for v in Xbar.columns.levels[0]:
+            try:
+                Xbar[(v,'Baseline value')] = np.log(Xbar[(v,'Baseline value')].replace(0,np.nan))
+            except KeyError:
+                pass
+        keep = ~np.isnan(Ybar)
+        Ybar = Ybar[keep]
+        Xbar = Xbar[keep]
+        Xbar = Xbar.fillna(0)
+
+    return Xbar,Ybar
+
+def system_estimation(Xbar,Ybar):
+    
+    Ybar,Xbar = drop_missing([Ybar,Xbar])
+
+    Xbar = Xbar.loc[:,Xbar.std()>0]
+    
+    b = np.linalg.lstsq(Xbar.T@Xbar,Xbar.T@Ybar,rcond=None)[0]
+
+    e = (Ybar - Xbar@b).squeeze().unstack('Outcome')
+
+    b = pd.DataFrame({'Coefficients':b.squeeze()},index=Xbar.columns)
+
+    # "Collapsed" version of Xbar
+    X = Xbar.groupby(['idno','Year']).sum()
+    
+    Xe = X.multiply(e.reindex(X.columns,axis=1,level=0))
+    XeeX = Xe.cov(min_periods=2) + Xe.mean().T@Xe.mean()
+
+    XeeX = (XeeX.T + XeeX)/2 # Make symmetric!
+    XeeX = utils.cov_nearest(XeeX,threshold=1e-5)
+    XeeX = pd.DataFrame(XeeX,index=Xe.columns,columns=Xe.columns)
+
+    XXinv = {}
+    working_outcomes = list(set(Xbar.index.get_level_values('Outcome')))
+    working_columns = []
+    for k in working_outcomes:
+        try:
+            v = X.xs(k,level='Outcome',axis=1)
+            XXinv[k] = np.linalg.inv((v.dropna().T@v.dropna())) # + np.eye(v.shape[1])*1)
+            assert len(Xbar.columns[Xbar.columns.isin([k],level=0)])==XXinv[k].shape[0]
+            working_columns += [(k,j) for j in v.columns]
+        except np.linalg.LinAlgError:
+            working_outcomes.remove(k)
+
+    usecols = pd.MultiIndex.from_tuples(working_columns)
+
+    XXinv = pd.DataFrame(block_diag(*XXinv.values()),
+                         columns=usecols,
+                         index=usecols)
+
+    XeeX = XeeX.reindex_like(XXinv)
+    Vb = XXinv@XeeX@XXinv
+
+    b = b.reindex(Vb.index) # Drop estimated coefficients without covariances
+    b.index.names = ['Outcome','Variable']
+
+    return b,Vb
+
 
 def residuals(df,outcomes,controls=None,baseline_na=True,elide=False):
 
