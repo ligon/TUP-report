@@ -2542,3 +2542,699 @@ def residuals_by_group(models, groups, outcomes=[], kind="kde", figure_dir="../f
  
 
 
+
+* Omnibus Analysis                                                 :noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-06-15 Tue 17:04
+  :ARCHIVE_FILE: ~/Research/SS-TUP/Report/documents/EndlineReport.org
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+
+Here we consider the most straight-forward possible comparison of
+programs.  Instead of the aggregation which characterizes many of our
+main results, we collect a list of all the primitive variables
+collected in our surveys for which we'd expect simply estimate conduct a POST analysis on /all/ of the
+outcomes which inform those aggregations, without any transformation
+or modification.
+#+begin_src python :results output raw table :tangle /tmp/post.py
+import ss_standard
+import pandas as pd
+from cfe.df_utils import drop_missing, df_to_orgtbl
+import statsmodels.api as sm
+import numpy as np
+from  scipy import stats
+
+prettylabels = {'meat': ' Meat (last three days)', 'fish': 'Fish (last three days)', 
+                'cereals': 'Cereals (last three days)', 'sugar': 'Sugar (last three days)', 
+                'egg': 'Egg (last three days)', 'oil': 'Oil (last three days)', 
+                'beans': 'Beans (last three days)', 'fruit': 'Fruit (last three days)', 
+                'salt': 'Salt (last three days)', 'vegetables': 'Vegetables (last three days)', 
+                'milk': 'Milk (last three days)', 'spices': 'Spices (last three days)', 
+                'alcohol': 'Alcohol (last three days)', 'otherfood': 'Other food (last three days)', 
+                'fuel': 'Cooking fuel (last month)', 'soap': 'Toiletries (last month)', 
+                'transport': 'Transportation (last month)', 'cosmetics': 'Cosmetics (last month)', 
+                'entertainment': 'Entertainment (last month)', 'clothesfootwear': 'Clothing, footwear (last year)', 
+                'charities': 'Charities (last year)', 'ceremonies': 'Rituals/ceremonies (last year)', 
+                'textiles': 'Textiles (last year)', 'utensils': 'Utensils (last year)',
+                'dowry': 'Dowry (last year)', 'furniture': 'Furniture (last year)', 
+                'other': 'Other non-food (last year)', 'cows': 'Large livestock (cows)', 
+                'smallanimals': 'Small livestock', 'bicycle': 'Bicycle', 
+                'radio': 'Radio', 'motorcycle': 'Motorcycle', 
+                'net': 'Mosquito net', 'poultry': 'Poultry', 
+                'bed': 'Bed', 'chairtables': 'Chair/table', 
+                'mobile': 'Mobile phone', 'netITN': 'Mosquito net ITN', 
+                'in_business': 'In business', 
+                'child_total': '# Child', 'hh_size':'Household size'}
+
+assets = ss_standard.basic_data(outcomes=None,filter='^asset_val_')
+assets = assets.rename(columns={'poultry':'Poultry (birds)'})
+
+savings = ss_standard.basic_data(outcomes=['savings_home', 'savings_bank', 'savings_BRAC', 'savings_NGOs', 
+                                           'savings_other',  'transfers_give1', 'transfers_give2', 'transfers_give3',
+                                           'savings_maize_val', 'savings_sorghum_val', 's8b_2c', 's8b_2d',
+                                           's4b_oth_1b', 's4b_oth_2b','savings_otherfood1_val','savings_otherfood2_val'])
+
+
+savings.rename({'s8b_2c': 'savings_otherfood1_val',
+                's8b_2d': 'savings_otherfood2_val',
+                's4b_oth_1b': 'savings_otherfood1_val',
+                's4b_oth_2b': 'savings_otherfood2_val'}, axis=1, inplace=True)
+
+savings = savings.groupby(level=0,axis=1).sum()
+
+land = ss_standard.basic_data(outcomes=['land_owncult', 'land_rentcult', 'land_communitycult',
+                                        'land_ownnocult', 'land_ownrent'])
+
+
+# Issue that units are supposed to be fedan (4200 m^2), but are sometimes instead expressed in square meters (20mx20m plots)
+for v in ['land_owncult', 'land_rentcult', 'land_communitycult', 'land_ownnocult', 'land_ownrent']:
+        land[v].loc[land[v]>20] = land[v].loc[land[v]>20]/4200
+
+consumption = ss_standard.basic_data(filter = r'^c_')
+
+fs = ss_standard.basic_data(filter = r'^fs_')
+
+# replace words with estimate of days per month not hungry
+fs.replace({"Everyday": 0,
+            "everyday": 0,
+            "3-6 times a week": 28-4.5*4,
+            "1-2 times a week": 28-1.5*4,
+            "Less than once a week": 28-4,
+            "less than once a week": 28-4,
+            "Never": 28,
+            "never": 28}, inplace=True)
+
+
+outcomes = {'worried':'Worried', 
+            'notpreferred':'No preferred',
+            'fewkinds':'Few kinds',
+            'preferrednot':'Ate unpreferred',
+            'portions':'Limited portions',
+            'fewmeals':'Fewer Meals', 
+            'nofood':'No food in house', 
+            'hungry':'Went hungry', 
+            'wholeday':'Whole day without eating'}
+
+fs = fs.rename(columns=outcomes)
+
+from income import farm_yearly, nonfarm_yearly
+
+nonfarm_yearly['Year'] = '2015'
+nonfarm_yearly = nonfarm_yearly.groupby(['idno','Year']).sum()
+
+
+farm_yearly['Year'] = '2015'
+farm_yearly = farm_yearly.groupby(['idno','Year']).sum()
+
+
+df = pd.concat({'Farm Income':farm_yearly,
+                'Nonfarm Income':nonfarm_yearly,
+                'Food Security':fs,
+                'Consumption':consumption,
+                'Land':land,
+                'Savings':savings,
+                'Physical Assets':assets},axis=1)
+
+df = pd.concat([farm_yearly,
+                nonfarm_yearly,
+                fs,
+                consumption,
+                land,
+                savings,
+                assets],axis=1).rename(columns=prettylabels)
+
+df = df.loc[:,~df.columns.duplicated(keep='first')]
+
+group = df['Group']
+groups = pd.get_dummies(group)
+# Drop Group vars
+df = df.loc[:,[s for s in df.columns if 'Group' not in s]]
+
+df = df.loc[:,df.std()>0]
+outcomes = df.columns.tolist()
+
+#df = pd.concat([df,groups],axis=1)
+df['Group'] = group  # Ancova
+df = ss_standard.ancova_form(df,outcomes)
+
+
+Residuals = ss_standard.residuals(df,outcomes)
+Residuals = Residuals.join(group).reset_index().set_index(['idno','Year','Group'])
+Residuals.to_pickle('/tmp/residuals.pickle')
+
+Results = {}
+
+Results['Values (SSP)'] = ss_standard.results(df,outcomes,nonzero=False,logs=False,return_stats=True)
+Results['Nonzero'] = ss_standard.results(df,outcomes,nonzero=True,logs=False,return_stats=True)
+Results['Log Values'] = ss_standard.results(df,outcomes,nonzero=False,logs=True,return_stats=True)
+
+other = pd.DataFrame({k:r[2].stack() for k,r in Results.items()})
+other.index.names = ['Variable','Outcome']
+other.columns.name = 'Class'
+other = other.stack().unstack('Variable').reorder_levels(['Class','Outcome']).sort_index()
+other = other.reindex(['Values (SSP)','Nonzero','Log Values'],level=0)
+
+# binomial test
+ptab = {}
+countsplus = {}
+countsminus = {}
+for sort in Results.keys():
+    plus = (Results[sort][0].T>0).sum()
+    minus = (Results[sort][0].T<0).sum()
+    countsplus[sort] = plus
+    countsminus[sort] = minus
+    plus = plus.to_dict()
+    minus = minus.to_dict()
+    ptab[sort] = {k:stats.binom_test((plus[k],minus[k]),alternative='greater') for k in plus.keys() if r'$\beta' in k}
+
+countsplus = pd.DataFrame(countsplus).T.filter(like='beta')
+countsminus = pd.DataFrame(countsminus).T.filter(like='beta')
+
+ptab = pd.DataFrame(ptab).T
+
+print(df_to_orgtbl(np.round(ptab,decimals=3).astype(str),
+                   conf_ints=(countsplus.astype(str),countsminus.astype(str)),float_fmt=r'%s'))
+
+print(ss_standard.table_stacked_by_class(Results,elide=True))
+
+#print(ss_standard.table_stacked_by_class(Results,elide=False))
+#+end_src 
+
+#+name: tab:post
+#+caption: POST analysis of all variables
+#+attr_latex: :environment longtable :align rrrrr
+
+
+
+
+* Summary Index Tests                                              :noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-06-15 Tue 17:04
+  :ARCHIVE_FILE: ~/Research/SS-TUP/Report/documents/EndlineReport.org
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+
+This section explores an idea proposed by Anderson (2008), which
+involves normalizing all outcomes and weighting them in groups by
+their inverse covariance matrix, then using means of these weighted normalized
+observations to estimate treatment effects, testing significance with
+a standard $t$ test.  This seems very close to the obvious GMM test of
+$\E( y| T) = E(y)$.  
+
+In the spirit of the last, we should also be able to estimate the
+treatment effects in a system, then use the estimated covariance
+matrix of the coefficients to construct a classical $F$ test of the
+hypothesis that all treatment effects are zero, which we implement below.
+
+#+begin_src python :results output raw table :tangle /tmp/summary_index.py
+import ss_standard
+import pandas as pd
+from cfe.df_utils import drop_missing, df_to_orgtbl
+import statsmodels.api as sm
+import numpy as np
+from  scipy import stats
+
+prettylabels = {'meat': ' Meat (last three days)', 'fish': 'Fish (last three days)', 
+                'cereals': 'Cereals (last three days)', 'sugar': 'Sugar (last three days)', 
+                'egg': 'Egg (last three days)', 'oil': 'Oil (last three days)', 
+                'beans': 'Beans (last three days)', 'fruit': 'Fruit (last three days)', 
+                'salt': 'Salt (last three days)', 'vegetables': 'Vegetables (last three days)', 
+                'milk': 'Milk (last three days)', 'spices': 'Spices (last three days)', 
+                'alcohol': 'Alcohol (last three days)', 'otherfood': 'Other food (last three days)', 
+                'fuel': 'Cooking fuel (last month)', 'soap': 'Toiletries (last month)', 
+                'transport': 'Transportation (last month)', 'cosmetics': 'Cosmetics (last month)', 
+                'entertainment': 'Entertainment (last month)', 'clothesfootwear': 'Clothing, footwear (last year)', 
+                'charities': 'Charities (last year)', 'ceremonies': 'Rituals/ceremonies (last year)', 
+                'textiles': 'Textiles (last year)', 'utensils': 'Utensils (last year)',
+                'dowry': 'Dowry (last year)', 'furniture': 'Furniture (last year)', 
+                'other': 'Other non-food (last year)', 'cows': 'Large livestock (cows)', 
+                'smallanimals': 'Small livestock', 'bicycle': 'Bicycle', 
+                'radio': 'Radio', 'motorcycle': 'Motorcycle', 
+                'net': 'Mosquito net', 'poultry': 'Poultry', 
+                'bed': 'Bed', 'chairtables': 'Chair/table', 
+                'mobile': 'Mobile phone', 'netITN': 'Mosquito net ITN', 
+                'in_business': 'In business', 
+                'child_total': '# Child', 'hh_size':'Household size'}
+
+assets = ss_standard.basic_data(outcomes=None,filter='^asset_val_')
+assets = assets.rename(columns={'poultry':'Poultry (birds)'})
+
+savings = ss_standard.basic_data(outcomes=['savings_home', 'savings_bank', 'savings_BRAC', 'savings_NGOs', 
+                                           'savings_other',  'transfers_give1', 'transfers_give2', 'transfers_give3',
+                                           'savings_maize_val', 'savings_sorghum_val', 's8b_2c', 's8b_2d',
+                                           's4b_oth_1b', 's4b_oth_2b','savings_otherfood1_val','savings_otherfood2_val'])
+
+
+savings.rename({'s8b_2c': 'savings_otherfood1_val',
+                's8b_2d': 'savings_otherfood2_val',
+                's4b_oth_1b': 'savings_otherfood1_val',
+                's4b_oth_2b': 'savings_otherfood2_val'}, axis=1, inplace=True)
+
+savings = savings.groupby(level=0,axis=1).sum()
+
+land = ss_standard.basic_data(outcomes=['land_owncult', 'land_rentcult', 'land_communitycult',
+                                        'land_ownnocult', 'land_ownrent'])
+
+
+# Issue that units are supposed to be fedan (4200 m^2), but are sometimes instead expressed in square meters (20mx20m plots)
+for v in ['land_owncult', 'land_rentcult', 'land_communitycult', 'land_ownnocult', 'land_ownrent']:
+        land[v].loc[land[v]>20] = land[v].loc[land[v]>20]/4200
+
+consumption = ss_standard.basic_data(filter = r'^c_')
+
+fs = ss_standard.basic_data(filter = r'^fs_')
+
+# replace words with estimate of days per month not hungry
+fs.replace({"Everyday": 0,
+            "everyday": 0,
+            "3-6 times a week": 28-4.5*4,
+            "1-2 times a week": 28-1.5*4,
+            "Less than once a week": 28-4,
+            "less than once a week": 28-4,
+            "Never": 28,
+            "never": 28}, inplace=True)
+
+
+outcomes = {'worried':'Worried', 
+            'notpreferred':'No preferred',
+            'fewkinds':'Few kinds',
+            'preferrednot':'Ate unpreferred',
+            'portions':'Limited portions',
+            'fewmeals':'Fewer Meals', 
+            'nofood':'No food in house', 
+            'hungry':'Went hungry', 
+            'wholeday':'Whole day without eating'}
+
+fs = fs.rename(columns=outcomes)
+
+from income import farm_yearly, nonfarm_yearly
+
+nonfarm_yearly['Year'] = '2015'
+nonfarm_yearly = nonfarm_yearly.groupby(['idno','Year']).sum()
+
+
+farm_yearly['Year'] = '2015'
+farm_yearly = farm_yearly.groupby(['idno','Year']).sum()
+
+
+df = pd.concat({'Farm Income':farm_yearly,
+                'Nonfarm Income':nonfarm_yearly,
+                'Food Security':fs,
+                'Consumption':consumption,
+                'Land':land,
+                'Savings':savings,
+                'Physical Assets':assets},axis=1)
+
+df = pd.concat([farm_yearly,
+                nonfarm_yearly,
+                fs,
+                consumption,
+                land,
+                savings,
+                assets],axis=1).rename(columns=prettylabels)
+
+df = df.loc[:,~df.columns.duplicated(keep='first')]
+
+group = df['Group']
+groups = pd.get_dummies(group)
+# Drop Group vars
+df = df.loc[:,[s for s in df.columns if 'Group' not in s]]
+
+df = df.loc[:,df.std()>0]
+outcomes = df.columns.tolist()
+
+#df = pd.concat([df,groups],axis=1)
+df['Group'] = group  # Ancova
+
+df.to_pickle('/tmp/mydf.pickle')
+
+df = ss_standard.ancova_form(df,outcomes)
+
+b,Vb = ss_standard.system_estimator(df,outcomes)
+
+#+end_src
+#+begin_src python :results output raw table :tangle /tmp/summary_index.py
+import ss_standard
+import pandas as pd
+from cfe.df_utils import drop_missing, df_to_orgtbl
+import statsmodels.api as sm
+import numpy as np
+from  scipy import stats
+from metrics_miscellany import tests, utils, estimators
+
+df = pd.read_pickle('/tmp/mydf.pickle')
+outcomes = df.columns.tolist()
+outcomes.remove('Group')
+
+df = ss_standard.ancova_form(df,outcomes)
+
+Xbar,Ybar = ss_standard.system_data(df,outcomes)
+
+b,Vb = estimators.ols(Xbar,Ybar,cov_type='HC3',PSD_COV=1e-2)
+
+#b0,Vb0 = ss_standard.system_estimation(Xbar,Ybar)
+
+
+# Test!
+
+p = []
+chi2s = []
+ortho_t = []
+for i in range(1000):
+    t = tests.chi2_test("Variable in ['UCT*2015']",b,Vb,TEST=True)
+    p.append(t[1])
+    chi2s.append(t[0])
+    ortho_t.append(t[-1])
+
+#+end_src
+
+
+* Rank tests                                                       :noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-06-15 Tue 17:04
+  :ARCHIVE_FILE: ~/Research/SS-TUP/Report/documents/EndlineReport.org
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+#+begin_src python :results output raw table :tangle /tmp/rank_tests.py
+import pandas as pd
+from scipy import stats
+import numpy as np
+from collections import defaultdict
+from cfe.df_utils import df_to_orgtbl
+
+e = pd.read_pickle('/tmp/residuals.pickle')
+
+e = e.reset_index()
+e['Group'] = e['Group'].fillna('Control')
+
+# Toss UCT into control group for 2014
+e['Group'] = e.apply(lambda x: 'Control' if ((x['Group']=='UCT') & (x['Year']=='2014')) else x['Group'], axis=1)
+e = e.set_index(['idno','Year','Group'])
+
+Comparisons = {(('TUP','2014'),('Control','2014')):r'$U^{2014}_{UGP}$',
+               (('TUP','2015'),('Control','2015')):r'$U^{2015}_{UGP}$',
+               (('UCT','2015'),('Control','2015')):r'$U^{2015}_{UCT}$',
+               (('TUP','2014'),('UCT','2015')):r'$U^{2014,2015}_{UGP,UCT}$',
+               (('TUP','2015'),('UCT','2015')):r'$U^{2015,2015}_{UGP,UCT}$'}
+
+Tests = defaultdict(dict)
+for outcome in e.columns.tolist():
+    x = e[[outcome]]
+    S = {}
+    for group in set(e.index.get_level_values('Group')):
+        for year in set(e.index.get_level_values('Year')):
+            group_year = x.query("Year=='%s' and Group=='%s'" % (year,group)).squeeze()
+            if len(group_year):
+                S[(group,year)] = group_year
+    
+    for test in Comparisons:
+        try:
+            Tests[Comparisons[test]][outcome] = stats.mannwhitneyu(S[test[0]],S[test[1]]).pvalue
+        except (KeyError,ValueError):
+            Tests[Comparisons[test]][outcome] = np.nan
+
+Tests = pd.DataFrame(Tests)
+
+print(df_to_orgtbl(Tests,float_fmt='%5.3f'))
+    
+#+end_src
+
+#+results:
+|                                | $U^{2015}_{UGP}$ | $U^{2015}_{UCT}$ | $U^{2014,2015}_{UGP,UCT}$ | $U^{2015,2015}_{UGP,UCT}$ |
+|--------------------------------+------------------+------------------+---------------------------+---------------------------|
+| farm_income_yearly_sum         |            0.048 |            0.308 |                     0.000 |                     0.102 |
+| livestock_income_yearly_sum    |            0.000 |            0.041 |                     0.000 |                     0.006 |
+| source1                        |            0.385 |            0.468 |                     0.000 |                     0.423 |
+| source2                        |            0.163 |            0.327 |                     0.000 |                     0.134 |
+| source3                        |            0.039 |            0.219 |                     0.000 |                     0.027 |
+| source4                        |            0.110 |            0.244 |                     0.000 |                     0.058 |
+| source5                        |            0.192 |            0.115 |                     0.000 |                     0.046 |
+| Worried                        |            0.226 |            0.165 |                     0.225 |                     0.073 |
+| No preferred                   |            0.441 |            0.021 |                     0.031 |                     0.019 |
+| Few kinds                      |            0.135 |            0.084 |                     0.003 |                     0.310 |
+| Ate unpreferred                |            0.381 |            0.040 |                     0.007 |                     0.073 |
+| Limited portions               |            0.395 |            0.401 |                     0.000 |                     0.497 |
+| Fewer Meals                    |            0.012 |            0.228 |                     0.000 |                     0.154 |
+| No food in house               |            0.037 |            0.033 |                     0.003 |                     0.370 |
+| Went hungry                    |            0.035 |            0.100 |                     0.018 |                     0.393 |
+| Whole day without eating       |            0.302 |            0.254 |                     0.019 |                     0.385 |
+| Cereals (last three days)      |            0.047 |            0.401 |                     0.014 |                     0.063 |
+| Beans (last three days)        |            0.218 |            0.429 |                     0.389 |                     0.357 |
+| Oil (last three days)          |            0.139 |            0.274 |                     0.348 |                     0.058 |
+| Salt (last three days)         |            0.020 |            0.027 |                     0.450 |                     0.415 |
+| Sugar (last three days)        |            0.023 |            0.110 |                     0.019 |                     0.388 |
+| Meat (last three days)         |            0.014 |            0.126 |                     0.000 |                     0.255 |
+| Fish (last three days)         |            0.000 |            0.089 |                     0.002 |                     0.109 |
+| Egg (last three days)          |            0.186 |            0.473 |                     0.000 |                     0.142 |
+| Milk (last three days)         |            0.032 |            0.113 |                     0.000 |                     0.227 |
+| Vegetables (last three days)   |            0.358 |            0.268 |                     0.043 |                     0.224 |
+| Fruit (last three days)        |            0.330 |            0.305 |                     0.000 |                     0.165 |
+| Spices (last three days)       |            0.453 |            0.078 |                     0.000 |                     0.061 |
+| Alcohol (last three days)      |            0.000 |            0.000 |                     0.000 |                     0.096 |
+| Other food (last three days)   |            0.036 |            0.137 |                     0.000 |                     0.373 |
+| Cooking fuel (last month)      |            0.098 |            0.053 |                     0.381 |                     0.260 |
+| Cosmetics (last month)         |            0.000 |            0.007 |                     0.001 |                     0.375 |
+| Toiletries (last month)        |            0.220 |            0.008 |                     0.000 |                     0.044 |
+| Transportation (last month)    |            0.243 |            0.355 |                     0.000 |                     0.180 |
+| Entertainment (last month)     |            0.021 |            0.079 |                     0.000 |                     0.382 |
+| Clothing, footwear (last year) |            0.011 |            0.089 |                     0.000 |                     0.373 |
+| Utensils (last year)           |            0.000 |            0.004 |                     0.000 |                     0.130 |
+| Furniture (last year)          |            0.000 |            0.000 |                     0.000 |                     0.043 |
+| Textiles (last year)           |            0.488 |            0.103 |                     0.038 |                     0.084 |
+| Rituals/ceremonies (last year) |            0.000 |            0.000 |                     0.000 |                     0.460 |
+| Charities (last year)          |            0.000 |            0.000 |                     0.000 |                     0.000 |
+| Dowry (last year)              |            0.003 |            0.096 |                     0.000 |                     0.231 |
+| Other non-food (last year)     |            0.000 |            0.001 |                     0.000 |                     0.210 |
+| maize                          |            0.052 |            0.092 |                     0.000 |                     0.469 |
+| sorghum                        |            0.026 |            0.346 |                     0.000 |                     0.123 |
+| millet                         |            0.000 |            0.003 |                     0.000 |                     0.415 |
+| potato                         |            0.000 |            0.049 |                     0.000 |                     0.089 |
+| sweetpotato                    |            0.002 |            0.004 |                     0.000 |                     0.199 |
+| rice                           |            0.005 |            0.464 |                     0.080 |                     0.027 |
+| bread                          |            0.030 |            0.034 |                     0.000 |                     0.345 |
+| livestock                      |            0.020 |            0.326 |                     0.000 |                     0.126 |
+| Poultry                        |            0.054 |            0.009 |                     0.000 |                     0.100 |
+| nuts                           |            0.000 |            0.265 |                     0.053 |                     0.015 |
+| tea                            |            0.014 |            0.223 |                     0.000 |                     0.191 |
+| medicine                       |            0.466 |            0.121 |                     0.433 |                     0.104 |
+| airtime                        |            0.214 |            0.443 |                     0.152 |                     0.332 |
+| childcare                      |            0.014 |            0.295 |                     0.000 |                     0.133 |
+| tobacco                        |            0.000 |            0.000 |                     0.000 |                     0.089 |
+| batteries                      |            0.006 |            0.225 |                     0.005 |                     0.139 |
+| durables                       |            0.000 |            0.000 |                     0.000 |                     0.000 |
+| othermonth                     |            0.001 |            0.017 |                     0.000 |                     0.384 |
+| womensclothes                  |            0.058 |            0.090 |                     0.000 |                     0.464 |
+| childrensclothes               |            0.034 |            0.035 |                     0.408 |                     0.355 |
+| shoes                          |            0.011 |            0.004 |                     0.000 |                     0.180 |
+| homeimprovement                |            0.002 |            0.006 |                     0.000 |                     0.337 |
+| funerals                       |            0.065 |            0.176 |                     0.000 |                     0.009 |
+| church                         |            0.051 |            0.010 |                     0.000 |                     0.123 |
+| land_owncult                   |            0.027 |            0.470 |                     0.000 |                     0.073 |
+| land_ownnocult                 |            0.330 |            0.366 |                     0.000 |                     0.122 |
+| land_ownrent                   |            0.046 |            0.393 |                     0.000 |                     0.077 |
+| land_rentcult                  |            0.186 |            0.411 |                     0.000 |                     0.044 |
+| land_communitycult             |            0.070 |            0.205 |                     0.000 |                     0.066 |
+| savings_BRAC                   |            0.003 |            0.000 |                     0.000 |                     0.000 |
+| savings_NGOs                   |            0.000 |            0.000 |                     0.000 |                     0.117 |
+| savings_bank                   |            0.000 |            0.000 |                     0.000 |                     0.485 |
+| savings_home                   |            0.000 |            0.008 |                     0.000 |                     0.143 |
+| savings_maize_val              |            0.000 |            0.000 |                     0.000 |                     0.390 |
+| savings_other                  |            0.000 |            0.000 |                     0.000 |                     0.382 |
+| savings_otherfood1_val         |            0.005 |            0.001 |                     0.000 |                     0.141 |
+| savings_otherfood2_val         |            0.000 |            0.000 |                     0.000 |                     0.160 |
+| savings_sorghum_val            |            0.000 |            0.002 |                     0.000 |                     0.060 |
+| transfers_give1                |            0.000 |            0.000 |                     0.000 |                     0.234 |
+| transfers_give2                |            0.000 |            0.000 |                     0.000 |                     0.432 |
+| transfers_give3                |            0.000 |            0.000 |                     0.000 |                     0.291 |
+| Large livestock (cows)         |            0.000 |            0.000 |                     0.000 |                     0.066 |
+| Small livestock                |            0.154 |            0.036 |                     0.000 |                     0.154 |
+| plough                         |            0.000 |            0.000 |                     0.000 |                     0.192 |
+| shed                           |            0.000 |            0.000 |                     0.000 |                     0.022 |
+| shop                           |            0.000 |            0.000 |                     0.000 |                     0.204 |
+| Radio                          |            0.000 |            0.048 |                     0.000 |                     0.135 |
+| tv                             |            0.002 |            0.066 |                     0.000 |                     0.135 |
+| fan                            |            0.000 |            0.000 |                     0.000 |                     0.040 |
+| Mobile phone                   |            0.123 |            0.189 |                     0.112 |                     0.047 |
+| Chair/table                    |            0.014 |            0.019 |                     0.093 |                     0.380 |
+| Bed                            |            0.027 |            0.000 |                     0.145 |                     0.009 |
+| Bicycle                        |            0.430 |            0.480 |                     0.000 |                     0.466 |
+| carts                          |            0.001 |            0.004 |                     0.000 |                     0.143 |
+| sewing                         |            0.000 |            0.000 |                     0.000 |                     0.237 |
+| Mosquito net                   |            0.057 |            0.338 |                     0.061 |                     0.215 |
+| Motorcycle                     |            0.000 |            0.000 |                     0.000 |                     0.347 |
+| chickens                       |            0.329 |            0.416 |                     0.000 |                     0.298 |
+| ducks                          |            0.000 |            0.105 |                     0.000 |                     0.000 |
+| charcoal                       |            0.001 |            0.003 |                     0.000 |                     0.293 |
+| pangas                         |            0.072 |            0.005 |                     0.000 |                     0.079 |
+| axes                           |            0.001 |            0.020 |                     0.000 |                     0.339 |
+| ploughs_again                  |            0.000 |            0.001 |                     0.000 |                       --- |
+| stoves                         |            0.043 |            0.010 |                     0.000 |                     0.128 |
+| potspans                       |            0.018 |            0.000 |                     0.001 |                     0.038 |
+
+
+
+
+* Food Insecurity                                                  :noexport:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-06-15 Tue 17:07
+  :ARCHIVE_FILE: ~/Research/SS-TUP/Report/documents/EndlineReport.org
+  :ARCHIVE_OLPATH: Results
+  :ARCHIVE_CATEGORY: EndlineReport
+  :END:
+
+Does the increase in consumption expenditures we measure
+for the UPG group in 2014 translate into greater food security?  In
+each year, we elicit information on roughly how many days during the
+most recent month the respondent has had experiences indicative of
+food insecurity.  Included are (from top to bottom of Table
+[[tab:food_insecurity]]) eating "less preferred" foods; eating just a "few
+kinds" of foods; eating "fewer meals"; eating "limited portions";
+having "no food [at all] in the house"; been able to eat "no
+preferred" foods; "went to sleep hungry"; going a "whole day without
+eating"; and being "worried" about not having enough food.  The
+columns corresponding to 2014 and 2015 can be interpreted as the
+average number of days per month people who report experiencing each.
+
+Average levels of these variables indicate very high food insecurity;
+for instance, the the average respondent is "worried" about 15 days
+out of the month, and reports going for 5--7 whole days without eating
+during the most recent month.  There is also a definite decrease in 
+food security between 2014 and 2015.  
+
+Since our examination of the log value of consumption expenditures (and in particular
+food) turned up significant average treatment effects for the UPG (in 2014)
+ and UCT groups (in 2015), one wonders whether these increases in food
+expenditures help to significantly reduce food insecurity.   And
+indeed, there's some very modest evidence that's consistent this; in
+2014 UPG households "went to sleep hungry" nearly one day less during
+the month than did the control group, and worried nearly two  days
+less.  But these effects are not estimated very precisely, and the
+claimed significance would not survive any standard multiple inference
+correction.  
+
+Though there are certainly multiple outcomes we're estimating here,
+they are all attempts to measure some latent "food insecurity".  So 
+in this spirit we calculate the first principal components of the
+matrix of food insecurity measures, one for each household-year.
+But though the signs of the effects associated with this summary
+measure are consistent with the UPG program having a small effect on
+food security, none are statistically significant.
+
+*************** Notes on Recreating food insecurity table                      
+The table looks at whether respondents experienced going a whole
+day without eating, limiting portions, etc. in a typical week.  
+The z-score is calculated by taking the sum of binary variables 'worried', 
+'portions', 'fewmeals', 'nofood', 'hungry', 'wholeday' for each
+individual, separately at baseline, midline, and endline. Call that
+'fs_sum_m' for an individual's sum at midline. Then their z-score at
+midline  would be (fs_sum_m - fs_sum_m.mean())/fs_sum_m.std(). CTL
+mean lists the mean and standard deviation of the control group in 2015.
+
+Differences with previous code: 
+-correction for what should be considered "weekly" (this code
+includes "Everyday", "3-6 times a week", and "1-2 times a week" as
+being considered weekly, whereas the previous code left out "1-2 times a week")
+-This code adds 'worried' to the table. It uses 'worried' to
+calculate the z-score, which  was also used to calculate
+the z-score in the previous table.
+
+Next steps: 
+-change how the z-score is being calculated because .sum(axis=1)
+equates NaN to 0, so some respondents who had NaN for every measure
+will still have a z-score, hence the higher N for 'z-score' than for
+the other variables
+-divide the standard deviation of CTL mean by the sqrt of the number of control
+observations to make it comparable with the other point estimates and
+standard errors in the table?
+-add another column with f statistic for joint hypothesis that all coefficients are equal to 0
+*************** END
+
+** food insecurity table                                             :ignore:
+
+#+name: food_insecurity
+#+begin_src python :noweb no-export :exports none  :results output table raw :var FE=1 :colnames no :tangle /tmp/food_security.py
+import pandas as pd
+import numpy as np
+from scipy import stats
+from cfe.df_utils import df_to_orgtbl
+import ss_standard
+from cfe.estimation import svd_missing
+
+fs = ss_standard.basic_data(filter = r'^fs_')
+
+# replace words with their corresponding code number from the survey
+fs.replace({"Everyday": 28,
+            "everyday": 28,
+            "3-6 times a week": 4.5*4,
+            "1-2 times a week": 1.5*4,
+            "Less than once a week": 4,
+            "less than once a week": 4,
+            "Never": 0,
+            "never": 0}, inplace=True)
+
+
+outcomes = {'worried':'Worried', 
+            'notpreferred':'No preferred',
+            'fewkinds':'Few kinds',
+            'preferrednot':'Ate unpreferred',
+            'portions':'Limited portions',
+            'fewmeals':'Fewer Meals', 
+            'nofood':'No food in house', 
+            'hungry':'Went hungry', 
+            'wholeday':'Whole day without eating'}
+
+fs = fs.rename(columns=outcomes)
+
+# used to calculate the z-score
+index_vars = [outcomes[k] for k in list(outcomes.keys())]
+outcomes = index_vars #+ [r'\(z\)-score','Score']
+
+#fs[r'\(z\)-score'] = np.sqrt(((fs[index_vars] - fs[index_vars].mean())**2/fs[index_vars].var()).mean(axis=1))
+
+u,s,vt = svd_missing(fs[index_vars].T,max_rank=1)
+
+score = pd.Series(vt.squeeze(),index=fs.index)
+score = (score - score.mean())/score.std()
+
+fs['Score'] = score
+
+df = ss_standard.ancova_form(fs,outcomes)
+
+Results = {}
+
+Results['Averages'] = ss_standard.results(df,outcomes,nonzero=False,logs=False,return_stats=True)
+
+print(ss_standard.table_stacked_by_class(Results,elide=True))
+print(ss_standard.table_stacked_by_class(Results,elide=False))
+#+end_src
+
+#+latex: \begin{landscape}
+#+name: tab:food_insecurity
+#+caption: Effects of programs on different measures of food insecurity.  Asterisks: *** $p<0.01$, ** $p<0.05$, * $p<0.10$.
+| Outcome                  | $\beta_{UPG}^{2014}$ | $\beta_{UPG}^{2015}$ | $\beta_{UCT}^{2014}$ | $\beta_{UCT}^{2015}$ | 2014             | 2015             | Baseline value  | Baseline missing | $\beta_{UPG}^{2014} - \beta_{UCT}^{2015}$ | $\beta_{UPG}^{2015} - \beta_{UCT}^{2015}$ |
+|--------------------------+----------------------+----------------------+----------------------+----------------------+------------------+------------------+-----------------+------------------+-------------------------------------------+-------------------------------------------|
+| Ate less preferred       | \(  0.41\)           | \( -0.32\)           | \( -1.61\)^{*}       | \(  1.16\)           | \( 10.40\)^{***} | \( 12.01\)^{***} | \( -0.18\)      | \( -2.21\)^{***} | \( -0.75\)                                | \( -1.49\)                                |
+| $N=1297$                 | (\(  0.73\))         | (\(  0.67\))         | (\(  0.82\))         | (\(  0.92\))         | (\(  0.70\))     | (\(  0.66\))     | (\(  0.18\))    | (\(  0.81\))     | (\(  1.18\))                              | (\(  1.14\))                              |
+| Few kinds                | \(  1.02\)           | \(  0.71\)           | \( -0.39\)           | \(  1.40\)           | \( 10.78\)^{***} | \( 13.22\)^{***} | \( -0.46\)^{**} | \( -1.96\)^{**}  | \( -0.38\)                                | \( -0.69\)                                |
+| $N=1297$                 | (\(  0.73\))         | (\(  0.71\))         | (\(  0.90\))         | (\(  0.94\))         | (\(  0.75\))     | (\(  0.72\))     | (\(  0.21\))    | (\(  0.88\))     | (\(  1.19\))                              | (\(  1.18\))                              |
+| Fewer Meals              | \(  0.16\)           | \(  0.91\)           | \( -0.27\)           | \( -0.04\)           | \(  8.94\)^{***} | \( 10.68\)^{***} | \( -0.31\)^{*}  | \( -1.63\)^{**}  | \(  0.20\)                                | \(  0.94\)                                |
+| $N=1297$                 | (\(  0.65\))         | (\(  0.65\))         | (\(  0.76\))         | (\(  0.81\))         | (\(  0.60\))     | (\(  0.57\))     | (\(  0.18\))    | (\(  0.72\))     | (\(  1.04\))                              | (\(  1.04\))                              |
+| Limited portions         | \(  0.33\)           | \( -0.35\)           | \( -0.21\)           | \( -0.41\)           | \(  8.02\)^{***} | \( 10.49\)^{***} | \(  0.14\)      | \( -0.81\)       | \(  0.75\)                                | \(  0.06\)                                |
+| $N=1292$                 | (\(  0.68\))         | (\(  0.65\))         | (\(  0.77\))         | (\(  0.85\))         | (\(  0.63\))     | (\(  0.61\))     | (\(  0.16\))    | (\(  0.73\))     | (\(  1.09\))                              | (\(  1.07\))                              |
+| No food in house         | \( -0.54\)           | \( -0.54\)           | \( -0.21\)           | \( -0.03\)           | \(  5.63\)^{***} | \(  8.86\)^{***} | \( -0.10\)      | \(  0.06\)       | \( -0.52\)                                | \( -0.51\)                                |
+| $N=1293$                 | (\(  0.48\))         | (\(  0.65\))         | (\(  0.58\))         | (\(  0.85\))         | (\(  0.54\))     | (\(  0.61\))     | (\(  0.16\))    | (\(  0.74\))     | (\(  0.98\))                              | (\(  1.07\))                              |
+| No preferred             | \(  0.32\)           | \( -0.35\)           | \( -0.65\)           | \(  1.72\)^{*}       | \( 10.97\)^{***} | \( 13.81\)^{***} | \( -0.40\)^{*}  | \( -2.16\)^{**}  | \( -1.40\)                                | \( -2.07\)                                |
+| $N=1297$                 | (\(  0.75\))         | (\(  0.75\))         | (\(  0.89\))         | (\(  1.02\))         | (\(  0.74\))     | (\(  0.74\))     | (\(  0.23\))    | (\(  0.90\))     | (\(  1.26\))                              | (\(  1.26\))                              |
+| Went to sleep hungry     | \( -0.94\)^{**}      | \(  0.14\)           | \( -0.46\)           | \(  0.77\)           | \(  5.45\)^{***} | \(  7.86\)^{***} | \( -0.18\)      | \( -1.21\)       | \( -1.71\)^{*}                            | \( -0.63\)                                |
+| $N=1297$                 | (\(  0.43\))         | (\(  0.67\))         | (\(  0.58\))         | (\(  0.91\))         | (\(  0.58\))     | (\(  0.67\))     | (\(  0.16\))    | (\(  0.76\))     | (\(  1.01\))                              | (\(  1.12\))                              |
+| Whole day without eating | \( -0.54\)           | \(  0.23\)           | \( -0.13\)           | \(  0.92\)           | \(  4.97\)^{***} | \(  7.55\)^{***} | \( -0.08\)      | \( -0.81\)       | \( -1.46\)                                | \( -0.69\)                                |
+| $N=1282$                 | (\(  0.46\))         | (\(  0.68\))         | (\(  0.63\))         | (\(  0.96\))         | (\(  0.60\))     | (\(  0.67\))     | (\(  0.15\))    | (\(  0.72\))     | (\(  1.06\))                              | (\(  1.18\))                              |
+| Worried                  | \( -1.76\)^{*}       | \( -1.05\)           | \(  0.54\)           | \(  0.40\)           | \( 14.94\)^{***} | \( 15.57\)^{***} | \( -0.33\)      | \( -2.26\)^{**}  | \( -2.16\)                                | \( -1.45\)                                |
+| $N=1291$                 | (\(  1.00\))         | (\(  0.83\))         | (\(  1.29\))         | (\(  1.09\))         | (\(  0.89\))     | (\(  0.77\))     | (\(  0.26\))    | (\(  1.02\))     | (\(  1.48\))                              | (\(  1.37\))                              |
+|--------------------------+----------------------+----------------------+----------------------+----------------------+------------------+------------------+-----------------+------------------+-------------------------------------------+-------------------------------------------|
+| Score (1st PC)           | \(  0.03\)           | \(  0.03\)           | \(  0.06\)           | \( -0.10\)           | \(  0.08\)       | \( -0.29\)       | \( -0.40\)^{*}  | \( -0.14\)       | \(  0.13\)                                | \(  0.14\)                                |
+| $N=1299$                 | (\(  0.08\))         | (\(  0.09\))         | (\(  0.10\))         | (\(  0.12\))         | (\(  0.19\))     | (\(  0.20\))     | (\(  0.22\))    | (\(  0.20\))     | (\(  0.14\))                              | (\(  0.15\))                              |
+#+latex: \end{landscape}
+
+
+
